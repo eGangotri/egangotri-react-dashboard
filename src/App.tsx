@@ -1,20 +1,15 @@
-import logo from './logo.svg';
 import './App.css';
 import EgangotriHeader from './header';
-import Uploads from './upload/Uploads';
-import {getIndices, getUploadStatusData} from './service/UploadDataRetrievalService';
-
+import TabPanel from './tab/tab';
 
 function App() {
   return (
     <div className="App">
           <EgangotriHeader title='eGangotri Dashboard' />
-          <Uploads items={getUploadStatusData()}></Uploads>
+          <TabPanel />
     </div>
   );
 }
 
-function getRows(){
-  return 
-}
+
 export default App;
