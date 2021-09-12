@@ -1,6 +1,14 @@
 export default interface Item{
-    id:number;
-    date:string;
-    status:string;
+    "_id":number,
+    "archiveProfile": "VN1";
+    "uploadLink": string;
+    "localPath":string;
+    "title":string;
+    "csvName":string;
+    "uploadCycleId":string;
+    "datetimeUploadStarted":string;
+    "__v": number,
+    "createdAt":string;
+    "updatedAt": string;
 }
     

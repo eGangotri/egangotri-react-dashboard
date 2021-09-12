@@ -1,18 +1,38 @@
 export default function Upload(props:any) {
+    console.log(`props.item ${JSON.stringify(props)} ${props.item}`);
+
     return (
         <>
         <tr>
             <td>
-            {props.item.id}
+            {props.item._id}
             </td>
             <td>
-            {props.item.date}
+            {props.item.archiveProfile}
             </td>
             <td>
-            {props.item.status}
+            {props.item.uploadLink}
             </td>
             <td>
-            <button>Run Item # {props.item.id}</button>
+            {props.item.uploadLink}
+            </td>
+            <td>
+            {props.item.localPath}
+            </td>
+            <td>
+            {props.item.title}
+            </td>
+            <td>
+            {props.item.csvName}
+            </td>
+            <td>
+            {props.item.uploadCycleId}
+            </td>
+            <td>
+            {props.item.datetimeUploadStarted}
+            </td>
+            <td>
+            <button>Run Item # {props.item._id}</button>
             </td>
         </tr>
         </>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
@@ -6,7 +6,9 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Uploads from '../upload/Uploads';
-import {getIndices, getUploadStatusData} from '../service/UploadDataRetrievalService';
+import {getUploadStatusData} from '../service/UploadDataRetrievalService';
+import {useEffect} from "react";
+import Item from '../model/Item';
 
 
 interface TabPanelProps {
@@ -50,12 +52,23 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export default function SimpleTabs() {
+  const [data, setData] = useState<Item[]>([]);
+  
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
     setValue(newValue);
   };
+  console.log(`before getUploadStatusData`)
+
+  useEffect(() => {
+    async function fetchMyAPI() {
+        setData(await getUploadStatusData());
+      }
+      fetchMyAPI();
+    }, []);
+    console.log(`after getUploadStatusData ${JSON.stringify(data)}`)
 
   return (
     <div className={classes.root}>
@@ -67,15 +80,15 @@ export default function SimpleTabs() {
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
-      <Uploads items={getUploadStatusData()}></Uploads>
+      <Uploads items={data}></Uploads>
       </TabPanel>
 
       <TabPanel value={value} index={1}>
-        Item Two
+        Gradle CLI
       </TabPanel>
 
       <TabPanel value={value} index={2}>
-        Item Three
+        Misc
       </TabPanel>
     </div>
   );
