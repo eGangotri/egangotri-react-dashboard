@@ -14,9 +14,6 @@ export default function Upload(props:any) {
             {props.item.uploadLink}
             </td>
             <td>
-            {props.item.uploadLink}
-            </td>
-            <td>
             {props.item.localPath}
             </td>
             <td>
