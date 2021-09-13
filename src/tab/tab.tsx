@@ -6,9 +6,10 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Uploads from '../upload/Uploads';
-import {getUploadStatusData} from '../service/UploadDataRetrievalService';
+import {getUploadStatusData, getUploadStatusDataByProfile} from '../service/UploadDataRetrievalService';
 import {useEffect} from "react";
 import Item from '../model/Item';
+import UploadsPerProfile from '../upload/UploadsPerProfile';
 
 
 interface TabPanelProps {
@@ -53,6 +54,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export default function SimpleTabs() {
   const [data, setData] = useState<Item[]>([]);
+  const [profileData, setProfileData] = useState<any>({});
   
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
@@ -65,6 +67,7 @@ export default function SimpleTabs() {
   useEffect(() => {
     async function fetchMyAPI() {
         setData(await getUploadStatusData());
+        setProfileData(await getUploadStatusDataByProfile());
       }
       fetchMyAPI();
     }, []);
@@ -75,7 +78,8 @@ export default function SimpleTabs() {
       <AppBar position="static">
         <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
           <Tab label="Uploads" {...a11yProps(0)} />
-          <Tab label="Gradle" {...a11yProps(1)} />
+          <Tab label="Uploads by Profile" {...a11yProps(1)} />
+          <Tab label="Gradle" {...a11yProps(2)} />
           <Tab label="Misc" {...a11yProps(2)} />
         </Tabs>
       </AppBar>
@@ -83,11 +87,16 @@ export default function SimpleTabs() {
       <Uploads items={data}></Uploads>
       </TabPanel>
 
+      
       <TabPanel value={value} index={1}>
-        Gradle CLI
+        <UploadsPerProfile items={profileData}></UploadsPerProfile>
       </TabPanel>
 
       <TabPanel value={value} index={2}>
+        Gradle CLI
+      </TabPanel>
+
+      <TabPanel value={value} index={3}>
         Misc
       </TabPanel>
     </div>
