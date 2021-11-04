@@ -10,6 +10,7 @@ import {getUploadStatusData, getUploadStatusDataByProfile} from '../service/Uplo
 import {useEffect} from "react";
 import Item from '../model/Item';
 import UploadsPerProfile from '../upload/UploadsPerProfile';
+import GradleLauncher from '../gradle/gradleLauncher';
 
 
 interface TabPanelProps {
@@ -79,7 +80,7 @@ export default function SimpleTabs() {
         <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
           <Tab label="Uploads" {...a11yProps(0)} />
           <Tab label="Uploads by Profile" {...a11yProps(1)} />
-          <Tab label="Gradle" {...a11yProps(2)} />
+          <Tab label="Gradle Launcher" {...a11yProps(2)} />
           <Tab label="Misc" {...a11yProps(2)} />
         </Tabs>
       </AppBar>
@@ -94,6 +95,9 @@ export default function SimpleTabs() {
 
       <TabPanel value={value} index={2}>
         Gradle CLI
+        <div>
+          <GradleLauncher />
+        </div>
       </TabPanel>
 
       <TabPanel value={value} index={3}>
