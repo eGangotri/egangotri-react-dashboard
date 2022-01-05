@@ -11,7 +11,7 @@ import {useEffect} from "react";
 import Item from '../model/Item';
 import UploadsPerProfile from '../upload/UploadsPerProfile';
 import GradleLauncher from '../gradle/gradleLauncher';
-
+import DataTable from '../widget/dataTable';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -81,11 +81,11 @@ export default function SimpleTabs() {
           <Tab label="Uploads" {...a11yProps(0)} />
           <Tab label="Uploads by Profile" {...a11yProps(1)} />
           <Tab label="Gradle Launcher" {...a11yProps(2)} />
-          <Tab label="Misc" {...a11yProps(2)} />
+          <Tab label="Data Table" {...a11yProps(3)} />
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
-      <Uploads items={data}></Uploads>
+        <Uploads items={data}></Uploads>
       </TabPanel>
 
       
@@ -101,7 +101,7 @@ export default function SimpleTabs() {
       </TabPanel>
 
       <TabPanel value={value} index={3}>
-        Misc
+        <DataTable />
       </TabPanel>
     </div>
   );
