@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/0be90369-0219-4dea-8f5f-d7f849486fb4/resourceGroups/CP_AZ_TEST_RESOURCE/providers/Microsoft.Web/sites/egangotri-react-dashboard",
+    "appService.deploySubpath": "."
+}
