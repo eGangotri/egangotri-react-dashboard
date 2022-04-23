@@ -12,4 +12,7 @@ COPY . .
 
 EXPOSE 8080
 EXPOSE 80
+
+ENV DEV_ENV prod
+
 CMD [ "npm", "run", "start" ]
