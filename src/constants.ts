@@ -1,13 +1,13 @@
-import * as Util from "./utils"
 import env from "react-dotenv";
+import configData from "./config.json";
 
 const development = {
-    BACKEND_SERVER : "http://localhost:4000/",
+    BACKEND_SERVER : configData.BACKEND_SERVER_LOCAL,
     env : env.DEV_ENV || 'dev'
   };
   
   const production = {
-    BACKEND_SERVER : "http://localhost:5000/",
+    BACKEND_SERVER : configData.BACKEND_SERVER_AZURE,
     env : env.DEV_ENV || 'prod'
   };
   
