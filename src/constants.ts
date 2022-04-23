@@ -13,7 +13,9 @@ const development = {
   
   export function getServer() {
       console.log(`getServer process.env.DEV_ENV ${env.DEV_ENV}`)
-      return env.DEV_ENV === 'prod' ? production : development;
+      const devEnv = env.DEV_ENV === 'prod' ? production : development;
+      console.log(`getServer:devEnv ${devEnv.BACKEND_SERVER}`)
+
   } 
 
   export const backendServer = getServer();
