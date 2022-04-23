@@ -9,8 +9,10 @@ View at http://localhost:3000/
 
 ## Docker
 docker build . -t egangotri/egangotri-react-dashboard
-docker run -d -p 8080:80  egangotri/egangotri-react-dashboard:latest
+docker run -d -p 5000:3000  egangotri/egangotri-react-dashboard:latest
+## 3000 refers to the port react launches in
 docker login
 docker push  egangotri/egangotri-react-dashboard
 
-http://ip_address:80/
+View Docker Image at 
+http://localhost:5000/

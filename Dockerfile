@@ -4,15 +4,15 @@ FROM node:16
 WORKDIR /usr/src/app
 
 # Install app dependencies
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-# where available (npm@5+)
-COPY package*.json ./
+COPY package.json ./
 
 COPY . .
 
-EXPOSE 8080
-EXPOSE 80
+RUN npm install
 
-ENV DEV_ENV prod
+#Note: App Service currently allows your container to expose only one port for HTTP requests.
+EXPOSE 3000
+
+ENV REACT_APP_DEV_ENV prod
 
 CMD [ "npm", "run", "start" ]

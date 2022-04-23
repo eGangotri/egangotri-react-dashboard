@@ -50,6 +50,6 @@
   },
   "devDependencies": {},
   "react-dotenv": {
-    "whitelist": ["DEV_ENV"]
+    "whitelist": ["REACT_APP_DEV_ENV"]
   }
 }
