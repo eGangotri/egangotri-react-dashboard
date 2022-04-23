@@ -25,9 +25,10 @@
     "typescript": "^4.4.2",
     "web-vitals": "^1.1.2"
   },
+  "devDependencies": {},
   "scripts": {
     "start": "react-dotenv && react-scripts start",
-    "build": "react-dotenv && react-scripts build",
+    "build": "react-dotenv && cross-env PORT=80&& react-scripts build",
     "test": "react-dotenv && react-scripts test"
   },
   "eslintConfig": {
@@ -48,8 +49,9 @@
       "last 1 safari version"
     ]
   },
-  "devDependencies": {},
   "react-dotenv": {
-    "whitelist": ["REACT_APP_DEV_ENV"]
+    "whitelist": [
+      "REACT_APP_DEV_ENV"
+    ]
   }
 }

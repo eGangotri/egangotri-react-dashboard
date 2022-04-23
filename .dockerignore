@@ -3,3 +3,5 @@
 .git
 *.md
 .gitignore
+package-lock.json
+yarn.lock

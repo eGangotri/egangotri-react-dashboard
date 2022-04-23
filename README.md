@@ -16,3 +16,10 @@ docker push  egangotri/egangotri-react-dashboard
 
 View Docker Image at 
 http://localhost:5000/
+
+
+Microsoft Azure:
+In App Service/Settings/Configuration/Application Settings
+WEBSITES_PORT=8000
+OR in Azure CLI
+az webapp config appsettings set --resource-group cp-bq-specialist-rq --name eg-react-fe --settings WEBSITES_PORT=8000
