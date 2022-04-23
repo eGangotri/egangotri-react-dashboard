@@ -20,6 +20,6 @@ http://localhost:5000/
 
 Microsoft Azure:
 In App Service/Settings/Configuration/Application Settings
-WEBSITES_PORT=8000
+WEBSITES_PORT=80
 OR in Azure CLI
-az webapp config appsettings set --resource-group cp-bq-specialist-rq --name eg-react-fe --settings WEBSITES_PORT=8000
+az webapp config appsettings set --resource-group cp-bq-specialist-rq --name eg-react-fe --settings WEBSITES_PORT=80
