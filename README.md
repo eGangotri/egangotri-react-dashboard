@@ -18,8 +18,9 @@ View Docker Image at
 http://localhost:5000/
 
 
-Microsoft Azure:
-In App Service/Settings/Configuration/Application Settings
-WEBSITES_PORT=80
+## Microsoft Azure:
+## may not be relevant any more
+In App Service/Settings/Configuration/Application Settings, add
+WEBSITES_PORT=3000
 OR in Azure CLI
-az webapp config appsettings set --resource-group cp-bq-specialist-rq --name eg-react-fe --settings WEBSITES_PORT=80
+az webapp config appsettings set --resource-group cp-bq-specialist-rq --name eg-react-fe --settings WEBSITES_PORT=3000

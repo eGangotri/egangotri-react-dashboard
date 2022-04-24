@@ -10,13 +10,18 @@ COPY package.json ./
 
 COPY . .
 
+RUN npm install -g npm@8.7.0
 RUN npm install
+
+RUN npm install -g serve
 
 ENV PORT 3000
 
-#Note: App Service currently allows your container to expose only one port for HTTP requests.
 EXPOSE 3000
 
 ENV REACT_APP_DEV_ENV prod
 
-CMD [ "npm", "run", "start" ]
+RUN npm run build
+
+#npx serve -s build -l 3000
+CMD ["npx","serve", "-s", "build", "-l", "3000"]
