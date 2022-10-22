@@ -1,19 +1,19 @@
-.App {
+.EgangotriDashboard {
   text-align: center;
 }
 
-.App-logo {
+.EgangotriDashboard-logo {
   height: 40vmin;
   pointer-events: none;
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+  .EgangotriDashboard-logo {
+    animation: EgangotriDashboard-logo-spin infinite 20s linear;
   }
 }
 
-.App-header {
+.EgangotriDashboard-header {
   background-color: #282c34;
   min-height: 100vh;
   display: flex;
@@ -24,11 +24,11 @@
   color: white;
 }
 
-.App-link {
+.EgangotriDashboard-link {
   color: #61dafb;
 }
 
-@keyframes App-logo-spin {
+@keyframes EgangotriDashboard-logo-spin {
   from {
     transform: rotate(0deg);
   }

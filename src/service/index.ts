@@ -1,2 +1,2 @@
-import { getServer } from '../utils/constants';
+import { getServer } from 'utils/constants';
 console.log(`Services Backend Server is ${getServer()}`)

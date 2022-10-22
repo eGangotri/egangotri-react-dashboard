@@ -1,6 +1,6 @@
 import Item from "model/Item";
 import Upload from "pages/upload/Upload";
-import { getServer } from '../../utils/constants';
+import { getServer } from 'utils/constants';
 
 export default function Uploads(props: any) {
     console.log(`props ${JSON.stringify(props)} ${props.items.length}`);
