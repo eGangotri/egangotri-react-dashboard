@@ -3,14 +3,15 @@ import 'layout/EgangotriDashboard.css';
 import EgangotriFooter from 'layout/footer';
 import EgangotriHeader from 'layout/header';
 import TabPanel from 'pages/tab/tab';
+import { Box } from '@mui/material';
 
-function EgangotriDashboard() {
+const EgangotriDashboard:React.FC = () => {
   return (
-    <div className="EgangotriDashboard">
+    <Box sx={{ textAlign: "center" }}>
           <EgangotriHeader title='eGangotri Dashboard' />
           <TabPanel />
           <EgangotriFooter title='eGangotri Digital Preservation Trust. CC-0. In Public Domain' />
-    </div>
+    </Box>
   );
 }
 
