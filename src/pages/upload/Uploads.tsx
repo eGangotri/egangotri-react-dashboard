@@ -1,3 +1,4 @@
+import React from 'react';
 import Item from "model/Item";
 import Upload from "pages/upload/Upload";
 import { getServer } from 'utils/constants';
@@ -7,7 +8,7 @@ export default function Uploads(props: any) {
     console.log(`Services Backend Server is ${getServer()}`)
     const content = props && props.items && props.items.length > 0 ? props?.items?.map((item: Item) => {
         console.log(`item ${item}`);
-        return <Upload item={item} />
+        return <Upload item={item} key={item}/>
     }
     ) : "";
 
@@ -16,7 +17,7 @@ export default function Uploads(props: any) {
             Uploads
             <table>
                 <thead>
-                    <tr>
+                    <tr key="0">
                         <th>Index</th>
                         <th>ArchiveProfile</th>
                         <th>Upload Link</th>

@@ -1,3 +1,4 @@
+import React from 'react';
 import 'layout/EgangotriDashboard.css';
 import EgangotriFooter from 'layout/footer';
 import EgangotriHeader from 'layout/header';

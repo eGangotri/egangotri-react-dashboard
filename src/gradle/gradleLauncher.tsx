@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState } from "react";
 import { launchGradle } from "service/launchUploader";
 
@@ -11,7 +12,7 @@ export default function GradleLauncher(props:any) {
       };
     
 
-    const launch =  (e:any,code:number = 1) =>{
+    const launch =  (e:any,code = 1) =>{
         switch (code){
             case 1:
                 console.log('e', profiles, code);

@@ -5,7 +5,7 @@ export default function Upload(props:any) {
 
     return (
         <>
-        <tr>
+        <tr key={props.item}>
             <td>
             {props.item._id}
             </td>

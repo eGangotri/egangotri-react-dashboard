@@ -1,10 +1,11 @@
+import React from 'react';
 import UploadPerProfile from "pages/upload/UploadPerProfile";
 
 export default function UploadsPerProfile(props: any) {
     console.log(`props ${JSON.stringify(props)} ${props.items.length}`);
     const head =                 
     <thead>
-    <tr>
+    <tr key="0">
         <th>Index</th>
         <th>ArchiveProfile</th>
         <th>Upload Link</th>

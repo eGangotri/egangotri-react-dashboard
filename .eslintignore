@@ -1,0 +1,7 @@
+build/
+public/
+config/
+.github/
+deploy/
+src/assets/
+src/serviceWorker.js
