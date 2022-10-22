@@ -1,3 +1,5 @@
+import React from 'react';
+
 export default function Upload(props:any) {
     console.log(`props.item ${JSON.stringify(props)} ${props.item}`);
 

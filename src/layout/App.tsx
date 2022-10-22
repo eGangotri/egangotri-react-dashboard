@@ -1,7 +1,7 @@
 import './App.css';
-import EgangotriFooter from './footer';
-import EgangotriHeader from './header';
-import TabPanel from './tab/tab';
+import EgangotriFooter from 'layout/footer';
+import EgangotriHeader from 'layout/header';
+import TabPanel from 'pages/tab/tab';
 
 function App() {
   return (

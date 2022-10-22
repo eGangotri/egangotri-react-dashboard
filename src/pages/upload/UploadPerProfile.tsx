@@ -1,3 +1,5 @@
+import React from 'react';
+
 export default function UploadPerProfile(props:any) {
     console.log(`props.profileData ${JSON.stringify(props)} ${props.profileData}`);
     const content = props && props.profileData && props.profileData.length > 0 ? props?.profileData?.map((item: any) =>

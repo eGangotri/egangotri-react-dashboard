@@ -1,4 +1,4 @@
-import { backendServer } from '../Constants';
+import { backendServer } from 'utils/constants';
 
 export function getUploadStatusData(){
     return fetch(backendServer + "itemsQueued/list?limit=20").then( res => res.json())

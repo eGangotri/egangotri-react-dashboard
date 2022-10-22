@@ -1,5 +1,3 @@
-
-
 export default function EgangotriFooter(props:any) {
     
 const footer = `{

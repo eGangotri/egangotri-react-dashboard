@@ -1,5 +1,5 @@
 import env from "react-dotenv";
-import configData from "./config.json";
+import configData from "../layout/config.json";
 
 const development = {
     BACKEND_SERVER : configData.BACKEND_SERVER_LOCAL,

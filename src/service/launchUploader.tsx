@@ -1,6 +1,6 @@
-import {backendServer} from '../Constants';
+import { backendServer } from 'utils/constants';
 
-export async function launchGradle(profiles:string){
+export async function launchGradle(profiles: string) {
     console.log(`${backendServer}launchGradle?profiles=${profiles}`)
     const res = await fetch(`${backendServer}launchGradle?profiles=${profiles}`);
     console.log(`res ${JSON.stringify(res)}`);

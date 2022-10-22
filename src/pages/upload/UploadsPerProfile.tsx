@@ -1,4 +1,4 @@
-import UploadPerProfile from "./UploadPerProfile";
+import UploadPerProfile from "pages/upload/UploadPerProfile";
 
 export default function UploadsPerProfile(props: any) {
     console.log(`props ${JSON.stringify(props)} ${props.items.length}`);

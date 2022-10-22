@@ -5,13 +5,14 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import Uploads from '../upload/Uploads';
-import {getUploadStatusData, getUploadStatusDataByProfile} from '../service/UploadDataRetrievalService';
+
+import Uploads from 'pages/upload/Uploads';
+import {getUploadStatusData, getUploadStatusDataByProfile} from 'service/UploadDataRetrievalService';
 import {useEffect} from "react";
-import Item from '../model/Item';
-import UploadsPerProfile from '../upload/UploadsPerProfile';
-import GradleLauncher from '../gradle/gradleLauncher';
-import DataTable from '../widget/dataTable';
+import Item from 'model/Item';
+import UploadsPerProfile from 'pages/upload/UploadsPerProfile';
+import GradleLauncher from 'gradle/gradleLauncher';
+import DataTable from 'pages/widget/dataTable';
 
 interface TabPanelProps {
   children?: React.ReactNode;
