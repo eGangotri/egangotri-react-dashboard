@@ -32,9 +32,11 @@
     "serve": "^13.0.2"
   },
   "scripts": {
-    "start": "react-dotenv && react-scripts start",
+    "start": "react-dotenv && npm run lint_fix && react-scripts start",
     "build": "react-dotenv && react-scripts build",
-    "test": "react-dotenv && react-scripts test"
+    "test": "react-dotenv && react-scripts test",
+    "lint": "npx eslint . --ext .js,.jsx,.ts,.tsx",
+    "lint_fix": "npx eslint --fix . --ext .js,.jsx,.ts,.tsx"
   },
   "eslintConfig": {
     "extends": [

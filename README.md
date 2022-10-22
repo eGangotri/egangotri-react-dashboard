@@ -24,3 +24,12 @@ In App Service/Settings/Configuration/Application Settings, add
 WEBSITES_PORT=3000
 OR in Azure CLI
 az webapp config appsettings set --resource-group cp-bq-specialist-rq --name eg-react-fe --settings WEBSITES_PORT=3000
+
+
+### firebase Deployment
+First time
+ npm install -g firebase-tools
+ firebase init 
+afterwards
+firebase login
+firebase deploy
