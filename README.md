@@ -33,3 +33,7 @@ First time
 afterwards
 firebase login
 firebase deploy
+
+Viewable at:
+https://egangotri-react-dashboard.firebaseapp.com
+https://egangotri-react-dashboard.web.app/
