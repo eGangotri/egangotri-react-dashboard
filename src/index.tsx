@@ -2,12 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import 'assets/css/index.css';
-import EgangotriDashboard from 'layout/EgangotriDashboard';
+import Dashboard from 'pages/Dashboard';
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
   <React.StrictMode>
-    <EgangotriDashboard />
+    <Dashboard />
   </React.StrictMode>,
   document.getElementById('root')
 );
