@@ -1,18 +1,21 @@
-import React, { useState } from 'react';
-import { makeStyles, Theme } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
+import React, { useState } from "react";
+import { makeStyles, Theme } from "@material-ui/core/styles";
+import AppBar from "@material-ui/core/AppBar";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
+import Typography from "@material-ui/core/Typography";
+import Box from "@material-ui/core/Box";
 
-import Uploads from 'pages/upload/Uploads';
-import {getUploadStatusData, getUploadStatusDataByProfile} from 'service/UploadDataRetrievalService';
-import {useEffect} from "react";
-import Item from 'model/Item';
-import UploadsPerProfile from 'pages/upload/UploadsPerProfile';
-import GradleLauncher from 'gradle/gradleLauncher';
-import DataTable from 'pages/widget/dataTable';
+import Uploads from "pages/upload/Uploads";
+import {
+  getUploadStatusData,
+  getUploadStatusDataByProfile,
+} from "service/UploadDataRetrievalService";
+import { useEffect } from "react";
+import Item from "model/Item";
+import UploadsPerProfile from "pages/upload/UploadsPerProfile";
+import GradleLauncher from "gradle/gradleLauncher";
+import DataTable from "pages/widget/dataTable";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -43,7 +46,7 @@ function TabPanel(props: TabPanelProps) {
 function a11yProps(index: any) {
   return {
     id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
   };
 }
 
@@ -57,28 +60,38 @@ const useStyles = makeStyles((theme: Theme) => ({
 export default function SimpleTabs() {
   const [data, setData] = useState<Item[]>([]);
   const [profileData, setProfileData] = useState<any>({});
-  
+
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event: React.ChangeEvent<any>, newValue: number) => {
     setValue(newValue);
   };
-  console.log(`before getUploadStatusData`)
+  console.log(`before getUploadStatusData`);
 
   useEffect(() => {
     async function fetchMyAPI() {
-        setData(await getUploadStatusData());
-        setProfileData(await getUploadStatusDataByProfile());
-      }
-      fetchMyAPI();
-    }, []);
-    console.log(`after getUploadStatusData ${JSON.stringify(data)}`)
+      const uploadStatsuData = await getUploadStatusData();
+      const trimmedData =
+        uploadStatsuData?.length > 6
+          ? uploadStatsuData.slice(0, 5)
+          : uploadStatsuData;
+      setData(trimmedData);
+      const dataByProfile = await getUploadStatusDataByProfile();
+      setProfileData(dataByProfile);
+    }
+    fetchMyAPI();
+  }, []);
+  console.log(`after getUploadStatusData ${JSON.stringify(data.length)}`);
 
   return (
     <div className={classes.root}>
       <AppBar position="static">
-        <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          aria-label="simple tabs example"
+        >
           <Tab label="Uploads" {...a11yProps(0)} />
           <Tab label="Uploads by Profile" {...a11yProps(1)} />
           <Tab label="Gradle Launcher" {...a11yProps(2)} />
@@ -89,7 +102,6 @@ export default function SimpleTabs() {
         <Uploads items={data}></Uploads>
       </TabPanel>
 
-      
       <TabPanel value={value} index={1}>
         <UploadsPerProfile items={profileData}></UploadsPerProfile>
       </TabPanel>
