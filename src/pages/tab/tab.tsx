@@ -69,17 +69,21 @@ export default function SimpleTabs() {
   };
   console.log(`before getUploadStatusData`);
 
+  async function fetchMyAPI() {
+    const uploadStatusData = await getUploadStatusData(16);
+    console.log(`uploadStatsuData?.length  ${uploadStatusData?.response?.length}`);
+    const trimmedData =
+      uploadStatusData?.response?.length > 6
+        ? uploadStatusData.response.slice(0, 5)
+        : uploadStatusData.response;
+    console.log(`trimmedData?.length  ${trimmedData?.response?.length}}`);
+
+    setData(trimmedData);
+    const dataByProfile = await getUploadStatusDataByProfile(15);
+    setProfileData(dataByProfile);
+  }
+
   useEffect(() => {
-    async function fetchMyAPI() {
-      const uploadStatsuData = await getUploadStatusData();
-      const trimmedData =
-        uploadStatsuData?.length > 6
-          ? uploadStatsuData.slice(0, 5)
-          : uploadStatsuData;
-      setData(trimmedData);
-      const dataByProfile = await getUploadStatusDataByProfile();
-      setProfileData(dataByProfile);
-    }
     fetchMyAPI();
   }, []);
   console.log(`after getUploadStatusData ${JSON.stringify(data.length)}`);

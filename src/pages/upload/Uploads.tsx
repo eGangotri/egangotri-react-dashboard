@@ -4,7 +4,7 @@ import Upload from "pages/upload/Upload";
 import { getServer } from 'utils/constants';
 
 export default function Uploads(props: any) {
-    console.log(`props ${JSON.stringify(props)} ${props.items.length}`);
+    console.log(`props  ${props.items.length}`);
     console.log(`Services Backend Server is ${getServer()}`)
     const content = props && props.items && props.items.length > 0 ? props?.items?.map((item: Item) => {
         console.log(`item ${item}`);

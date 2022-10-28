@@ -1,23 +1,27 @@
-import { backendServer } from 'utils/constants';
+import { backendServer } from "utils/constants";
 
-export function getUploadStatusData(){
-    return fetch(backendServer + "itemsQueued/list?limit=20").then( res => res.json())
-        .then((items:any[]) => {
-            console.log(`items ${items.length}`);
-            return items;
-        });
-}
+export const makeGetCall = async (resource: string) => {
+  const response = await fetch(resource);
+  console.log(`response ${JSON.stringify(response)}`);
+  const respAsJson = await response.json();
+  console.log(`respAsJson ${respAsJson.length}`);
+  return respAsJson;
+};
 
-export function getUploadStatusDataByProfile(){
-    return fetch(backendServer + "itemsQueued/listByProfile?limit=20").then( res => res.json())
-        .then((items:any[]) => {
-            console.log(`items ${items.length}`);
-            return items;
-        });
-}
+export const getUploadStatusData = async (limit: number) => {
+  const resource = backendServer + `itemsQueued/list?limit=${limit}`;
+  const result = await makeGetCall(resource);
+  return result
+};
+
+
+export const getUploadStatusDataByProfile = async (limit: number) => {
+  const resource = backendServer + `itemsQueued/listByProfile?limit=${limit}`;
+  const result = await makeGetCall(resource);
+  return result};
+
 export async function getUploadStatusData3() {
-    const res = await fetch(backendServer + "itemsQueued/list?limit=1");
-    const items = await res.json();
-    console.log(`items ${items.length}`);
-    return items;
+  const resource = backendServer + "itemsQueued/list?limit=1";
+  const result = await makeGetCall(resource);
+  return result
 }
