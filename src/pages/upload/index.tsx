@@ -42,7 +42,7 @@ const Uploads: React.FC<UploadType> = ({ items }) => {
         setFilteredProfiles={setFilteredProfiles}
       />
       Uploads
-      <UploadsPanel items={items}></UploadsPanel>
+      <UploadsPanel items={uploadableItems}></UploadsPanel>
     </Stack>
   );
 };

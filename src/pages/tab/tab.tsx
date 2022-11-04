@@ -6,7 +6,7 @@ import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 
-import UploadsPanel from "pages/upload/UploadsPanel";
+import Uploads from "pages/upload";
 import {
   getUploadStatusData,
   getUploadStatusDataByProfile,
@@ -66,16 +66,16 @@ export default function SimpleTabs() {
   const handleChange = (event: React.ChangeEvent<any>, newValue: number) => {
     setValue(newValue);
   };
-  console.log(`before getUploadStatusData`);
+  //console.log(`before getUploadStatusData`);
 
   async function fetchMyAPI() {
     const uploadStatusData = await getUploadStatusData(16);
-    console.log(`uploadStatsuData?.length  ${uploadStatusData?.response?.length}`);
+    //console.log(`uploadStatsuData?.length  ${uploadStatusData?.response?.length}`);
     const trimmedData =
       uploadStatusData?.response?.length > 6
         ? uploadStatusData.response.slice(0, 5)
         : uploadStatusData.response;
-    console.log(`trimmedData?.length  ${trimmedData?.response?.length}}`);
+    //console.log(`trimmedData?.length  ${trimmedData?.response?.length}}`);
 
     setData(trimmedData);
     const dataByProfile = await getUploadStatusDataByProfile(15);
@@ -85,7 +85,7 @@ export default function SimpleTabs() {
   useEffect(() => {
     fetchMyAPI();
   }, []);
-  console.log(`after getUploadStatusData ${JSON.stringify(data.length)}`);
+//  console.log(`after getUploadStatusData ${JSON.stringify(data.length)}`);
 
   return (
     <div className={classes.root}>
@@ -96,20 +96,15 @@ export default function SimpleTabs() {
           aria-label="simple tabs example"
         >
           <Tab label="Uploads" {...a11yProps(0)} />
-          <Tab label="Uploads by Profile" {...a11yProps(1)} />
-          <Tab label="Gradle Launcher" {...a11yProps(2)} />
-          <Tab label="Data Table" {...a11yProps(3)} />
+          <Tab label="Gradle Launcher" {...a11yProps(1)} />
+          <Tab label="Data Table" {...a11yProps(2)} />
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
-        <UploadsPanel items={data}></UploadsPanel>
+        <Uploads items={data}></Uploads>
       </TabPanel>
 
       <TabPanel value={value} index={1}>
-        Under Dev
-      </TabPanel>
-
-      <TabPanel value={value} index={2}>
         Gradle CLI
         <div>
           <GradleLauncher />
