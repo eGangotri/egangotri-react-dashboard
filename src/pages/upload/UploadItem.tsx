@@ -3,6 +3,8 @@ import Item from "model/Item";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import Link from "@mui/material/Link";
+import { DAY_MONTH_YEAR_HOUR_MIN_FORMAT } from "utils/date-constants";
+import format from "date-fns/format";
 
 type UploadPropsType = {
   item: Item;
@@ -71,7 +73,7 @@ const UploadItem: React.FC<UploadPropsType> = ({ item }) => {
         </td>
         <td>{item.csvName}</td>
         <td>{item.uploadCycleId}</td>
-        <td>{item.datetimeUploadStarted}</td>
+        <td>{format(new Date(item.datetimeUploadStarted), DAY_MONTH_YEAR_HOUR_MIN_FORMAT)}</td>
         <td>
           <button>Run Item # {item._id}</button>
         </td>

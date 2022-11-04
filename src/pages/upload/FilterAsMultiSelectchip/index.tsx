@@ -29,10 +29,13 @@ function getStyles(name: string, profileName: readonly string[], theme: Theme) {
 }
 
 type FilterAsMultipleSelectChipPropsType = {
-     profiles: string[],  
-     setFilteredProfiles: React.Dispatch<React.SetStateAction<string[]>>};
+  profiles: string[];
+  setFilteredProfiles: React.Dispatch<React.SetStateAction<string[]>>;
+};
 
-const FilterAsMultipleSelectChip: React.FC<FilterAsMultipleSelectChipPropsType> = ({ profiles, setFilteredProfiles }) => {
+const FilterAsMultipleSelectChip: React.FC<
+  FilterAsMultipleSelectChipPropsType
+> = ({ profiles, setFilteredProfiles }) => {
   const theme = useTheme();
   const [profileName, setprofileName] = React.useState<string[]>([]);
 
@@ -41,7 +44,7 @@ const FilterAsMultipleSelectChip: React.FC<FilterAsMultipleSelectChipPropsType> 
       target: { value },
     } = event;
     // On autofill we get a stringified value.
-    const _profiles = typeof value === "string" ? value.split(",") : value
+    const _profiles = typeof value === "string" ? value.split(",") : value;
     setprofileName(_profiles);
     setFilteredProfiles(_profiles);
   };
@@ -49,7 +52,7 @@ const FilterAsMultipleSelectChip: React.FC<FilterAsMultipleSelectChipPropsType> 
   return (
     <div>
       <FormControl sx={{ m: 1, width: 300 }}>
-        <InputLabel id="demo-multiple-chip-label">Profile</InputLabel>
+        <InputLabel id="demo-multiple-chip-label">Filter By Profile</InputLabel>
         <Select
           labelId="demo-multiple-chip-label"
           id="demo-multiple-chip"
@@ -72,7 +75,7 @@ const FilterAsMultipleSelectChip: React.FC<FilterAsMultipleSelectChipPropsType> 
               value={profile}
               style={getStyles(profile, profileName, theme)}
             >
-              {profile}
+              <Box sx={{ width: "250px" }}>{profile}</Box>
             </MenuItem>
           ))}
         </Select>
