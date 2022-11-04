@@ -1,6 +1,6 @@
 export default interface Item{
     "_id":number,
-    "archiveProfile": "VN1";
+    "archiveProfile": string;
     "uploadLink": string;
     "localPath":string;
     "title":string;

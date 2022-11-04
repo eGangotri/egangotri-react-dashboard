@@ -11,10 +11,10 @@ const development = {
     env : env.REACT_APP_DEV_ENV || 'prod'
   };
   
-  export function getServer() {
-      console.log(`getServer process.env.REACT_APP_DEV_ENV ${env.REACT_APP_DEV_ENV}`)
+  export function getServer():string {
+      //console.log(`getServer process.env.REACT_APP_DEV_ENV ${env.REACT_APP_DEV_ENV}`)
       const devEnv = env.REACT_APP_DEV_ENV === 'prod' ? production : development;
-      console.log(`getServer:devEnv ${devEnv.BACKEND_SERVER}`)
+      //console.log(`getServer:devEnv ${devEnv.BACKEND_SERVER}`)
       return devEnv.BACKEND_SERVER;
   } 
 

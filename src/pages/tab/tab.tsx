@@ -6,14 +6,13 @@ import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 
-import Uploads from "pages/upload/Uploads";
+import UploadsPanel from "pages/upload/UploadsPanel";
 import {
   getUploadStatusData,
   getUploadStatusDataByProfile,
 } from "service/UploadDataRetrievalService";
 import { useEffect } from "react";
 import Item from "model/Item";
-import UploadsPerProfile from "pages/upload/UploadsPerProfile";
 import GradleLauncher from "gradle/gradleLauncher";
 import DataTable from "pages/widget/dataTable";
 
@@ -103,11 +102,11 @@ export default function SimpleTabs() {
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
-        <Uploads items={data}></Uploads>
+        <UploadsPanel items={data}></UploadsPanel>
       </TabPanel>
 
       <TabPanel value={value} index={1}>
-        <UploadsPerProfile items={profileData}></UploadsPerProfile>
+        Under Dev
       </TabPanel>
 
       <TabPanel value={value} index={2}>
