@@ -17,7 +17,7 @@ const FilterByTime: React.FC<FilterByTimePropTime> = ({setTimeValues}) => {
   const handleChange = () => {
     console.log("...")
     setApplyTimeFilter(!applyTimeFilter);
-    setTimeValues()
+    setTimeValues([]);
   }
 
   return (
