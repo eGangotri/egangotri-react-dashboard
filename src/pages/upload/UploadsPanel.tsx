@@ -17,12 +17,12 @@ const UploadsPanel: React.FC<UploadType> = ({ items }) => {
           <tr key="0">
             <th>Index</th>
             <th>ArchiveProfile</th>
+            <th>Title</th>
+            <th>Datetime Upload Started</th>
             <th>Upload Link</th>
             <th>Local Path</th>
-            <th>Title</th>
             <th>Csv Name</th>
             <th>Upload CycleId</th>
-            <th>datetimeUploadStarted</th>
             <th>createdAt</th>
             <th>Rerun</th>
           </tr>
