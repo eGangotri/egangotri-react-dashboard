@@ -10,6 +10,7 @@ import {
   getUploadStatusDataByProfile,
 } from "service/UploadDataRetrievalService";
 import { getArchiveProfiles } from "./utils";
+import { isAfter, isBefore } from "date-fns";
 
 const Uploads: React.FC = () => {
   const [items, setItems] = useState<Item[]>([]);
@@ -37,11 +38,30 @@ const Uploads: React.FC = () => {
 
   const [filteredProfiles, setFilteredProfiles] = useState<string[]>([]);
 
-  const [timeValues, setTimeValues] = useState<Date[]>([]);
+  const [startTimeValues, setStartTimeValues] = useState<Date>(new Date());
+  const [endTimeValues, setEndTimeValues] = useState<Date>(new Date());
+
+  const handleClick = (applyFilter:boolean) => {
+    // 👇️ take parameter passed from Child component
+    if(applyFilter){
+      const _uploadableItems = uploadableItems.filter((item: Item) =>
+      isAfter(new Date(item.datetimeUploadStarted),new Date(startTimeValues))
+      && 
+       isBefore(new Date(item.datetimeUploadStarted),new Date(endTimeValues), )
+    );
+    console.log("startTimeValues: " + startTimeValues + new Date(startTimeValues));
+    console.log("endTimeValues: " + endTimeValues);
+    console.log("applyFilter: " + applyFilter);
+    setUploadableItems(_uploadableItems);
+    }
+    else{
+      setUploadableItems(items);
+    }
+  };
   useEffect(() => {
     setProfiles(getArchiveProfiles(items));
     console.log(`profiles  ${profiles}`);
-    console.log(`items  ${items}`);
+    //console.log(`items  ${items}`);
 
     if (filteredProfiles.length) {
       const _uploadableItems = items.filter((item: Item) =>
@@ -63,7 +83,11 @@ const Uploads: React.FC = () => {
           profiles={profiles}
           setFilteredProfiles={setFilteredProfiles}
         />
-        <FilterByTime setTimeValues={setTimeValues} />
+        <FilterByTime
+          setStartTimeValues={setStartTimeValues}
+          setEndTimeValues={setEndTimeValues}
+          handleClick={handleClick}
+        />
       </Box>
       Uploads
       <UploadsPanel items={uploadableItems}></UploadsPanel>

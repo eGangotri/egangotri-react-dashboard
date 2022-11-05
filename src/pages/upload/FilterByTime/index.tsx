@@ -1,53 +1,87 @@
-import React, { useState } from "react";
+import React, { useState, KeyboardEvent } from "react";
 import TextField from "@mui/material/TextField";
-import Stack from "@mui/material/Stack";
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { subDays } from "date-fns";
 import { formatWithTInMiddle } from "utils/utils";
+import { Height } from "@mui/icons-material";
+import { PRIMARY_BLUE } from "constants/colors";
 
 const endTimeDefaultValue = formatWithTInMiddle(new Date(), false);
 const startTimeDefaultValue = formatWithTInMiddle(subDays(new Date(), 30));
 
-type FilterByTimePropTime = {
-    setTimeValues:  React.Dispatch<React.SetStateAction<Date[]>>
-}
+type FilterByTimePropType = {
+  setStartTimeValues: React.Dispatch<React.SetStateAction<Date>>;
+  setEndTimeValues: React.Dispatch<React.SetStateAction<Date>>;
+  handleClick: (applyFilter:boolean) => void;
+};
 
-const FilterByTime: React.FC<FilterByTimePropTime> = ({setTimeValues}) => {
+const widgetStyles = { width: 250, border:"20px" };
+const FilterByTime: React.FC<FilterByTimePropType> = ({
+  setStartTimeValues,
+  setEndTimeValues,
+  handleClick
+}) => {
   const [applyTimeFilter, setApplyTimeFilter] = useState<boolean>(true);
-  const handleChange = () => {
-    console.log("...")
+
+  const handleChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    start = true
+  ) => {
+    const { value } = event.target;
+
+    console.log(`handleChang2e value ${value}`);
     setApplyTimeFilter(!applyTimeFilter);
-    setTimeValues([]);
-  }
+    start
+      ? setStartTimeValues(new Date(value))
+      : setEndTimeValues(new Date(value));
+  };
+
+  const toggleTimeFilter = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    // const value = event.target.value;
+    // console.log(`toggleTimeFilter value ${value}`);
+    setApplyTimeFilter(!applyTimeFilter);
+    handleClick(applyTimeFilter)
+  };
 
   return (
-    <Stack component="form" noValidate spacing={3}>
+    <Box sx={{display:"flex"}} justifyContent="space-around" flexDirection="column">
       <TextField
         id="datetime-local"
         label="Start Time"
         type="datetime-local"
         defaultValue={startTimeDefaultValue}
-        sx={{ width: 250 }}
+        sx={widgetStyles}
+        onChange={(e) =>
+         { console.log( typeof e);
+          handleChange(e)}
+        }
         InputLabelProps={{
           shrink: true,
         }}
       />
 
       <TextField
-        id="datetime-local2"
+        id="datetime-local-end"
         label="End Time"
         type="datetime-local"
         defaultValue={endTimeDefaultValue}
-        sx={{ width: 250 }}
+        sx={widgetStyles}
+        onChange={(e) => handleChange(e,false)} 
         InputLabelProps={{
           shrink: true,
         }}
       />
 
-      <Button variant="contained" onClick={handleChange}>
-        {(applyTimeFilter?"Apply":"Remove") + "Date Filter"}
+      <Button variant="contained" onClick={e=> toggleTimeFilter(e)} 
+      
+      sx={{...widgetStyles, height:"50px", backgroundColor:PRIMARY_BLUE}}
+      >
+        {(applyTimeFilter ? "Apply" : "Remove") + "Date Filter"}
       </Button>
-    </Stack>
+    </Box>
   );
 };
 
