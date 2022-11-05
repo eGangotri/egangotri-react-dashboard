@@ -1,6 +1,5 @@
 import { format } from "date-fns";
 import {
-  HOUR_MIN_FORMAT,
   SECONDARY_DATE_FORMAT,
 } from "utils/date-constants";
 

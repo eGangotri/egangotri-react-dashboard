@@ -7,12 +7,7 @@ import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 
 import Uploads from "pages/upload";
-import {
-  getUploadStatusData,
-  getUploadStatusDataByProfile,
-} from "service/UploadDataRetrievalService";
-import { useEffect } from "react";
-import Item from "model/Item";
+
 import GradleLauncher from "gradle/gradleLauncher";
 import DataTable from "pages/widget/dataTable";
 
@@ -57,8 +52,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export default function SimpleTabs() {
-  const [data, setData] = useState<Item[]>([]);
-  const [profileData, setProfileData] = useState<any>({});
 
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
@@ -66,26 +59,6 @@ export default function SimpleTabs() {
   const handleChange = (event: React.ChangeEvent<any>, newValue: number) => {
     setValue(newValue);
   };
-  //console.log(`before getUploadStatusData`);
-
-  async function fetchMyAPI() {
-    const uploadStatusData = await getUploadStatusData(16);
-    //console.log(`uploadStatsuData?.length  ${uploadStatusData?.response?.length}`);
-    const trimmedData =
-      uploadStatusData?.response?.length > 6
-        ? uploadStatusData.response.slice(0, 5)
-        : uploadStatusData.response;
-    //console.log(`trimmedData?.length  ${trimmedData?.response?.length}}`);
-
-    setData(trimmedData);
-    const dataByProfile = await getUploadStatusDataByProfile(15);
-    setProfileData(dataByProfile);
-  }
-
-  useEffect(() => {
-    fetchMyAPI();
-  }, []);
-//  console.log(`after getUploadStatusData ${JSON.stringify(data.length)}`);
 
   return (
     <div className={classes.root}>
@@ -101,7 +74,7 @@ export default function SimpleTabs() {
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
-        <Uploads items={data}></Uploads>
+        <Uploads />
       </TabPanel>
 
       <TabPanel value={value} index={1}>

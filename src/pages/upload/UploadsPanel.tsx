@@ -8,8 +8,6 @@ type UploadType = {
 };
 
 const UploadsPanel: React.FC<UploadType> = ({ items }) => {
-  console.log(`props  ${items.length}`);
-
   return (
     <Stack spacing="2">
       <table>
@@ -28,9 +26,8 @@ const UploadsPanel: React.FC<UploadType> = ({ items }) => {
           </tr>
         </thead>
         <tbody>
-          {items && items.length > 0
+          {items?.length > 0
             ? items?.map((item: Item) => {
-                console.log(`item ${item}`);
                 return <UploadItem item={item} key={item._id} />;
               })
             : ""}
