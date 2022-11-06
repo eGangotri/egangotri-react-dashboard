@@ -5,9 +5,10 @@ import Stack from "@mui/material/Stack";
 
 type UploadType = {
   items: Item[];
+  forQueues:boolean
 };
 
-const UploadsPanel: React.FC<UploadType> = ({ items }) => {
+const UploadsPanel: React.FC<UploadType> = ({ items, forQueues = false }) => {
   return (
     <Stack spacing="2">
       <table>
@@ -17,6 +18,7 @@ const UploadsPanel: React.FC<UploadType> = ({ items }) => {
             <th>ArchiveProfile</th>
             <th>Title</th>
             <th>Datetime Upload Started</th>
+            {!forQueues && <th>Archive Url</th> }
             <th>Upload Link</th>
             <th>Local Path</th>
             <th>Csv Name</th>
@@ -28,7 +30,7 @@ const UploadsPanel: React.FC<UploadType> = ({ items }) => {
         <tbody>
           {items?.length > 0
             ? items?.map((item: Item) => {
-                return <UploadItem item={item} key={item._id} />;
+                return <UploadItem item={item} key={item._id} forQueues={forQueues} />;
               })
             : ""}
         </tbody>

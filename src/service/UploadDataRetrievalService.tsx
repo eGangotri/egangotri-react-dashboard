@@ -1,5 +1,12 @@
 import { backendServer } from "utils/constants";
 
+const QUEUE_API_PREFIX = "itemsQueued";
+const USHERED_API_PREFIX = "itemsushered";
+
+const chooseApiPrefix = (forQueues = false) => {
+  return forQueues ? QUEUE_API_PREFIX : USHERED_API_PREFIX;
+};
+
 export const makeGetCall = async (resource: string) => {
   const response = await fetch(resource);
   console.log(`response ${JSON.stringify(response)}`);
@@ -8,20 +15,20 @@ export const makeGetCall = async (resource: string) => {
   return respAsJson;
 };
 
-export const getUploadStatusData = async (limit: number) => {
-  const resource = backendServer + `itemsQueued/list?limit=${limit}`;
+export const getUploadStatusData = async (limit: number, forQueues = false) => {
+  const resource =
+    backendServer + `${chooseApiPrefix(forQueues)}/list?limit=${limit}`;
   const result = await makeGetCall(resource);
-  return result
+  return result;
 };
 
-
-export const getUploadStatusDataByProfile = async (limit: number) => {
-  const resource = backendServer + `itemsQueued/listByProfile?limit=${limit}`;
+export const getUploadStatusDataByProfile = async (
+  limit: number,
+  forQueues = false
+) => {
+  const resource =
+    backendServer +
+    `${chooseApiPrefix(forQueues)}/listByProfile?limit=${limit}`;
   const result = await makeGetCall(resource);
-  return result};
-
-export async function getUploadStatusData3() {
-  const resource = backendServer + "itemsQueued/list?limit=1";
-  const result = await makeGetCall(resource);
-  return result
-}
+  return result;
+};

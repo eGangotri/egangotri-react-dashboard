@@ -1,4 +1,4 @@
-export default interface Item{
+export default interface Item {
     "_id":number,
     "archiveProfile": string;
     "uploadLink": string;
@@ -7,6 +7,7 @@ export default interface Item{
     "csvName":string;
     "uploadCycleId":string;
     "datetimeUploadStarted":string;
+    "archiveItemId"?: string;
     "__v": number,
     "createdAt":string;
     "updatedAt": string;

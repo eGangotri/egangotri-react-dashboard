@@ -7,12 +7,15 @@ import Box from "@mui/material/Box";
 import FilterByTime from "./FilterByTime";
 import {
   getUploadStatusData,
-  getUploadStatusDataByProfile,
 } from "service/UploadDataRetrievalService";
 import { getArchiveProfiles } from "./utils";
 import { isAfter, isBefore } from "date-fns";
 
-const Uploads: React.FC = () => {
+interface UploadsType {
+  forQueues:boolean
+}
+
+const Uploads: React.FC<UploadsType> = ({forQueues = false}) => {
   const [items, setItems] = useState<Item[]>([]);
   const [profiles, setProfiles] = useState<string[]>([]);
   const [applyFilter, setApplyFilter] = useState<boolean>(false);
@@ -20,7 +23,7 @@ const Uploads: React.FC = () => {
   //console.log(`Services Backend Server is ${getServer()}`);
 
   async function fetchMyAPI() {
-    const uploadStatusData = await getUploadStatusData(100);
+    const uploadStatusData = await getUploadStatusData(100,forQueues);
     //console.log(`uploadStatsuData?.length  ${uploadStatusData?.response?.length}`);
     setItems(uploadStatusData?.response || []);
   }
@@ -93,7 +96,7 @@ const Uploads: React.FC = () => {
         />
       </Box>
       Uploads
-      <UploadsPanel items={uploadableItems}></UploadsPanel>
+      <UploadsPanel items={uploadableItems} forQueues={forQueues}></UploadsPanel>
     </Stack>
   );
 };

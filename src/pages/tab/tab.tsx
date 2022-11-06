@@ -68,16 +68,21 @@ export default function SimpleTabs() {
           onChange={handleChange}
           aria-label="simple tabs example"
         >
-          <Tab label="Uploads" {...a11yProps(0)} />
-          <Tab label="Gradle Launcher" {...a11yProps(1)} />
-          <Tab label="Data Table" {...a11yProps(2)} />
+          <Tab label="Uploads (Ushered)" {...a11yProps(0)} />
+          <Tab label="Uploads (Queued)" {...a11yProps(1)} />
+          <Tab label="Gradle Launcher" {...a11yProps(2)} />
+          <Tab label="Data Table" {...a11yProps(3)} />
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
-        <Uploads />
+        <Uploads forQueues={false}/>
       </TabPanel>
 
       <TabPanel value={value} index={1}>
+        <Uploads forQueues={true}/>
+      </TabPanel>
+
+      <TabPanel value={value} index={2}>
         Gradle CLI
         <div>
           <GradleLauncher />
