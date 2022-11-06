@@ -7,6 +7,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import Chip from "@mui/material/Chip";
+import { WIDTH_OF_WIDGETS } from "utils/constants";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -51,7 +52,7 @@ const FilterAsMultipleSelectChip: React.FC<
 
   return (
     <Box sx={{margin: "20px 0px"}}>
-      <FormControl sx={{ width: 300 }}>
+      <FormControl sx={{ width: WIDTH_OF_WIDGETS }}>
         <InputLabel id="demo-multiple-chip-label">Filter By Profile</InputLabel>
         <Select
           labelId="demo-multiple-chip-label"

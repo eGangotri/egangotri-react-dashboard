@@ -6,6 +6,7 @@ import { subDays } from "date-fns";
 import { formatWithTInMiddle } from "utils/utils";
 import { Height } from "@mui/icons-material";
 import { PRIMARY_BLUE } from "constants/colors";
+import { WIDTH_OF_WIDGETS } from "utils/constants";
 
 const endTimeDefaultValue = formatWithTInMiddle(new Date(), false);
 const startTimeDefaultValue = formatWithTInMiddle(subDays(new Date(), 30));
@@ -14,15 +15,18 @@ type FilterByTimePropType = {
   setStartTimeValues: React.Dispatch<React.SetStateAction<Date>>;
   setEndTimeValues: React.Dispatch<React.SetStateAction<Date>>;
   handleClick: (applyFilter:boolean) => void;
+  applyFilter:boolean;
+  setApplyFilter:React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const widgetStyles = { width: 250, marginRight:"20px" };
+const widgetStyles = { width: WIDTH_OF_WIDGETS, marginRight:"20px" };
 const FilterByTime: React.FC<FilterByTimePropType> = ({
   setStartTimeValues,
   setEndTimeValues,
-  handleClick
+  handleClick,
+  applyFilter,
+  setApplyFilter
 }) => {
-  const [applyTimeFilter, setApplyTimeFilter] = useState<boolean>(true);
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -30,8 +34,8 @@ const FilterByTime: React.FC<FilterByTimePropType> = ({
   ) => {
     const { value } = event.target;
 
-    console.log(`handleChang2e value ${value}`);
-    setApplyTimeFilter(!applyTimeFilter);
+    console.log(`handleChange value ${value}`);
+
     start
       ? setStartTimeValues(new Date(value))
       : setEndTimeValues(new Date(value));
@@ -42,8 +46,9 @@ const FilterByTime: React.FC<FilterByTimePropType> = ({
   ) => {
     // const value = event.target.value;
     // console.log(`toggleTimeFilter value ${value}`);
-    setApplyTimeFilter(!applyTimeFilter);
-    handleClick(applyTimeFilter)
+    const newApplyFilter = !applyFilter;
+    handleClick(newApplyFilter)
+    setApplyFilter(newApplyFilter);
   };
 
   return (
@@ -79,7 +84,7 @@ const FilterByTime: React.FC<FilterByTimePropType> = ({
       
       sx={{...widgetStyles, height:"50px", backgroundColor:PRIMARY_BLUE}}
       >
-        {(applyTimeFilter ? "Apply" : "Remove") + "Date Filter"}
+        {(applyFilter ? "Apply" : "Remove") + " Date Filter"}
       </Button>
     </Box>
   );

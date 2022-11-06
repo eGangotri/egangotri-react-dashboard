@@ -15,6 +15,7 @@ import { isAfter, isBefore } from "date-fns";
 const Uploads: React.FC = () => {
   const [items, setItems] = useState<Item[]>([]);
   const [profiles, setProfiles] = useState<string[]>([]);
+  const [applyFilter, setApplyFilter] = useState<boolean>(false);
 
   //console.log(`Services Backend Server is ${getServer()}`);
 
@@ -41,7 +42,7 @@ const Uploads: React.FC = () => {
   const [startTimeValues, setStartTimeValues] = useState<Date>(new Date());
   const [endTimeValues, setEndTimeValues] = useState<Date>(new Date());
 
-  const handleClick = (applyFilter:boolean) => {
+  const handleClick = (_applyFilter:boolean) => {
     // 👇️ take parameter passed from Child component
     if(applyFilter){
       const _uploadableItems = uploadableItems.filter((item: Item) =>
@@ -87,6 +88,8 @@ const Uploads: React.FC = () => {
           setStartTimeValues={setStartTimeValues}
           setEndTimeValues={setEndTimeValues}
           handleClick={handleClick}
+          setApplyFilter={setApplyFilter}
+          applyFilter={applyFilter}
         />
       </Box>
       Uploads

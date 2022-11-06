@@ -19,3 +19,5 @@ const development = {
   } 
 
   export const backendServer = getServer();
+
+  export const WIDTH_OF_WIDGETS = 250;
