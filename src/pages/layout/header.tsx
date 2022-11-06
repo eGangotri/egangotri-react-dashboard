@@ -3,7 +3,7 @@ import 'index.css';
 
 const EgangotriHeader: React.FC<{ title: string }> = ({ title }) => {
     return (
-        <header className='Header'>
+        <header style={{ textAlign: "center" }} className='Header'>
             {title}
         </header>
     );

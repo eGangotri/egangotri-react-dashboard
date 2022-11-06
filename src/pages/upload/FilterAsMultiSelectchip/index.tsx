@@ -50,8 +50,8 @@ const FilterAsMultipleSelectChip: React.FC<
   };
 
   return (
-    <div>
-      <FormControl sx={{ m: 1, width: 300 }}>
+    <Box sx={{margin: "20px 0px"}}>
+      <FormControl sx={{ width: 300 }}>
         <InputLabel id="demo-multiple-chip-label">Filter By Profile</InputLabel>
         <Select
           labelId="demo-multiple-chip-label"
@@ -80,7 +80,7 @@ const FilterAsMultipleSelectChip: React.FC<
           ))}
         </Select>
       </FormControl>
-    </div>
+    </Box>
   );
 };
 

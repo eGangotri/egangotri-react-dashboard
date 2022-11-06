@@ -7,7 +7,7 @@ import { Box } from '@mui/material';
 
 const Dashboard:React.FC = () => {
   return (
-    <Box sx={{ textAlign: "center" }}>
+    <Box>
           <EgangotriHeader title='eGangotri Dashboard' />
           <Box className="Main">
           <TabPanel/>

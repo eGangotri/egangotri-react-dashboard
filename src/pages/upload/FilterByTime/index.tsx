@@ -16,7 +16,7 @@ type FilterByTimePropType = {
   handleClick: (applyFilter:boolean) => void;
 };
 
-const widgetStyles = { width: 250, border:"20px" };
+const widgetStyles = { width: 250, marginRight:"20px" };
 const FilterByTime: React.FC<FilterByTimePropType> = ({
   setStartTimeValues,
   setEndTimeValues,
@@ -47,7 +47,7 @@ const FilterByTime: React.FC<FilterByTimePropType> = ({
   };
 
   return (
-    <Box sx={{display:"flex"}} justifyContent="space-around" flexDirection="column">
+    <Box sx={{display:"flex", justifyContent:"flex-start", flexDirection:"row"}}>
       <TextField
         id="datetime-local"
         label="Start Time"
