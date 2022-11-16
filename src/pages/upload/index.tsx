@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import Item from "model/Item";
 import UploadsPanel from "pages/upload/UploadsPanel";
 import FilterAsMultipleSelectChip from "pages/upload/FilterAsMultiSelectchip";
 import Stack from "@mui/material/Stack";
@@ -10,6 +9,7 @@ import {
 } from "service/UploadDataRetrievalService";
 import { getArchiveProfiles } from "./utils";
 import { isAfter, isBefore } from "date-fns";
+import * as _ from 'lodash';
 
 interface UploadsType {
   forQueues:boolean
@@ -23,14 +23,20 @@ const Uploads: React.FC<UploadsType> = ({forQueues = false}) => {
   //console.log(`Services Backend Server is ${getServer()}`);
 
   async function fetchMyAPI() {
-    const uploadStatusData = await getUploadStatusData(100,forQueues);
+    const uploadStatusData:ItemListResponseType = await getUploadStatusData(100,forQueues);
+    if(uploadStatusData?.response){
+      const _tmpFiltered = uploadStatusData?.response.filter((item:Item) =>{
+        return (item.uploadCycleId !== 'X' && !_.isEmpty(item.uploadCycleId));
+      })
+      //setItems(_tmpFiltered || []);
+    }
     //console.log(`uploadStatsuData?.length  ${uploadStatusData?.response?.length}`);
     setItems(uploadStatusData?.response || []);
   }
 
   useEffect(() => {
     (async () => {
-      fetchMyAPI();
+      await fetchMyAPI();
       console.log(`after getUploadStatusData ${JSON.stringify(items)}`);
       setProfiles(getArchiveProfiles(items));
     })();

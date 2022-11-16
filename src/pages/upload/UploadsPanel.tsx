@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import Item from "model/Item";
 import UploadItem from "pages/upload/UploadItem";
 import Stack from "@mui/material/Stack";
 

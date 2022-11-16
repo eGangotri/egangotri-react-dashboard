@@ -1,4 +1,3 @@
-import Item from "model/Item";
 
 export const getArchiveProfiles = (items: Item[]) => {
   const itemsAsSet = new Set(items?.map((item: Item) => item.archiveProfile));

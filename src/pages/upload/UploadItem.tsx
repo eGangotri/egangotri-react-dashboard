@@ -1,5 +1,4 @@
 import React from "react";
-import Item from "model/Item";
 import { DAY_MONTH_YEAR_HOUR_MIN_FORMAT } from "utils/date-constants";
 import format from "date-fns/format";
 import ItemToolTip from "./ItemTooltip";
