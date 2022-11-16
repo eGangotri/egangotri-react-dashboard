@@ -15,6 +15,7 @@ const UploadsPanel: React.FC<UploadType> = ({ items, forQueues = false }) => {
         <thead>
           <tr key="0">
             <th>Index</th>
+            <th>Upload CycleId</th>
             <th>ArchiveProfile</th>
             <th>Title</th>
             <th>Datetime Upload Started</th>
@@ -22,7 +23,6 @@ const UploadsPanel: React.FC<UploadType> = ({ items, forQueues = false }) => {
             <th>Upload Link</th>
             <th>Local Path</th>
             <th>Csv Name</th>
-            <th>Upload CycleId</th>
             <th>createdAt</th>
             <th>Rerun</th>
           </tr>

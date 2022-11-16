@@ -20,6 +20,7 @@ const UploadItem: React.FC<UploadPropsType> = ({ item, forQueues = false }) => {
         <td>
           <ItemToolTip input={`${item._id}`} alphabetCount={5} />
         </td>
+        <td>{item.uploadCycleId}</td>
         <td>{item.archiveProfile}</td>
         <td>
           <ItemToolTip input={item.title} alphabetCount={50} />
@@ -44,7 +45,6 @@ const UploadItem: React.FC<UploadPropsType> = ({ item, forQueues = false }) => {
           <ItemToolTip input={item.localPath} reverse={true} />
         </td>
         <td>{item.csvName}</td>
-        <td>{item.uploadCycleId}</td>
         <td>
           <button>Run Item # {item._id}</button>
         </td>
