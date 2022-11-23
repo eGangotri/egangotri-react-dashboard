@@ -1,6 +1,8 @@
 # egangotri-react-dashboard
 React Based Dashboard for eGangotri Front End
 
+# First Time
+yarn install
 
 # To Start
 npm run start
