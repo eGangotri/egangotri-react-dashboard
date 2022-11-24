@@ -36,7 +36,7 @@
     "serve": "^13.0.2"
   },
   "scripts": {
-    "start": "react-dotenv && yarn run lint_fix && react-scripts --openssl-legacy-provider start",
+    "start": "react-dotenv && yarn run lint_fix && react-scripts start",
     "build": "react-dotenv && react-scripts build",
     "test": "react-dotenv && react-scripts test",
     "lint": "npx eslint . --ext .js,.jsx,.ts,.tsx",

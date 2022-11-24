@@ -19,6 +19,11 @@ docker push  egangotri/egangotri-react-dashboard
 View Docker Image at 
 http://localhost:5000/
 
+##Debugging
+if on higher versions of node you may have to modify start script as 
+    "start": "react-dotenv && yarn run lint_fix && react-scripts --openssl-legacy-provider start",
+    
+Due to changes on Node.js v17, --openssl-legacy-provider was added for handling key size on OpenSSL v3. For now i do workaround with this options.
 
 ## Microsoft Azure:
 ## may not be relevant any more
