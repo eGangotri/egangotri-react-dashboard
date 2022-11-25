@@ -3,11 +3,13 @@ import UploadsPanel from "pages/upload/UploadsPanel";
 import FilterAsMultipleSelectChip from "pages/upload/FilterAsMultiSelectchip";
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+
 import FilterByTime from "./FilterByTime";
 import {
   getUploadStatusData,
 } from "service/UploadDataRetrievalService";
-import { getArchiveProfiles } from "./utils";
+import { getArchiveProfiles, validateArchiveUrls } from "./utils";
 import { isAfter, isBefore } from "date-fns";
 import * as _ from 'lodash';
 
@@ -100,6 +102,9 @@ const Uploads: React.FC<UploadsType> = ({forQueues = false}) => {
           setApplyFilter={setApplyFilter}
           applyFilter={applyFilter}
         />
+      </Box>
+      <Box>
+        <Button onClick={()=>validateArchiveUrls()}>Validate All Archive URLs</Button>
       </Box>
       Uploads
       <UploadsPanel items={uploadableItems} forQueues={forQueues}></UploadsPanel>
