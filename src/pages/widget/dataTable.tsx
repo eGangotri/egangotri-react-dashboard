@@ -36,7 +36,7 @@ const rows = [
   { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
 ];
 
-export default function DataTable() {
+const DataTable:React.FC = () => {
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
@@ -49,3 +49,5 @@ export default function DataTable() {
     </div>
   );
 }
+
+export default DataTable

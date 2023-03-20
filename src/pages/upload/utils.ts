@@ -1,4 +1,4 @@
-export const getArchiveProfiles = (items: Item[]) => {
+export const getArchiveProfiles = (items: Item[]):string[] => {
   const itemsAsSet = new Set(items?.map((item: Item) => item.archiveProfile));
   console.log(`itemsAsSet ${JSON.stringify(itemsAsSet)}`);
   return Array.from(itemsAsSet);
@@ -7,7 +7,7 @@ export const getArchiveProfiles = (items: Item[]) => {
 export const validateArchiveUrls = (archiveUrls: string[] = 
   ["https://archive.org/details/HUIM_tajika-nilakanthi-satika-sodaharana-praramyate-sanskrit-1888-mumbai-sri-venkates1",
 "https://archive.org/details/HUIM_tajika-nilakanthi-satika-sodaharana-praramyate-sanskrit-1888-mumbai-sri-venkates"]
-  ) => {
+  ):void => {
   console.log("In Progress");
   const invalidItems: string[] = [];
   archiveUrls.forEach(async (archiveUrl: string) => {

@@ -3,23 +3,22 @@ import { useState } from "react";
 import { launchGradle } from "service/launchUploader";
 
 
-
-export default function GradleLauncher(props:any) {
+const GradleLauncher: React.FC = () => {
     const [profiles, setProfiles] = useState('');
 
-    const onChange = (event:any) => {
+    const onChange = (event:React.ChangeEvent<HTMLInputElement>) => {
         setProfiles(event.target.value);
       };
     
 
-    const launch =  (e:any,code = 1) =>{
+    const launch =  (e:React.MouseEvent<HTMLButtonElement, MouseEvent>,code = 1) =>{
         switch (code){
             case 1:
                 console.log('e', profiles, code);
                 launchGradle(profiles);
                 break;
             default:
-                console.log('e', e.target.value, code)
+                console.log('e', e.currentTarget.value, code)
         }
     }
 
@@ -30,3 +29,5 @@ export default function GradleLauncher(props:any) {
         </>
     );
   }
+
+  export default GradleLauncher;

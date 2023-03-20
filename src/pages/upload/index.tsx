@@ -31,6 +31,7 @@ const Uploads: React.FC<UploadsType> = ({forQueues = false}) => {
         return (item.uploadCycleId !== 'X' && !_.isEmpty(item.uploadCycleId));
       })
       //setItems(_tmpFiltered || []);
+      console.log(`_tmpFiltered ${_tmpFiltered}`);
     }
     //console.log(`uploadStatsuData?.length  ${uploadStatusData?.response?.length}`);
     setItems(uploadStatusData?.response || []);
@@ -53,7 +54,7 @@ const Uploads: React.FC<UploadsType> = ({forQueues = false}) => {
   const [startTimeValues, setStartTimeValues] = useState<Date>(new Date());
   const [endTimeValues, setEndTimeValues] = useState<Date>(new Date());
 
-  const handleClick = (_applyFilter:boolean) => {
+  const handleClick = () => {
     // 👇️ take parameter passed from Child component
     if(applyFilter){
       const _uploadableItems = uploadableItems.filter((item: Item) =>

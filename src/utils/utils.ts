@@ -3,14 +3,14 @@ import {
   SECONDARY_DATE_FORMAT,
 } from "utils/date-constants";
 
-export const formatWithTInMiddle = (date: Date, startOfDay = true) => {
+export const formatWithTInMiddle = (date: Date, startOfDay = true):string => {
   const formattedTime = format(date, SECONDARY_DATE_FORMAT);
   const withAppendage = `${formattedTime}${startOfDay ? "T00:00" : "T23:59"}`;
   console.log(`formatWithTInMiddle ${withAppendage}`);
   return withAppendage;
 };
 
-export const formatWithTInMiddle2 = (date: Date) => {
+export const formatWithTInMiddle2 = (date: Date):string => {
   return format(date, SECONDARY_DATE_FORMAT);
 };
 
