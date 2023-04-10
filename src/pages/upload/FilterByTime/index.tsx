@@ -1,10 +1,9 @@
-import React, { useState, KeyboardEvent } from "react";
+import React from "react";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { subDays } from "date-fns";
 import { formatWithTInMiddle } from "utils/utils";
-import { Height } from "@mui/icons-material";
 import { PRIMARY_BLUE } from "constants/colors";
 import { WIDTH_OF_WIDGETS } from "utils/constants";
 
@@ -44,8 +43,8 @@ const FilterByTime: React.FC<FilterByTimePropType> = ({
   const toggleTimeFilter = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
-    // const value = event.target.value;
-    // console.log(`toggleTimeFilter value ${value}`);
+    const value = event.currentTarget.value;
+    console.log(`toggleTimeFilter value ${value}`);
     const newApplyFilter = !applyFilter;
     handleClick(newApplyFilter)
     setApplyFilter(newApplyFilter);

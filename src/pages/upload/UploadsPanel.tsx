@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import UploadItem from "pages/upload/UploadItem";
 import Stack from "@mui/material/Stack";
+import TablePagination from '@mui/material/TablePagination';
 
 type UploadType = {
   items: Item[];
@@ -8,8 +9,33 @@ type UploadType = {
 };
 
 const UploadsPanel: React.FC<UploadType> = ({ items, forQueues = false }) => {
+  const [page, setPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  const handleChangePage = (
+    event: React.MouseEvent<HTMLButtonElement> | null,
+    newPage: number,
+  ) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
   return (
     <Stack spacing="2">
+    <TablePagination
+      component="div"
+      count={100}
+      page={page}
+      onPageChange={handleChangePage}
+      rowsPerPage={rowsPerPage}
+      onRowsPerPageChange={handleChangeRowsPerPage}
+/>
       <table>
         <thead>
           <tr key="0">
@@ -28,7 +54,7 @@ const UploadsPanel: React.FC<UploadType> = ({ items, forQueues = false }) => {
         </thead>
         <tbody>
           {items?.length > 0
-            ? items?.map((item: Item) => {
+            ? items?.slice(rowsPerPage)?.map((item: Item) => {
                 return <UploadItem item={item} key={item._id} forQueues={forQueues} />;
               })
             : ""}

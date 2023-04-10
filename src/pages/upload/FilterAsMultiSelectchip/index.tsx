@@ -6,7 +6,8 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
-import Chip from "@mui/material/Chip";
+import Chip from '@mui/material/Chip';
+
 import { WIDTH_OF_WIDGETS } from "utils/constants";
 
 const ITEM_HEIGHT = 48;
@@ -38,18 +39,24 @@ const FilterAsMultipleSelectChip: React.FC<
   FilterAsMultipleSelectChipPropsType
 > = ({ profiles, setFilteredProfiles }) => {
   const theme = useTheme();
-  const [profileName, setprofileName] = React.useState<string[]>([]);
+  const [profileNames, setprofileNames] = React.useState<string[]>([]);
 
-  const handleChange = (event: SelectChangeEvent<typeof profileName>) => {
+  const handleChange = (event: SelectChangeEvent<typeof profileNames>) => {
     const {
       target: { value },
     } = event;
     // On autofill we get a stringified value.
     const _profiles = typeof value === "string" ? value.split(",") : value;
-    setprofileName(_profiles);
+    console.log(`_profiles ${_profiles}`)
+    setprofileNames(_profiles);
     setFilteredProfiles(_profiles);
   };
 
+  const handleDelete = (value = "") => {
+    console.info(`You clicked the delete icon. ${value}`);
+  }
+  
+  
   return (
     <Box sx={{margin: "20px 0px"}}>
       <FormControl sx={{ width: WIDTH_OF_WIDGETS }}>
@@ -58,13 +65,13 @@ const FilterAsMultipleSelectChip: React.FC<
           labelId="demo-multiple-chip-label"
           id="demo-multiple-chip"
           multiple
-          value={profileName}
+          value={profileNames}
           onChange={handleChange}
           input={<OutlinedInput id="select-multiple-chip" label="Profiles" />}
           renderValue={(selected) => (
             <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
               {selected.map((value) => (
-                <Chip key={value} label={value} />
+                <Chip label={value} onDelete={handleDelete} />
               ))}
             </Box>
           )}
@@ -74,7 +81,7 @@ const FilterAsMultipleSelectChip: React.FC<
             <MenuItem
               key={profile}
               value={profile}
-              style={getStyles(profile, profileName, theme)}
+              style={getStyles(profile, profileNames, theme)}
             >
               <Box sx={{ width: "250px" }}>{profile}</Box>
             </MenuItem>

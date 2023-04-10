@@ -5,9 +5,24 @@ React Based Dashboard for eGangotri Front End
 yarn install
 
 # To Start
-npm run start
-nodemon --exec npm run start
+yarn run start
+nodemon --exec yarn run start
 View at http://localhost:3000/
+
+@Error: Digital envelope routines
+if you get above error. Enable legacy OpenSSL provider.
+
+On Unix-like (Linux, macOS, Git bash, etc.):
+
+export NODE_OPTIONS=--openssl-legacy-provider
+On Windows command prompt:
+
+set NODE_OPTIONS=--openssl-legacy-provider
+On PowerShell:
+
+$env:NODE_OPTIONS = "--openssl-legacy-provider
+
+Source: https://stackoverflow.com/questions/69692842/error-message-error0308010cdigital-envelope-routinesunsupported
 
 ## Docker
 docker build . -t egangotri/egangotri-react-dashboard
