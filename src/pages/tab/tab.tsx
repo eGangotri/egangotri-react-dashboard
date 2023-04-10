@@ -10,6 +10,7 @@ import Uploads from "pages/upload";
 
 import GradleLauncher from "gradle/gradleLauncher";
 import DataTable from "pages/widget/dataTable";
+import FileMover from "pages/widget/fileMover";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -72,6 +73,7 @@ export default function SimpleTabs() {
           <Tab label="Uploads (Queued)" {...a11yProps(1)} />
           <Tab label="Gradle Launcher" {...a11yProps(2)} />
           <Tab label="Data Table" {...a11yProps(3)} />
+          <Tab label="File Mover" {...a11yProps(4)} />
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
@@ -91,6 +93,10 @@ export default function SimpleTabs() {
 
       <TabPanel value={value} index={3}>
         <DataTable />
+      </TabPanel>
+
+      <TabPanel value={value} index={4}>
+        <FileMover />
       </TabPanel>
     </div>
   );
