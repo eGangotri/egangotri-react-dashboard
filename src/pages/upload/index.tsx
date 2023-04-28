@@ -33,7 +33,7 @@ const Uploads: React.FC<UploadsType> = ({forQueues = false}) => {
       //setItems(_tmpFiltered || []);
       console.log(`_tmpFiltered ${_tmpFiltered}`);
     }
-    //console.log(`uploadStatsuData?.length  ${uploadStatusData?.response?.length}`);
+    console.log(`uploadStatsuData?.length  ${uploadStatusData?.response?.length}`);
     setItems(uploadStatusData?.response || []);
   }
 
@@ -45,7 +45,7 @@ const Uploads: React.FC<UploadsType> = ({forQueues = false}) => {
     })();
   }, []);
 
-  //  console.log(`after getUploadStatusData ${JSON.stringify(data.length)}`);
+  // console.log(`after getUploadStatusData ${JSON.stringify(data.length)}`);
 
   const [uploadableItems, setUploadableItems] = useState<Item[]>(items);
 

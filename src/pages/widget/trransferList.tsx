@@ -27,6 +27,10 @@ const TransferList: React.FC = () =>  {
   const [left, setLeft] = React.useState<readonly number[]>([0, 1, 2, 3]);
   const [right, setRight] = React.useState<readonly number[]>([4, 5, 6, 7]);
 
+  const readSourceFolder = () => {
+    console.log('beign developed')
+  }
+
   const leftChecked = intersection(checked, left);
   const rightChecked = intersection(checked, right);
 

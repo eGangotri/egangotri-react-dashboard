@@ -6,8 +6,8 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
-import Chip from '@mui/material/Chip';
-
+import ListItemText from '@mui/material/ListItemText';
+import Checkbox from '@mui/material/Checkbox';
 import { WIDTH_OF_WIDGETS } from "utils/constants";
 
 const ITEM_HEIGHT = 48;
@@ -47,34 +47,39 @@ const FilterAsMultipleSelectChip: React.FC<
     } = event;
     // On autofill we get a stringified value.
     const _profiles = typeof value === "string" ? value.split(",") : value;
-    console.log(`_profiles ${_profiles}`)
+    console.log(`handleChange:_profiles ${_profiles}`)
     setprofileNames(_profiles);
     setFilteredProfiles(_profiles);
   };
 
-  const handleDelete = (value = "") => {
-    console.info(`You clicked the delete icon. ${value}`);
-  }
-  
+
   
   return (
     <Box sx={{margin: "20px 0px"}}>
       <FormControl sx={{ width: WIDTH_OF_WIDGETS }}>
-        <InputLabel id="demo-multiple-chip-label">Filter By Profile</InputLabel>
+        <InputLabel id="demo-multiple-checkbox-label">Filter By Profile</InputLabel>
         <Select
-          labelId="demo-multiple-chip-label"
-          id="demo-multiple-chip"
+          labelId="demo-multiple-checkbox-label"
+          id="demo-multiple-checkbox"
           multiple
           value={profileNames}
           onChange={handleChange}
-          input={<OutlinedInput id="select-multiple-chip" label="Profiles" />}
-          renderValue={(selected) => (
-            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-              {selected.map((value) => (
-                <Chip label={value} onDelete={handleDelete} />
-              ))}
-            </Box>
-          )}
+          input={<OutlinedInput label="Profiles" />}
+          // renderValue={(selected) => (
+          //   <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+          //     {selected.map((value) => (
+          //       <Chip label={value} onDelete={handleDelete} />
+          //     ))}
+            
+          //   </Box>
+
+          // )}
+          renderValue={(selected) => {
+            console.log(`selected ${selected}`) 
+            return "";//selected.join(', ')
+          }
+          }
+
           MenuProps={MenuProps}
         >
           {profiles.map((profile: string) => (
@@ -84,6 +89,8 @@ const FilterAsMultipleSelectChip: React.FC<
               style={getStyles(profile, profileNames, theme)}
             >
               <Box sx={{ width: "250px" }}>{profile}</Box>
+              <Checkbox checked={profileNames.indexOf(profile) > -1} />
+              <ListItemText primary={profile} />
             </MenuItem>
           ))}
         </Select>
