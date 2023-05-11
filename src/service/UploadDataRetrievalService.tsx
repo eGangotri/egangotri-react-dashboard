@@ -32,3 +32,29 @@ export const getUploadStatusDataByProfile = async (
   const result = await makeGetCall(resource);
   return result;
 };
+
+export const verifyUploadStatus = async (
+  dataAsCSV:string,
+  forQueues = false
+) => {
+  const resource =
+    backendServer +
+    `${chooseApiPrefix(forQueues)}/verifyUploadStatus`;
+  const result = await makePostCall({
+    verifiableUploads: dataAsCSV
+  },resource);
+  return result;
+};
+
+export const makePostCall = async (body: Record<string, unknown>, resource: string) => {
+  const requestOptions: RequestInit = {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  };
+
+  const response = await fetch(resource, requestOptions);
+  console.log()
+  const data = await response.json();
+  return data;
+};

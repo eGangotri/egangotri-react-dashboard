@@ -31,9 +31,10 @@ const Uploads: React.FC<UploadsType> = ({forQueues = false}) => {
         return (item.uploadCycleId !== 'X' && !_.isEmpty(item.uploadCycleId));
       })
       //setItems(_tmpFiltered || []);
-      console.log(`_tmpFiltered ${_tmpFiltered}`);
+      console.log(`_tmpFiltered ${JSON.stringify(_tmpFiltered)}`);
     }
-    console.log(`uploadStatsuData?.length  ${uploadStatusData?.response?.length}`);
+    console.log(`uploadStatusData?.length:  ${uploadStatusData?.response?.length}`);
+    console.log(`uploadStatusData?.response: ${JSON.stringify(uploadStatusData?.response)}`);
     setItems(uploadStatusData?.response || []);
   }
 
@@ -53,6 +54,8 @@ const Uploads: React.FC<UploadsType> = ({forQueues = false}) => {
 
   const [startTimeValues, setStartTimeValues] = useState<Date>(new Date());
   const [endTimeValues, setEndTimeValues] = useState<Date>(new Date());
+
+  const [selectedRows, setSelectedRows] = useState<number[]>([]);
 
   const handleClick = () => {
     // 👇️ take parameter passed from Child component
@@ -105,10 +108,19 @@ const Uploads: React.FC<UploadsType> = ({forQueues = false}) => {
         />
       </Box>
       <Box>
-        <Button onClick={()=>validateArchiveUrls()}>Validate All Archive URLs</Button>
+        <Button 
+          sx={{ width: 200, backgroundColor:"yellow", padding: 1, margin: 2 }}
+        color="success" 
+        onClick={()=>validateArchiveUrls(selectedRows)} 
+        variant="contained" 
+        size="large">Validate All Archive URLs</Button>
       </Box>
       Uploads
-      <UploadsPanel items={uploadableItems} forQueues={forQueues}></UploadsPanel>
+      <UploadsPanel 
+      items={uploadableItems} 
+      forQueues={forQueues}  
+      selectedRows={selectedRows}
+      setSelectedRows={setSelectedRows}></UploadsPanel>
     </Stack>
   );
 };
