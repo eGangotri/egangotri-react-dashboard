@@ -14,3 +14,5 @@ export const formatWithTInMiddle2 = (date: Date):string => {
   return format(date, SECONDARY_DATE_FORMAT);
 };
 
+
+export const DD_MM_YYYY_FORMAT = 'DD-MMM-YYYY'

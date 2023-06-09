@@ -1,15 +1,9 @@
 import React from "react";
-import { makeStyles, Theme } from "@material-ui/core/styles";
-import AppBar from "@material-ui/core/AppBar";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
-import Typography from "@material-ui/core/Typography";
-import Box from "@material-ui/core/Box";
+import { Tabs, Tab, Typography, Box, AppBar, Theme } from "@mui/material";
 
 import Uploads from "pages/upload";
 
 import GradleLauncher from "gradle/gradleLauncher";
-import DataTable from "pages/widget/dataTable";
 import FileMover from "pages/widget/fileMover";
 
 interface TabPanelProps {
@@ -45,16 +39,8 @@ function a11yProps(index: number) {
   };
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    flexGrow: 1,
-    backgroundColor: theme.palette.background.paper,
-  },
-}));
-
 const SimpleTabs:React.FC = () => {
 
-  const classes = useStyles();
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event: React.ChangeEvent<any>, newValue: number) => {
@@ -63,7 +49,7 @@ const SimpleTabs:React.FC = () => {
   };
 
   return (
-    <div className={classes.root}>
+    <div>
       <AppBar position="static">
         <Tabs
           value={value}
@@ -90,10 +76,6 @@ const SimpleTabs:React.FC = () => {
         <div>
           <GradleLauncher />
         </div>
-      </TabPanel>
-
-      <TabPanel value={value} index={3}>
-        <DataTable />
       </TabPanel>
 
       <TabPanel value={value} index={4}>
