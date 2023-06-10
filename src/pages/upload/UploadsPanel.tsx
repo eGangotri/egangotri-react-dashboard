@@ -39,7 +39,11 @@ const UploadsPanel: React.FC<UploadType> = ({ items, forQueues = false, selected
 
   return (
     <Stack spacing="2">
-      <Button onClick={_verifyUploadStatus}>Verify Upload Status</Button>
+      <Button
+        sx={{ width: 300, color: "primary" }}
+        onClick={_verifyUploadStatus}
+        variant="contained"
+        size="large">Verify Upload Status</Button>
       <TablePagination
         component="div"
         count={100}
@@ -55,11 +59,11 @@ const UploadsPanel: React.FC<UploadType> = ({ items, forQueues = false, selected
               <Checkbox
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                   console.log(`Header.target.checked ${e.target.checked} ${selectedRows?.length}`);
-                    setSelectedRows(
-                      e.target.checked
-                        ? itemsSlicesByRowsPerPageLimit.map((item) => item._id)
-                        : []
-                    );
+                  setSelectedRows(
+                    e.target.checked
+                      ? itemsSlicesByRowsPerPageLimit.map((item) => item._id)
+                      : []
+                  );
                 }}
               />
             </th>
@@ -79,16 +83,16 @@ const UploadsPanel: React.FC<UploadType> = ({ items, forQueues = false, selected
         <tbody>
           {items?.length > 0
             ? itemsSlicesByRowsPerPageLimit?.map((item: Item) => {
-                return (
-                  <UploadItem
-                    item={item}
-                    key={item._id}
-                    forQueues={forQueues}
-                    selectedRows={selectedRows}
-                    setSelectedRows={setSelectedRows}
-                  />
-                );
-              })
+              return (
+                <UploadItem
+                  item={item}
+                  key={item._id}
+                  forQueues={forQueues}
+                  selectedRows={selectedRows}
+                  setSelectedRows={setSelectedRows}
+                />
+              );
+            })
             : ""}
         </tbody>
       </table>
