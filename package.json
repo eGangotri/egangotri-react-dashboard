@@ -37,7 +37,7 @@
   },
   "scripts": {
     "start0": "react-dotenv && yarn run lint_fix",
-    "start": "react-dotenv && yarn run lint_fix && react-scripts start",
+    "start": "set NODE_OPTIONS=--openssl-legacy-provider && react-dotenv && yarn run lint_fix && react-scripts start",
     "start2": "react-scripts start",
     "build": "react-dotenv && react-scripts build",
     "test": "react-dotenv && react-scripts test",
