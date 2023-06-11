@@ -1,4 +1,0 @@
-{
-    "BACKEND_SERVER_AZURE": "https://egangotri-node-backend.azurewebsites.net/",   
-    "BACKEND_SERVER_LOCAL": "http://localhost:80/"   
-}

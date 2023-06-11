@@ -8,11 +8,37 @@ const chooseApiPrefix = (forQueues = false) => {
 };
 
 export const makeGetCall = async (resource: string) => {
-  const response = await fetch(resource);
-  console.log(`response ${JSON.stringify(response)}`);
-  const respAsJson = await response.json();
-  console.log(`respAsJson ${respAsJson.length}`);
-  return respAsJson;
+  try {
+    const response = await fetch(resource);
+    console.log(`response ${JSON.stringify(response)}`);
+    const respAsJson = await response.json();
+    console.log(`respAsJson ${respAsJson.length}`);
+    return respAsJson;
+  }
+  catch (err) {
+    return {
+      error: err
+    };
+  }
+};
+
+export const makePostCall = async (body: Record<string, unknown>, resource: string) => {
+  const requestOptions: RequestInit = {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  };
+
+  try {
+    const response = await fetch(resource, requestOptions);
+    const data = await response.json();
+    return data;
+  }
+  catch (err) {
+    return {
+      error: err
+    };
+  }
 };
 
 export const getUploadStatusData = async (limit: number, forQueues = false) => {
@@ -34,7 +60,7 @@ export const getUploadStatusDataByProfile = async (
 };
 
 export const verifyUploadStatus = async (
-  dataAsCSV:string,
+  dataAsCSV: string,
   forQueues = false
 ) => {
   const resource =
@@ -42,19 +68,7 @@ export const verifyUploadStatus = async (
     `${chooseApiPrefix(forQueues)}/verifyUploadStatus`;
   const result = await makePostCall({
     verifiableUploads: dataAsCSV
-  },resource);
+  }, resource);
   return result;
 };
 
-export const makePostCall = async (body: Record<string, unknown>, resource: string) => {
-  const requestOptions: RequestInit = {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  };
-
-  const response = await fetch(resource, requestOptions);
-  console.log()
-  const data = await response.json();
-  return data;
-};

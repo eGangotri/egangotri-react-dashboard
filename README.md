@@ -59,3 +59,10 @@ firebase deploy
 Viewable at:
 https://egangotri-react-dashboard.firebaseapp.com
 https://egangotri-react-dashboard.web.app/
+
+###Environment File
+REACT_APP_DEV_ENV=prod
+REACT_APP_FAST_REFRESH=false
+REACT_APP_BACKEND_SERVER_PROD="https://hardy-ivy-388117.de.r.appspot.com/"
+REACT_APP_BACKEND_SERVER_DEV=http://localhost:80/
+REACT_APP_LAST_DEPLOYMENT_ON="10-JUN-23"
