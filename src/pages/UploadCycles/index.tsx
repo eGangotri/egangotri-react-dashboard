@@ -86,6 +86,7 @@ const UploadCycles = () => {
                         <TableRow>
                             <TableCell onClick={() => handleSort('uploadCycleId')}>Upload Cycle Id</TableCell>
                             <TableCell>Profile and Upload Count</TableCell>
+                            <TableCell onClick={() => handleSort('dateTimeUploadStarted')}>Total Count</TableCell>
                             <TableCell onClick={() => handleSort('dateTimeUploadStarted')}>Time Started</TableCell>
                         </TableRow>
                     </TableHead>
@@ -95,7 +96,7 @@ const UploadCycles = () => {
                             : sortedData
                         ).map((row: Data) => (
                             <TableRow key={row.uploadCycleId}>
-                                <TableCell>{row.uploadCycleId}</TableCell>
+                                <TableCell sx={{verticalAlign:"top"}}>{row.uploadCycleId}</TableCell>
                                 <TableCell>
                                     <Table>
                                         <TableBody>
@@ -111,8 +112,8 @@ const UploadCycles = () => {
                                         </TableBody>
                                     </Table>
                                 </TableCell>
-                                <TableCell>{row.totalCount}</TableCell>
-                                <TableCell>{moment(row.dateTimeUploadStarted).format(DD_MM_YYYY_WITH_TIME_FORMAT)}</TableCell>
+                                <TableCell sx={{verticalAlign:"top"}}>{row.totalCount}</TableCell>
+                                <TableCell sx={{verticalAlign:"top"}}>{moment(row.dateTimeUploadStarted).format(DD_MM_YYYY_WITH_TIME_FORMAT)}</TableCell>
                             </TableRow>
                         ))}
                         {emptyRows > 0 && (
