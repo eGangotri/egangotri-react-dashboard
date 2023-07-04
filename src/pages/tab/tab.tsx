@@ -2,7 +2,7 @@ import React from "react";
 import { Tabs, Tab, Typography, Box, AppBar, Theme } from "@mui/material";
 
 import Uploads from "pages/upload";
-
+import UploadCycles from 'pages/UploadCycles';
 import GradleLauncher from "gradle/gradleLauncher";
 import FileMover from "pages/widget/fileMover";
 
@@ -58,9 +58,10 @@ const SimpleTabs:React.FC = () => {
         >
           <Tab label="Uploads (Ushered)" {...a11yProps(0)} />
           <Tab label="Uploads (Queued)" {...a11yProps(1)} />
-          <Tab label="Gradle Launcher" {...a11yProps(2)} />
-          <Tab label="Data Table" {...a11yProps(3)} />
-          <Tab label="File Mover" {...a11yProps(4)} />
+          <Tab label="Upload Cycle Tables" {...a11yProps(2)} />
+          <Tab label="Gradle Launcher" {...a11yProps(3)} />
+          <Tab label="Data Table" {...a11yProps(4)} />
+          <Tab label="File Mover" {...a11yProps(5)} />
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
@@ -70,8 +71,10 @@ const SimpleTabs:React.FC = () => {
       <TabPanel value={value} index={1}>
         <Uploads forQueues={true}/>
       </TabPanel>
-
       <TabPanel value={value} index={2}>
+        <UploadCycles/>
+      </TabPanel>
+      <TabPanel value={value} index={3}>
         Gradle CLI
         <div>
           <GradleLauncher />
