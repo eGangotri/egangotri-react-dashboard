@@ -9,6 +9,7 @@ export function getServer(): string {
   const backendServer = env.REACT_APP_DEV_ENV === 'prod' ? env.REACT_APP_BACKEND_SERVER_PROD : "http://localhost:80/";
 
   console.log(`Deployment on ${env.REACT_APP_LAST_DEPLOYMENT_ON}
+  ${env.REACT_APP_DEV_ENV}
       getServer:${backendServer}`)
   return backendServer;
 }

@@ -3,24 +3,13 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 import "pages/UploadCycles/UploadCycles.css"
 import moment from 'moment';
 import { DD_MM_YYYY_WITH_TIME_FORMAT } from 'utils/utils';
-
-interface ArchiveProfileAndCount {
-    archiveProfile: string;
-    count: number;
-}
-
-interface Data {
-    uploadCycleId: number;
-    archiveProfileAndCount: ArchiveProfileAndCount[];
-    dateTimeUploadStarted: Date;
-    totalCount: number;
-}
-
+import { getDataForUploadCycle } from 'service/UploadDataRetrievalService';
+import { ArchiveProfileAndCount, UploadCycleTableData } from 'mirror/types';
 
 const UploadCycles = () => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
-    const [sortedData, setSortedData] = useState<Data[]>([]);
+    const [sortedData, setSortedData] = useState<UploadCycleTableData[]>([]);
 
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, sortedData?.length - page * rowsPerPage);
 
@@ -33,7 +22,7 @@ const UploadCycles = () => {
         setPage(0);
     };
 
-    const handleSort = (column: keyof Data) => {
+    const handleSort = (column: keyof UploadCycleTableData) => {
         const sorted = [...sortedData].sort((a, b) => {
             if (a[column] < b[column]) return -1;
             if (a[column] > b[column]) return 1;
@@ -44,27 +33,30 @@ const UploadCycles = () => {
 
 
     async function fetchMyAPI() {
-        return [
-            {
-                uploadCycleId: 1, archiveProfileAndCount:
-                    [{ archiveProfile: 'VT', count: 20 },
-                    { archiveProfile: 'SPS', count: 43 }],
-                dateTimeUploadStarted: new Date(),
-                totalCount: 63
-            },
-            {
-                uploadCycleId: 2,
-                archiveProfileAndCount: [{ archiveProfile: 'JAMMU', count: 23 }],
-                dateTimeUploadStarted: new Date(),
-                totalCount: 23
-            },
-            {
-                uploadCycleId: 3,
-                archiveProfileAndCount: [{ archiveProfile: 'KM', count: 4 }],
-                dateTimeUploadStarted: new Date(),
-                totalCount: 4
-            },
-        ];
+        //
+        const dataForUploadCycle: ItemListResponseType = await getDataForUploadCycle(100);
+        return [dataForUploadCycle]
+        // return [
+        //     {
+        //         uploadCycleId: 1, archiveProfileAndCount:
+        //             [{ archiveProfile: 'VT', count: 20 },
+        //             { archiveProfile: 'SPS', count: 43 }],
+        //         dateTimeUploadStarted: new Date(),
+        //         totalCount: 63
+        //     },
+        //     {
+        //         uploadCycleId: 2,
+        //         archiveProfileAndCount: [{ archiveProfile: 'JAMMU', count: 23 }],
+        //         dateTimeUploadStarted: new Date(),
+        //         totalCount: 23
+        //     },
+        //     {
+        //         uploadCycleId: 3,
+        //         archiveProfileAndCount: [{ archiveProfile: 'KM', count: 4 }],
+        //         dateTimeUploadStarted: new Date(),
+        //         totalCount: 4
+        //     },
+        // ];
 
     }
 
@@ -72,7 +64,7 @@ const UploadCycles = () => {
         (async () => {
             const _data = await fetchMyAPI();
             console.log(`after _data ${JSON.stringify(_data)}`);
-            setSortedData(_data);
+            //setSortedData(_data);
         })();
     }, []);
 
@@ -94,9 +86,9 @@ const UploadCycles = () => {
                         {(rowsPerPage > 0
                             ? sortedData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             : sortedData
-                        ).map((row: Data) => (
+                        ).map((row: UploadCycleTableData) => (
                             <TableRow key={row.uploadCycleId}>
-                                <TableCell sx={{verticalAlign:"top"}}>{row.uploadCycleId}</TableCell>
+                                <TableCell sx={{ verticalAlign: "top" }}>{row.uploadCycleId}</TableCell>
                                 <TableCell>
                                     <Table>
                                         <TableBody>
@@ -112,8 +104,8 @@ const UploadCycles = () => {
                                         </TableBody>
                                     </Table>
                                 </TableCell>
-                                <TableCell sx={{verticalAlign:"top"}}>{row.totalCount}</TableCell>
-                                <TableCell sx={{verticalAlign:"top"}}>{moment(row.dateTimeUploadStarted).format(DD_MM_YYYY_WITH_TIME_FORMAT)}</TableCell>
+                                <TableCell sx={{ verticalAlign: "top" }}>{row.totalCount}</TableCell>
+                                <TableCell sx={{ verticalAlign: "top" }}>{moment(row.datetimeUploadStarted:).format(DD_MM_YYYY_WITH_TIME_FORMAT)}</TableCell>
                             </TableRow>
                         ))}
                         {emptyRows > 0 && (

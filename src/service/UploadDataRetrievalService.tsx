@@ -59,6 +59,18 @@ export const getUploadStatusDataByProfile = async (
   return result;
 };
 
+
+export const getDataForUploadCycle = async (
+  limit: number,
+  forQueues = false
+) => {
+  const resource =
+    backendServer +
+    `${chooseApiPrefix(forQueues)}/listForUploadCycle?limit=${limit}`;
+  const result = await makeGetCall(resource);
+  return result?.response;
+};
+
 export const verifyUploadStatus = async (
   dataAsCSV: string,
   forQueues = false
