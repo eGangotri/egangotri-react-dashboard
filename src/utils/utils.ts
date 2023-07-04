@@ -16,3 +16,4 @@ export const formatWithTInMiddle2 = (date: Date):string => {
 
 
 export const DD_MM_YYYY_FORMAT = 'DD-MMM-YYYY'
+export const DD_MM_YYYY_WITH_TIME_FORMAT = 'DD-MMM-YYYY HH:MM'
