@@ -13,6 +13,7 @@ interface Data {
     uploadCycleId: number;
     archiveProfileAndCount: ArchiveProfileAndCount[];
     dateTimeUploadStarted: Date;
+    totalCount: number;
 }
 
 
@@ -48,15 +49,20 @@ const UploadCycles = () => {
                 uploadCycleId: 1, archiveProfileAndCount:
                     [{ archiveProfile: 'VT', count: 20 },
                     { archiveProfile: 'SPS', count: 43 }],
-                dateTimeUploadStarted: new Date()
+                dateTimeUploadStarted: new Date(),
+                totalCount: 63
             },
             {
-                uploadCycleId: 2, archiveProfileAndCount: [{ archiveProfile: 'JAMMU', count: 23 }],
-                dateTimeUploadStarted: new Date()
+                uploadCycleId: 2,
+                archiveProfileAndCount: [{ archiveProfile: 'JAMMU', count: 23 }],
+                dateTimeUploadStarted: new Date(),
+                totalCount: 23
             },
             {
-                uploadCycleId: 3, archiveProfileAndCount: [{ archiveProfile: 'KM', count: 4 }],
-                dateTimeUploadStarted: new Date()
+                uploadCycleId: 3,
+                archiveProfileAndCount: [{ archiveProfile: 'KM', count: 4 }],
+                dateTimeUploadStarted: new Date(),
+                totalCount: 4
             },
         ];
 
@@ -105,6 +111,7 @@ const UploadCycles = () => {
                                         </TableBody>
                                     </Table>
                                 </TableCell>
+                                <TableCell>{row.totalCount}</TableCell>
                                 <TableCell>{moment(row.dateTimeUploadStarted).format(DD_MM_YYYY_WITH_TIME_FORMAT)}</TableCell>
                             </TableRow>
                         ))}
