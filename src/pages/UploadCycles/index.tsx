@@ -35,29 +35,7 @@ const UploadCycles = () => {
     async function fetchMyAPI() {
         //
         const dataForUploadCycle: ItemListResponseType = await getDataForUploadCycle(100);
-        return [dataForUploadCycle]
-        // return [
-        //     {
-        //         uploadCycleId: 1, archiveProfileAndCount:
-        //             [{ archiveProfile: 'VT', count: 20 },
-        //             { archiveProfile: 'SPS', count: 43 }],
-        //         dateTimeUploadStarted: new Date(),
-        //         totalCount: 63
-        //     },
-        //     {
-        //         uploadCycleId: 2,
-        //         archiveProfileAndCount: [{ archiveProfile: 'JAMMU', count: 23 }],
-        //         dateTimeUploadStarted: new Date(),
-        //         totalCount: 23
-        //     },
-        //     {
-        //         uploadCycleId: 3,
-        //         archiveProfileAndCount: [{ archiveProfile: 'KM', count: 4 }],
-        //         dateTimeUploadStarted: new Date(),
-        //         totalCount: 4
-        //     },
-        // ];
-
+        return dataForUploadCycle
     }
 
     useEffect(() => {
@@ -68,8 +46,6 @@ const UploadCycles = () => {
         })();
     }, []);
 
-    // conso
-
     return (
         <div>
             <TableContainer component={Paper}>
@@ -78,8 +54,8 @@ const UploadCycles = () => {
                         <TableRow>
                             <TableCell onClick={() => handleSort('uploadCycleId')}>Upload Cycle Id</TableCell>
                             <TableCell>Profile and Upload Count</TableCell>
-                            <TableCell onClick={() => handleSort('dateTimeUploadStarted')}>Total Count</TableCell>
-                            <TableCell onClick={() => handleSort('dateTimeUploadStarted')}>Time Started</TableCell>
+                            <TableCell onClick={() => handleSort('totalCount')}>Total Count</TableCell>
+                            <TableCell onClick={() => handleSort('datetimeUploadStarted')}>Time Started</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -105,7 +81,7 @@ const UploadCycles = () => {
                                     </Table>
                                 </TableCell>
                                 <TableCell sx={{ verticalAlign: "top" }}>{row.totalCount}</TableCell>
-                                <TableCell sx={{ verticalAlign: "top" }}>{moment(row.datetimeUploadStarted:).format(DD_MM_YYYY_WITH_TIME_FORMAT)}</TableCell>
+                                <TableCell sx={{ verticalAlign: "top" }}>{moment(row.datetimeUploadStarted).format(DD_MM_YYYY_WITH_TIME_FORMAT)}</TableCell>
                             </TableRow>
                         ))}
                         {emptyRows > 0 && (
