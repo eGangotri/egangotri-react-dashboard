@@ -4,7 +4,7 @@ import "pages/UploadCycles/UploadCycles.css"
 import moment from 'moment';
 import { DD_MM_YYYY_WITH_TIME_FORMAT } from 'utils/utils';
 import { getDataForUploadCycle } from 'service/UploadDataRetrievalService';
-import { ArchiveProfileAndCount, UploadCycleTableData } from 'mirror/types';
+import { ArchiveProfileAndCount, UploadCycleTableData, UploadCycleTableDataDictionary, UploadCycleTableDataResponse } from 'mirror/types';
 
 const UploadCycles = () => {
     const [page, setPage] = useState(0);
@@ -34,15 +34,35 @@ const UploadCycles = () => {
 
     async function fetchMyAPI() {
         //
-        const dataForUploadCycle: ItemListResponseType = await getDataForUploadCycle(100);
-        return dataForUploadCycle
+        const dataForUploadCycle: UploadCycleTableDataResponse = await getDataForUploadCycle(100);
+        const testData:UploadCycleTableDataResponse = {
+            "response": [
+                {
+                    "uploadCycle": {
+                        uploadCycleId: "123456-frewq-234566",
+                        archiveProfileAndCount: [{
+                            archiveProfile: "JAMMU",
+                            count: 12
+                        },
+                        {
+                            archiveProfile: "VT",
+                            count: 8
+                        }],
+                        datetimeUploadStarted: new Date(),
+                        totalCount: 20,
+                    }
+                }
+            ]
+        }
+
+        return dataForUploadCycle?.response || testData.response
     }
 
     useEffect(() => {
         (async () => {
             const _data = await fetchMyAPI();
             console.log(`after _data ${JSON.stringify(_data)}`);
-            //setSortedData(_data);
+            setSortedData(_data.map(x => x.uploadCycle));
         })();
     }, []);
 
@@ -70,9 +90,9 @@ const UploadCycles = () => {
                                         <TableBody>
                                             {row.archiveProfileAndCount.map((arcProfAndCount: ArchiveProfileAndCount) =>
                                             (
-                                                <TableRow>
-                                                    <TableCell className="centerAligned">{row.archiveProfileAndCount[0].archiveProfile}</TableCell>
-                                                    <TableCell className="centerAligned">{row.archiveProfileAndCount[0].count}</TableCell>
+                                                <TableRow key={arcProfAndCount.archiveProfile}>
+                                                    <TableCell className="centerAligned">{arcProfAndCount.archiveProfile}</TableCell>
+                                                    <TableCell className="centerAligned">{arcProfAndCount.count}</TableCell>
                                                 </TableRow>
                                             )
                                             )

@@ -54,7 +54,11 @@ const SimpleTabs:React.FC = () => {
         <Tabs
           value={value}
           onChange={handleChange}
-          aria-label="simple tabs example"
+          aria-label="eGangotri-react-Dashboard"
+          sx={{
+            color:"blueviolet",
+            "& button.Mui-selected" : {color:"white"}
+          }}
         >
           <Tab label="Uploads (Ushered)" {...a11yProps(0)} />
           <Tab label="Uploads (Queued)" {...a11yProps(1)} />
