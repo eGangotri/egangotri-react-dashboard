@@ -34,34 +34,13 @@ const UploadCycles = () => {
 
     async function fetchMyAPI() {
         //
-        const dataForUploadCycle: UploadCycleTableDataResponse = await getDataForUploadCycle(100);
-        const testData:UploadCycleTableDataResponse = {
-            "response": [
-                {
-                    "uploadCycle": {
-                        uploadCycleId: "123456-frewq-234566",
-                        archiveProfileAndCount: [{
-                            archiveProfile: "JAMMU",
-                            count: 12
-                        },
-                        {
-                            archiveProfile: "VT",
-                            count: 8
-                        }],
-                        datetimeUploadStarted: new Date(),
-                        totalCount: 20,
-                    }
-                }
-            ]
-        }
-
-        return dataForUploadCycle?.response || testData.response
+        const dataForUploadCycle: UploadCycleTableDataDictionary[] = await getDataForUploadCycle(100);
+        return dataForUploadCycle;
     }
 
     useEffect(() => {
         (async () => {
             const _data = await fetchMyAPI();
-            console.log(`after _data ${JSON.stringify(_data)}`);
             setSortedData(_data.map(x => x.uploadCycle));
         })();
     }, []);

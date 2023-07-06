@@ -68,7 +68,7 @@ export const getDataForUploadCycle = async (
     backendServer +
     `${chooseApiPrefix(forQueues)}/listForUploadCycle?limit=${limit}`;
   const result = await makeGetCall(resource);
-  return result?.response;
+  return result?.response || [];
 };
 
 export const verifyUploadStatus = async (
