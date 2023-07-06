@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination, Link } from '@mui/material';
 import "pages/UploadCycles/UploadCycles.css"
 import moment from 'moment';
 import { DD_MM_YYYY_WITH_TIME_FORMAT } from 'utils/utils';
@@ -84,7 +84,7 @@ const UploadCycles = () => {
                             : sortedData
                         ).map((row: UploadCycleTableData) => (
                             <TableRow key={row.uploadCycleId}>
-                                <TableCell sx={{ verticalAlign: "top" }}>{row.uploadCycleId}</TableCell>
+                                <TableCell sx={{ verticalAlign: "top" }}><Link href="/">{row.uploadCycleId}</Link></TableCell>
                                 <TableCell>
                                     <Table>
                                         <TableBody>
