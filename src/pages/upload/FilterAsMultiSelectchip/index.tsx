@@ -39,7 +39,7 @@ const FilterAsMultipleSelectChip: React.FC<
   FilterAsMultipleSelectChipPropsType
 > = ({ profiles, setFilteredProfiles }) => {
   const theme = useTheme();
-  const [profileNames, setprofileNames] = React.useState<string[]>([]);
+  const [profileNames, setprofileNames] = React.useState<string[]>(profiles);
 
   const handleChange = (event: SelectChangeEvent<typeof profileNames>) => {
     const {
@@ -52,10 +52,8 @@ const FilterAsMultipleSelectChip: React.FC<
     setFilteredProfiles(_profiles);
   };
 
-
-  
   return (
-    <Box sx={{margin: "20px 0px"}}>
+    <Box sx={{ margin: "20px 0px" }}>
       <FormControl sx={{ width: WIDTH_OF_WIDGETS }}>
         <InputLabel id="demo-multiple-checkbox-label">Filter By Profile</InputLabel>
         <Select
@@ -65,21 +63,10 @@ const FilterAsMultipleSelectChip: React.FC<
           value={profileNames}
           onChange={handleChange}
           input={<OutlinedInput label="Profiles" />}
-          // renderValue={(selected) => (
-          //   <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-          //     {selected.map((value) => (
-          //       <Chip label={value} onDelete={handleDelete} />
-          //     ))}
-            
-          //   </Box>
-
-          // )}
           renderValue={(selected) => {
-            console.log(`selected ${selected}`) 
-            return "";//selected.join(', ')
+            return selected.join(', ')
           }
           }
-
           MenuProps={MenuProps}
         >
           {profiles.map((profile: string) => (
@@ -88,7 +75,6 @@ const FilterAsMultipleSelectChip: React.FC<
               value={profile}
               style={getStyles(profile, profileNames, theme)}
             >
-              <Box sx={{ width: "250px" }}>{profile}</Box>
               <Checkbox checked={profileNames.indexOf(profile) > -1} />
               <ListItemText primary={profile} />
             </MenuItem>

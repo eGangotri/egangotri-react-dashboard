@@ -41,10 +41,11 @@ export const makePostCall = async (body: Record<string, unknown>, resource: stri
   }
 };
 
-export const getUploadStatusData = async (limit: number, forQueues = false, uploadCycleId = "") => {
+export const getUploadStatusData = async (limit: number, forQueues = false, uploadCycleId = "", filteredProfiles:string[] = []) => {
   const uploadCycleIdFilter = _.isEmpty(uploadCycleId)?"":`&uploadCycleId=${uploadCycleId}`
+  const filteredProfilesFilter = _.isEmpty(filteredProfiles)?"":`&archiveProfile=${filteredProfiles.join(",")}`
   const resource =
-    backendServer + `${chooseApiPrefix(forQueues)}/list?limit=${limit}${uploadCycleIdFilter}`
+    backendServer + `${chooseApiPrefix(forQueues)}/list?limit=${limit}${uploadCycleIdFilter}${filteredProfilesFilter}`
   const result = await makeGetCall(resource);
   return result;
 };

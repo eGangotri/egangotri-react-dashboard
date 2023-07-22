@@ -15,7 +15,7 @@ type UploadType = {
 
 const UploadsPanel: React.FC<UploadType> = ({ items, forQueues = false, selectedRows, setSelectedRows }) => {
   const [page, setPage] = useState(10);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(100);
 
   const _verifyUploadStatus = () => {
     console.log(` selectedRows ${selectedRows}`)

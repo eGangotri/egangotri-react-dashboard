@@ -9,14 +9,14 @@ import TopPanel from "pages/TopPanel";
 
 const Layout: React.FC<PropsWithChildren> = ({ children }) => {
     return (
-        <>
+        <Box sx={{paddingLeft:"40px"}}>
         <Header title="eGangotri Dashboard"/>
         <TopPanel />
             {children}
             <Box className="footer">
                 <Footer />
             </Box>
-        </>
+        </Box>
     );
 };
 

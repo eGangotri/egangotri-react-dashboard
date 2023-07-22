@@ -51,7 +51,10 @@ const Uploads: React.FC<UploadsType> = ({ forQueues = false }) => {
 
   const fetchMyAPI = async () => {
     const uploadCycleId = searchParams.get('uploadCycleId') || "";
-    const uploadStatusData: ItemListResponseType = await getUploadStatusData(MAX_ITEMS_LISTABLE, forQueues, uploadCycleId);
+    const uploadStatusData: ItemListResponseType = await getUploadStatusData(MAX_ITEMS_LISTABLE,
+      forQueues,
+      uploadCycleId,
+      filteredProfiles);
     return uploadStatusData?.response;
   }
 
@@ -80,12 +83,23 @@ const Uploads: React.FC<UploadsType> = ({ forQueues = false }) => {
 
   useEffect(() => {
     (async () => {
-      const _data = await fetchMyAPI();
-      setUploadableItems(_data || []);
-      console.log(`uploadStatusData ${JSON.stringify(uploadableItems)}`)
-      console.log(`uploadStatusData?.response: ${JSON.stringify(uploadableItems[0])}`);
+      const _data = await fetchMyAPI() || [];
+      setUploadableItems(_data);
+      const uniqueProfiles = Array.from(new Set<string>(_data?.map(x => x.archiveProfile)));
+      console.log(`uniqueProfiles: ${Array.from(uniqueProfiles)}`)
+      setProfiles(uniqueProfiles)
+      setFilteredProfiles(uniqueProfiles)
+      console.log(`--filteredProfiles: ${profiles}`)
     })();
   }, []);
+
+  useEffect(() => {
+    (async () => {
+      const _data = await fetchMyAPI() || [];
+      setUploadableItems(_data);
+      console.log(`:filteredProfiles: ${profiles}`)
+    })();
+  }, [filteredProfiles]);
 
   return (
     <Stack spacing="2" sx={{ display: "flex" }}>
