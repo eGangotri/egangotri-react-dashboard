@@ -5,6 +5,7 @@ import moment from 'moment';
 import { DD_MM_YYYY_WITH_TIME_FORMAT } from 'utils/utils';
 import { getDataForUploadCycle } from 'service/UploadDataRetrievalService';
 import { ArchiveProfileAndCount, UploadCycleTableData, UploadCycleTableDataDictionary, UploadCycleTableDataResponse } from 'mirror/types';
+import { UPLOADS_USHERED_PATH } from 'Routes';
 
 const UploadCycles = () => {
     const [page, setPage] = useState(0);
@@ -62,7 +63,7 @@ const UploadCycles = () => {
                             : sortedData
                         ).map((row: UploadCycleTableData) => (
                             <TableRow key={row.uploadCycleId}>
-                                <TableCell sx={{ verticalAlign: "top" }}><Link href="/">{row.uploadCycleId}</Link></TableCell>
+                                <TableCell sx={{ verticalAlign: "top" }}><Link href={UPLOADS_USHERED_PATH}>{row.uploadCycleId}</Link></TableCell>
                                 <TableCell>
                                     <Table>
                                         <TableBody>
