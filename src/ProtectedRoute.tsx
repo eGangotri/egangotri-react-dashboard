@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useEffect } from 'react';
+import React, { PropsWithChildren } from 'react';
 import { Outlet } from 'react-router-dom';
 import Layout from 'pages/Layout2';
 

@@ -2,8 +2,8 @@ import React from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 
-import { PRIMARY_BLUE, BLUE_MATISSE, SAIL_BLUE } from "constants/colors";
-import { Button, Icon } from "@mui/material";
+import { BLUE_MATISSE, SAIL_BLUE } from "constants/colors";
+import { Button } from "@mui/material";
 
 const styles = {
   position: {

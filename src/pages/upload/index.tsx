@@ -12,7 +12,6 @@ import {
 } from "service/UploadDataRetrievalService";
 import { getArchiveProfiles, validateArchiveUrls } from "./utils";
 import { isAfter, isBefore } from "date-fns";
-import * as _ from 'lodash';
 import { FaRegTrashAlt } from "react-icons/fa";
 
 import dayjs, { Dayjs } from 'dayjs';
@@ -24,82 +23,42 @@ import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import moment from 'moment';
 import { DD_MM_YYYY_FORMAT } from "utils/utils";
 
+import { MAX_ITEMS_LISTABLE } from "utils/constants";
+import { useSearchParams } from 'react-router-dom'
+
 interface UploadsType {
   forQueues: boolean
 }
 
 const Uploads: React.FC<UploadsType> = ({ forQueues = false }) => {
-  const [items, setItems] = useState<Item[]>([]);
+  const [searchParams, _] = useSearchParams()
+
   const [profiles, setProfiles] = useState<string[]>([]);
+  const [filteredProfiles, setFilteredProfiles] = useState<string[]>([]);
+
   const [applyFilter, setApplyFilter] = useState<boolean>(false);
 
-
-  const [selectedStartDate, setSelectedStartDate] = React.useState<string | null>(null);
-  const [selectedEndDate, setSelectedEndDate] = React.useState<string | null>(null);
-
-  //console.log(`Services Backend Server is ${getServer()}`);
-
-  async function fetchMyAPI() {
-    const uploadStatusData: ItemListResponseType = await getUploadStatusData(100, forQueues);
-    if (uploadStatusData?.response) {
-      const _tmpFiltered = uploadStatusData?.response.filter((item: Item) => {
-        return (item.uploadCycleId !== 'X' && !_.isEmpty(item.uploadCycleId));
-      })
-      //setItems(_tmpFiltered || []);
-      console.log(`_tmpFiltered ${JSON.stringify(_tmpFiltered)}`);
-    }
-    console.log(`uploadStatusData?.length:  ${uploadStatusData?.response?.length}`);
-    console.log(`uploadStatusData?.response: ${JSON.stringify(uploadStatusData?.response)}`);
-    setItems(uploadStatusData?.response || []);
-  }
-
-  useEffect(() => {
-    (async () => {
-      await fetchMyAPI();
-      console.log(`after getUploadStatusData ${JSON.stringify(items)}`);
-      setProfiles(getArchiveProfiles(items));
-    })();
-  }, []);
-
-  // console.log(`after getUploadStatusData ${JSON.stringify(data.length)}`);
-
-  const [uploadableItems, setUploadableItems] = useState<Item[]>(items);
-
-  const [filteredProfiles, setFilteredProfiles] = useState<string[]>([]);
+  const [uploadableItems, setUploadableItems] = useState<Item[]>([]);
 
   const [startTimeValues, setStartTimeValues] = useState<Date>(new Date());
   const [endTimeValues, setEndTimeValues] = useState<Date>(new Date());
 
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
 
-  const handleClick = () => {
-    // 👇️ take parameter passed from Child component
-    if (applyFilter) {
-      const _uploadableItems = uploadableItems.filter((item: Item) =>
-        isAfter(new Date(item.datetimeUploadStarted), new Date(startTimeValues))
-        &&
-        isBefore(new Date(item.datetimeUploadStarted), new Date(endTimeValues),)
-      );
-      console.log("startTimeValues: " + startTimeValues + new Date(startTimeValues));
-      console.log("endTimeValues: " + endTimeValues);
-      console.log("applyFilter: " + applyFilter);
-      setUploadableItems(_uploadableItems);
-    }
-    else {
-      setUploadableItems(items);
-    }
-  };
 
-  const generateReport = async () => {
-    console.log(`generateReport`);
-    // setIsLoading(true);
-    // if(_loggedUserRole === SUPERADMIN_ROLE || _loggedUserRole === ADMIN_ROLE){
-    //     await sendFilteredFormToServerGet(operators, centers, selectedStartDate, selectedEndDate);
-    // } 
-    // else {
-    //     await sendFilteredFormToServerGetForBasicUser(_loggedUser, selectedStartDate, selectedEndDate);
-    // }
-    // setIsLoading(false);
+  const [selectedStartDate, setSelectedStartDate] = React.useState<string | null>(null);
+  const [selectedEndDate, setSelectedEndDate] = React.useState<string | null>(null);
+
+  async function fetchMyAPI() {
+    const uploadCycleId = searchParams.get('uploadCycleId') || "";
+    console.log(`uploadCycleId ${uploadCycleId}`);
+    const uploadStatusData: ItemListResponseType = await getUploadStatusData(MAX_ITEMS_LISTABLE, forQueues, uploadCycleId);
+    if (uploadStatusData?.response) {
+      console.log(`uploadStatusData?.length:  ${uploadStatusData?.response?.length}`);
+      console.log(`uploadStatusData?.response: ${JSON.stringify(uploadStatusData?.response[0])}`);
+      setUploadableItems(uploadStatusData?.response || [])
+    }
+    return uploadStatusData?.response || [];
   }
 
   const [dayRangeValue, setDayRangeValue] = React.useState<DateRange<Dayjs | null>>([
@@ -124,23 +83,14 @@ const Uploads: React.FC<UploadsType> = ({ forQueues = false }) => {
     setSelectedEndDate(moment(newDayRangeValue[1]?.toDate()).format(DD_MM_YYYY_FORMAT) || null);
     setDayRangeValue(newDayRangeValue);
   }
-  useEffect(() => {
-    setProfiles(getArchiveProfiles(items));
-    console.log(`profiles  ${profiles}`);
-    //console.log(`items  ${items}`);
 
-    if (filteredProfiles.length) {
-      const _uploadableItems = items.filter((item: Item) =>
-        filteredProfiles.includes(item.archiveProfile)
-      );
-      setUploadableItems(_uploadableItems);
-      console.log(`_uploadableItems${_uploadableItems.length}`);
-      console.log(`uploadableItems${uploadableItems.length}`);
-      console.log(`filteredProfiles${filteredProfiles}`);
-    } else {
-      setUploadableItems(items);
-    }
-  }, [items, filteredProfiles]);
+  useEffect(() => {
+    (async () => {
+        const _data = await fetchMyAPI();
+        setUploadableItems(_data);
+        console.log(`uploadStatusData ${JSON.stringify(uploadableItems)}`)
+    })();
+}, []);
 
   return (
     <Stack spacing="2" sx={{ display: "flex" }}>
@@ -150,32 +100,32 @@ const Uploads: React.FC<UploadsType> = ({ forQueues = false }) => {
           setFilteredProfiles={setFilteredProfiles}
         />
       </Box>
-     
+
       <Box sx={{ justifyContent: "flexStart" }}>
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DemoContainer components={['DateRangePicker', 'DateRangePicker']}>
-          <DemoItem label="Filter by Time: " component="DateRangePicker">
-            <DateRangePicker
-              sx={{ width: "500px" }}
-              value={dayRangeValue}
-              onChange={(newValue: DateRange<Dayjs>) => onDatePickerChange(newValue)}
-            />
-          </DemoItem>
-        </DemoContainer>
-      </LocalizationProvider>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DemoContainer components={['DateRangePicker', 'DateRangePicker']}>
+            <DemoItem label="Filter by Time: " component="DateRangePicker">
+              <DateRangePicker
+                sx={{ width: "500px" }}
+                value={dayRangeValue}
+                onChange={(newValue: DateRange<Dayjs>) => onDatePickerChange(newValue)}
+              />
+            </DemoItem>
+          </DemoContainer>
+        </LocalizationProvider>
       </Box>
-     
+
       <Box sx={{ justifyContent: "flexStart", padding: "10px 0" }}>
-      <Button
-        variant="contained"
-        endIcon={<FaRegTrashAlt style={{ color: "primary" }} />}
-        onClick={() => clearResults()}
-        sx={{ width: "100px", textAlign: "left", padding: "10px 10px 10px 10px" }}
-      >
-        Clear
-      </Button>
-      <Button
-          sx={{ width: 300, color: "primary", marginLeft:"10px"}}
+        <Button
+          variant="contained"
+          endIcon={<FaRegTrashAlt style={{ color: "primary" }} />}
+          onClick={() => clearResults()}
+          sx={{ width: "100px", textAlign: "left", padding: "10px 10px 10px 10px" }}
+        >
+          Clear
+        </Button>
+        <Button
+          sx={{ width: 300, color: "primary", marginLeft: "10px" }}
           onClick={() => validateArchiveUrls(selectedRows)}
           variant="contained"
           size="large">Validate All Archive URLs</Button>

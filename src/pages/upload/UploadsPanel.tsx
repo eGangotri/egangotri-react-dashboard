@@ -44,14 +44,6 @@ const UploadsPanel: React.FC<UploadType> = ({ items, forQueues = false, selected
         onClick={_verifyUploadStatus}
         variant="contained"
         size="large">Verify Upload Status</Button>
-      <TablePagination
-        component="div"
-        count={100}
-        page={page}
-        onPageChange={handleChangePage}
-        rowsPerPage={rowsPerPage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
       <table>
         <thead>
           <tr key="0">

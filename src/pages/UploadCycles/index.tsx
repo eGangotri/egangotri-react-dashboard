@@ -6,6 +6,7 @@ import { DD_MM_YYYY_WITH_TIME_FORMAT } from 'utils/utils';
 import { getDataForUploadCycle } from 'service/UploadDataRetrievalService';
 import { ArchiveProfileAndCount, UploadCycleTableData, UploadCycleTableDataDictionary, UploadCycleTableDataResponse } from 'mirror/types';
 import { UPLOADS_USHERED_PATH } from 'Routes';
+import { MAX_ITEMS_LISTABLE } from 'utils/constants';
 
 const UploadCycles = () => {
     const [page, setPage] = useState(0);
@@ -34,7 +35,7 @@ const UploadCycles = () => {
 
 
     async function fetchMyAPI() {
-        const dataForUploadCycle: UploadCycleTableDataDictionary[] = await getDataForUploadCycle(100);
+        const dataForUploadCycle: UploadCycleTableDataDictionary[] = await getDataForUploadCycle(MAX_ITEMS_LISTABLE);
         return dataForUploadCycle;
     }
 
@@ -63,7 +64,9 @@ const UploadCycles = () => {
                             : sortedData
                         ).map((row: UploadCycleTableData) => (
                             <TableRow key={row.uploadCycleId}>
-                                <TableCell sx={{ verticalAlign: "top" }}><Link href={UPLOADS_USHERED_PATH}>{row.uploadCycleId}</Link></TableCell>
+                                <TableCell sx={{ verticalAlign: "top" }}>
+                                    <Link href={`${UPLOADS_USHERED_PATH}?uploadCycleId=${row.uploadCycleId}`}>{row.uploadCycleId}</Link>
+                                </TableCell>
                                 <TableCell>
                                     <Table>
                                         <TableBody>

@@ -9,7 +9,7 @@ import {
 
 const TopPanel: React.FC = () => {
   return (
-    <Grid container spacing={2} columns={{ sm: 6, md: 18 }} direction="row" sx={{ margin: "20px 0" }}>
+    <Grid container spacing={1} columns={{ sm: 6, md: 18 }} direction="row" sx={{ margin: "20px 0" }}>
       <Grid item xs={1} sm={1} md={2}><Link to={LANDING_PAGE_PATH}>Uploads Cycles</Link></Grid>
       <Grid item xs={1} sm={1} md={2}><Link to={UPLOADS_USHERED_PATH}>Uploads Ushered</Link></Grid>
       <Grid item xs={1} sm={1} md={2}><Link to={UPLOADS_QUEUED_PATH}>Uploads Queued</Link></Grid>

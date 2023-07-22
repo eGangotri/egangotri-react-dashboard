@@ -4,13 +4,13 @@ import { ThemeProvider } from '@mui/material/styles';
 import DWRRoutes from 'Routes';
 import AppError from 'components/Error/AppError';
 import ErrorBoundary from 'components/ErrorBoundary';
-import caepeTheme from 'themes/DWSTheme';
+import eGangotriTheme from 'themes/DWSTheme';
 import { RecoilRoot } from 'recoil';
 
 const Dashboard:React.FC = () => {
   return (
     <RecoilRoot>
-    <ThemeProvider theme={caepeTheme}>
+    <ThemeProvider theme={eGangotriTheme}>
     <ErrorBoundary fallbackComponent={AppError}>
       <DWRRoutes />
     </ErrorBoundary>

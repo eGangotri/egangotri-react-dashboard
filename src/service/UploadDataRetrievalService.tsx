@@ -1,5 +1,5 @@
 import { backendServer } from "utils/constants";
-
+import * as _ from 'lodash';
 const QUEUE_API_PREFIX = "itemsQueued";
 const USHERED_API_PREFIX = "itemsushered";
 
@@ -41,9 +41,10 @@ export const makePostCall = async (body: Record<string, unknown>, resource: stri
   }
 };
 
-export const getUploadStatusData = async (limit: number, forQueues = false) => {
+export const getUploadStatusData = async (limit: number, forQueues = false, uploadCycleId = "") => {
+  const uploadCycleIdFilter = _.isEmpty(uploadCycleId)?"":`&uploadCycleId=${uploadCycleId}`
   const resource =
-    backendServer + `${chooseApiPrefix(forQueues)}/list?limit=${limit}`;
+    backendServer + `${chooseApiPrefix(forQueues)}/list?limit=${limit}${uploadCycleIdFilter}`
   const result = await makeGetCall(resource);
   return result;
 };

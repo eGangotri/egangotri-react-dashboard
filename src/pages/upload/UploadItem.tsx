@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { DAY_MONTH_YEAR_HOUR_MIN_FORMAT } from "utils/date-constants";
 import format from "date-fns/format";
 import ItemToolTip from "./ItemTooltip";
@@ -37,7 +37,7 @@ const UploadItem: React.FC<UploadPropsType> = ({
   };
 
   const isSelected = (id: number) => {
-    console.log(`id ${id}`)
+    //console.log(`id ${id}`)
     return selectedRows.indexOf(id) !== -1;
   };
 

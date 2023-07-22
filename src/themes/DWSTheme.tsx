@@ -1,22 +1,6 @@
 import { createTheme } from '@mui/material/styles';
 import React from 'react';
 
-import {
-  AURO_METAL,
-  BLACK,
-  ERROR_RED,
-  GRAY34,
-  PRIMARY_BLUE,
-  ROMAN_SILVER,
-  SUCCESS_GREEN,
-  TEXT_DISABLED,
-  TEXT_PRIMARY,
-  TEXT_SECONDARY,
-  WARNING_ORANGE,
-  WARNING_YELLOW,
-  WHITE,
-} from 'constants/colors';
-
 const commonTextStyle: React.CSSProperties = {
   lineHeight: '22px',
   fontSize: '13px',
