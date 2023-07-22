@@ -1,7 +1,7 @@
 import React from 'react';
 import 'index.css';
 import { ThemeProvider } from '@mui/material/styles';
-import DWRRoutes from 'Routes';
+import DashboardRoutes from 'Routes';
 import AppError from 'components/Error/AppError';
 import ErrorBoundary from 'components/ErrorBoundary';
 import eGangotriTheme from 'themes/DWSTheme';
@@ -12,7 +12,7 @@ const Dashboard:React.FC = () => {
     <RecoilRoot>
     <ThemeProvider theme={eGangotriTheme}>
     <ErrorBoundary fallbackComponent={AppError}>
-      <DWRRoutes />
+      <DashboardRoutes />
     </ErrorBoundary>
   </ThemeProvider>
   </RecoilRoot>

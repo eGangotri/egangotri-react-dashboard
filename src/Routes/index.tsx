@@ -13,7 +13,7 @@ export const UPLOAD_CYCLES_PATH = "/uploadCycles";
 export const GRADLE_LAUNCHER_PATH = "/gradleLauncher";
 export const FILE_MOVER_PATH = "/fileMover";
 
-const DWRRoutes: React.FC = () => (
+const DashboardRoutes: React.FC = () => (
     <Routes>
         <Route path="/test" element={<>TestAreaWithoutLayout</>} />
         <Route element={<ProtectedRoute />}>
@@ -26,4 +26,4 @@ const DWRRoutes: React.FC = () => (
     </Routes>
 );
 
-export default DWRRoutes;
+export default DashboardRoutes;

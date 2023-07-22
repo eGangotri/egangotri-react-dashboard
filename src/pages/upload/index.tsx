@@ -49,16 +49,10 @@ const Uploads: React.FC<UploadsType> = ({ forQueues = false }) => {
   const [selectedStartDate, setSelectedStartDate] = React.useState<string | null>(null);
   const [selectedEndDate, setSelectedEndDate] = React.useState<string | null>(null);
 
-  async function fetchMyAPI() {
+  const fetchMyAPI = async () => {
     const uploadCycleId = searchParams.get('uploadCycleId') || "";
-    console.log(`uploadCycleId ${uploadCycleId}`);
     const uploadStatusData: ItemListResponseType = await getUploadStatusData(MAX_ITEMS_LISTABLE, forQueues, uploadCycleId);
-    if (uploadStatusData?.response) {
-      console.log(`uploadStatusData?.length:  ${uploadStatusData?.response?.length}`);
-      console.log(`uploadStatusData?.response: ${JSON.stringify(uploadStatusData?.response[0])}`);
-      setUploadableItems(uploadStatusData?.response || [])
-    }
-    return uploadStatusData?.response || [];
+    return uploadStatusData?.response;
   }
 
   const [dayRangeValue, setDayRangeValue] = React.useState<DateRange<Dayjs | null>>([
@@ -86,11 +80,12 @@ const Uploads: React.FC<UploadsType> = ({ forQueues = false }) => {
 
   useEffect(() => {
     (async () => {
-        const _data = await fetchMyAPI();
-        setUploadableItems(_data);
-        console.log(`uploadStatusData ${JSON.stringify(uploadableItems)}`)
+      const _data = await fetchMyAPI();
+      setUploadableItems(_data || []);
+      console.log(`uploadStatusData ${JSON.stringify(uploadableItems)}`)
+      console.log(`uploadStatusData?.response: ${JSON.stringify(uploadableItems[0])}`);
     })();
-}, []);
+  }, []);
 
   return (
     <Stack spacing="2" sx={{ display: "flex" }}>

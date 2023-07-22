@@ -22,7 +22,7 @@ const UploadsPanel: React.FC<UploadType> = ({ items, forQueues = false, selected
     verifyUploadStatus(selectedRows?.join(","))
   }
 
-  const itemsSlicesByRowsPerPageLimit = items?.slice(rowsPerPage);
+  const itemsSlicesByRowsPerPageLimit = items?.slice(0,rowsPerPage);
   const handleChangePage = (
     event: React.MouseEvent<HTMLButtonElement> | null,
     newPage: number
