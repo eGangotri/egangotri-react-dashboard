@@ -1,5 +1,6 @@
-import { backendServer } from "utils/constants";
+import { MAX_ITEMS_LISTABLE, backendServer } from "utils/constants";
 import * as _ from 'lodash';
+import { checkUrlValidity } from "utils/utils";
 const QUEUE_API_PREFIX = "itemsQueued";
 const USHERED_API_PREFIX = "itemsushered";
 
@@ -41,9 +42,9 @@ export const makePostCall = async (body: Record<string, unknown>, resource: stri
   }
 };
 
-export const getUploadStatusData = async (limit: number, forQueues = false, uploadCycleId = "", filteredProfiles:string[] = []) => {
-  const uploadCycleIdFilter = _.isEmpty(uploadCycleId)?"":`&uploadCycleId=${uploadCycleId}`
-  const filteredProfilesFilter = _.isEmpty(filteredProfiles)?"":`&archiveProfile=${filteredProfiles.join(",")}`
+export const getUploadStatusData = async (limit: number, forQueues = false, uploadCycleId = "", filteredProfiles: string[] = []) => {
+  const uploadCycleIdFilter = _.isEmpty(uploadCycleId) ? "" : `&uploadCycleId=${uploadCycleId}`
+  const filteredProfilesFilter = _.isEmpty(filteredProfiles) ? "" : `&archiveProfile=${filteredProfiles.join(",")}`
   const resource =
     backendServer + `${chooseApiPrefix(forQueues)}/list?limit=${limit}${uploadCycleIdFilter}${filteredProfilesFilter}`
   const result = await makeGetCall(resource);
@@ -74,15 +75,15 @@ export const getDataForUploadCycle = async (
 };
 
 export const verifyUploadStatus = async (
-  dataAsCSV: string,
+  urls: string[],
   forQueues = false
 ) => {
-  const resource =
+  //export const makePostCall = async (body: Record<string, unknown>, ) => {
+    const resource =
     backendServer +
-    `${chooseApiPrefix(forQueues)}/verifyUploadStatus`;
-  const result = await makePostCall({
-    verifiableUploads: dataAsCSV
-  }, resource);
-  return result;
+    `${chooseApiPrefix(forQueues)}/verifyUploadStatus?limit=${MAX_ITEMS_LISTABLE}`;
+    const result = await makePostCall({uploadsForVerification:[...urls, urls[0].replaceAll("details/","details/1")]},
+      resource);
+    return result.response
 };
 

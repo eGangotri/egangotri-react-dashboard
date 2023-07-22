@@ -5,6 +5,7 @@ import TablePagination from "@mui/material/TablePagination";
 import { Checkbox } from "@mui/material";
 import Button from "@mui/material/Button";
 import { verifyUploadStatus } from "service/UploadDataRetrievalService";
+import { createArchiveLink } from "utils/utils";
 
 type UploadType = {
   items: Item[];
@@ -19,7 +20,10 @@ const UploadsPanel: React.FC<UploadType> = ({ items, forQueues = false, selected
 
   const _verifyUploadStatus = () => {
     console.log(` selectedRows ${selectedRows}`)
-    verifyUploadStatus(selectedRows?.join(","))
+    const urls = items.filter(x=>selectedRows.includes(x._id))?.map(y=>createArchiveLink(y?.archiveItemId));
+    const result = verifyUploadStatus(urls);
+    
+    console.log(`result ${JSON.stringify(result)}`);
   }
 
   const itemsSlicesByRowsPerPageLimit = items?.slice(0,rowsPerPage);

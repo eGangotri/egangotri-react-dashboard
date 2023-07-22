@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { DAY_MONTH_YEAR_HOUR_MIN_FORMAT } from "utils/date-constants";
 import format from "date-fns/format";
 import ItemToolTip from "./ItemTooltip";
 import { Checkbox } from "@mui/material";
 import * as _ from "lodash";
+import { createArchiveLink } from "utils/utils";
 
 type UploadPropsType = {
   item: Item;
@@ -20,7 +21,7 @@ const UploadItem: React.FC<UploadPropsType> = ({
 }) => {
   //console.log(`item ${JSON.stringify(props)} ${item}`);
   //direction: "rtl",
-  const archiveLink = `https://archive.org/details/${item?.archiveItemId}`;
+  const archiveLink = createArchiveLink(item?.archiveItemId);
 
 
   const handleRowClick = (id: number, _checked: boolean) => {
