@@ -73,7 +73,11 @@ const UploadCycles = () => {
                                             {row.archiveProfileAndCount.map((arcProfAndCount: ArchiveProfileAndCount) =>
                                             (
                                                 <TableRow key={arcProfAndCount.archiveProfile}>
-                                                    <TableCell className="centerAligned">{arcProfAndCount.archiveProfile}</TableCell>
+                                                    <TableCell className="centerAligned">
+                                                    <Link href={`${UPLOADS_USHERED_PATH}?uploadCycleId=${row.uploadCycleId}&archiveProfile=${arcProfAndCount.archiveProfile}`}>
+                                                        {arcProfAndCount.archiveProfile}
+                                                        </Link>
+                                                        </TableCell>
                                                     <TableCell className="centerAligned">{arcProfAndCount.count}</TableCell>
                                                 </TableRow>
                                             )

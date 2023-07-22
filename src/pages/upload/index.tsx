@@ -5,7 +5,7 @@ import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-
+import * as _ from 'lodash';
 
 import {
   getUploadStatusData,
@@ -50,11 +50,13 @@ const Uploads: React.FC<UploadsType> = ({ forQueues = false }) => {
   const [selectedEndDate, setSelectedEndDate] = React.useState<string | null>(null);
 
   const fetchMyAPI = async () => {
-    const uploadCycleId = searchParams.get('uploadCycleId') || "";
+    const uploadCycleIdParam = searchParams.get('uploadCycleId') || "";
+    const archiveProfileParam = searchParams.get('archiveProfile') || "";
+
     const uploadStatusData: ItemListResponseType = await getUploadStatusData(MAX_ITEMS_LISTABLE,
       forQueues,
-      uploadCycleId,
-      filteredProfiles);
+      uploadCycleIdParam,
+      archiveProfileParam?.length > 0 ? [archiveProfileParam] :filteredProfiles);
     return uploadStatusData?.response;
   }
 
