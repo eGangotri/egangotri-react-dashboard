@@ -1,19 +1,21 @@
 import React from 'react';
 import 'index.css';
-import EgangotriFooter from 'pages/layout/footer';
-import EgangotriHeader from 'pages/layout/header';
-import TabPanel from 'pages/tab/tab';
-import { Box } from '@mui/material';
+import { ThemeProvider } from '@mui/material/styles';
+import DWRRoutes from 'Routes';
+import AppError from 'components/Error/AppError';
+import ErrorBoundary from 'components/ErrorBoundary';
+import caepeTheme from 'themes/DWSTheme';
+import { RecoilRoot } from 'recoil';
 
 const Dashboard:React.FC = () => {
   return (
-    <Box>
-          <EgangotriHeader title='eGangotri Dashboard' />
-          <Box className="Main">
-          <TabPanel/>
-          </Box>
-          <EgangotriFooter title='eGangotri Digital Preservation Trust. CC-0. In Public Domain' />
-    </Box>
+    <RecoilRoot>
+    <ThemeProvider theme={caepeTheme}>
+    <ErrorBoundary fallbackComponent={AppError}>
+      <DWRRoutes />
+    </ErrorBoundary>
+  </ThemeProvider>
+  </RecoilRoot>
   );
 }
 

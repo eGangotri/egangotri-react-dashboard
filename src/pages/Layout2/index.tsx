@@ -5,10 +5,13 @@ import Footer from "./Footer";
 import {
     Box,
 } from "@mui/material";
+import TopPanel from "pages/TopPanel";
 
 const Layout: React.FC<PropsWithChildren> = ({ children }) => {
     return (
-        <><Header />
+        <>
+        <Header title="eGangotri Dashboard"/>
+        <TopPanel />
             {children}
             <Box className="footer">
                 <Footer />

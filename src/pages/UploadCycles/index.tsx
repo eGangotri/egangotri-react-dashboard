@@ -33,7 +33,6 @@ const UploadCycles = () => {
 
 
     async function fetchMyAPI() {
-        //
         const dataForUploadCycle: UploadCycleTableDataDictionary[] = await getDataForUploadCycle(100);
         return dataForUploadCycle;
     }
