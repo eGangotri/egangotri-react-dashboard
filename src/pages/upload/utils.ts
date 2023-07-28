@@ -10,10 +10,10 @@ export const validateArchiveUrls = (itemIds: SelectedUploadItem[]): void => {
   console.log(`validateArchiveUrls call to backend with ${itemIds.length} items`)
 }
 
-export const itemToSelectedUploadItem = (item: Item, isError = false) => {
+export const itemToSelectedUploadItem = (item: Item, isValid = true) => {
   return {
     id: item._id,
     archiveId: `${item.archiveItemId}`,
-    isError
+    isValid
   } as SelectedUploadItem
 }

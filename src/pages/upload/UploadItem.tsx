@@ -48,16 +48,24 @@ const UploadItem: React.FC<UploadPropsType> = ({
   };
 
   const isErroneous = (id: number) => {
-    console.log(`id ${id}`)
-    const row = selectedRows.find(x=>x.id === id)
-    console.log(`selectedRows.find(x=>x.id === id) ${JSON.stringify(row)}/${JSON.stringify(selectedRows.map(x=>x.id))}`);
-    console.log(`isError ${row?.isError}`);
-    console.log(`hasisErrorTrue ${!_.isEmpty(selectedRows.find(x=>x.id === id && x.isError === true))}`);
-    return !_.isEmpty(selectedRows.find(x=>x.id === id && x.isError === true));
+    const row = selectedRows.find(x=>x.id === id && x.isValid === false)
+    return !_.isEmpty(row);
   };
 
+  const stylesForErroneous = (id:number) => {
+    if(isErroneous(id)){
+      return {
+        backgroundColor:"red",
+        color:"white"
+      }
+    }
+    return {
+
+    }
+  }
+
   return (
-    <Box sx={{ backgroundColor: `${isErroneous(item._id) ? "red" : ""}` }}>
+    <Box sx={stylesForErroneous(item._id)}>
       <tr key={item._id}>
         <td>
           <Checkbox
