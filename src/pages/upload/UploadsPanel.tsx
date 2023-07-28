@@ -5,13 +5,14 @@ import TablePagination from "@mui/material/TablePagination";
 import { Checkbox } from "@mui/material";
 import Button from "@mui/material/Button";
 import { verifyUploadStatus } from "service/UploadDataRetrievalService";
-import { createArchiveLink } from "utils/utils";
+import { SelectedUploadItem } from "mirror/types"
+import { itemToSelectedUploadItem } from "./utils";
 
 type UploadType = {
   items: Item[];
   forQueues: boolean;
-  selectedRows: number[];
-  setSelectedRows: React.Dispatch<React.SetStateAction<number[]>>;
+  selectedRows: SelectedUploadItem[];
+  setSelectedRows: React.Dispatch<React.SetStateAction<SelectedUploadItem[]>>;
 };
 
 const UploadsPanel: React.FC<UploadType> = ({ items, forQueues = false, selectedRows, setSelectedRows }) => {
@@ -20,8 +21,7 @@ const UploadsPanel: React.FC<UploadType> = ({ items, forQueues = false, selected
 
   const _verifyUploadStatus = () => {
     console.log(` selectedRows ${selectedRows}`)
-    const urls = items.filter(x=>selectedRows.includes(x._id))?.map(y=>createArchiveLink(y?.archiveItemId));
-    const result = verifyUploadStatus(urls);
+    const result = verifyUploadStatus(selectedRows);
     
     console.log(`result ${JSON.stringify(result)}`);
   }
@@ -57,7 +57,7 @@ const UploadsPanel: React.FC<UploadType> = ({ items, forQueues = false, selected
                   console.log(`Header.target.checked ${e.target.checked} ${selectedRows?.length}`);
                   setSelectedRows(
                     e.target.checked
-                      ? itemsSlicesByRowsPerPageLimit.map((item) => item._id)
+                      ? itemsSlicesByRowsPerPageLimit.map((item) => itemToSelectedUploadItem(item))
                       : []
                   );
                 }}

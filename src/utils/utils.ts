@@ -32,7 +32,3 @@ export async function checkUrlValidity(url: string): Promise<boolean> {
     return false; // An error occurred, so the URL is invalid
   }
 }
-
-export const createArchiveLink = (archiveItemId = "") => {
-  return `https://archive.org/details/${archiveItemId}`;
-}

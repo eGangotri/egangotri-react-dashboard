@@ -2,15 +2,16 @@ import React, { useState } from "react";
 import { DAY_MONTH_YEAR_HOUR_MIN_FORMAT } from "utils/date-constants";
 import format from "date-fns/format";
 import ItemToolTip from "./ItemTooltip";
-import { Checkbox } from "@mui/material";
+import { Box, Checkbox } from "@mui/material";
 import * as _ from "lodash";
-import { createArchiveLink } from "utils/utils";
+import { createArchiveLink } from "mirror";
+import { SelectedUploadItem } from "mirror/types"
 
 type UploadPropsType = {
   item: Item;
   forQueues: boolean;
-  selectedRows?: number[];
-  setSelectedRows?: React.Dispatch<React.SetStateAction<number[]>>;
+  selectedRows?: SelectedUploadItem[];
+  setSelectedRows?: React.Dispatch<React.SetStateAction<SelectedUploadItem[]>>;
 };
 
 const UploadItem: React.FC<UploadPropsType> = ({
@@ -27,11 +28,15 @@ const UploadItem: React.FC<UploadPropsType> = ({
   const handleRowClick = (id: number, _checked: boolean) => {
     if (_checked) {
       if (setSelectedRows) {
-        setSelectedRows([id, ...selectedRows]);
+        const selectedRow = {
+          id,
+          archiveId: `${item.archiveItemId}`
+        }
+        setSelectedRows([selectedRow, ...selectedRows]);
       }
     } else {
       if (setSelectedRows) {
-        setSelectedRows(_.remove(selectedRows, (item) => item !== id));
+        setSelectedRows(_.remove(selectedRows, (row) => row.id !== id));
       }
     }
     console.log(`_checked ${_checked} ${selectedRows.length}`)
@@ -39,11 +44,15 @@ const UploadItem: React.FC<UploadPropsType> = ({
 
   const isSelected = (id: number) => {
     //console.log(`id ${id}`)
-    return selectedRows.indexOf(id) !== -1;
+    return selectedRows.map(x=>x.id).includes(id);
+  };
+
+  const isErroneous = (id: number) => {
+    return !_.isEmpty(selectedRows.find(x=>x.id === id && x.isError === true));
   };
 
   return (
-    <>
+    <Box sx={{ backgroundColor: `${isErroneous(item._id) ? "red" : ""}` }}>
       <tr key={item._id}>
         <td>
           <Checkbox
@@ -86,7 +95,7 @@ const UploadItem: React.FC<UploadPropsType> = ({
           <button>Run Item # {item._id}</button>
         </td>
       </tr>
-    </>
+    </Box>
   );
 };
 

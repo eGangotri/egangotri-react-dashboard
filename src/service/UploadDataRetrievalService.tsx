@@ -1,6 +1,6 @@
 import { MAX_ITEMS_LISTABLE, backendServer } from "utils/constants";
 import * as _ from 'lodash';
-import { checkUrlValidity } from "utils/utils";
+import { SelectedUploadItem } from "mirror/types"
 const QUEUE_API_PREFIX = "itemsQueued";
 const USHERED_API_PREFIX = "itemsushered";
 
@@ -75,15 +75,14 @@ export const getDataForUploadCycle = async (
 };
 
 export const verifyUploadStatus = async (
-  urls: string[],
+  selectedUploadItems: SelectedUploadItem[],
   forQueues = false
 ) => {
-  //export const makePostCall = async (body: Record<string, unknown>, ) => {
-    const resource =
+  const resource =
     backendServer +
     `${chooseApiPrefix(forQueues)}/verifyUploadStatus?limit=${MAX_ITEMS_LISTABLE}`;
-    const result = await makePostCall({uploadsForVerification:[...urls, urls[0].replaceAll("details/","details/1")]},
-      resource);
-    return result.response
+  const result = await makePostCall({ uploadsForVerification: [...selectedUploadItems] },
+    resource);
+  return result.response
 };
 

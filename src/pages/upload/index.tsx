@@ -25,6 +25,7 @@ import { DD_MM_YYYY_FORMAT } from "utils/utils";
 
 import { MAX_ITEMS_LISTABLE } from "utils/constants";
 import { useSearchParams } from 'react-router-dom'
+import { SelectedUploadItem } from "mirror/types"
 
 interface UploadsType {
   forQueues: boolean
@@ -43,7 +44,7 @@ const Uploads: React.FC<UploadsType> = ({ forQueues = false }) => {
   const [startTimeValues, setStartTimeValues] = useState<Date>(new Date());
   const [endTimeValues, setEndTimeValues] = useState<Date>(new Date());
 
-  const [selectedRows, setSelectedRows] = useState<number[]>([]);
+  const [selectedRows, setSelectedRows] = useState<SelectedUploadItem[]>([]);
 
 
   const [selectedStartDate, setSelectedStartDate] = React.useState<string | null>(null);
