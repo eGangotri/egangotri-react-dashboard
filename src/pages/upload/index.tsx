@@ -57,7 +57,7 @@ const Uploads: React.FC<UploadsType> = ({ forQueues = false }) => {
     const uploadStatusData: ItemListResponseType = await getUploadStatusData(MAX_ITEMS_LISTABLE,
       forQueues,
       uploadCycleIdParam,
-      archiveProfileParam?.length > 0 ? [archiveProfileParam] :filteredProfiles);
+      archiveProfileParam?.length > 0 ? [archiveProfileParam] : filteredProfiles);
     return uploadStatusData?.response;
   }
 
@@ -136,11 +136,6 @@ const Uploads: React.FC<UploadsType> = ({ forQueues = false }) => {
         >
           Clear
         </Button>
-        <Button
-          sx={{ width: 300, color: "primary", marginLeft: "10px" }}
-          onClick={() => validateArchiveUrls(selectedRows)}
-          variant="contained"
-          size="large">Validate All Archive URLs</Button>
       </Box>
 
       <Typography variant="h4" sx={{ padding: "25px 0 25px 0" }}>Uploads</Typography>

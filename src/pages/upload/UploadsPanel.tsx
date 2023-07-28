@@ -19,10 +19,10 @@ const UploadsPanel: React.FC<UploadType> = ({ items, forQueues = false, selected
   const [page, setPage] = useState(10);
   const [rowsPerPage, setRowsPerPage] = useState(100);
 
-  const _verifyUploadStatus = () => {
-    console.log(` selectedRows ${selectedRows}`)
-    const result = verifyUploadStatus(selectedRows);
-    
+  const _verifyUploadStatus = async () => {
+    console.log(` selectedRows ${JSON.stringify(selectedRows)}`)
+    const result = await verifyUploadStatus(selectedRows);
+    setSelectedRows(result);
     console.log(`result ${JSON.stringify(result)}`);
   }
 

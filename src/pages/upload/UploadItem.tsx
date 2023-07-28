@@ -48,6 +48,11 @@ const UploadItem: React.FC<UploadPropsType> = ({
   };
 
   const isErroneous = (id: number) => {
+    console.log(`id ${id}`)
+    const row = selectedRows.find(x=>x.id === id)
+    console.log(`selectedRows.find(x=>x.id === id) ${JSON.stringify(row)}/${JSON.stringify(selectedRows.map(x=>x.id))}`);
+    console.log(`isError ${row?.isError}`);
+    console.log(`hasisErrorTrue ${!_.isEmpty(selectedRows.find(x=>x.id === id && x.isError === true))}`);
     return !_.isEmpty(selectedRows.find(x=>x.id === id && x.isError === true));
   };
 
