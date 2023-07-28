@@ -44,19 +44,19 @@ const UploadItem: React.FC<UploadPropsType> = ({
 
   const isSelected = (id: number) => {
     //console.log(`id ${id}`)
-    return selectedRows.map(x=>x.id).includes(id);
+    return selectedRows.map(x => x.id).includes(id);
   };
 
   const isErroneous = (id: number) => {
-    const row = selectedRows.find(x=>x.id === id && x.isValid === false)
+    const row = selectedRows.find(x => x.id === id && x.isValid === false)
     return !_.isEmpty(row);
   };
 
-  const stylesForErroneous = (id:number) => {
-    if(isErroneous(id)){
+  const stylesForErroneous = (id: number) => {
+    if (isErroneous(id)) {
       return {
-        backgroundColor:"red",
-        color:"white"
+        backgroundColor: "red",
+        color: "white"
       }
     }
     return {
@@ -65,50 +65,48 @@ const UploadItem: React.FC<UploadPropsType> = ({
   }
 
   return (
-    <Box sx={stylesForErroneous(item._id)}>
-      <tr key={item._id}>
+    <tr key={item._id} style={stylesForErroneous(item._id)}>
+      <td>
+        <Checkbox
+          checked={isSelected(item._id)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            handleRowClick(item._id, e.target.checked)
+          }
+        />
+      </td>
+      <td>
+        <ItemToolTip input={`${item._id}`} alphabetCount={5} />
+      </td>
+      <td>{item.uploadCycleId}</td>
+      <td>{item.archiveProfile}</td>
+      <td>
+        <ItemToolTip input={item.title} alphabetCount={50} />
+      </td>
+      <td>
+        {format(
+          new Date(item.datetimeUploadStarted),
+          DAY_MONTH_YEAR_HOUR_MIN_FORMAT
+        )}
+      </td>
+      {!forQueues && (
         <td>
-          <Checkbox
-            checked={isSelected(item._id)}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              handleRowClick(item._id, e.target.checked)
-            }
-          />
-        </td>
-        <td>
-          <ItemToolTip input={`${item._id}`} alphabetCount={5} />
-        </td>
-        <td>{item.uploadCycleId}</td>
-        <td>{item.archiveProfile}</td>
-        <td>
-          <ItemToolTip input={item.title} alphabetCount={50} />
-        </td>
-        <td>
-          {format(
-            new Date(item.datetimeUploadStarted),
-            DAY_MONTH_YEAR_HOUR_MIN_FORMAT
+          {item.archiveItemId && (
+            <ItemToolTip input={archiveLink} url={true} />
           )}
         </td>
-        {!forQueues && (
-          <td>
-            {item.archiveItemId && (
-              <ItemToolTip input={archiveLink} url={true} />
-            )}
-          </td>
-        )}
+      )}
 
-        <td>
-          <ItemToolTip input={item.uploadLink} url={true} />
-        </td>
-        <td>
-          <ItemToolTip input={item.localPath} reverse={true} />
-        </td>
-        <td>{item.csvName}</td>
-        <td>
-          <button>Run Item # {item._id}</button>
-        </td>
-      </tr>
-    </Box>
+      <td>
+        <ItemToolTip input={item.uploadLink} url={true} />
+      </td>
+      <td>
+        <ItemToolTip input={item.localPath} reverse={true} />
+      </td>
+      <td>{item.csvName}</td>
+      <td>
+        <button>Run Item # {item._id}</button>
+      </td>
+    </tr>
   );
 };
 

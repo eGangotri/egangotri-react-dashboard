@@ -8,7 +8,7 @@ import { Route, Routes } from 'react-router-dom';
 
 export const LANDING_PAGE_PATH = "/"
 export const UPLOADS_USHERED_PATH = "/uploadsUshered";
-export const UPLOADS_QUEUED_PATH = "/uploadsUshered";
+export const UPLOADS_QUEUED_PATH = "/uploadsQueued";
 export const UPLOAD_CYCLES_PATH = "/uploadCycles";
 export const GRADLE_LAUNCHER_PATH = "/gradleLauncher";
 export const FILE_MOVER_PATH = "/fileMover";
