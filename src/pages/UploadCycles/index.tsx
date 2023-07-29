@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination, Link, Typography } from '@mui/material';
 import "pages/UploadCycles/UploadCycles.css"
+import * as _ from 'lodash';
 import moment from 'moment';
+
 import { DD_MM_YYYY_WITH_TIME_FORMAT } from 'utils/utils';
 import { getDataForUploadCycle } from 'service/UploadDataRetrievalService';
 import { ArchiveProfileAndCount, UploadCycleTableData, UploadCycleTableDataDictionary, UploadCycleTableDataResponse } from 'mirror/types';
@@ -10,7 +12,7 @@ import { MAX_ITEMS_LISTABLE } from 'utils/constants';
 import IconButton from '@mui/material/IconButton';
 import InfoIcon from '@mui/icons-material/Info';
 import Tooltip from '@mui/material/Tooltip';
-import { ERROR_RED, SUCCESS_GREEN } from 'constants/colors';
+import { ERROR_RED, PRIMARY_BLUE, SUCCESS_GREEN } from 'constants/colors';
 
 
 const UploadCycles = () => {
@@ -30,12 +32,14 @@ const UploadCycles = () => {
     };
 
     const handleSort = (column: keyof UploadCycleTableData) => {
-        // const sorted = [...sortedData].sort((a, b) => {
-        //     if (a[column] < b[column]) return -1;
-        //     if (a[column] > b[column]) return 1;
-        //     return 0;
-        // });
-        // setSortedData(sorted);
+        const sorted = [...sortedData].sort((a, b) => {
+            const aCom = a[column] || "";
+            const bCol = b[column] || "";
+            if (aCom < bCol) return -1;
+            if (aCom > bCol) return 1;
+            return 0;
+        });
+        setSortedData(sorted);
     };
 
 
@@ -97,12 +101,12 @@ const UploadCycles = () => {
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <TableCell onClick={() => handleSort('uploadCycleId')}>Upload Cycle Id</TableCell>
+                            <TableCell onClick={() => handleSort('uploadCycleId')}><Link>Upload Cycle Id</Link></TableCell>
                             <TableCell>Profile and Upload Count ( Ushered )</TableCell>
                             <TableCell>Profile and Upload Count ( Queued )</TableCell>
                             <TableCellForEqualityCount />
-                            <TableCell onClick={() => handleSort('totalCount')}>Total Count</TableCell>
-                            <TableCell onClick={() => handleSort('datetimeUploadStarted')}>Time Started</TableCell>
+                            <TableCell onClick={() => handleSort('totalCount')}><Link>Total Count</Link></TableCell>
+                            <TableCell onClick={() => handleSort('datetimeUploadStarted')}><Link>Time Started</Link></TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
