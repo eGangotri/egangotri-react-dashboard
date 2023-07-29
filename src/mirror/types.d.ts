@@ -8,6 +8,9 @@ export interface UploadCycleTableData {
     archiveProfileAndCount: ArchiveProfileAndCount[];
     datetimeUploadStarted: Date|string;
     totalCount: number;
+    archiveProfileAndCountForQueue?: ArchiveProfileAndCount[];
+    totalQueueCount?:number;
+    dateTimeQueueUploadStarted?:Date;
 }
 
 export interface UploadCycleTableDataDictionary {

@@ -1,12 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination, Link } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination, Link, Typography } from '@mui/material';
 import "pages/UploadCycles/UploadCycles.css"
 import moment from 'moment';
 import { DD_MM_YYYY_WITH_TIME_FORMAT } from 'utils/utils';
 import { getDataForUploadCycle } from 'service/UploadDataRetrievalService';
 import { ArchiveProfileAndCount, UploadCycleTableData, UploadCycleTableDataDictionary, UploadCycleTableDataResponse } from 'mirror/types';
-import { UPLOADS_USHERED_PATH } from 'Routes';
+import { UPLOADS_QUEUED_PATH, UPLOADS_USHERED_PATH } from 'Routes';
 import { MAX_ITEMS_LISTABLE } from 'utils/constants';
+import IconButton from '@mui/material/IconButton';
+import InfoIcon from '@mui/icons-material/Info';
+import Tooltip from '@mui/material/Tooltip';
+import { ERROR_RED, SUCCESS_GREEN } from 'constants/colors';
+
 
 const UploadCycles = () => {
     const [page, setPage] = useState(0);
@@ -25,14 +30,54 @@ const UploadCycles = () => {
     };
 
     const handleSort = (column: keyof UploadCycleTableData) => {
-        const sorted = [...sortedData].sort((a, b) => {
-            if (a[column] < b[column]) return -1;
-            if (a[column] > b[column]) return 1;
-            return 0;
-        });
-        setSortedData(sorted);
+        // const sorted = [...sortedData].sort((a, b) => {
+        //     if (a[column] < b[column]) return -1;
+        //     if (a[column] > b[column]) return 1;
+        //     return 0;
+        // });
+        // setSortedData(sorted);
     };
 
+
+    const TableCellForEqualityCount: React.FC = () => {
+        return (
+            <TableCell>Ushered/Queued Eqality
+                <Tooltip title="This Column establishes that uploads meant to be dumped online (the Queue Count) is same as the ones that were actually attempted for upload(the Ushered Count)">
+                    <IconButton aria-label="info"><InfoIcon />
+                    </IconButton>
+                </Tooltip>
+            </TableCell>
+        )
+    }
+
+    type UploadCycleDataProp = {
+        row: UploadCycleTableData,
+        forQueue: boolean
+
+    }
+    const ProfileAndCount: React.FC<UploadCycleDataProp> = ({ row, forQueue = false }) => {
+        const archiveProfileAndCountMap = forQueue ? row.archiveProfileAndCountForQueue : row.archiveProfileAndCount;
+        const _path = forQueue ? UPLOADS_QUEUED_PATH : UPLOADS_USHERED_PATH
+        const equality = row.totalCount === row.totalQueueCount ? "YES" : "NO";
+        return (
+            <>
+                {
+                    archiveProfileAndCountMap?.map((arcProfAndCount: ArchiveProfileAndCount) =>
+                    (
+                        <TableRow key={arcProfAndCount.archiveProfile}>
+                            <TableCell className="centerAligned">
+                                <Link href={`${_path}?uploadCycleId=${row.uploadCycleId}&archiveProfile=${arcProfAndCount.archiveProfile}`}>
+                                    {arcProfAndCount.archiveProfile}
+                                </Link>
+                            </TableCell>
+                            <TableCell className="centerAligned">{arcProfAndCount.count}</TableCell>
+                        </TableRow>
+                    )
+                    )
+                }
+            </>
+        )
+    }
 
     async function fetchMyAPI() {
         const dataForUploadCycle: UploadCycleTableDataDictionary[] = await getDataForUploadCycle(MAX_ITEMS_LISTABLE);
@@ -53,7 +98,9 @@ const UploadCycles = () => {
                     <TableHead>
                         <TableRow>
                             <TableCell onClick={() => handleSort('uploadCycleId')}>Upload Cycle Id</TableCell>
-                            <TableCell>Profile and Upload Count</TableCell>
+                            <TableCell>Profile and Upload Count ( Ushered )</TableCell>
+                            <TableCell>Profile and Upload Count ( Queued )</TableCell>
+                            <TableCellForEqualityCount />
                             <TableCell onClick={() => handleSort('totalCount')}>Total Count</TableCell>
                             <TableCell onClick={() => handleSort('datetimeUploadStarted')}>Time Started</TableCell>
                         </TableRow>
@@ -67,24 +114,22 @@ const UploadCycles = () => {
                                 <TableCell sx={{ verticalAlign: "top" }}>
                                     <Link href={`${UPLOADS_USHERED_PATH}?uploadCycleId=${row.uploadCycleId}`}>{row.uploadCycleId}</Link>
                                 </TableCell>
+                                <TableCell sx={{ verticalAlign: "top" }}>
+                                    <Table>
+                                        <TableBody>
+                                            <ProfileAndCount row={row} forQueue={false} />
+                                        </TableBody>
+                                    </Table>
+                                </TableCell>
                                 <TableCell>
                                     <Table>
                                         <TableBody>
-                                            {row.archiveProfileAndCount.map((arcProfAndCount: ArchiveProfileAndCount) =>
-                                            (
-                                                <TableRow key={arcProfAndCount.archiveProfile}>
-                                                    <TableCell className="centerAligned">
-                                                    <Link href={`${UPLOADS_USHERED_PATH}?uploadCycleId=${row.uploadCycleId}&archiveProfile=${arcProfAndCount.archiveProfile}`}>
-                                                        {arcProfAndCount.archiveProfile}
-                                                        </Link>
-                                                        </TableCell>
-                                                    <TableCell className="centerAligned">{arcProfAndCount.count}</TableCell>
-                                                </TableRow>
-                                            )
-                                            )
-                                            }
+                                            <ProfileAndCount row={row} forQueue={true} />
                                         </TableBody>
                                     </Table>
+                                </TableCell>
+                                <TableCell className="centerAligned" sx={(row?.totalCount === row?.totalQueueCount) ? { color: SUCCESS_GREEN } : { color: ERROR_RED }}>
+                                    <Typography>{row?.totalCount} == {row?.totalQueueCount}</Typography>
                                 </TableCell>
                                 <TableCell sx={{ verticalAlign: "top" }}>{row.totalCount}</TableCell>
                                 <TableCell sx={{ verticalAlign: "top" }}>{moment(row.datetimeUploadStarted).format(DD_MM_YYYY_WITH_TIME_FORMAT)}</TableCell>
