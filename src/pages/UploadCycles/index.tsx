@@ -42,10 +42,44 @@ const UploadCycles = () => {
         setSortedData(sorted);
     };
 
-
-    const TableCellForEqualityCount: React.FC = () => {
+    const TableRowCellForEqualityCount: React.FC<{ row: UploadCycleTableData }> = ({ row }) => {
+        const hasUploadCycleGlobalValues = (row?.countIntended || 0) > 0;
+        const equality = hasUploadCycleGlobalValues ? ((row?.totalCount === row?.totalQueueCount) && (row?.countIntended === row?.totalQueueCount)) : (row?.totalCount === row?.totalQueueCount)
+        const equalityLabel = hasUploadCycleGlobalValues ? `${row?.countIntended} == ${row?.totalCount} == ${row?.totalQueueCount}` : `${row?.totalCount} == ${row?.totalQueueCount}`;
         return (
-            <TableCell>Ushered/Queued Eqality
+            <TableCell className="centerAligned" sx={equality ? { color: SUCCESS_GREEN } : { color: ERROR_RED }}>
+                <Typography>{equalityLabel}</Typography>
+            </TableCell>
+        )
+    }
+
+    const TableRowCellForUploadCycleGlobalStats: React.FC<{ row: UploadCycleTableData }> = ({ row }) => {
+        const hasUploadCycleGlobalValues = (row?.countIntended || 0) > 0;
+        const uploadstats = hasUploadCycleGlobalValues ? `${row.countIntended} /(${row.archiveProfileAndCountIntended?.map(x => `${x.archiveProfile}(${x.count})`).join(",")})` : "-";
+        return (
+            <TableCell sx={{ verticalAlign: "top" }}>
+                {uploadstats}
+            </TableCell>
+        )
+    }
+
+
+
+    const TableHeaderCellForEqualityCount: React.FC = () => {
+        return (
+            <TableCell>Intended/Ushered/Queued Equality
+                <Tooltip title="At the start of archive uploads what the uploader had in mind is registered here. if the counts are not matching the Ushered/Uploaded then there is an Issue">
+                    <IconButton aria-label="info"><InfoIcon />
+                    </IconButton>
+                </Tooltip>
+            </TableCell>
+        )
+    }
+
+
+    const TableHeaderCellForUploadCycleStats: React.FC = () => {
+        return (
+            <TableCell>Uploads Intended
                 <Tooltip title="This Column establishes that uploads meant to be dumped online (the Queue Count) is same as the ones that were actually attempted for upload(the Ushered Count)">
                     <IconButton aria-label="info"><InfoIcon />
                     </IconButton>
@@ -83,14 +117,14 @@ const UploadCycles = () => {
         )
     }
 
-    async function fetchMyAPI() {
+    async function fetchUploadCycles() {
         const dataForUploadCycle: UploadCycleTableDataDictionary[] = await getDataForUploadCycle(MAX_ITEMS_LISTABLE);
         return dataForUploadCycle;
     }
 
     useEffect(() => {
         (async () => {
-            const _data = await fetchMyAPI();
+            const _data = await fetchUploadCycles();
             setSortedData(_data.map(x => x.uploadCycle));
         })();
     }, []);
@@ -102,9 +136,10 @@ const UploadCycles = () => {
                     <TableHead>
                         <TableRow>
                             <TableCell onClick={() => handleSort('uploadCycleId')}><Link>Upload Cycle Id</Link></TableCell>
-                            <TableCell>Profile and Upload Count ( Ushered )</TableCell>
-                            <TableCell>Profile and Upload Count ( Queued )</TableCell>
-                            <TableCellForEqualityCount />
+                            <TableHeaderCellForUploadCycleStats />
+                            <TableCell>( Ushered ) Stats </TableCell>
+                            <TableCell>( Queued ) Stats </TableCell>
+                            <TableHeaderCellForEqualityCount />
                             <TableCell onClick={() => handleSort('totalCount')}><Link>Total Count</Link></TableCell>
                             <TableCell onClick={() => handleSort('datetimeUploadStarted')}><Link>Time Started</Link></TableCell>
                         </TableRow>
@@ -118,6 +153,7 @@ const UploadCycles = () => {
                                 <TableCell sx={{ verticalAlign: "top" }}>
                                     <Link href={`${UPLOADS_USHERED_PATH}?uploadCycleId=${row.uploadCycleId}`}>{row.uploadCycleId}</Link>
                                 </TableCell>
+                                <TableRowCellForUploadCycleGlobalStats row={row} />
                                 <TableCell sx={{ verticalAlign: "top" }}>
                                     <Table>
                                         <TableBody>
@@ -132,9 +168,7 @@ const UploadCycles = () => {
                                         </TableBody>
                                     </Table>
                                 </TableCell>
-                                <TableCell className="centerAligned" sx={(row?.totalCount === row?.totalQueueCount) ? { color: SUCCESS_GREEN } : { color: ERROR_RED }}>
-                                    <Typography>{row?.totalCount} == {row?.totalQueueCount}</Typography>
-                                </TableCell>
+                                <TableRowCellForEqualityCount row={row} />
                                 <TableCell sx={{ verticalAlign: "top" }}>{row.totalCount}</TableCell>
                                 <TableCell sx={{ verticalAlign: "top" }}>{moment(row.datetimeUploadStarted).format(DD_MM_YYYY_WITH_TIME_FORMAT)}</TableCell>
                             </TableRow>
