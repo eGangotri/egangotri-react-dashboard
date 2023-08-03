@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { DAY_MONTH_YEAR_HOUR_MIN_FORMAT } from "utils/date-constants";
 import format from "date-fns/format";
-import ItemToolTip from "./ItemTooltip";
-import { Box, Checkbox } from "@mui/material";
+import ItemToolTip, { ellipsis } from "./ItemTooltip";
+import { Box, Button, Checkbox } from "@mui/material";
 import * as _ from "lodash";
 import { createArchiveLink } from "mirror";
 import { SelectedUploadItem } from "mirror/types"
+import { runItemFromCmdPrompt } from "service/UploadServices";
 
 type UploadPropsType = {
   item: Item;
@@ -13,6 +14,11 @@ type UploadPropsType = {
   selectedRows?: SelectedUploadItem[];
   setSelectedRows?: React.Dispatch<React.SetStateAction<SelectedUploadItem[]>>;
 };
+
+const runItem = (row:Item) => {
+  console.log(`row ${row.uploadLink} ${row.localPath} `);
+  runItemFromCmdPrompt(row)
+}
 
 const UploadItem: React.FC<UploadPropsType> = ({
   item,
@@ -104,7 +110,11 @@ const UploadItem: React.FC<UploadPropsType> = ({
       </td>
       <td>{item.csvName}</td>
       <td>
-        <button>Run Item # {item._id}</button>
+        <Button 
+        sx={{ width: 300, color: "primary" }}
+        variant="contained"
+        size="medium"
+        onClick={() => runItem(item)}>Run Item # {ellipsis(item._id,7)}</Button>
       </td>
     </tr>
   );

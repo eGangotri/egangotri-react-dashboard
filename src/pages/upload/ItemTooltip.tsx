@@ -6,16 +6,17 @@ import Link from "@mui/material/Link";
 
 const DEFAULT_COUNT_FOR_ELLIPSIS = 20;
 
-const ellipsis = (
-  input: string,
+export const ellipsis = (
+  input: string|number,
   alphabetCount = DEFAULT_COUNT_FOR_ELLIPSIS
 ) => {
-  return input.length > alphabetCount
-    ? `${input.substring(0, alphabetCount)}...`
+  const inputAsString = input.toString();
+  return inputAsString.length > alphabetCount
+    ? `${inputAsString.substring(0, alphabetCount)}...`
     : input;
 };
 
-const reverseEllipsis = (
+export const reverseEllipsis = (
   input: string,
   alphabetCount = DEFAULT_COUNT_FOR_ELLIPSIS
 ) => {

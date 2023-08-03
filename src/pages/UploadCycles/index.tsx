@@ -55,7 +55,7 @@ const UploadCycles = () => {
 
     const TableRowCellForUploadCycleGlobalStats: React.FC<{ row: UploadCycleTableData }> = ({ row }) => {
         const hasUploadCycleGlobalValues = (row?.countIntended || 0) > 0;
-        const uploadstats = hasUploadCycleGlobalValues ? `${row.countIntended} /(${row.archiveProfileAndCountIntended?.map(x => `${x.archiveProfile}(${x.count})`).join(",")})` : "-";
+        const uploadstats = hasUploadCycleGlobalValues ? `${row.countIntended} /(${row.archiveProfileAndCountIntended?.map((x :ArchiveProfileAndCount)=> `${x.archiveProfile}(${x.count})`).join(",")})` : "-";
         return (
             <TableCell sx={{ verticalAlign: "top" }}>
                 {uploadstats}

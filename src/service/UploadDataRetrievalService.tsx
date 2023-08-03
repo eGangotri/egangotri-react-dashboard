@@ -4,7 +4,7 @@ import { SelectedUploadItem } from "mirror/types"
 const QUEUE_API_PREFIX = "itemsQueued";
 const USHERED_API_PREFIX = "itemsushered";
 
-const chooseApiPrefix = (forQueues = false) => {
+export const chooseApiPrefix = (forQueues = false) => {
   return forQueues ? QUEUE_API_PREFIX : USHERED_API_PREFIX;
 };
 
