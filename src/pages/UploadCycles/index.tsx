@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination, Link, Typography } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination, Link, Typography, Button } from '@mui/material';
 import "pages/UploadCycles/UploadCycles.css"
 import * as _ from 'lodash';
 import moment from 'moment';
@@ -22,6 +22,9 @@ const UploadCycles = () => {
 
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, sortedData?.length - page * rowsPerPage);
 
+    const verifyUploadStatus = (event: React.MouseEvent<HTMLButtonElement> | null) => {
+        alert("To be Implemented");
+    };
     const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
         setPage(newPage);
     };
@@ -48,14 +51,24 @@ const UploadCycles = () => {
         const equalityLabel = hasUploadCycleGlobalValues ? `${row?.countIntended} == ${row?.totalCount} == ${row?.totalQueueCount}` : `${row?.totalCount} == ${row?.totalQueueCount}`;
         return (
             <TableCell className="centerAligned" sx={equality ? { color: SUCCESS_GREEN } : { color: ERROR_RED }}>
-                <Typography>{equalityLabel}</Typography>
+                <Typography>{equalityLabel}
+                <Typography component="span" sx={{paddingLeft:"10px"}}>
+                <Button
+                    variant="contained"
+                    onClick={verifyUploadStatus}
+                    sx={{ textAlign: "left", padding: "10px 10px 10px 10px" }}
+                >
+                    Verify Upload Status
+                </Button>
+                </Typography>
+                </Typography>
             </TableCell>
         )
     }
 
     const TableRowCellForUploadCycleGlobalStats: React.FC<{ row: UploadCycleTableData }> = ({ row }) => {
         const hasUploadCycleGlobalValues = (row?.countIntended || 0) > 0;
-        const uploadstats = hasUploadCycleGlobalValues ? `${row.countIntended} /(${row.archiveProfileAndCountIntended?.map((x :ArchiveProfileAndCount)=> `${x.archiveProfile}(${x.count})`).join(",")})` : "-";
+        const uploadstats = hasUploadCycleGlobalValues ? `${row.countIntended} /(${row.archiveProfileAndCount?.map((x: ArchiveProfileAndCount) => `${x.archiveProfile}(${x.count})`).join(",")})` : "-";
         return (
             <TableCell sx={{ verticalAlign: "top" }}>
                 {uploadstats}
@@ -72,6 +85,7 @@ const UploadCycles = () => {
                     <IconButton aria-label="info"><InfoIcon />
                     </IconButton>
                 </Tooltip>
+                <Typography>Final Step to establish 100% uploading is click (Verfiy Upload Status) Button</Typography>
             </TableCell>
         )
     }

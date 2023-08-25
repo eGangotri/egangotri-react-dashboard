@@ -138,7 +138,7 @@ const Uploads: React.FC<UploadsType> = ({ forQueues = false }) => {
         </Button>
       </Box>
 
-      <Typography variant="h4" sx={{ padding: "25px 0 25px 0" }}>Uploads</Typography>
+      <Typography variant="h4" sx={{ padding: "25px 0 25px 0" }}>Uploads[{uploadableItems?.length} ({selectedRows?.length} selected)]</Typography>
       <UploadsPanel
         items={uploadableItems}
         forQueues={forQueues}
