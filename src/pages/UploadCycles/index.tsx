@@ -3,7 +3,7 @@ import {
     Table, TableBody, TableCell,
     TableContainer, TableHead, TableRow, Paper,
     TablePagination,
-     Link, Typography,
+    Link, Typography,
     Button, Box
 } from '@mui/material';
 import "pages/UploadCycles/UploadCycles.css"
@@ -85,7 +85,16 @@ const UploadCycles = () => {
                         <Box>
                             <Typography component="span">{x.archiveProfile} </Typography>
                             <Typography component="span">{x.count}</Typography>
-                            <Typography component="div">Titles: {ellipsis(x?.titles?.join(",") || "")}</Typography>
+                            <Tooltip title={
+                                <>
+                                {x?.titles?.map(y=>(
+                                    <Box>{y.replaceAll(".pdf", "")}</Box>
+                                ))}
+                                </>
+                            }>
+                                <Typography component="div" sx={{fontWeight:600}}>Titles: {ellipsis(x?.titles?.join(",") || "")}</Typography>
+                            </Tooltip>
+
                         </Box>
                     ))
                     }
