@@ -56,7 +56,11 @@ const UploadCycles = () => {
     const TableRowCellForEqualityCount: React.FC<{ row: UploadCycleTableData }> = ({ row }) => {
         const hasUploadCycleGlobalValues = (row?.countIntended || 0) > 0;
         const equality = hasUploadCycleGlobalValues ? ((row?.totalCount === row?.totalQueueCount) && (row?.countIntended === row?.totalQueueCount)) : (row?.totalCount === row?.totalQueueCount)
-        const equalityLabel = hasUploadCycleGlobalValues ? `${row?.countIntended} == ${row?.totalCount} == ${row?.totalQueueCount}` : `${row?.totalCount} == ${row?.totalQueueCount}`;
+        
+        const equalityLabel =
+            hasUploadCycleGlobalValues ? (
+                <>{row?.countIntended} == {row?.totalCount} == {row?.totalQueueCount} </>
+            ):<>{row?.totalCount} == {row?.totalQueueCount}</>
         return (
             <TableCell className="centerAligned" sx={equality ? { color: SUCCESS_GREEN } : { color: ERROR_RED }}>
                 <Grid container spacing={1}>
@@ -80,7 +84,6 @@ const UploadCycles = () => {
 
     const TableRowCellForUploadCycleGlobalStats: React.FC<{ row: UploadCycleTableData }> = ({ row }) => {
         const hasUploadCycleGlobalValues = (row?.countIntended || 0) > 0;
-        const uploadstats2 = hasUploadCycleGlobalValues ? `${row.countIntended} /(${row.archiveProfileAndCountIntended?.map((x: ArchiveProfileAndCount) => `${x.archiveProfile}(${x.count})`).join(",")})` : "-";
         const uploadstats =
             hasUploadCycleGlobalValues ? (
                 <>
@@ -139,7 +142,7 @@ const UploadCycles = () => {
     const TableHeaderCellForUploadCycleStats: React.FC = () => {
         return (
             <TableCell>Uploads Intended
-                <Tooltip title="This Column establishes that uploads meant to be dumped online (the Queue Count) is same as the ones that were actually attempted for upload(the Ushered Count)">
+                <Tooltip title="Right at the time uploads are initiated a snapshot of the Total Intended Count, Profile Name and Titles is taken. This column is for that reading">
                     <IconButton aria-label="info"><InfoIcon />
                     </IconButton>
                 </Tooltip>
