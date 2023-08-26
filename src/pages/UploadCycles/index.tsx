@@ -107,8 +107,6 @@ const UploadCycles = () => {
         )
     }
 
-
-
     const TableHeaderCellForEqualityCount: React.FC = () => {
 
         const infoText = (
