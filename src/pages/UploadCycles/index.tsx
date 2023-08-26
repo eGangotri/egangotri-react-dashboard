@@ -6,6 +6,7 @@ import {
     Link, Typography,
     Button, Box
 } from '@mui/material';
+import Grid from '@mui/material/Unstable_Grid2';
 import "pages/UploadCycles/UploadCycles.css"
 import * as _ from 'lodash';
 import moment from 'moment';
@@ -58,17 +59,21 @@ const UploadCycles = () => {
         const equalityLabel = hasUploadCycleGlobalValues ? `${row?.countIntended} == ${row?.totalCount} == ${row?.totalQueueCount}` : `${row?.totalCount} == ${row?.totalQueueCount}`;
         return (
             <TableCell className="centerAligned" sx={equality ? { color: SUCCESS_GREEN } : { color: ERROR_RED }}>
-                <Typography>{equalityLabel}
-                    <Typography component="span" sx={{ paddingLeft: "10px" }}>
+                <Grid container spacing={1}>
+                    <Grid xs={4}>
+                    <Typography>{equalityLabel}</Typography>
+                    </Grid>
+                    <Grid xs={8}>
+                    <Typography component="span">
                         <Button
                             variant="contained"
                             onClick={verifyUploadStatus}
-                            sx={{ textAlign: "left", padding: "10px 10px 10px 10px" }}
                         >
                             Verify Upload Status
                         </Button>
                     </Typography>
-                </Typography>
+                    </Grid>
+                </Grid>
             </TableCell>
         )
     }
