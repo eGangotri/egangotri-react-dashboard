@@ -1,6 +1,7 @@
 export interface ArchiveProfileAndCount {
     archiveProfile: string;
     count: number;
+    titles?: string[];
 }
 
 export interface UploadCycleTableData {

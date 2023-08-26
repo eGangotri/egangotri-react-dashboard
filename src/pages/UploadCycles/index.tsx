@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination, Link, Typography, Button } from '@mui/material';
+import {
+    Table, TableBody, TableCell,
+    TableContainer, TableHead, TableRow, Paper,
+    TablePagination,
+     Link, Typography,
+    Button, Box
+} from '@mui/material';
 import "pages/UploadCycles/UploadCycles.css"
 import * as _ from 'lodash';
 import moment from 'moment';
@@ -13,6 +19,7 @@ import IconButton from '@mui/material/IconButton';
 import InfoIcon from '@mui/icons-material/Info';
 import Tooltip from '@mui/material/Tooltip';
 import { ERROR_RED, PRIMARY_BLUE, SUCCESS_GREEN } from 'constants/colors';
+import { ellipsis } from 'pages/upload/ItemTooltip';
 
 
 const UploadCycles = () => {
@@ -52,15 +59,15 @@ const UploadCycles = () => {
         return (
             <TableCell className="centerAligned" sx={equality ? { color: SUCCESS_GREEN } : { color: ERROR_RED }}>
                 <Typography>{equalityLabel}
-                <Typography component="span" sx={{paddingLeft:"10px"}}>
-                <Button
-                    variant="contained"
-                    onClick={verifyUploadStatus}
-                    sx={{ textAlign: "left", padding: "10px 10px 10px 10px" }}
-                >
-                    Verify Upload Status
-                </Button>
-                </Typography>
+                    <Typography component="span" sx={{ paddingLeft: "10px" }}>
+                        <Button
+                            variant="contained"
+                            onClick={verifyUploadStatus}
+                            sx={{ textAlign: "left", padding: "10px 10px 10px 10px" }}
+                        >
+                            Verify Upload Status
+                        </Button>
+                    </Typography>
                 </Typography>
             </TableCell>
         )
@@ -68,7 +75,22 @@ const UploadCycles = () => {
 
     const TableRowCellForUploadCycleGlobalStats: React.FC<{ row: UploadCycleTableData }> = ({ row }) => {
         const hasUploadCycleGlobalValues = (row?.countIntended || 0) > 0;
-        const uploadstats = hasUploadCycleGlobalValues ? `${row.countIntended} /(${row.archiveProfileAndCount?.map((x: ArchiveProfileAndCount) => `${x.archiveProfile}(${x.count})`).join(",")})` : "-";
+        const uploadstats2 = hasUploadCycleGlobalValues ? `${row.countIntended} /(${row.archiveProfileAndCountIntended?.map((x: ArchiveProfileAndCount) => `${x.archiveProfile}(${x.count})`).join(",")})` : "-";
+        const uploadstats =
+            hasUploadCycleGlobalValues ? (
+                <>
+                    {row.countIntended}
+
+                    {row?.archiveProfileAndCountIntended?.map((x: ArchiveProfileAndCount) => (
+                        <Box>
+                            <Typography component="span">{x.archiveProfile} </Typography>
+                            <Typography component="span">{x.count}</Typography>
+                            <Typography component="div">Titles: {ellipsis(x?.titles?.join(",") || "")}</Typography>
+                        </Box>
+                    ))
+                    }
+                </>
+            ) : <>-</>
         return (
             <TableCell sx={{ verticalAlign: "top" }}>
                 {uploadstats}
