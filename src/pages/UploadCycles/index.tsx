@@ -133,7 +133,7 @@ const UploadCycles = () => {
                     <IconButton aria-label="info"><InfoIcon />
                     </IconButton>
                 </Tooltip>
-                <Typography>Final Step to establish 100% uploading is click (Verfiy Upload Status) Button</Typography>
+                <Typography>Intended count == Queued Count == Ushered Count. Then Manual Upload Verifcation</Typography>
             </TableCell>
         )
     }
