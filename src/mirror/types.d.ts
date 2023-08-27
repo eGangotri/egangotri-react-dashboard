@@ -1,13 +1,18 @@
 export interface ArchiveProfileAndCount {
     archiveProfile: string;
     count: number;
+}
+
+export interface ArchiveProfileAndCountAndTitles {
+    archiveProfile: string;
+    count: number;
     titles?: string[];
 }
 
 export interface UploadCycleTableData {
     uploadCycleId: string;
     countIntended?: number;
-    archiveProfileAndCountIntended?: ArchiveProfileAndCount[];
+    archiveProfileAndCountIntended?: ArchiveProfileAndCountAndTitles[];
     archiveProfileAndCount: ArchiveProfileAndCount[];
     datetimeUploadStarted: Date|string;
     totalCount: number;

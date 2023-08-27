@@ -4,7 +4,7 @@ import {
     TableContainer, TableHead, TableRow, Paper,
     TablePagination,
     Link, Typography,
-    Button, Box
+    Button, Box, Popover
 } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import "pages/UploadCycles/UploadCycles.css"
@@ -13,13 +13,13 @@ import moment from 'moment';
 
 import { DD_MM_YYYY_WITH_TIME_FORMAT } from 'utils/utils';
 import { getDataForUploadCycle } from 'service/UploadDataRetrievalService';
-import { ArchiveProfileAndCount, UploadCycleTableData, UploadCycleTableDataDictionary, UploadCycleTableDataResponse } from 'mirror/types';
+import { ArchiveProfileAndCount, ArchiveProfileAndCountAndTitles, UploadCycleTableData, UploadCycleTableDataDictionary, UploadCycleTableDataResponse } from 'mirror/types';
 import { UPLOADS_QUEUED_PATH, UPLOADS_USHERED_PATH } from 'Routes';
 import { MAX_ITEMS_LISTABLE } from 'utils/constants';
 import IconButton from '@mui/material/IconButton';
 import InfoIcon from '@mui/icons-material/Info';
 import Tooltip from '@mui/material/Tooltip';
-import { ERROR_RED, PRIMARY_BLUE, SUCCESS_GREEN } from 'constants/colors';
+import { ERROR_RED, LIGHT_RED, SUCCESS_GREEN, WHITE_SMOKE } from 'constants/colors';
 import { ellipsis } from 'pages/upload/ItemTooltip';
 
 
@@ -27,7 +27,25 @@ const UploadCycles = () => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [sortedData, setSortedData] = useState<UploadCycleTableData[]>([]);
+    const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+    const [titlesForPopover, setTitlesForPopover] = useState(<></>);
 
+    const handleTitleClick = (event: React.MouseEvent<HTMLButtonElement>, titles: string[]) => {
+        const _titles = (
+            <>
+                {titles?.map((title, index) => <Box>({index + 1}) {title.replaceAll(".pdf", "")}</Box>)}
+            </>
+        )
+        setTitlesForPopover(_titles);
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
+    const open = Boolean(anchorEl);
+    const id = open ? 'simple-popover' : undefined;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, sortedData?.length - page * rowsPerPage);
 
     const verifyUploadStatus = (event: React.MouseEvent<HTMLButtonElement> | null) => {
@@ -53,29 +71,35 @@ const UploadCycles = () => {
         setSortedData(sorted);
     };
 
-    const TableRowCellForEqualityCount: React.FC<{ row: UploadCycleTableData }> = ({ row }) => {
+    const checkCountEquality = (row: UploadCycleTableData) => {
         const hasUploadCycleGlobalValues = (row?.countIntended || 0) > 0;
         const equality = hasUploadCycleGlobalValues ? ((row?.totalCount === row?.totalQueueCount) && (row?.countIntended === row?.totalQueueCount)) : (row?.totalCount === row?.totalQueueCount)
-        
+        return {
+            hasUploadCycleGlobalValues,
+            equality
+        }
+    }
+    const TableRowCellForEqualityCount: React.FC<{ row: UploadCycleTableData }> = ({ row }) => {
+        const { hasUploadCycleGlobalValues, equality } = checkCountEquality(row);
         const equalityLabel =
             hasUploadCycleGlobalValues ? (
                 <>{row?.countIntended} == {row?.totalCount} == {row?.totalQueueCount} </>
-            ):<>{row?.totalCount} == {row?.totalQueueCount}</>
+            ) : <>{row?.totalCount} == {row?.totalQueueCount}</>
         return (
             <TableCell className="centerAligned" sx={equality ? { color: SUCCESS_GREEN } : { color: ERROR_RED }}>
                 <Grid container spacing={1}>
                     <Grid xs={4}>
-                    <Typography>{equalityLabel}</Typography>
+                        <Typography>{equalityLabel}</Typography>
                     </Grid>
                     <Grid xs={8}>
-                    <Typography component="span">
-                        <Button
-                            variant="contained"
-                            onClick={verifyUploadStatus}
-                        >
-                            Verify Upload Status
-                        </Button>
-                    </Typography>
+                        <Typography component="span">
+                            <Button
+                                variant="contained"
+                                onClick={verifyUploadStatus}
+                            >
+                                Verify Upload Status
+                            </Button>
+                        </Typography>
                     </Grid>
                 </Grid>
             </TableCell>
@@ -89,19 +113,29 @@ const UploadCycles = () => {
                 <>
                     {row.countIntended}
 
-                    {row?.archiveProfileAndCountIntended?.map((x: ArchiveProfileAndCount) => (
+                    {row?.archiveProfileAndCountIntended?.map((archiveProfileAndCount: ArchiveProfileAndCountAndTitles) => (
                         <Box>
-                            <Typography component="span">{x.archiveProfile} </Typography>
-                            <Typography component="span">{x.count}</Typography>
-                            <Tooltip title={
-                                <>
-                                {x?.titles?.map(y=>(
-                                    <Box>{y.replaceAll(".pdf", "")}</Box>
-                                ))}
-                                </>
-                            }>
-                                <Typography component="div" sx={{fontWeight:600}}>Titles: {ellipsis(x?.titles?.join(",") || "")}</Typography>
-                            </Tooltip>
+                            <Typography component="span">{archiveProfileAndCount.archiveProfile} </Typography>
+                            <Typography component="span">{archiveProfileAndCount.count}</Typography>
+
+                            <Typography component="div" sx={{ fontWeight: 600 }}>
+                                <Button onClick={(e) => handleTitleClick(e, archiveProfileAndCount?.titles || [])}>
+                                    Titles: {ellipsis(archiveProfileAndCount?.titles?.join(",") || "")}
+                                </Button>
+                            </Typography>
+
+                            <Popover
+                                id={id}
+                                open={open}
+                                anchorEl={anchorEl}
+                                onClose={handleClose}
+                                anchorOrigin={{
+                                    vertical: 'bottom',
+                                    horizontal: 'left',
+                                }}
+                            >
+                                <Typography sx={{ p: 2 }}>{titlesForPopover}</Typography>
+                            </Popover>
 
                         </Box>
                     ))
@@ -119,11 +153,11 @@ const UploadCycles = () => {
 
         const infoText = (
             <>
-            <Typography>Four Set of Checks</Typography>
-            <Typography>The Intended Count at the Beginning of the Cycle(If this is higher then find the missine one by going to Titles)</Typography>
-            <Typography>Count of Items Queued</Typography>
-            <Typography>Count of Items Ushered</Typography>
-            <Typography>Finally Check for All Items properly uploaded post-ushering(Verify Upload Status)</Typography>
+                <Typography>Four Set of Checks</Typography>
+                <Typography>The Intended Count at the Beginning of the Cycle(If this is higher then find the missine one by going to Titles)</Typography>
+                <Typography>Count of Items Queued</Typography>
+                <Typography>Count of Items Ushered</Typography>
+                <Typography>Finally Check for All Items properly uploaded post-ushering(Verify Upload Status)</Typography>
             </>
         )
 
@@ -158,7 +192,6 @@ const UploadCycles = () => {
     const ProfileAndCount: React.FC<UploadCycleDataProp> = ({ row, forQueue = false }) => {
         const archiveProfileAndCountMap = forQueue ? row.archiveProfileAndCountForQueue : row.archiveProfileAndCount;
         const _path = forQueue ? UPLOADS_QUEUED_PATH : UPLOADS_USHERED_PATH
-        const equality = row.totalCount === row.totalQueueCount ? "YES" : "NO";
         return (
             <>
                 {
@@ -166,7 +199,7 @@ const UploadCycles = () => {
                     (
                         <TableRow key={arcProfAndCount.archiveProfile}>
                             <TableCell className="centerAligned">
-                                <Link href={`${_path}?uploadCycleId=${row.uploadCycleId}&archiveProfile=${arcProfAndCount.archiveProfile}`}>
+                                <Link href={`${_path} ? uploadCycleId = ${row.uploadCycleId} & archiveProfile=${arcProfAndCount.archiveProfile}`}>
                                     {arcProfAndCount.archiveProfile}
                                 </Link>
                             </TableCell>
@@ -199,8 +232,8 @@ const UploadCycles = () => {
                         <TableRow>
                             <TableCell onClick={() => handleSort('uploadCycleId')}><Link>Upload Cycle Id</Link></TableCell>
                             <TableHeaderCellForUploadCycleStats />
-                            <TableCell>( Ushered ) Stats </TableCell>
                             <TableCell>( Queued ) Stats </TableCell>
+                            <TableCell>( Ushered ) Stats </TableCell>
                             <TableHeaderCellForEqualityCount />
                             <TableCell onClick={() => handleSort('totalCount')}><Link>Total Count</Link></TableCell>
                             <TableCell onClick={() => handleSort('datetimeUploadStarted')}><Link>Time Started</Link></TableCell>
@@ -211,22 +244,22 @@ const UploadCycles = () => {
                             ? sortedData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             : sortedData
                         ).map((row: UploadCycleTableData) => (
-                            <TableRow key={row.uploadCycleId}>
+                            <TableRow key={row.uploadCycleId} sx={{ backgroundColor: `${row?.countIntended !== row?.totalCount ? LIGHT_RED : ""}` }}>
                                 <TableCell sx={{ verticalAlign: "top" }}>
-                                    <Link href={`${UPLOADS_USHERED_PATH}?uploadCycleId=${row.uploadCycleId}`}>{row.uploadCycleId}</Link>
+                                    <Link href={`${UPLOADS_USHERED_PATH} ? uploadCycleId = ${row.uploadCycleId}`}>{row.uploadCycleId}</Link>
                                 </TableCell>
                                 <TableRowCellForUploadCycleGlobalStats row={row} />
                                 <TableCell sx={{ verticalAlign: "top" }}>
                                     <Table>
                                         <TableBody>
-                                            <ProfileAndCount row={row} forQueue={false} />
+                                            <ProfileAndCount row={row} forQueue={true} />
                                         </TableBody>
                                     </Table>
                                 </TableCell>
                                 <TableCell>
                                     <Table>
                                         <TableBody>
-                                            <ProfileAndCount row={row} forQueue={true} />
+                                            <ProfileAndCount row={row} forQueue={false} />
                                         </TableBody>
                                     </Table>
                                 </TableCell>
