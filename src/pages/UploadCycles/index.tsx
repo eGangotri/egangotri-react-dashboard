@@ -19,7 +19,7 @@ import { MAX_ITEMS_LISTABLE } from 'utils/constants';
 import IconButton from '@mui/material/IconButton';
 import InfoIcon from '@mui/icons-material/Info';
 import Tooltip from '@mui/material/Tooltip';
-import { ERROR_RED, LIGHT_RED, SUCCESS_GREEN, WHITE_SMOKE } from 'constants/colors';
+import { DARK_RED, ERROR_RED, LIGHT_RED, SUCCESS_GREEN, WHITE_SMOKE } from 'constants/colors';
 import { ellipsis } from 'pages/upload/ItemTooltip';
 
 
@@ -85,21 +85,37 @@ const UploadCycles = () => {
             hasUploadCycleGlobalValues ? (
                 <>{row?.countIntended} == {row?.totalCount} == {row?.totalQueueCount} </>
             ) : <>{row?.totalCount} == {row?.totalQueueCount}</>
+        const textColor =  equality ? { color: SUCCESS_GREEN } : { color: ERROR_RED }   
         return (
-            <TableCell className="centerAligned" sx={equality ? { color: SUCCESS_GREEN } : { color: ERROR_RED }}>
+            <TableCell className="centerAligned" sx={{verticalAlign: "top" , ...textColor}}>
                 <Grid container spacing={1}>
                     <Grid xs={4}>
                         <Typography>{equalityLabel}</Typography>
                     </Grid>
                     <Grid xs={8}>
-                        <Typography component="span">
-                            <Button
-                                variant="contained"
-                                onClick={verifyUploadStatus}
-                            >
-                                Verify Upload Status
-                            </Button>
-                        </Typography>
+                        <Grid xs={6} paddingBottom={"6px"}>
+                            <Typography component="span">
+                                <Button
+                                    variant="contained"
+                                    onClick={verifyUploadStatus}
+                                    size="small"
+                                >
+                                    Verify Upload Status
+                                </Button>
+                            </Typography>
+                        </Grid>
+                        <Grid xs={6}>
+                            <Typography component="span">
+                            {!equality ? <Button
+                                    variant="contained"
+                                    onClick={verifyUploadStatus}
+                                    size="small"
+                                    sx={{color:ERROR_RED}}
+                                >
+                                    Find Missing
+                                </Button>:<></>}
+                            </Typography>
+                        </Grid>
                     </Grid>
                 </Grid>
             </TableCell>
@@ -199,7 +215,7 @@ const UploadCycles = () => {
                     (
                         <TableRow key={arcProfAndCount.archiveProfile}>
                             <TableCell className="centerAligned">
-                                <Link href={`${_path} ? uploadCycleId = ${row.uploadCycleId} & archiveProfile=${arcProfAndCount.archiveProfile}`}>
+                                <Link href={`${_path}?uploadCycleId=${row.uploadCycleId}&archiveProfile=${arcProfAndCount.archiveProfile}`}>
                                     {arcProfAndCount.archiveProfile}
                                 </Link>
                             </TableCell>
@@ -256,7 +272,7 @@ const UploadCycles = () => {
                                         </TableBody>
                                     </Table>
                                 </TableCell>
-                                <TableCell>
+                                <TableCell sx={{ verticalAlign: "top" }}>
                                     <Table>
                                         <TableBody>
                                             <ProfileAndCount row={row} forQueue={false} />
