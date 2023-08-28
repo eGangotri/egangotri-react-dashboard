@@ -12,7 +12,7 @@ import * as _ from 'lodash';
 import moment from 'moment';
 
 import { DD_MM_YYYY_WITH_TIME_FORMAT } from 'utils/utils';
-import { getDataForUploadCycle } from 'service/UploadDataRetrievalService';
+import { getDataForUploadCycle, getUploadStatusData } from 'service/UploadDataRetrievalService';
 import { ArchiveProfileAndCount, ArchiveProfileAndCountAndTitles, UploadCycleTableData, UploadCycleTableDataDictionary, UploadCycleTableDataResponse } from 'mirror/types';
 import { UPLOADS_QUEUED_PATH, UPLOADS_USHERED_PATH } from 'Routes';
 import { MAX_ITEMS_LISTABLE } from 'utils/constants';
@@ -28,29 +28,55 @@ const UploadCycles = () => {
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [sortedData, setSortedData] = useState<UploadCycleTableData[]>([]);
     const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+    const [anchorEl2, setAnchorEl2] = React.useState<HTMLButtonElement | null>(null);
     const [titlesForPopover, setTitlesForPopover] = useState(<></>);
 
     const handleTitleClick = (event: React.MouseEvent<HTMLButtonElement>, titles: string[]) => {
         const _titles = (
             <>
-                {titles?.map((title, index) => <Box>({index + 1}) {title.replaceAll(".pdf", "")}</Box>)}
+                {titles?.map((title, index) => <Box component="span">({index + 1}) {title.replaceAll(".pdf", "")}</Box>)}
             </>
         )
         setTitlesForPopover(_titles);
+        console.log("handleTitleClick: " + event.currentTarget)
         setAnchorEl(event.currentTarget);
     };
 
     const handleClose = () => {
         setAnchorEl(null);
+        setAnchorEl2(null);
     };
 
     const open = Boolean(anchorEl);
+    const open2 = Boolean(anchorEl2);
+    console.log(`opn ${open} ${open2}`);
     const id = open ? 'simple-popover' : undefined;
+    const id2 = open2 ? 'simple-popover2' : undefined;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, sortedData?.length - page * rowsPerPage);
 
-    const verifyUploadStatus = (event: React.MouseEvent<HTMLButtonElement> | null) => {
+    const verifyUploadStatus = (event: React.MouseEvent<HTMLButtonElement>) => {
         alert("To be Implemented");
     };
+
+    const findMissing = async (event: React.MouseEvent<HTMLButtonElement>, row: UploadCycleTableData) => {
+        const currentTarget = event.currentTarget
+        console.log("findMissing: eventCurTarget" + currentTarget)
+        const uploadStatusData: ItemListResponseType = await getUploadStatusData(MAX_ITEMS_LISTABLE,
+            true,
+            row.uploadCycleId);
+        const _titlesIntended = row?.archiveProfileAndCountIntended?.flatMap(x => x?.titles?.map(y => y.replace(".pdf", ""))) || []
+        const _titlesUshered = uploadStatusData?.response?.map((x: Item) => x?.title || "")
+        const missing = _titlesIntended?.filter((item) => !_titlesUshered?.includes(item || ""));
+        const _titles = (
+            <>
+                {missing?.map((title, index) => <Box sx={{ color: ERROR_RED }}>({index + 1}) {title}</Box>)}
+            </>
+        )
+        setTitlesForPopover(_titles);
+        setAnchorEl2(currentTarget);
+        console.log(`_tiles: ${event.currentTarget} ${JSON.stringify(_titles)}`)
+    };
+
     const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
         setPage(newPage);
     };
@@ -79,15 +105,16 @@ const UploadCycles = () => {
             equality
         }
     }
+
     const TableRowCellForEqualityCount: React.FC<{ row: UploadCycleTableData }> = ({ row }) => {
         const { hasUploadCycleGlobalValues, equality } = checkCountEquality(row);
         const equalityLabel =
             hasUploadCycleGlobalValues ? (
                 <>{row?.countIntended} == {row?.totalCount} == {row?.totalQueueCount} </>
             ) : <>{row?.totalCount} == {row?.totalQueueCount}</>
-        const textColor =  equality ? { color: SUCCESS_GREEN } : { color: ERROR_RED }   
+        const textColor = equality ? { color: SUCCESS_GREEN } : { color: ERROR_RED }
         return (
-            <TableCell className="centerAligned" sx={{verticalAlign: "top" , ...textColor}}>
+            <TableCell className="centerAligned" sx={{ verticalAlign: "top", ...textColor }}>
                 <Grid container spacing={1}>
                     <Grid xs={4}>
                         <Typography>{equalityLabel}</Typography>
@@ -106,14 +133,29 @@ const UploadCycles = () => {
                         </Grid>
                         <Grid xs={6}>
                             <Typography component="span">
-                            {!equality ? <Button
-                                    variant="contained"
-                                    onClick={verifyUploadStatus}
-                                    size="small"
-                                    sx={{color:ERROR_RED}}
-                                >
-                                    Find Missing
-                                </Button>:<></>}
+                                {!equality ? <>
+                                    <Button
+                                        variant="contained"
+                                        onClick={async (e: React.MouseEvent<HTMLButtonElement>) => await findMissing(e, row)}
+                                        size="small"
+                                        sx={{ color: ERROR_RED }}
+                                    >
+                                        Find Missing
+                                    </Button>
+                                    <Popover
+                                        id={id2}
+                                        open={open2}
+                                        anchorEl={anchorEl2}
+                                        onClose={handleClose}
+                                        anchorOrigin={{
+                                            vertical: 'bottom',
+                                            horizontal: 'right',
+                                        }}
+                                    ><Typography sx={{ p: 2 }}>{titlesForPopover}</Typography>
+                                    </Popover>
+                                </> : <></>}
+
+
                             </Typography>
                         </Grid>
                     </Grid>
