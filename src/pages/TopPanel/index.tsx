@@ -18,7 +18,7 @@ const TopPanel: React.FC = () => {
     return splitLocation[1] === _route ? "active" : ""
   }
   return (
-    <Grid container spacing={1} columns={{ sm: 6, md: 18 }} direction="row" sx={{ margin: "20px 0",backgroundColor:"lightgrey" }}>
+    <Grid container spacing={1} columns={{ sm: 6, md: 18 }} direction="row" sx={{ margin: "20px 0" }}>
       <Grid item xs={1} sm={1} md={2}><NavLink to={LANDING_PAGE_PATH} className={activeClass(LANDING_PAGE_PATH)}>Uploads Cycles</NavLink></Grid>
       <Grid item xs={1} sm={1} md={2}><NavLink to={UPLOADS_USHERED_PATH} className={activeClass(UPLOADS_USHERED_PATH)} >Uploads Ushered</NavLink></Grid>
       <Grid item xs={1} sm={1} md={2}><NavLink to={UPLOADS_QUEUED_PATH} className={activeClass(UPLOADS_QUEUED_PATH)}>Uploads Queued</NavLink></Grid>
