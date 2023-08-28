@@ -34,7 +34,7 @@ const UploadCycles = () => {
     const handleTitleClick = (event: React.MouseEvent<HTMLButtonElement>, titles: string[]) => {
         const _titles = (
             <>
-                {titles?.map((title, index) => <Box component="span">({index + 1}) {title.replaceAll(".pdf", "")}</Box>)}
+                {titles?.map((title, index) => <Box>({index + 1}) {title.replaceAll(".pdf", "")}</Box>)}
             </>
         )
         setTitlesForPopover(_titles);
@@ -304,7 +304,7 @@ const UploadCycles = () => {
                         ).map((row: UploadCycleTableData) => (
                             <TableRow key={row.uploadCycleId} sx={{ backgroundColor: `${row?.countIntended !== row?.totalCount ? LIGHT_RED : ""}` }}>
                                 <TableCell sx={{ verticalAlign: "top" }}>
-                                    <Link href={`${UPLOADS_USHERED_PATH} ? uploadCycleId = ${row.uploadCycleId}`}>{row.uploadCycleId}</Link>
+                                    <Link href={`${UPLOADS_USHERED_PATH}?uploadCycleId=${row.uploadCycleId}`}>{row.uploadCycleId}</Link>
                                 </TableCell>
                                 <TableRowCellForUploadCycleGlobalStats row={row} />
                                 <TableCell sx={{ verticalAlign: "top" }}>
