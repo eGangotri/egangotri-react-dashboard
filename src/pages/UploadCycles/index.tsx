@@ -4,16 +4,18 @@ import {
     TableContainer, TableHead, TableRow, Paper,
     TablePagination,
     Link, Typography,
-    Button, Box, Popover
+    Button, Box, Popover, Stack
 } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import "pages/UploadCycles/UploadCycles.css"
 import * as _ from 'lodash';
 import moment from 'moment';
 
+import { verifyUploadStatusForUploadCycleId } from "service/UploadDataRetrievalService";
+
 import { DD_MM_YYYY_WITH_TIME_FORMAT } from 'utils/utils';
 import { getDataForUploadCycle, getUploadStatusData } from 'service/UploadDataRetrievalService';
-import { ArchiveProfileAndCount, ArchiveProfileAndCountAndTitles, UploadCycleTableData, UploadCycleTableDataDictionary, UploadCycleTableDataResponse } from 'mirror/types';
+import { ArchiveProfileAndCount, ArchiveProfileAndCountAndTitles, SelectedUploadItem, UploadCycleTableData, UploadCycleTableDataDictionary, UploadCycleTableDataResponse } from 'mirror/types';
 import { UPLOADS_QUEUED_PATH, UPLOADS_USHERED_PATH } from 'Routes';
 import { MAX_ITEMS_LISTABLE } from 'utils/constants';
 import IconButton from '@mui/material/IconButton';
@@ -21,6 +23,7 @@ import InfoIcon from '@mui/icons-material/Info';
 import Tooltip from '@mui/material/Tooltip';
 import { DARK_RED, ERROR_RED, LIGHT_RED, SUCCESS_GREEN, WHITE_SMOKE } from 'constants/colors';
 import { ellipsis } from 'pages/upload/ItemTooltip';
+import Spinner from 'widgets/Spinner';
 
 
 const UploadCycles = () => {
@@ -29,7 +32,12 @@ const UploadCycles = () => {
     const [sortedData, setSortedData] = useState<UploadCycleTableData[]>([]);
     const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
     const [anchorEl2, setAnchorEl2] = React.useState<HTMLButtonElement | null>(null);
+    const [anchorEl3, setAnchorEl3] = React.useState<HTMLButtonElement | null>(null);
+
     const [titlesForPopover, setTitlesForPopover] = useState(<></>);
+    const [failedUploadsForPopover, setFailedUploadsForPopover] = useState(<></>);
+    
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const handleTitleClick = (event: React.MouseEvent<HTMLButtonElement>, titles: string[]) => {
         const _titles = (
@@ -45,17 +53,35 @@ const UploadCycles = () => {
     const handleClose = () => {
         setAnchorEl(null);
         setAnchorEl2(null);
+        setAnchorEl3(null);
     };
 
     const open = Boolean(anchorEl);
     const open2 = Boolean(anchorEl2);
-    console.log(`opn ${open} ${open2}`);
+    const open3 = Boolean(anchorEl3);
+    console.log(`open ${open} ${open2} ${open3}`);
+
     const id = open ? 'simple-popover' : undefined;
     const id2 = open2 ? 'simple-popover2' : undefined;
+    const id3 = open3 ? 'simple-popover3' : undefined;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, sortedData?.length - page * rowsPerPage);
 
-    const verifyUploadStatus = (event: React.MouseEvent<HTMLButtonElement>) => {
-        alert("To be Implemented");
+    const _verifyUploadStatus = async (event: React.MouseEvent<HTMLButtonElement>, _uploadCycleId: string) => {
+        const currentTarget = event.currentTarget
+        setIsLoading(true);
+        const result:SelectedUploadItem[] = await verifyUploadStatusForUploadCycleId(_uploadCycleId);
+        setIsLoading(false);
+        const failedUploadListPanel = (
+            <>
+                <h4>Following Items Failed Upload</h4>
+                {result?.map((item, index) => 
+                !item.isValid && <Box sx={{ color: ERROR_RED }}>({index + 1}) {item.archiveId.replaceAll(".pdf", "")}</Box>
+                )}
+            </>
+        )
+        setFailedUploadsForPopover(failedUploadListPanel);
+        setAnchorEl3(currentTarget);
+        console.log(`result ${JSON.stringify(result)}`);
     };
 
     const findMissing = async (event: React.MouseEvent<HTMLButtonElement>, row: UploadCycleTableData) => {
@@ -67,14 +93,14 @@ const UploadCycles = () => {
         const _titlesIntended = row?.archiveProfileAndCountIntended?.flatMap(x => x?.titles?.map(y => y.replace(".pdf", ""))) || []
         const _titlesUshered = uploadStatusData?.response?.map((x: Item) => x?.title || "")
         const missing = _titlesIntended?.filter((item) => !_titlesUshered?.includes(item || ""));
-        const _titles = (
+        const missingTitlesPanel = (
             <>
                 {missing?.map((title, index) => <Box sx={{ color: ERROR_RED }}>({index + 1}) {title}</Box>)}
             </>
         )
-        setTitlesForPopover(_titles);
+        setTitlesForPopover(missingTitlesPanel);
         setAnchorEl2(currentTarget);
-        console.log(`_tiles: ${event.currentTarget} ${JSON.stringify(_titles)}`)
+        console.log(`_tiles: ${event.currentTarget} ${JSON.stringify(missingTitlesPanel)}`)
     };
 
     const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
@@ -124,11 +150,22 @@ const UploadCycles = () => {
                             <Typography component="span">
                                 <Button
                                     variant="contained"
-                                    onClick={verifyUploadStatus}
+                                    onClick={(e) => _verifyUploadStatus(e, row.uploadCycleId)}
                                     size="small"
                                 >
                                     Verify Upload Status
                                 </Button>
+                                <Popover
+                                    id={id3}
+                                    open={open3}
+                                    anchorEl={anchorEl3}
+                                    onClose={handleClose}
+                                    anchorOrigin={{
+                                        vertical: 'bottom',
+                                        horizontal: 'right',
+                                    }}
+                                ><Typography sx={{ p: 2 }}>{failedUploadsForPopover}</Typography>
+                                </Popover>
                             </Typography>
                         </Grid>
                         <Grid xs={6}>
@@ -283,67 +320,71 @@ const UploadCycles = () => {
     }, []);
 
     return (
-        <div>
-            <TableContainer component={Paper}>
-                <Table>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell onClick={() => handleSort('uploadCycleId')}><Link>Upload Cycle Id</Link></TableCell>
-                            <TableHeaderCellForUploadCycleStats />
-                            <TableCell>( Queued ) Stats </TableCell>
-                            <TableCell>( Ushered ) Stats </TableCell>
-                            <TableHeaderCellForEqualityCount />
-                            <TableCell onClick={() => handleSort('totalCount')}><Link>Total Count</Link></TableCell>
-                            <TableCell onClick={() => handleSort('datetimeUploadStarted')}><Link>Time Started</Link></TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {(rowsPerPage > 0
-                            ? sortedData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                            : sortedData
-                        ).map((row: UploadCycleTableData) => (
-                            <TableRow key={row.uploadCycleId} sx={{ backgroundColor: `${row?.countIntended !== row?.totalCount ? LIGHT_RED : ""}` }}>
-                                <TableCell sx={{ verticalAlign: "top" }}>
-                                    <Link href={`${UPLOADS_USHERED_PATH}?uploadCycleId=${row.uploadCycleId}`}>{row.uploadCycleId}</Link>
-                                </TableCell>
-                                <TableRowCellForUploadCycleGlobalStats row={row} />
-                                <TableCell sx={{ verticalAlign: "top" }}>
-                                    <Table>
-                                        <TableBody>
-                                            <ProfileAndCount row={row} forQueue={true} />
-                                        </TableBody>
-                                    </Table>
-                                </TableCell>
-                                <TableCell sx={{ verticalAlign: "top" }}>
-                                    <Table>
-                                        <TableBody>
-                                            <ProfileAndCount row={row} forQueue={false} />
-                                        </TableBody>
-                                    </Table>
-                                </TableCell>
-                                <TableRowCellForEqualityCount row={row} />
-                                <TableCell sx={{ verticalAlign: "top" }}>{row.totalCount}</TableCell>
-                                <TableCell sx={{ verticalAlign: "top" }}>{moment(row.datetimeUploadStarted).format(DD_MM_YYYY_WITH_TIME_FORMAT)}</TableCell>
+        <Stack spacing="2">
+            {isLoading && <Spinner />}
+
+            <div>
+                <TableContainer component={Paper}>
+                    <Table>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell onClick={() => handleSort('uploadCycleId')}><Link>Upload Cycle Id</Link></TableCell>
+                                <TableHeaderCellForUploadCycleStats />
+                                <TableCell>( Queued ) Stats </TableCell>
+                                <TableCell>( Ushered ) Stats </TableCell>
+                                <TableHeaderCellForEqualityCount />
+                                <TableCell onClick={() => handleSort('totalCount')}><Link>Total Count</Link></TableCell>
+                                <TableCell onClick={() => handleSort('datetimeUploadStarted')}><Link>Time Started</Link></TableCell>
                             </TableRow>
-                        ))}
-                        {emptyRows > 0 && (
-                            <TableRow style={{ height: 53 * emptyRows }}>
-                                <TableCell colSpan={3} />
-                            </TableRow>
-                        )}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-            <TablePagination
-                rowsPerPageOptions={[5, 10, 25]}
-                component="div"
-                count={sortedData.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-            />
-        </div>
+                        </TableHead>
+                        <TableBody>
+                            {(rowsPerPage > 0
+                                ? sortedData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                : sortedData
+                            ).map((row: UploadCycleTableData) => (
+                                <TableRow key={row.uploadCycleId} sx={{ backgroundColor: `${row?.countIntended !== row?.totalCount ? LIGHT_RED : ""}` }}>
+                                    <TableCell sx={{ verticalAlign: "top" }}>
+                                        <Link href={`${UPLOADS_USHERED_PATH}?uploadCycleId=${row.uploadCycleId}`}>{row.uploadCycleId}</Link>
+                                    </TableCell>
+                                    <TableRowCellForUploadCycleGlobalStats row={row} />
+                                    <TableCell sx={{ verticalAlign: "top" }}>
+                                        <Table>
+                                            <TableBody>
+                                                <ProfileAndCount row={row} forQueue={true} />
+                                            </TableBody>
+                                        </Table>
+                                    </TableCell>
+                                    <TableCell sx={{ verticalAlign: "top" }}>
+                                        <Table>
+                                            <TableBody>
+                                                <ProfileAndCount row={row} forQueue={false} />
+                                            </TableBody>
+                                        </Table>
+                                    </TableCell>
+                                    <TableRowCellForEqualityCount row={row} />
+                                    <TableCell sx={{ verticalAlign: "top" }}>{row.totalCount}</TableCell>
+                                    <TableCell sx={{ verticalAlign: "top" }}>{moment(row.datetimeUploadStarted).format(DD_MM_YYYY_WITH_TIME_FORMAT)}</TableCell>
+                                </TableRow>
+                            ))}
+                            {emptyRows > 0 && (
+                                <TableRow style={{ height: 53 * emptyRows }}>
+                                    <TableCell colSpan={3} />
+                                </TableRow>
+                            )}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+                <TablePagination
+                    rowsPerPageOptions={[5, 10, 25]}
+                    component="div"
+                    count={sortedData.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                />
+            </div>
+        </Stack>
     );
 };
 

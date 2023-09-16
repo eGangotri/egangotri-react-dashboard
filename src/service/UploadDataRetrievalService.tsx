@@ -86,3 +86,15 @@ export const verifyUploadStatus = async (
   return result.response
 };
 
+export const verifyUploadStatusForUploadCycleId = async (
+  uploadCycleId: string,
+  forQueues = false
+) => {
+  const resource =
+    backendServer +
+    `${chooseApiPrefix(forQueues)}/verifyUploadStatus?limit=${MAX_ITEMS_LISTABLE}`;
+  const result = await makePostCall({ uploadCycleIdForVerification: uploadCycleId},
+    resource);
+  return result.response
+};
+

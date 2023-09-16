@@ -1,3 +1,5 @@
+import { ObjectId } from "mongodb";
+
 export interface ArchiveProfileAndCount {
     archiveProfile: string;
     count: number;
@@ -30,7 +32,7 @@ export interface UploadCycleTableDataResponse {
 }
 
 export interface SelectedUploadItem {
-    id:number;
+    id:any;
     archiveId:string;
     isValid?: boolean;
 }
