@@ -100,7 +100,7 @@ const UploadCycles = () => {
         setIsLoading(false);
         const moveToFreezeRespPanel = (
             <>
-                <Typography>Logs</Typography>
+                <Typography>Gradle Logs</Typography>
                 {_resp?.response?.split("\n").map((item:string, index:number) => {
                     return (<Box sx={{ color: SUCCESS_GREEN }}>({index + 1}) {item}</Box>)})
                 }
