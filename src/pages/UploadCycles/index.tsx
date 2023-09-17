@@ -105,7 +105,7 @@ const UploadCycles = () => {
         )
         setMoveToFreezeRespPopover(moveToFreezeRespPanel);
         setAnchorEl4(currentTarget);
-        console.log(`_tiles: ${event.currentTarget} ${JSON.stringify(moveToFreezeRespPanel)}`)
+        console.log(`_titles: ${event.currentTarget} ${JSON.stringify(moveToFreezeRespPanel)}`)
     }
     
     const findMissing = async (event: React.MouseEvent<HTMLButtonElement>, row: UploadCycleTableData) => {
@@ -124,7 +124,7 @@ const UploadCycles = () => {
         )
         setTitlesForPopover(missingTitlesPanel);
         setAnchorEl2(currentTarget);
-        console.log(`_tiles: ${event.currentTarget} ${JSON.stringify(missingTitlesPanel)}`)
+        console.log(`_titles: ${event.currentTarget} ${JSON.stringify(missingTitlesPanel)}`)
     };
 
     const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
