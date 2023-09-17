@@ -5,7 +5,5 @@ export async function launchGradle(profiles: string) {
     console.log(`_url ${_url}`);
     const res = await fetch(_url);
     console.log(`res ${JSON.stringify(res)}`);
-    const items = await res.json();
-    console.log(`items ${items.length}`);
-    return items;
+    return res;
 }

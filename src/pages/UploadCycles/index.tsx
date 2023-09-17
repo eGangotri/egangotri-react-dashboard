@@ -34,9 +34,11 @@ const UploadCycles = () => {
     const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
     const [anchorEl2, setAnchorEl2] = React.useState<HTMLButtonElement | null>(null);
     const [anchorEl3, setAnchorEl3] = React.useState<HTMLButtonElement | null>(null);
+    const [anchorEl4, setAnchorEl4] = React.useState<HTMLButtonElement | null>(null);
 
     const [titlesForPopover, setTitlesForPopover] = useState(<></>);
     const [failedUploadsForPopover, setFailedUploadsForPopover] = useState(<></>);
+    const [moveToFreezeRespPopover, setMoveToFreezeRespPopover] = useState(<></>);
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -55,16 +57,20 @@ const UploadCycles = () => {
         setAnchorEl(null);
         setAnchorEl2(null);
         setAnchorEl3(null);
+        setAnchorEl4(null);
     };
 
     const open = Boolean(anchorEl);
     const open2 = Boolean(anchorEl2);
     const open3 = Boolean(anchorEl3);
-    console.log(`open ${open} ${open2} ${open3}`);
+    const open4 = Boolean(anchorEl4);
+    console.log(`open ${open} ${open2} ${open3} ${open4}`);
 
     const id = open ? 'simple-popover' : undefined;
     const id2 = open2 ? 'simple-popover2' : undefined;
     const id3 = open3 ? 'simple-popover3' : undefined;
+    const id4 = open4 ? 'simple-popover4' : undefined;
+
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, sortedData?.length - page * rowsPerPage);
 
     const _verifyUploadStatus = async (event: React.MouseEvent<HTMLButtonElement>, _uploadCycleId: string) => {
@@ -86,9 +92,20 @@ const UploadCycles = () => {
     };
 
     const moveToFreeze = async (event: React.MouseEvent<HTMLButtonElement>, archiveProfileAndCount: ArchiveProfileAndCount[]) => {
+        const currentTarget = event.currentTarget
         const _profiles = archiveProfileAndCount.map((arcProfAndCount: ArchiveProfileAndCount) => arcProfAndCount.archiveProfile);
         console.log(`_profiles ${_profiles}`)
-        await launchGradle(_profiles.join(","))
+        setIsLoading(true);
+        const _resp = await launchGradle(_profiles.join(","))
+        setIsLoading(false);
+        const moveToFreezeRespPanel = (
+            <>
+                {_resp}
+            </>
+        )
+        setMoveToFreezeRespPopover(moveToFreezeRespPanel);
+        setAnchorEl4(currentTarget);
+        console.log(`_tiles: ${event.currentTarget} ${JSON.stringify(moveToFreezeRespPanel)}`)
     }
     
     const findMissing = async (event: React.MouseEvent<HTMLButtonElement>, row: UploadCycleTableData) => {
@@ -209,6 +226,17 @@ const UploadCycles = () => {
                         >
                             Gradle Move to Freeze
                         </Button>
+                        <Popover
+                            id={id4}
+                            open={open4}
+                            anchorEl={anchorEl4}
+                            onClose={handleClose}
+                            anchorOrigin={{
+                                vertical: 'bottom',
+                                horizontal: 'right',
+                            }}
+                        ><Typography sx={{ p: 2 }}>{moveToFreezeRespPopover}</Typography>
+                        </Popover>
                     </Typography>
                 </Stack>
             </TableCell >
