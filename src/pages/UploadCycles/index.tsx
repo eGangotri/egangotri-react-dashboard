@@ -24,6 +24,7 @@ import Tooltip from '@mui/material/Tooltip';
 import { DARK_RED, ERROR_RED, LIGHT_RED, SUCCESS_GREEN, WHITE_SMOKE } from 'constants/colors';
 import { ellipsis } from 'pages/upload/ItemTooltip';
 import Spinner from 'widgets/Spinner';
+import { launchGradle } from 'service/launchUploader';
 
 
 const UploadCycles = () => {
@@ -84,9 +85,11 @@ const UploadCycles = () => {
         console.log(`result ${JSON.stringify(result)}`);
     };
 
-    const moveToFreeze = async (event: React.MouseEvent<HTMLButtonElement>, _uploadCycleId: string) => {
-        alert("Not Implemented Yet");
-    };
+    const moveToFreeze = async (event: React.MouseEvent<HTMLButtonElement>, archiveProfileAndCount: ArchiveProfileAndCount[]) => {
+        const _profiles = archiveProfileAndCount.map((arcProfAndCount: ArchiveProfileAndCount) => arcProfAndCount.archiveProfile);
+        console.log(`_profiles ${_profiles}`)
+        await launchGradle(_profiles.join(","))
+    }
     
     const findMissing = async (event: React.MouseEvent<HTMLButtonElement>, row: UploadCycleTableData) => {
         const currentTarget = event.currentTarget
@@ -200,7 +203,7 @@ const UploadCycles = () => {
                     <Typography component="span">
                         <Button
                             variant="contained"
-                            onClick={(e) => moveToFreeze(e, row.uploadCycleId)}
+                            onClick={(e) => moveToFreeze(e, row.archiveProfileAndCount)}
                             size="small"
                             sx={{ width: "200px", marginTop: "10px" }}
                         >
