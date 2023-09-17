@@ -1,6 +1,6 @@
 import { backendServer } from 'utils/constants';
 
-export async function launchGradle(profiles: string) {
+export async function launchGradleMoveToFreeze(profiles: string) {
     const _url = `${backendServer}launchGradle/moveToFreeze?profiles=${profiles}`
     console.log(`_url ${_url}`);
     const res = await fetch(_url);

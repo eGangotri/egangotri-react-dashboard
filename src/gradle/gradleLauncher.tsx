@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState } from "react";
-import { launchGradle } from "service/launchUploader";
+import { launchGradleMoveToFreeze } from "service/launchUploader";
 
 
 const GradleLauncher: React.FC = () => {
@@ -15,7 +15,7 @@ const GradleLauncher: React.FC = () => {
         switch (code){
             case 1:
                 console.log('e', profiles, code);
-                launchGradle(profiles);
+                launchGradleMoveToFreeze(profiles);
                 break;
             default:
                 console.log('e', e.currentTarget.value, code)

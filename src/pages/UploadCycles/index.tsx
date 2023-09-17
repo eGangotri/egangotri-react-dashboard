@@ -4,7 +4,7 @@ import {
     TableContainer, TableHead, TableRow, Paper,
     TablePagination,
     Link, Typography,
-    Button, Box, Popover, Stack
+    Button, Box, Popover, Stack, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions
 } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import "pages/UploadCycles/UploadCycles.css"
@@ -24,7 +24,7 @@ import Tooltip from '@mui/material/Tooltip';
 import { DARK_RED, ERROR_RED, LIGHT_RED, SUCCESS_GREEN, WHITE_SMOKE } from 'constants/colors';
 import { ellipsis } from 'pages/upload/ItemTooltip';
 import Spinner from 'widgets/Spinner';
-import { launchGradle } from 'service/launchUploader';
+import { launchGradleMoveToFreeze } from 'service/launchUploader';
 
 
 const UploadCycles = () => {
@@ -41,6 +41,7 @@ const UploadCycles = () => {
     const [moveToFreezeRespPopover, setMoveToFreezeRespPopover] = useState(<></>);
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [openDialog, setOpenDialog] = useState<boolean>(false);
 
     const handleTitleClick = (event: React.MouseEvent<HTMLButtonElement>, titles: string[]) => {
         const _titles = (
@@ -78,12 +79,18 @@ const UploadCycles = () => {
         setIsLoading(true);
         const result: SelectedUploadItem[] = await verifyUploadStatusForUploadCycleId(_uploadCycleId);
         setIsLoading(false);
+        const failedUploads = result.filter((item: SelectedUploadItem) => !item.isValid);
+        const noFailedUploads = failedUploads.length === 0;
         const failedUploadListPanel = (
             <>
-                <h4>Following Items Failed Upload</h4>
+
+                <h4>
+                    <Typography sx={{ color: noFailedUploads ? SUCCESS_GREEN : DARK_RED }}>{noFailedUploads ? "No Failed Uploads" : "Following Items Failed Upload:"}</Typography>
+                </h4>
                 {result?.map((item, index) =>
                     !item.isValid && <Box sx={{ color: ERROR_RED }}>({index + 1}) {item.archiveId.replaceAll(".pdf", "")}</Box>
                 )}
+
             </>
         )
         setFailedUploadsForPopover(failedUploadListPanel);
@@ -93,24 +100,25 @@ const UploadCycles = () => {
 
     const moveToFreeze = async (event: React.MouseEvent<HTMLButtonElement>, archiveProfileAndCount: ArchiveProfileAndCount[]) => {
         const currentTarget = event.currentTarget
+        setOpenDialog(false)
         const _profiles = archiveProfileAndCount.map((arcProfAndCount: ArchiveProfileAndCount) => arcProfAndCount.archiveProfile);
         console.log(`_profiles ${_profiles}`)
         setIsLoading(true);
-        const _resp = await launchGradle(_profiles.join(","))
+        const _resp = await launchGradleMoveToFreeze(_profiles.join(","))
         setIsLoading(false);
         const moveToFreezeRespPanel = (
             <>
                 <Typography>Gradle Logs</Typography>
-                {_resp?.response?.split("\n").map((item:string, index:number) => {
-                    return (<Box sx={{ color: SUCCESS_GREEN }}>({index + 1}) {item}</Box>)})
+                {_resp?.response?.split("\n").map((item: string, index: number) => {
+                    return (<Box sx={{ color: SUCCESS_GREEN }}>({index + 1}) {item}</Box>)
+                })
                 }
             </>
         )
         setMoveToFreezeRespPopover(moveToFreezeRespPanel);
         setAnchorEl4(currentTarget);
-        console.log(`_titles: ${event.currentTarget} ${JSON.stringify(moveToFreezeRespPanel)}`)
     }
-    
+
     const findMissing = async (event: React.MouseEvent<HTMLButtonElement>, row: UploadCycleTableData) => {
         const currentTarget = event.currentTarget
         console.log("findMissing: eventCurTarget" + currentTarget)
@@ -180,6 +188,7 @@ const UploadCycles = () => {
                             onClick={(e) => _verifyUploadStatus(e, row.uploadCycleId)}
                             size="small"
                             sx={{ width: "200px" }}
+                            disabled={isLoading}
                         >
                             Verify Upload Status
                         </Button>
@@ -202,6 +211,7 @@ const UploadCycles = () => {
                                 onClick={async (e: React.MouseEvent<HTMLButtonElement>) => await findMissing(e, row)}
                                 size="small"
                                 sx={{ color: "#f38484", width: "200px", marginTop: "10px" }}
+                                disabled={isLoading}
                             >
                                 Find Missing
                             </Button>
@@ -223,12 +233,29 @@ const UploadCycles = () => {
                     <Typography component="span">
                         <Button
                             variant="contained"
-                            onClick={(e) => moveToFreeze(e, row.archiveProfileAndCount)}
+                            onClick={()=>setOpenDialog(true)}
                             size="small"
                             sx={{ width: "200px", marginTop: "10px" }}
+                            disabled={isLoading}
                         >
                             Gradle Move to Freeze
                         </Button>
+                        <Dialog open={openDialog} onClose={handleClose}>
+                            <DialogTitle>Confirmation</DialogTitle>
+                            <DialogContent>
+                                <DialogContentText>
+                                    Do you want to proceed?
+                                </DialogContentText>
+                            </DialogContent>
+                            <DialogActions>
+                                <Button onClick={()=>setOpenDialog(false)} color="primary">
+                                    No
+                                </Button>
+                                <Button onClick={(e) => moveToFreeze(e, row.archiveProfileAndCount)} color="primary" autoFocus>
+                                    Yes
+                                </Button>
+                            </DialogActions>
+                        </Dialog>
                         <Popover
                             id={id4}
                             open={open4}
@@ -259,8 +286,11 @@ const UploadCycles = () => {
                             <Typography component="span">{archiveProfileAndCount.count}</Typography>
 
                             <Typography component="div" sx={{ fontWeight: 600 }}>
-                                <Button variant='contained'
-                                    onClick={(e) => handleTitleClick(e, archiveProfileAndCount?.titles || [])}>
+                                <Button
+                                    variant='contained'
+                                    onClick={(e) => handleTitleClick(e, archiveProfileAndCount?.titles || [])}
+                                    disabled={isLoading}
+                                >
                                     Fetch All Titles
                                 </Button>
                             </Typography>
