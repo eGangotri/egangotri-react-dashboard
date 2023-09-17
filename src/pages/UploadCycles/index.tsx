@@ -36,7 +36,7 @@ const UploadCycles = () => {
 
     const [titlesForPopover, setTitlesForPopover] = useState(<></>);
     const [failedUploadsForPopover, setFailedUploadsForPopover] = useState(<></>);
-    
+
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const handleTitleClick = (event: React.MouseEvent<HTMLButtonElement>, titles: string[]) => {
@@ -69,13 +69,13 @@ const UploadCycles = () => {
     const _verifyUploadStatus = async (event: React.MouseEvent<HTMLButtonElement>, _uploadCycleId: string) => {
         const currentTarget = event.currentTarget
         setIsLoading(true);
-        const result:SelectedUploadItem[] = await verifyUploadStatusForUploadCycleId(_uploadCycleId);
+        const result: SelectedUploadItem[] = await verifyUploadStatusForUploadCycleId(_uploadCycleId);
         setIsLoading(false);
         const failedUploadListPanel = (
             <>
                 <h4>Following Items Failed Upload</h4>
-                {result?.map((item, index) => 
-                !item.isValid && <Box sx={{ color: ERROR_RED }}>({index + 1}) {item.archiveId.replaceAll(".pdf", "")}</Box>
+                {result?.map((item, index) =>
+                    !item.isValid && <Box sx={{ color: ERROR_RED }}>({index + 1}) {item.archiveId.replaceAll(".pdf", "")}</Box>
                 )}
             </>
         )
@@ -84,6 +84,10 @@ const UploadCycles = () => {
         console.log(`result ${JSON.stringify(result)}`);
     };
 
+    const moveToFreeze = async (event: React.MouseEvent<HTMLButtonElement>, _uploadCycleId: string) => {
+        alert("Not Implemented Yet");
+    };
+    
     const findMissing = async (event: React.MouseEvent<HTMLButtonElement>, row: UploadCycleTableData) => {
         const currentTarget = event.currentTarget
         console.log("findMissing: eventCurTarget" + currentTarget)
@@ -141,63 +145,70 @@ const UploadCycles = () => {
         const textColor = equality ? { color: SUCCESS_GREEN } : { color: ERROR_RED }
         return (
             <TableCell className="centerAligned" sx={{ verticalAlign: "top", ...textColor }}>
-                <Grid container spacing={1}>
-                    <Grid xs={4}>
-                        <Typography>{equalityLabel}</Typography>
-                    </Grid>
-                    <Grid xs={8}>
-                        <Grid xs={6} paddingBottom={"6px"}>
-                            <Typography component="span">
-                                <Button
-                                    variant="contained"
-                                    onClick={(e) => _verifyUploadStatus(e, row.uploadCycleId)}
-                                    size="small"
-                                >
-                                    Verify Upload Status
-                                </Button>
-                                <Popover
-                                    id={id3}
-                                    open={open3}
-                                    anchorEl={anchorEl3}
-                                    onClose={handleClose}
-                                    anchorOrigin={{
-                                        vertical: 'bottom',
-                                        horizontal: 'right',
-                                    }}
-                                ><Typography sx={{ p: 2 }}>{failedUploadsForPopover}</Typography>
-                                </Popover>
-                            </Typography>
-                        </Grid>
-                        <Grid xs={6}>
-                            <Typography component="span">
-                                {!equality ? <>
-                                    <Button
-                                        variant="contained"
-                                        onClick={async (e: React.MouseEvent<HTMLButtonElement>) => await findMissing(e, row)}
-                                        size="small"
-                                        sx={{ color: ERROR_RED }}
-                                    >
-                                        Find Missing
-                                    </Button>
-                                    <Popover
-                                        id={id2}
-                                        open={open2}
-                                        anchorEl={anchorEl2}
-                                        onClose={handleClose}
-                                        anchorOrigin={{
-                                            vertical: 'bottom',
-                                            horizontal: 'right',
-                                        }}
-                                    ><Typography sx={{ p: 2 }}>{titlesForPopover}</Typography>
-                                    </Popover>
-                                </> : <></>}
+                <Stack spacing="2" sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                }}>
+                    <Typography sx={{ alignContent: "center" }}>{equalityLabel}</Typography>
+                    <Typography component="span">
+                        <Button
+                            variant="contained"
+                            onClick={(e) => _verifyUploadStatus(e, row.uploadCycleId)}
+                            size="small"
+                            sx={{ width: "200px" }}
+                        >
+                            Verify Upload Status
+                        </Button>
+                        <Popover
+                            id={id3}
+                            open={open3}
+                            anchorEl={anchorEl3}
+                            onClose={handleClose}
+                            anchorOrigin={{
+                                vertical: 'bottom',
+                                horizontal: 'right',
+                            }}
+                        ><Typography sx={{ p: 2 }}>{failedUploadsForPopover}</Typography>
+                        </Popover>
+                    </Typography>
+                    <Typography component="span">
+                        {!equality ? <>
+                            <Button
+                                variant="contained"
+                                onClick={async (e: React.MouseEvent<HTMLButtonElement>) => await findMissing(e, row)}
+                                size="small"
+                                sx={{ color: "#f38484", width: "200px", marginTop: "10px" }}
+                            >
+                                Find Missing
+                            </Button>
+                            <Popover
+                                id={id2}
+                                open={open2}
+                                anchorEl={anchorEl2}
+                                onClose={handleClose}
+                                anchorOrigin={{
+                                    vertical: 'bottom',
+                                    horizontal: 'right',
+                                }}
+                            ><Typography sx={{ p: 2 }}>{titlesForPopover}</Typography>
+                            </Popover>
+                        </> : <></>}
 
 
-                            </Typography>
-                        </Grid>
-                    </Grid>
-                </Grid>
-            </TableCell>
+                    </Typography>
+                    <Typography component="span">
+                        <Button
+                            variant="contained"
+                            onClick={(e) => moveToFreeze(e, row.uploadCycleId)}
+                            size="small"
+                            sx={{ width: "200px", marginTop: "10px" }}
+                        >
+                            Gradle Move to Freeze
+                        </Button>
+                    </Typography>
+                </Stack>
+            </TableCell >
         )
     }
 
@@ -214,8 +225,9 @@ const UploadCycles = () => {
                             <Typography component="span">{archiveProfileAndCount.count}</Typography>
 
                             <Typography component="div" sx={{ fontWeight: 600 }}>
-                                <Button onClick={(e) => handleTitleClick(e, archiveProfileAndCount?.titles || [])}>
-                                    Titles: {ellipsis(archiveProfileAndCount?.titles?.join(",") || "")}
+                                <Button variant='contained'
+                                    onClick={(e) => handleTitleClick(e, archiveProfileAndCount?.titles || [])}>
+                                    Fetch All Titles
                                 </Button>
                             </Typography>
 
