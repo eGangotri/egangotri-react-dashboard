@@ -1,8 +1,8 @@
 import ProtectedRoute from 'ProtectedRoute';
-import GradleLauncher from 'gradle/gradleLauncher';
 import UploadCycles from 'pages/UploadCycles';
 import Uploads from 'pages/upload';
 import FileMover from 'pages/widget/fileMover';
+import ExecLauncher from 'scriptsThruExec/ExecLauncher';
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 
@@ -20,7 +20,7 @@ const DashboardRoutes: React.FC = () => (
             {<Route path={LANDING_PAGE_PATH} element={<UploadCycles />} />}
             {<Route path={UPLOADS_USHERED_PATH} element={<Uploads forQueues={false} />} />}
             {<Route path={UPLOADS_QUEUED_PATH} element={<Uploads forQueues={true} />} />}
-            {<Route path={GRADLE_LAUNCHER_PATH} element={<GradleLauncher />} />}
+            {<Route path={GRADLE_LAUNCHER_PATH} element={<ExecLauncher />} />}
             {<Route path={FILE_MOVER_PATH} element={<FileMover />} />}
         </Route>
     </Routes>

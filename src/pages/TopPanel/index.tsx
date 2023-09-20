@@ -22,7 +22,7 @@ const TopPanel: React.FC = () => {
       <Grid item xs={1} sm={1} md={2}><NavLink to={LANDING_PAGE_PATH} className={activeClass(LANDING_PAGE_PATH)}>Uploads Cycles</NavLink></Grid>
       <Grid item xs={1} sm={1} md={2}><NavLink to={UPLOADS_USHERED_PATH} className={activeClass(UPLOADS_USHERED_PATH)} >Uploads Ushered</NavLink></Grid>
       <Grid item xs={1} sm={1} md={2}><NavLink to={UPLOADS_QUEUED_PATH} className={activeClass(UPLOADS_QUEUED_PATH)}>Uploads Queued</NavLink></Grid>
-      <Grid item xs={1} sm={1} md={2}><NavLink to={GRADLE_LAUNCHER_PATH} className={activeClass(GRADLE_LAUNCHER_PATH)}>Gradle Launcher</NavLink></Grid>
+      <Grid item xs={1} sm={1} md={2}><NavLink to={GRADLE_LAUNCHER_PATH} className={activeClass(GRADLE_LAUNCHER_PATH)}>Script Launcher</NavLink></Grid>
       <Grid item xs={1} sm={1} md={2}><NavLink to={FILE_MOVER_PATH} className={activeClass(FILE_MOVER_PATH)}>File Mover</NavLink></Grid>
     </Grid>
   );
