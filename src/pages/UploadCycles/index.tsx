@@ -42,6 +42,7 @@ const UploadCycles = () => {
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [openDialog, setOpenDialog] = useState<boolean>(false);
+    const [chosenProfilesForMove, setChosenProfilesForMove] = useState<string[]>([]);
 
     const handleTitleClick = (event: React.MouseEvent<HTMLButtonElement>, titles: string[]) => {
         const _titles = (
@@ -98,13 +99,17 @@ const UploadCycles = () => {
         console.log(`result ${JSON.stringify(result)}`);
     };
 
-    const moveToFreeze = async (event: React.MouseEvent<HTMLButtonElement>, archiveProfileAndCount: ArchiveProfileAndCount[]) => {
+    const showDialog = (event: React.MouseEvent<HTMLButtonElement>, profiles: string[]) => {
+        setOpenDialog(true);
+        setChosenProfilesForMove(profiles);
+    }
+
+    const moveToFreeze = async (event: React.MouseEvent<HTMLButtonElement>) => {
         const currentTarget = event.currentTarget
         setOpenDialog(false)
-        const _profiles = archiveProfileAndCount.map((arcProfAndCount: ArchiveProfileAndCount) => arcProfAndCount.archiveProfile);
-        console.log(`_profiles ${_profiles}`)
+        console.log(`_profiles ${chosenProfilesForMove} ${JSON.stringify(chosenProfilesForMove)}`)
         setIsLoading(true);
-        const _resp = await launchGradleMoveToFreeze(_profiles.join(","))
+        const _resp = await launchGradleMoveToFreeze(chosenProfilesForMove.join(","))
         setIsLoading(false);
         const moveToFreezeRespPanel = (
             <>
@@ -233,29 +238,13 @@ const UploadCycles = () => {
                     <Typography component="span">
                         <Button
                             variant="contained"
-                            onClick={()=>setOpenDialog(true)}
+                            onClick={(e) => showDialog(e, row.archiveProfileAndCount.map((arcProfAndCount: ArchiveProfileAndCount) => arcProfAndCount.archiveProfile))}
                             size="small"
                             sx={{ width: "200px", marginTop: "10px" }}
                             disabled={isLoading}
                         >
                             Gradle Move to Freeze
                         </Button>
-                        <Dialog open={openDialog} onClose={handleClose}>
-                            <DialogTitle>Confirmation</DialogTitle>
-                            <DialogContent>
-                                <DialogContentText>
-                                    Do you want to proceed?
-                                </DialogContentText>
-                            </DialogContent>
-                            <DialogActions>
-                                <Button onClick={()=>setOpenDialog(false)} color="primary">
-                                    No
-                                </Button>
-                                <Button onClick={(e) => moveToFreeze(e, row.archiveProfileAndCount)} color="primary" autoFocus>
-                                    Yes
-                                </Button>
-                            </DialogActions>
-                        </Dialog>
                         <Popover
                             id={id4}
                             open={open4}
@@ -460,6 +449,23 @@ const UploadCycles = () => {
                     onRowsPerPageChange={handleChangeRowsPerPage}
                 />
             </div>
+
+            <Dialog open={openDialog} onClose={handleClose}>
+                <DialogTitle>Confirmation</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Do you want to proceed?
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setOpenDialog(false)} color="primary">
+                        No
+                    </Button>
+                    <Button onClick={(e) => moveToFreeze(e)} color="primary" autoFocus>
+                        Yes
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </Stack>
     );
 };
