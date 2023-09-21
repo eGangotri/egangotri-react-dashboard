@@ -31,6 +31,8 @@ const ExecLauncher: React.FC = () => {
         <div>
             <ExecComponent buttonText="Upload Pdfs for Profile" />
             <ExecComponent buttonText="Reverse Move (Python)"/>
+            <ExecComponent buttonText="Move Folder Contents" placeholder='Move QA-Passed-to-Pipeline'/>
+            <ExecComponent buttonText="Use Bulk Rename Conventions" placeholder='Use Bulk Rename Conventions'/>
         </div>
     );
 }
