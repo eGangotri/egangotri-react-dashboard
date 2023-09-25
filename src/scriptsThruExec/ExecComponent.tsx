@@ -26,7 +26,7 @@ const ExecComponent: React.FC<Props> = ({ placeholder = 'Comma Separated Profile
   const onSubmit = async (data: FormData) => {
     console.log(data.userInput);
     const _resp = await launchUploader(data.userInput)
-    console.log(data.userInput);
+    console.log(`_resp ${JSON.stringify(_resp)}`);
   };
 
   return (
