@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState } from "react";
-import { launchGradleMoveToFreeze } from "service/launchUploader";
+import { launchGradleMoveToFreeze } from "service/launchGradle";
 import ExecComponent from './ExecComponent';
 
 

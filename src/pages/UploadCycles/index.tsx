@@ -24,7 +24,7 @@ import Tooltip from '@mui/material/Tooltip';
 import { DARK_RED, ERROR_RED, LIGHT_RED, SUCCESS_GREEN, WHITE_SMOKE } from 'constants/colors';
 import { ellipsis } from 'pages/upload/ItemTooltip';
 import Spinner from 'widgets/Spinner';
-import { launchGradleMoveToFreeze } from 'service/launchUploader';
+import { launchGradleMoveToFreeze } from 'service/launchGradle';
 
 
 const UploadCycles = () => {
