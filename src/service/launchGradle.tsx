@@ -1,7 +1,7 @@
 import { backendServer } from 'utils/constants';
 
 export async function launchGradleMoveToFreeze(profiles: string) {
-    const _url = `${backendServer}launchGradle/moveToFreeze?profiles=${profiles}`
+    const _url = `${backendServer}execLauncher/moveToFreeze?profiles=${profiles}`
     console.log(`_url ${_url}`);
     const res = await fetch(_url);
     const jsonResp = res.json()
@@ -10,7 +10,7 @@ export async function launchGradleMoveToFreeze(profiles: string) {
 }
 
 export async function launchUploader(profiles: string) {
-    const _url = `${backendServer}launchGradle/launchUploader?profiles=${profiles}`
+    const _url = `${backendServer}execLauncher/launchUploader?profiles=${profiles}`
     console.log(`_url ${_url}`);
     const res = await fetch(_url);
     const jsonResp = res.json()
