@@ -30,10 +30,10 @@ const ExecComponent: React.FC<Props> = ({ placeholder = 'Comma Separated Profile
       case ExecType.UploadPdfs:
         _resp = await launchUploader(dataUserInput);
         break;
-      case ExecType.ReverseMove:
+      case ExecType.MoveFolderContents:
         _resp = await launchGradleMoveToFreeze(dataUserInput);
         break;
-      case ExecType.MoveFolderContents:
+      case ExecType.ReverseMove:
         _resp = await launchReverseMove(dataUserInput);
         break;
       case ExecType.LoginToArchive:
