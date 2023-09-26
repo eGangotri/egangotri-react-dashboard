@@ -11,10 +11,6 @@ type FormData = {
   userInput: string;
 };
 
-const onSubmit = (data: FormData) => {
-  console.log(data.userInput);
-}
-
 type Props = {
   placeholder?: string;
   buttonText?: string;
@@ -26,21 +22,22 @@ const ExecComponent: React.FC<Props> = ({ placeholder = 'Comma Separated Profile
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
 
   const onSubmit = async (data: FormData) => {
-    console.log(`data.userInput ${data.userInput}`);
+    const dataUserInput = data.userInput;
+    console.log(`data.userInput ${dataUserInput}`);
     let _resp = {}
 
     switch (execType) {
       case ExecType.UploadPdfs:
-        _resp = await launchUploader(data.userInput);
+        _resp = await launchUploader(dataUserInput);
         break;
       case ExecType.ReverseMove:
-        _resp = await launchGradleMoveToFreeze(data.userInput);
+        _resp = await launchGradleMoveToFreeze(dataUserInput);
         break;
       case ExecType.MoveFolderContents:
-        _resp = await launchReverseMove(data.userInput);
+        _resp = await launchReverseMove(dataUserInput);
         break;
       case ExecType.UseBulkRenameConventions:
-        _resp = await launchBulkRename(data.userInput);
+        _resp = await launchBulkRename(dataUserInput);
         break;
       default:
         // Handle unknown execType value
