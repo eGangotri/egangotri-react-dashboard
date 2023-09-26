@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
-import { launchBulkRename, launchGradleMoveToFreeze, launchReverseMove, launchUploader } from 'service/launchGradle';
+import { launchBulkRename, launchGradleMoveToFreeze, launchReverseMove, launchUploader, loginToArchive } from 'service/launchGradle';
 import { ExecType } from './ExecLauncher';
 
 type FormData = {
@@ -35,6 +35,9 @@ const ExecComponent: React.FC<Props> = ({ placeholder = 'Comma Separated Profile
         break;
       case ExecType.MoveFolderContents:
         _resp = await launchReverseMove(dataUserInput);
+        break;
+      case ExecType.LoginToArchive:
+        _resp = await loginToArchive(dataUserInput);
         break;
       case ExecType.UseBulkRenameConventions:
         _resp = await launchBulkRename(dataUserInput);

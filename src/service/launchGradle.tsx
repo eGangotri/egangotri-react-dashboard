@@ -12,9 +12,14 @@ export async function launchReverseMove(profiles: string) {
     return launchGradle(profiles, 'reverseMove')
 }
 
+export async function loginToArchive(profiles: string) {
+    return launchGradle(profiles, 'loginToArchive')
+}
+
 export async function launchBulkRename(profiles: string) {
     return launchGradle(profiles, 'bulkRename')
 }
+
 
 
 export async function launchGradle(profiles: string, gradleTask: string) {

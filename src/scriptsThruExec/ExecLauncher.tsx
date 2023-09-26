@@ -6,8 +6,10 @@ export enum ExecType {
     UploadPdfs = 1,
     MoveFolderContents = 2,
     ReverseMove = 3,
-    UseBulkRenameConventions = 4
+    LoginToArchive = 4,
+    UseBulkRenameConventions = 5,
 }
+
 const ExecLauncher: React.FC = () => {
 
     return (
@@ -21,6 +23,10 @@ const ExecLauncher: React.FC = () => {
 
             <ExecComponent buttonText="Reverse Move (Python)"
                 execType={ExecType.ReverseMove} />
+
+            <ExecComponent buttonText="Login to Archive"
+                placeholder='Login to Archive'
+                execType={ExecType.LoginToArchive} />
 
             <ExecComponent buttonText="Use Bulk Rename Conventions"
                 placeholder='Use Bulk Rename Conventions'
