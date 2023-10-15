@@ -20,6 +20,10 @@ export async function launchBulkRename(profiles: string) {
     return launchGradle(profiles, 'bulkRename')
 }
 
+export async function downloadFromGoogleDrive(profiles: string) {
+    //yarn run downloadFromGoogle
+    return launchGradle(profiles, 'bulkRename')
+}
 
 
 export async function launchGradle(profiles: string, gradleTask: string) {

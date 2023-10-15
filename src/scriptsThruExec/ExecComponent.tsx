@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
-import { launchBulkRename, launchGradleMoveToFreeze, launchReverseMove, launchUploader, loginToArchive } from 'service/launchGradle';
+import { downloadFromGoogleDrive, launchBulkRename, launchGradleMoveToFreeze, launchReverseMove, launchUploader, loginToArchive } from 'service/launchGradle';
 import { ExecType } from './ExecLauncher';
 
 type FormData = {
@@ -42,6 +42,9 @@ const ExecComponent: React.FC<Props> = ({ placeholder = 'Comma Separated Profile
       case ExecType.UseBulkRenameConventions:
         _resp = await launchBulkRename(dataUserInput);
         break;
+      case ExecType.DownloadGoogleDriveLink:
+        _resp = await downloadFromGoogleDrive(dataUserInput);
+        break;
       default:
         // Handle unknown execType value
         break;
@@ -56,6 +59,7 @@ const ExecComponent: React.FC<Props> = ({ placeholder = 'Comma Separated Profile
           placeholder={placeholder}
           {...register('userInput', { required: "This field is required" })}
           error={Boolean(errors.userInput)}
+          sx={{ paddingRight: "30px" }}
           helperText={errors.userInput?.message} />
         <Button variant="contained" color="primary" type="submit">
           {buttonText}
