@@ -36,8 +36,11 @@ const ExecLauncher: React.FC = () => {
             </Box>
 
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
-                <ExecComponent buttonText="Download from Drive Link"
+                <ExecComponent
+                    buttonText="Download from Drive Link"
                     placeholder='Enter Google Drive Link'
+                    secondTextBox={true}
+                    secondTextBoxPlaceHolder='Enter Destination Folder'
                     execType={ExecType.DownloadGoogleDriveLink} />
             </Box>
         </Box>

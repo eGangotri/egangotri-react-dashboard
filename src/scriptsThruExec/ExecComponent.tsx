@@ -4,20 +4,29 @@ import { useForm } from 'react-hook-form';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
-import { downloadFromGoogleDrive, launchBulkRename, launchGradleMoveToFreeze, launchReverseMove, launchUploader, loginToArchive } from 'service/launchGradle';
+import { launchGoogleDriveDownload, launchBulkRename, launchGradleMoveToFreeze, launchReverseMove, launchUploader, loginToArchive } from 'service/launchGradle';
 import { ExecType } from './ExecLauncher';
 
 type FormData = {
   userInput: string;
+  userInputSecond ?: string;
 };
 
 type Props = {
   placeholder?: string;
   buttonText?: string;
   execType?: number;
+  secondTextBox?: boolean;
+  secondTextBoxPlaceHolder ?: string; 
 };
 
-const ExecComponent: React.FC<Props> = ({ placeholder = 'Comma Separated Profile Codes', buttonText = 'Click me', execType = undefined }) => {
+const ExecComponent: React.FC<Props> = ({
+  placeholder = 'Comma Separated Profile Codes',
+  buttonText = 'Click me',
+  execType = undefined,
+  secondTextBox = false,
+  secondTextBoxPlaceHolder = "",
+}) => {
 
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
 
@@ -43,7 +52,8 @@ const ExecComponent: React.FC<Props> = ({ placeholder = 'Comma Separated Profile
         _resp = await launchBulkRename(dataUserInput);
         break;
       case ExecType.DownloadGoogleDriveLink:
-        _resp = await downloadFromGoogleDrive(dataUserInput);
+        const dataUserInput2 = data.userInputSecond || "";
+        _resp = await launchGoogleDriveDownload(dataUserInput,dataUserInput2);
         break;
       default:
         // Handle unknown execType value
@@ -61,6 +71,15 @@ const ExecComponent: React.FC<Props> = ({ placeholder = 'Comma Separated Profile
           error={Boolean(errors.userInput)}
           sx={{ paddingRight: "30px" }}
           helperText={errors.userInput?.message} />
+        {secondTextBoxPlaceHolder?.length>0 ?
+          <TextField variant="outlined"
+            placeholder={secondTextBoxPlaceHolder}
+            {...register('userInputSecond', { required: "This field is required" })}
+            error={Boolean(errors.userInputSecond)}
+            sx={{ paddingRight: "30px",width:"250px" }}
+            helperText={errors.userInputSecond?.message} />
+            : null
+        }
         <Button variant="contained" color="primary" type="submit">
           {buttonText}
         </Button>

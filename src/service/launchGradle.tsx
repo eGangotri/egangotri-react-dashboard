@@ -1,4 +1,5 @@
 import { backendServer } from 'utils/constants';
+import { makePostCall } from './UploadDataRetrievalService';
 
 export async function launchUploader(profiles: string) {
     return launchGradle(profiles, 'launchUploader')
@@ -20,9 +21,17 @@ export async function launchBulkRename(profiles: string) {
     return launchGradle(profiles, 'bulkRename')
 }
 
-export async function downloadFromGoogleDrive(profiles: string) {
-    //yarn run downloadFromGoogle
-    return launchGradle(profiles, 'bulkRename')
+export async function launchGoogleDriveDownload(googleDriveLink: string, profile: string) {
+    const resource =
+        backendServer +
+        `yarn/downloadFromGoogleDrive`;
+
+    const result = await makePostCall({
+        "googleDriveLink": googleDriveLink,
+        "profile": profile
+    },
+        resource);
+    return result.response
 }
 
 
@@ -34,3 +43,4 @@ export async function launchGradle(profiles: string, gradleTask: string) {
     console.log(`res ${JSON.stringify(jsonResp)}`);
     return jsonResp;
 }
+;

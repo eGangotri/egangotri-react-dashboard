@@ -1,20 +1,22 @@
-import env from "react-dotenv";
 
+const backendServerDev =  process.env.REACT_APP_BACKEND_SERVER_DEV|| "";
+const backendServerProd =  process.env.REACT_APP_BACKEND_SERVER_PROD || "";
+const reactDevEnv = process.env.REACT_APP_DEV_ENV;
+const BACKEND_SERVER = reactDevEnv === 'prod' ? backendServerProd : backendServerDev;
+
+console.log(`getServer env.REACT_APP_DEV_ENV ${reactDevEnv}`)
+console.log(`getServer env.REACT_APP_BACKEND_SERVER_DEV ${backendServerDev}`)
+console.log(`getServer env.REACT_APP_BACKEND_SERVER_PROD ${backendServerProd}`)
+
+console.log(`Deployment on ${process.env.REACT_APP_LAST_DEPLOYMENT_ON}
+${reactDevEnv}
+    getServer:${BACKEND_SERVER}`)
+    
 export function getServer(): string {
-  console.log(`getServer process.env.REACT_APP_DEV_ENV ${env.REACT_APP_DEV_ENV}`)
-  console.log(`getServer process.env.REACT_APP_DEV_SERVER ${env.REACT_APP_DEV_SERVER}`)
-  console.log(`getServer process.env.REACT_APP_BACKEND_SERVER_PROD ${env.REACT_APP_BACKEND_SERVER_PROD}`)
-  console.log(`getServer process.env.REACT_APP_BACKEND_SERVER_DEV ${env.REACT_APP_BACKEND_SERVER_DEV}`)
-
-  const backendServer = env.REACT_APP_DEV_ENV === 'prod' ? env.REACT_APP_BACKEND_SERVER_PROD : "http://localhost:80/";
-
-  console.log(`Deployment on ${env.REACT_APP_LAST_DEPLOYMENT_ON}
-  ${env.REACT_APP_DEV_ENV}
-      getServer:${backendServer}`)
-  return backendServer;
+  return BACKEND_SERVER;
 }
 
-export const MAX_ITEMS_LISTABLE=500;
+export const MAX_ITEMS_LISTABLE = 500;
 
 export const backendServer = getServer();
 
