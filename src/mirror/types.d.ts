@@ -32,7 +32,7 @@ export interface UploadCycleTableDataResponse {
 }
 
 export interface SelectedUploadItem {
-    id:any;
+    id:number|string;
     archiveId:string;
     isValid?: boolean;
 }

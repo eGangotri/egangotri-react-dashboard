@@ -22,7 +22,9 @@ module.exports = {
       // e.g. "@typescript-eslint/explicit-function-return-type": "off",
       "react/prop-types": "off",
       "react/display-name": "off",
-      "react/jsx-key":"off"
+      "react/jsx-key":"off",
+      "no-unused-vars": "off",
+      "@typescript-eslint/no-unused-vars" : "off"
     },
   };
   
