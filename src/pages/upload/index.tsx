@@ -51,13 +51,14 @@ const Uploads: React.FC<UploadsType> = ({ forQueues = false }) => {
   const [selectedEndDate, setSelectedEndDate] = React.useState<string | null>(null);
 
   const fetchMyAPI = async () => {
-    const uploadCycleIdParam = searchParams.get('uploadCycleId') || "";
-    const archiveProfileParam = searchParams.get('archiveProfile') || "";
+    const uploadCycleIdParam:string = searchParams.get('uploadCycleId') || "";
+    const archiveProfileParam:string = searchParams?.get('archiveProfile') || "";
+    const _profiles = archiveProfileParam?.length > 0 ? [archiveProfileParam] : filteredProfiles;
 
     const uploadStatusData: ItemListResponseType = await getUploadStatusData(MAX_ITEMS_LISTABLE,
       forQueues,
       uploadCycleIdParam,
-      archiveProfileParam?.length > 0 ? [archiveProfileParam] : filteredProfiles);
+      _profiles)
     return uploadStatusData?.response;
   }
 
