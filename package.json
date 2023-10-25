@@ -36,6 +36,8 @@
     "@testing-library/jest-dom": "latest",
     "@testing-library/react": "latest",
     "@testing-library/user-event": "latest",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
     "@types/jest": "^27.0.1",
     "@types/lodash": "latest",
     "@types/node": "^16.7.6",
