@@ -9,7 +9,7 @@ export enum ExecType {
   DownloadGoogleDriveLink = 6,
 }
 export const invokeFuncBasedOnExecType = async (execType: ExecType, data: ExecComponentFormData) => {
-  let _resp = {}
+  let _resp = { response:{}}
   const dataUserInput = data.userInput;
   console.log(`data.userInput ${dataUserInput}`);
 
@@ -34,7 +34,9 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType, data: ExecCo
       _resp = await launchGoogleDriveDownload(dataUserInput, dataUserInput2);
       break;
     default:
+      _resp = { response: ""}
       // Handle unknown execType value
       break;
   }
+  return _resp;
 }
