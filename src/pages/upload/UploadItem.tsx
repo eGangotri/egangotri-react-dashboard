@@ -6,7 +6,7 @@ import { Box, Button, Checkbox } from "@mui/material";
 import * as _ from "lodash";
 import { createArchiveLink } from "mirror";
 import { SelectedUploadItem } from "mirror/types"
-import { runItemFromCmdPrompt } from "service/UploadServices";
+import { uploadSingleItemViaGradle } from "service/UploadServices";
 
 type UploadPropsType = {
   item: Item;
@@ -17,7 +17,7 @@ type UploadPropsType = {
 
 const runItem = (row:Item) => {
   console.log(`row ${row.uploadLink} ${row.localPath} `);
-  runItemFromCmdPrompt(row)
+  uploadSingleItemViaGradle(row)
 }
 
 const UploadItem: React.FC<UploadPropsType> = ({

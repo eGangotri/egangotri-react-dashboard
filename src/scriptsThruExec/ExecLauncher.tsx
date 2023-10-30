@@ -1,17 +1,12 @@
 import React from 'react';
 import ExecComponent from './ExecComponent';
 import Box from '@mui/material/Box';
-
-export enum ExecType {
-    UploadPdfs = 1,
-    MoveFolderContents = 2,
-    ReverseMove = 3,
-    LoginToArchive = 4,
-    UseBulkRenameConventions = 5,
-    DownloadGoogleDriveLink = 6,
-}
+import Typography from '@mui/material/Typography';
+import UploadDialog from 'pages/UploadCycles/UploadDialog';
+import { ExecType } from './util';
 
 const ExecLauncher: React.FC = () => {
+
 
     return (
         <Box display="flex" gap={4} mb={2} flexDirection="row">
@@ -22,6 +17,8 @@ const ExecLauncher: React.FC = () => {
                 <ExecComponent buttonText="Move Folder Contents"
                     placeholder='Move QA-Passed-to-Pipeline'
                     execType={ExecType.MoveFolderContents} />
+
+                <Typography>Make Dialog and Popover for gradle console display</Typography>
 
                 <ExecComponent buttonText="Reverse Move (Python)"
                     execType={ExecType.ReverseMove} />
@@ -42,7 +39,7 @@ const ExecLauncher: React.FC = () => {
                     secondTextBox={true}
                     secondTextBoxPlaceHolder='Enter Destination Folder'
                     execType={ExecType.DownloadGoogleDriveLink} />
-            </Box>
+            </Box>      
         </Box>
     );
 }

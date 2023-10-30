@@ -11,6 +11,11 @@ export interface ArchiveProfileAndCountAndTitles {
     titles?: string[];
 }
 
+export interface ArchiveProfileAndTitle {
+    archiveProfile: string;
+    title: string;
+}
+
 export interface UploadCycleTableData {
     uploadCycleId: string;
     countIntended?: number;

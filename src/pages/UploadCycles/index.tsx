@@ -11,11 +11,11 @@ import "pages/UploadCycles/UploadCycles.css"
 import * as _ from 'lodash';
 import moment from 'moment';
 
-import { verifyUploadStatusForUploadCycleId } from "service/UploadDataRetrievalService";
+import { getUploadStatusDataForUshered, verifyUploadStatusForUploadCycleId } from "service/UploadDataRetrievalService";
 
 import { DD_MM_YYYY_WITH_TIME_FORMAT } from 'utils/utils';
 import { getDataForUploadCycle, getUploadStatusData } from 'service/UploadDataRetrievalService';
-import { ArchiveProfileAndCount, ArchiveProfileAndCountAndTitles, SelectedUploadItem, UploadCycleTableData, UploadCycleTableDataDictionary, UploadCycleTableDataResponse } from 'mirror/types';
+import { ArchiveProfileAndCount, ArchiveProfileAndCountAndTitles, ArchiveProfileAndTitle, SelectedUploadItem, UploadCycleTableData, UploadCycleTableDataDictionary, UploadCycleTableDataResponse } from 'mirror/types';
 import { UPLOADS_QUEUED_PATH, UPLOADS_USHERED_PATH } from 'Routes';
 import { MAX_ITEMS_LISTABLE } from 'utils/constants';
 import IconButton from '@mui/material/IconButton';
@@ -24,7 +24,8 @@ import Tooltip from '@mui/material/Tooltip';
 import { DARK_RED, ERROR_RED, LIGHT_RED, SUCCESS_GREEN, WHITE_SMOKE } from 'constants/colors';
 import { ellipsis } from 'pages/upload/ItemTooltip';
 import Spinner from 'widgets/Spinner';
-import { launchGradleMoveToFreeze } from 'service/launchGradle';
+import { launchGradleMoveToFreeze, launchGradleReuploadMissed } from 'service/launchGradle';
+import UploadDialog from './UploadDialog';
 
 
 const UploadCycles = () => {
@@ -35,6 +36,7 @@ const UploadCycles = () => {
     const [anchorEl2, setAnchorEl2] = React.useState<HTMLButtonElement | null>(null);
     const [anchorEl3, setAnchorEl3] = React.useState<HTMLButtonElement | null>(null);
     const [anchorEl4, setAnchorEl4] = React.useState<HTMLButtonElement | null>(null);
+    const [anchorElReuploadMissed, setAnchorElReuploadMissed] = React.useState<HTMLButtonElement | null>(null);
 
     const [titlesForPopover, setTitlesForPopover] = useState(<></>);
     const [failedUploadsForPopover, setFailedUploadsForPopover] = useState(<></>);
@@ -42,7 +44,9 @@ const UploadCycles = () => {
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [openDialog, setOpenDialog] = useState<boolean>(false);
+    const [openDialogForReuploadMissed, setOpenDialogForReuploadMissed] = useState<boolean>(false);
     const [chosenProfilesForMove, setChosenProfilesForMove] = useState<string[]>([]);
+    const [reuploadables, setReuploadables] = useState<UploadCycleTableData>();
 
     const handleTitleClick = (event: React.MouseEvent<HTMLButtonElement>, titles: string[]) => {
         const _titles = (
@@ -60,16 +64,19 @@ const UploadCycles = () => {
         setAnchorEl2(null);
         setAnchorEl3(null);
         setAnchorEl4(null);
+        setAnchorElReuploadMissed(null);
     };
 
     const open = Boolean(anchorEl);
     const open2 = Boolean(anchorEl2);
     const open3 = Boolean(anchorEl3);
     const open4 = Boolean(anchorEl4);
+    const openReuploadMiss = Boolean(anchorElReuploadMissed);
     console.log(`open ${open} ${open2} ${open3} ${open4}`);
 
     const id = open ? 'simple-popover' : undefined;
     const id2 = open2 ? 'simple-popover2' : undefined;
+    const idReuplodMissing = openReuploadMiss ? 'simple-popover-reupload-missing' : undefined;
     const id3 = open3 ? 'simple-popover3' : undefined;
     const id4 = open4 ? 'simple-popover4' : undefined;
 
@@ -104,6 +111,11 @@ const UploadCycles = () => {
         setChosenProfilesForMove(profiles);
     }
 
+    const showDialogReuploadMissed = (event: React.MouseEvent<HTMLButtonElement>, row: UploadCycleTableData) => {
+        setOpenDialogForReuploadMissed(true);
+        setReuploadables(row);
+    }
+
     const moveToFreeze = async (event: React.MouseEvent<HTMLButtonElement>) => {
         const currentTarget = event.currentTarget
         setOpenDialog(false)
@@ -124,15 +136,49 @@ const UploadCycles = () => {
         setAnchorEl4(currentTarget);
     }
 
-    const findMissing = async (event: React.MouseEvent<HTMLButtonElement>, row: UploadCycleTableData) => {
+
+    const findMissingTitles = async (row: UploadCycleTableData | undefined) => {
+        return (await findMissingTitlesWithProfile(row))?.map(x => x.title)
+    }
+
+    /**
+    * 
+    * @param row strangely items in row?.archiveProfileAndCountIntended
+    * sometimes have an extra space in the end, its imp. to trim
+    * @returns 
+    */
+    const findMissingTitlesWithProfile = async (row: UploadCycleTableData | undefined) => {
+        const uploadStatusData: ItemListResponseType = await getUploadStatusDataForUshered(MAX_ITEMS_LISTABLE,
+            row?.uploadCycleId);
+
+
+        // Extract pairs of titles and archiveProfile
+        const data = row?.archiveProfileAndCountIntended || [];
+
+        const itemsIntended: ArchiveProfileAndTitle[] = data.flatMap(item =>
+            item.titles ? item.titles.map(title => ({
+                archiveProfile: item.archiveProfile,
+                title: title.replace(".pdf", "").trim()
+            })) : []
+        );
+
+        const itemsUshered: ArchiveProfileAndTitle[] = uploadStatusData?.response?.map((x: Item) => {
+            return {
+                archiveProfile: x?.archiveProfile,
+                title: x?.title.trim() || ""
+            }
+        }) || [];
+
+        const missing = _.differenceWith(itemsIntended, itemsUshered, _.isEqual);
+
+        console.log(`missingPairs: ${JSON.stringify(missing)}`);
+        return missing
+    }
+
+    const findMissingAndSetInPopover = async (event: React.MouseEvent<HTMLButtonElement>, row: UploadCycleTableData) => {
         const currentTarget = event.currentTarget
         console.log("findMissing: eventCurTarget" + currentTarget)
-        const uploadStatusData: ItemListResponseType = await getUploadStatusData(MAX_ITEMS_LISTABLE,
-            true,
-            row.uploadCycleId);
-        const _titlesIntended = row?.archiveProfileAndCountIntended?.flatMap(x => x?.titles?.map(y => y.replace(".pdf", ""))) || []
-        const _titlesUshered = uploadStatusData?.response?.map((x: Item) => x?.title || "")
-        const missing = _titlesIntended?.filter((item) => !_titlesUshered?.includes(item || ""));
+        const missing = await findMissingTitles(row);
         const missingTitlesPanel = (
             <>
                 {missing?.map((title, index) => <Box sx={{ color: ERROR_RED }}>({index + 1}) {title}</Box>)}
@@ -142,6 +188,28 @@ const UploadCycles = () => {
         setAnchorEl2(currentTarget);
         console.log(`_titles: ${event.currentTarget} ${JSON.stringify(missingTitlesPanel)}`)
     };
+
+    const reuploadMissed = async (event: React.MouseEvent<HTMLButtonElement>) => {
+        const currentTarget = event.currentTarget
+        console.log("reuploadMissing: eventCurTarget" + currentTarget)
+        setOpenDialogForReuploadMissed(false)
+        const missing = await findMissingTitlesWithProfile(reuploadables);
+        setIsLoading(true);
+        const _resp = await launchGradleReuploadMissed(missing)
+        setIsLoading(false);
+        console.log(JSON.stringify(_resp))
+        const moveToFreezeRespPanel = (
+            <>
+                <Typography>Gradle Logs</Typography>
+                {_resp?.response?.split("\n").map((item: string, index: number) => {
+                    return (<Box sx={{ color: SUCCESS_GREEN }}>({index + 1}) {item}</Box>)
+                })
+                }
+            </>
+        )
+        // setMoveToFreezeRespPopover(moveToFreezeRespPanel);
+        setAnchorElReuploadMissed(currentTarget);
+    }
 
     const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
         setPage(newPage);
@@ -213,7 +281,7 @@ const UploadCycles = () => {
                         {!equality ? <>
                             <Button
                                 variant="contained"
-                                onClick={async (e: React.MouseEvent<HTMLButtonElement>) => await findMissing(e, row)}
+                                onClick={async (e: React.MouseEvent<HTMLButtonElement>) => await findMissingAndSetInPopover(e, row)}
                                 size="small"
                                 sx={{ color: "#f38484", width: "200px", marginTop: "10px" }}
                                 disabled={isLoading}
@@ -224,6 +292,30 @@ const UploadCycles = () => {
                                 id={id2}
                                 open={open2}
                                 anchorEl={anchorEl2}
+                                onClose={handleClose}
+                                anchorOrigin={{
+                                    vertical: 'bottom',
+                                    horizontal: 'right',
+                                }}
+                            ><Typography sx={{ p: 2 }}>{titlesForPopover}</Typography>
+                            </Popover>
+                        </> : <></>}
+                    </Typography>
+                    <Typography component="span">
+                        {!equality ? <>
+                            <Button
+                                variant="contained"
+                                onClick={async (e) => showDialogReuploadMissed(e, row)}
+                                size="small"
+                                sx={{ color: "#f38484", width: "200px", marginTop: "10px" }}
+                                disabled={isLoading}
+                            >
+                                Reupload Missed
+                            </Button>
+                            <Popover
+                                id={idReuplodMissing}
+                                open={openReuploadMiss}
+                                anchorEl={anchorElReuploadMissed}
                                 onClose={handleClose}
                                 anchorOrigin={{
                                     vertical: 'bottom',
@@ -449,23 +541,15 @@ const UploadCycles = () => {
                     onRowsPerPageChange={handleChangeRowsPerPage}
                 />
             </div>
+            <UploadDialog openDialog={openDialog}
+                handleClose={handleClose}
+                setOpenDialog={setOpenDialog}
+                invokeFuncOnClick={moveToFreeze} />
 
-            <Dialog open={openDialog} onClose={handleClose}>
-                <DialogTitle>Confirmation</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
-                        Do you want to proceed?
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setOpenDialog(false)} color="primary">
-                        No
-                    </Button>
-                    <Button onClick={(e) => moveToFreeze(e)} color="primary" autoFocus>
-                        Yes
-                    </Button>
-                </DialogActions>
-            </Dialog>
+            <UploadDialog openDialog={openDialogForReuploadMissed}
+                handleClose={handleClose}
+                setOpenDialog={setOpenDialogForReuploadMissed}
+                invokeFuncOnClick={reuploadMissed} />
         </Stack>
     );
 };

@@ -1,5 +1,6 @@
 import { backendServer } from 'utils/constants';
 import { makePostCall } from './UploadDataRetrievalService';
+import { ArchiveProfileAndTitle } from 'mirror/types';
 
 export async function launchUploader(profiles: string) {
     return launchGradle(profiles, 'launchUploader')
@@ -7,6 +8,10 @@ export async function launchUploader(profiles: string) {
 
 export async function launchGradleMoveToFreeze(profiles: string) {
     return launchGradle(profiles, 'moveToFreeze')
+}
+
+export async function launchGradleReuploadMissed(reuploadables: ArchiveProfileAndTitle[]) {
+    return launchGradleWithPostData(reuploadables, 'reuploadMissed')
 }
 
 export async function launchReverseMove(profiles: string) {
@@ -43,4 +48,14 @@ export async function launchGradle(profiles: string, gradleTask: string) {
     console.log(`res ${JSON.stringify(jsonResp)}`);
     return jsonResp;
 }
-;
+
+export async function launchGradleWithPostData(
+    data: ArchiveProfileAndTitle[],
+    gradleTask: string) {
+
+    const _url = `${backendServer}execLauncher/${gradleTask}`;
+    const result = await makePostCall({
+        itemsForReupload: data
+    }, _url);
+    return result.response
+}

@@ -1,7 +1,7 @@
 import { MAX_ITEMS_LISTABLE, backendServer } from "utils/constants";
 import { chooseApiPrefix, makePostCall } from "./UploadDataRetrievalService";
 
-export const uploadMissedItems = async (row: Item) => {
+export const reUploadOneItem = async (row: Item) => {
   const resource =
     backendServer +
     `${chooseApiPrefix(false)}/reUploadMissed?limit=${MAX_ITEMS_LISTABLE}`;
@@ -17,7 +17,7 @@ export const uploadMissedItems = async (row: Item) => {
 };
 
 
-export const runItemFromCmdPrompt = async (row: Item) => {
-  const uploadStatusData: ItemListResponseType = await uploadMissedItems(row);
+export const uploadSingleItemViaGradle = async (row: Item) => {
+  const uploadStatusData: ItemListResponseType = await reUploadOneItem(row);
   return uploadStatusData?.response;
 }

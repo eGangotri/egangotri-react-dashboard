@@ -1,65 +1,37 @@
 // RowComponent.tsx
-import React, { ChangeEventHandler, useState } from 'react';
+import React from 'react';
 import { useForm } from 'react-hook-form';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
-import { launchGoogleDriveDownload, launchBulkRename, launchGradleMoveToFreeze, launchReverseMove, launchUploader, loginToArchive } from 'service/launchGradle';
-import { ExecType } from './ExecLauncher';
+import { ExecType, invokeFuncBasedOnExecType } from './util';
+import UploadDialog from '../pages/UploadCycles/UploadDialog';
 
-type FormData = {
-  userInput: string;
-  userInputSecond ?: string;
-};
-
-type Props = {
-  placeholder?: string;
-  buttonText?: string;
-  execType?: number;
-  secondTextBox?: boolean;
-  secondTextBoxPlaceHolder ?: string; 
-};
-
-const ExecComponent: React.FC<Props> = ({
+const ExecComponent: React.FC<ExecComponentProps> = ({
   placeholder = 'Comma Separated Profile Codes',
   buttonText = 'Click me',
-  execType = undefined,
+  execType = ExecType.LoginToArchive,
   secondTextBox = false,
   secondTextBoxPlaceHolder = "",
 }) => {
 
-  const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
-
-  const onSubmit = async (data: FormData) => {
-    const dataUserInput = data.userInput;
-    console.log(`data.userInput ${dataUserInput}`);
-    let _resp = {}
-
-    switch (execType) {
-      case ExecType.UploadPdfs:
-        _resp = await launchUploader(dataUserInput);
-        break;
-      case ExecType.MoveFolderContents:
-        _resp = await launchGradleMoveToFreeze(dataUserInput);
-        break;
-      case ExecType.ReverseMove:
-        _resp = await launchReverseMove(dataUserInput);
-        break;
-      case ExecType.LoginToArchive:
-        _resp = await loginToArchive(dataUserInput);
-        break;
-      case ExecType.UseBulkRenameConventions:
-        _resp = await launchBulkRename(dataUserInput);
-        break;
-      case ExecType.DownloadGoogleDriveLink:
-        const dataUserInput2 = data.userInputSecond || "";
-        _resp = await launchGoogleDriveDownload(dataUserInput,dataUserInput2);
-        break;
-      default:
-        // Handle unknown execType value
-        break;
-    }
+  const { register, handleSubmit, formState: { errors } } = useForm<ExecComponentFormData>();
+  const [openDialog, setOpenDialog] = React.useState<boolean>(false);
+  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+  const open = Boolean(anchorEl);
+  const [formData, setFormData] = React.useState<ExecComponentFormData>({} as ExecComponentFormData);
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  const funcToInvoke = () => {
+    setOpenDialog(false);
+    const _resp = invokeFuncBasedOnExecType(execType, formData);
     console.log(`_resp ${JSON.stringify(_resp)}`);
+  }
+
+  const onSubmit = async (data: ExecComponentFormData) => {
+    setOpenDialog(true);
+    setFormData(data)
   };
 
   return (
@@ -71,19 +43,23 @@ const ExecComponent: React.FC<Props> = ({
           error={Boolean(errors.userInput)}
           sx={{ paddingRight: "30px" }}
           helperText={errors.userInput?.message} />
-        {secondTextBoxPlaceHolder?.length>0 ?
+        {secondTextBoxPlaceHolder?.length > 0 ?
           <TextField variant="outlined"
             placeholder={secondTextBoxPlaceHolder}
             {...register('userInputSecond', { required: "This field is required" })}
             error={Boolean(errors.userInputSecond)}
-            sx={{ paddingRight: "30px",width:"250px" }}
+            sx={{ paddingRight: "30px", width: "250px" }}
             helperText={errors.userInputSecond?.message} />
-            : null
+          : null
         }
         <Button variant="contained" color="primary" type="submit">
           {buttonText}
         </Button>
       </form>
+      <UploadDialog openDialog={openDialog}
+        handleClose={handleClose}
+        setOpenDialog={setOpenDialog}
+        invokeFuncOnClick2={funcToInvoke} />
     </Box>
   );
 };
