@@ -1,6 +1,7 @@
 import { backendServer } from 'utils/constants';
 import { makePostCall } from './UploadDataRetrievalService';
 import { ArchiveProfileAndTitle } from 'mirror/types';
+import { ExecResponseDetails } from 'scriptsThruExec/types';
 
 export async function launchUploader(profiles: string) {
     return launchGradle(profiles, 'launchUploader')
@@ -26,7 +27,8 @@ export async function launchBulkRename(profiles: string) {
     return launchGradle(profiles, 'bulkRename')
 }
 
-export async function launchGoogleDriveDownload(googleDriveLink: string, profile: string) {
+export async function launchGoogleDriveDownload(googleDriveLink: string, 
+    profile: string):Promise<ExecResponseDetails> {
     const resource =
         backendServer +
         `yarn/downloadFromGoogleDrive`;
@@ -36,7 +38,7 @@ export async function launchGoogleDriveDownload(googleDriveLink: string, profile
         "profile": profile
     },
         resource);
-    return result.response
+    return result.response as ExecResponseDetails
 }
 
 

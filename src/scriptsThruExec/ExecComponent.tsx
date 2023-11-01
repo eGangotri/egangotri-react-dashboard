@@ -1,4 +1,3 @@
-// RowComponent.tsx
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import TextField from '@mui/material/TextField';
@@ -8,6 +7,8 @@ import { ExecType, invokeFuncBasedOnExecType } from './util';
 import UploadDialog from '../pages/UploadCycles/UploadDialog';
 import Spinner from '../widgets/Spinner';
 import { Popover, Typography, Stack } from '@mui/material';
+import ExecResponsePanel from './ExecResponsePanel';
+import { ExecComponentFormData, ExecComponentProps } from './types';
 
 const ExecComponent: React.FC<ExecComponentProps> = ({
   placeholder = 'Comma Separated Profile Codes',
@@ -34,13 +35,8 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
     const _resp = await invokeFuncBasedOnExecType(execType, formData);
     console.log(`_resp ${JSON.stringify(_resp)}`);
     setIsLoading(false);
-    const moveToFreezeRespPanel = (
-      <>
-        <Typography>Backend Resp.</Typography>
-        {JSON.stringify(_resp?.response)}
-      </>
-    )
-    setExecLogsForPopover(moveToFreezeRespPanel);
+
+    setExecLogsForPopover(<ExecResponsePanel response={_resp} />);
     setAnchorEl(currentTarget);
 
   }
