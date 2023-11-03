@@ -5,3 +5,4 @@ config/
 deploy/
 src/assets/
 src/serviceWorker.js
+postcss.config.js

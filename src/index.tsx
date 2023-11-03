@@ -5,6 +5,7 @@ import Dashboard from 'pages/Dashboard';
 import reportWebVitals from './reportWebVitals';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
+import './assets/main.css';
 
 const root = createRoot(document.getElementById('root') as Element);
 

@@ -18,7 +18,7 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
   secondTextBoxPlaceHolder = "",
 }) => {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
-  const { register, handleSubmit, formState: { errors } } = useForm<ExecComponentFormData>();
+  const { register, handleSubmit, formState: { errors }, reset } = useForm<ExecComponentFormData>();
   const [openDialog, setOpenDialog] = React.useState<boolean>(false);
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
   const open = Boolean(anchorEl);
@@ -56,7 +56,7 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
               placeholder={placeholder}
               {...register('userInput', { required: "This field is required" })}
               error={Boolean(errors.userInput)}
-              sx={{ paddingRight: "30px" }}
+              sx={{ paddingRight: "30px", paddingBottom: "20px" }}
               helperText={errors.userInput?.message} />
             {isLoading && <Spinner />}
           </Stack>
@@ -82,8 +82,11 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
               helperText={errors.userInputSecond?.message} />
             : null
           }
-          <Button variant="contained" color="primary" type="submit">
+          <Button variant="contained" color="primary" type="submit" sx={{marginRight:"10px"}}>
             {buttonText}
+          </Button>
+          <Button variant="contained" color="primary" type="reset" onClick={()=>reset()}>
+            Reset
           </Button>
         </form>
         <UploadDialog openDialog={openDialog}
