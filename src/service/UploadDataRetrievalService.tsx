@@ -42,7 +42,10 @@ export const makePostCall = async (body: Record<string, unknown>, resource: stri
   }
 };
 
-export const getUploadStatusData = async (limit: number, forQueues = false, uploadCycleId = "", filteredProfiles: string[] = []) => {
+export const getUploadStatusData = async (limit: number,
+  forQueues = false,
+  uploadCycleId = "",
+  filteredProfiles: string[] = []) => {
   const uploadCycleIdFilter = _.isEmpty(uploadCycleId) ? "" : `&uploadCycleId=${uploadCycleId}`
   const filteredProfilesFilter = _.isEmpty(filteredProfiles) ? "" : `&archiveProfile=${filteredProfiles.join(",")}`
   const resource =
@@ -50,7 +53,18 @@ export const getUploadStatusData = async (limit: number, forQueues = false, uplo
   const result = await makeGetCall(resource);
   return result;
 };
+export const getUploadStatusDataForQueues = async (limit: number,
+  uploadCycleId = "",
+  filteredProfiles: string[] = []) => {
+  return getUploadStatusData(limit, true, uploadCycleId, filteredProfiles)
+}
 
+export const getUploadStatusDataForUshered = async (limit: number,
+  uploadCycleId = "",
+  filteredProfiles: string[] = []) => {
+  return getUploadStatusData(limit, false, uploadCycleId, filteredProfiles)
+
+}
 export const getUploadStatusDataByProfile = async (
   limit: number,
   forQueues = false
@@ -93,7 +107,7 @@ export const verifyUploadStatusForUploadCycleId = async (
   const resource =
     backendServer +
     `${chooseApiPrefix(forQueues)}/verifyUploadStatus?limit=${MAX_ITEMS_LISTABLE}`;
-  const result = await makePostCall({ uploadCycleIdForVerification: uploadCycleId},
+  const result = await makePostCall({ uploadCycleIdForVerification: uploadCycleId },
     resource);
   return result.response
 };
