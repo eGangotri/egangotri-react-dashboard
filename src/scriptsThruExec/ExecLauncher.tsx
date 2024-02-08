@@ -43,15 +43,13 @@ const ExecLauncher: React.FC = () => {
                 <ExecComponent
                     buttonText="Create Archive Excel"
                     placeholder='Archive Link'
-                    secondTextBox={false}
-                    secondTextBoxPlaceHolder='Enter Destination Folder'
                     execType={ExecType.GenExcelOfArchiveLink} />
 
                 <ExecComponent
                     buttonText="Create Drive Excel"
                     placeholder='Enter Google Drive Link'
                     secondTextBox={true}
-                    secondTextBoxPlaceHolder='Enter Destination Folder'
+                    secondTextBoxPlaceHolder='Enter Folder Name'
                     execType={ExecType.GenExcelOfGoogleDriveLink} />
             </Box>
         </Box>

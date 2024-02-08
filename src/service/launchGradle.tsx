@@ -3,6 +3,10 @@ import { makePostCall } from './UploadDataRetrievalService';
 import { ArchiveProfileAndTitle } from 'mirror/types';
 import { ExecResponseDetails } from 'scriptsThruExec/types';
 
+import { utils, writeFile } from 'xlsx';
+import os from 'os';
+import path from 'path';
+
 export async function launchUploader(profiles: string) {
     return launchGradle(profiles, 'launchUploader')
 }
@@ -41,33 +45,48 @@ export async function launchGoogleDriveDownload(googleDriveLink: string,
     return result.response as ExecResponseDetails
 }
 
+export async function launchGoogleDriveExcelListing(googleDriveLink: string,
+    folderName: string): Promise<ExecResponseDetails> {
+    const resource =
+        backendServer +
+        `yarn/getGoogleDriveListing`;
+
+    const result = await makePostCall({
+        "googleDriveLink": googleDriveLink,
+        //"folderName": folderName
+    },
+        resource);
+    return result.response as ExecResponseDetails
+}
 
 
-export async function launchArchiveExcelDownload(archiveLink: string): Promise<boolean> {
+
+
+export async function launchArchiveExcelDownload(archiveLink: string): Promise<ExecResponseDetails> {
     const resource =
         backendServer +
         `yarn/getArchiveListing`;
 
-    const requestOptions: RequestInit = {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            "archiveLink": archiveLink
-        }),
-    };
+    const result = await makePostCall({
+        "archiveLink": archiveLink
+    }, resource);
 
-    const response = await fetch(resource, requestOptions);
+    const _result = result.response;
+    console.log(`_result ${JSON.stringify(_result)}`)
+    if (_result?.success == true) {
+        generateExcel(_result.links, _result.excelFileName);
+        return {
+            excelFileName: _result.excelFileName,
+            linkCount: `${_result.links.length}`
+        } as ExecResponseDetails;
+    }
+    else {
+        return {
+            excelFileName: "Error",
+            linkCount: "Error"
+        } as ExecResponseDetails;
 
-    // Assuming the response is a blob
-    const blob = await response.blob();
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'links.xlsx';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    return true
+    }
 }
 
 export async function launchGradle(profiles: string, gradleTask: string) {
@@ -89,3 +108,21 @@ export async function launchGradleWithPostData(
     }, _url);
     return result.response
 }
+
+
+interface LinkData {
+    link: string;
+    title: string;
+}
+
+const generateExcel = (data: LinkData[], excelfileName: string) => {
+    const worksheet = utils.json_to_sheet(data);
+    const workbook = utils.book_new();
+    utils.book_append_sheet(workbook, worksheet, `${excelfileName}`);
+
+    const homeDirectory = os.homedir();
+    const downloadDirectory = path.join(homeDirectory, 'Downloads');
+    const filePath = path.join(downloadDirectory, `${excelfileName}.xlsx`);
+
+    writeFile(workbook, filePath);
+};

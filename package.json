@@ -30,7 +30,8 @@
     "recoil": "^0.7.7",
     "tailwindcss": "^3.3.5",
     "typescript": "^5.2.2",
-    "web-vitals": "^1.1.2"
+    "web-vitals": "^1.1.2",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "latest",
