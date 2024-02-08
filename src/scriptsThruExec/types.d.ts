@@ -23,3 +23,13 @@ export type ExecResponseDetails = {
     totalPdfsToDownload?: number;
     results?: string[];
 }
+
+
+export type ArchiveLinkResponseDetails = {
+    [key: string]: string | number | boolean | null; // Replace with your actual types
+    status?: string;
+    success_count?: number;
+    error_count?: number;
+    totalPdfsToDownload?: number;
+    results?: string[];
+}

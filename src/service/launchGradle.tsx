@@ -27,8 +27,8 @@ export async function launchBulkRename(profiles: string) {
     return launchGradle(profiles, 'bulkRename')
 }
 
-export async function launchGoogleDriveDownload(googleDriveLink: string, 
-    profile: string):Promise<ExecResponseDetails> {
+export async function launchGoogleDriveDownload(googleDriveLink: string,
+    profile: string): Promise<ExecResponseDetails> {
     const resource =
         backendServer +
         `yarn/downloadFromGoogleDrive`;
@@ -41,6 +41,34 @@ export async function launchGoogleDriveDownload(googleDriveLink: string,
     return result.response as ExecResponseDetails
 }
 
+
+
+export async function launchArchiveExcelDownload(archiveLink: string): Promise<boolean> {
+    const resource =
+        backendServer +
+        `yarn/getArchiveListing`;
+
+    const requestOptions: RequestInit = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            "archiveLink": archiveLink
+        }),
+    };
+
+    const response = await fetch(resource, requestOptions);
+
+    // Assuming the response is a blob
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'links.xlsx';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    return true
+}
 
 export async function launchGradle(profiles: string, gradleTask: string) {
     const _url = `${backendServer}execLauncher/${gradleTask}?profiles=${profiles}`
