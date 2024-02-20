@@ -1,4 +1,4 @@
-import { launchArchiveExcelDownload, launchBulkRename, launchGoogleDriveDownload, launchGoogleDriveExcelListing, launchGradleMoveToFreeze, launchReverseMove, launchUploader, loginToArchive } from "service/launchGradle";
+import { launchArchiveExcelDownload, launchBulkRename, launchGoogleDriveDownload, launchGoogleDriveExcelListing, launchGradleMoveToFreeze, launchLocalFolderListing, launchReverseMove, launchUploader, loginToArchive } from "service/launchGradle";
 import { ExecComponentFormData, ExecResponse, ExecResponseDetails } from "./types";
 
 export enum ExecType {
@@ -10,6 +10,8 @@ export enum ExecType {
   DownloadGoogleDriveLink = 6,
   GenExcelOfArchiveLink = 7,
   GenExcelOfGoogleDriveLink = 8,
+  GenListingsofLocalFolder = 9,
+
 }
 export const invokeFuncBasedOnExecType = async (execType: ExecType,
   data: ExecComponentFormData): Promise<ExecResponseDetails> => {
@@ -41,6 +43,9 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       _resp = await launchArchiveExcelDownload(dataUserInput);
       break;
     case ExecType.GenExcelOfGoogleDriveLink:
+      _resp = await launchLocalFolderListing(dataUserInput);
+      break;
+    case ExecType.GenListingsofLocalFolder:
       _resp = await launchGoogleDriveExcelListing(dataUserInput, "");
       break;
     default:
