@@ -11,8 +11,8 @@ export enum ExecType {
   GenExcelOfArchiveLink = 7,
   GenExcelOfGoogleDriveLink = 8,
   GenListingsofLocalFolder = 9,
-
 }
+
 export const invokeFuncBasedOnExecType = async (execType: ExecType,
   data: ExecComponentFormData): Promise<ExecResponseDetails> => {
   let _resp: ExecResponseDetails = {}
@@ -43,10 +43,10 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       _resp = await launchArchiveExcelDownload(dataUserInput);
       break;
     case ExecType.GenExcelOfGoogleDriveLink:
-      _resp = await launchLocalFolderListing(dataUserInput);
+      _resp = await launchGoogleDriveExcelListing(dataUserInput);
       break;
     case ExecType.GenListingsofLocalFolder:
-      _resp = await launchGoogleDriveExcelListing(dataUserInput, "");
+      _resp = await launchLocalFolderListing(dataUserInput);
       break;
     default:
       _resp = {}

@@ -2,7 +2,6 @@ import React from 'react';
 import ExecComponent from './ExecComponent';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import UploadDialog from 'pages/UploadCycles/UploadDialog';
 import { ExecType } from './util';
 
 const ExecLauncherTwo: React.FC = () => {
