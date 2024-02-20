@@ -27,8 +27,12 @@ const ExecLauncherTwo: React.FC = () => {
                     placeholder='Folder Path'
                     execType={ExecType.GenListingsofLocalFolder} />
 
-                <ExecComponent buttonText="List Files in Goofle Drive"
-                    placeholder='Google Drive Link'
+
+                <ExecComponent
+                    buttonText="Create Drive Excel"
+                    placeholder='Enter Google Drive Link'
+                    secondTextBox={true}
+                    secondTextBoxPlaceHolder='Enter Folder Name'
                     execType={ExecType.GenExcelOfGoogleDriveLink} />
             </Box>
 
@@ -45,13 +49,6 @@ const ExecLauncherTwo: React.FC = () => {
                     buttonText="Create Archive Excel"
                     placeholder='Archive Link'
                     execType={ExecType.GenExcelOfArchiveLink} />
-
-                <ExecComponent
-                    buttonText="Create Drive Excel"
-                    placeholder='Enter Google Drive Link'
-                    secondTextBox={true}
-                    secondTextBoxPlaceHolder='Enter Folder Name'
-                    execType={ExecType.GenExcelOfGoogleDriveLink} />
             </Box>
         </Box>
     );

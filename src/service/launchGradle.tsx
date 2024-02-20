@@ -49,14 +49,14 @@ export async function launchGoogleDriveDownload(googleDriveLink: string,
     return result.response as ExecResponseDetails
 }
 
-export async function launchGoogleDriveExcelListing(googleDriveLink: string ): Promise<ExecResponseDetails> {
+export async function launchGoogleDriveExcelListing(googleDriveLink: string, folderName:string ): Promise<ExecResponseDetails> {
     const resource =
         backendServer +
         `yarn/getGoogleDriveListing`;
 
     const result = await makePostCall({
         "googleDriveLink": googleDriveLink,
-        //"folderName": folderName
+        "folderName": folderName
     },
         resource);
     return result.response as ExecResponseDetails

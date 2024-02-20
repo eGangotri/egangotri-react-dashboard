@@ -43,7 +43,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       _resp = await launchArchiveExcelDownload(dataUserInput);
       break;
     case ExecType.GenExcelOfGoogleDriveLink:
-      _resp = await launchGoogleDriveExcelListing(dataUserInput);
+      _resp = await launchGoogleDriveExcelListing(dataUserInput, data.userInputSecond || "D:\\");
       break;
     case ExecType.GenListingsofLocalFolder:
       _resp = await launchLocalFolderListing(dataUserInput);
