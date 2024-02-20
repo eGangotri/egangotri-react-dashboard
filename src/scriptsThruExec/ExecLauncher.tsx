@@ -39,12 +39,6 @@ const ExecLauncher: React.FC = () => {
                     secondTextBoxPlaceHolder='Enter Destination Folder'
                     execType={ExecType.DownloadGoogleDriveLink} />
 
-
-                <ExecComponent
-                    buttonText="Create Archive Excel"
-                    placeholder='Archive Link'
-                    execType={ExecType.GenExcelOfArchiveLink} />
-
                 <ExecComponent
                     buttonText="Create Drive Excel"
                     placeholder='Enter Google Drive Link'

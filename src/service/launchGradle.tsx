@@ -49,7 +49,7 @@ export async function launchGoogleDriveDownload(googleDriveLink: string,
     return result.response as ExecResponseDetails
 }
 
-export async function launchGoogleDriveExcelListing(googleDriveLink: string, folderName:string ): Promise<ExecResponseDetails> {
+export async function launchGoogleDriveExcelListing(googleDriveLink: string, folderName: string): Promise<ExecResponseDetails> {
     const resource =
         backendServer +
         `yarn/getGoogleDriveListing`;
@@ -77,16 +77,14 @@ export async function launchArchiveExcelDownload(archiveLink: string): Promise<E
     const _result = result.response;
     console.log(`_result ${JSON.stringify(_result)}`)
     if (_result?.success == true) {
-        generateExcel(_result.links, _result.excelFileName);
+        //  generateExcel(_result.links, _result.excelFileName);
         return {
-            excelFileName: _result.excelFileName,
-            linkCount: `${_result.links.length}`
+            msg: _result.msg
         } as ExecResponseDetails;
     }
     else {
         return {
-            excelFileName: "Error",
-            linkCount: "Error"
+            msg: "Error. failure Reported from backend. Please check logs.",
         } as ExecResponseDetails;
 
     }
