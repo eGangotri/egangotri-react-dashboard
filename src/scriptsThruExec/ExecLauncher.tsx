@@ -49,7 +49,7 @@ const ExecLauncher: React.FC = () => {
                     buttonText="Create Drive Excel"
                     placeholder='Enter Google Drive Link'
                     secondTextBox={true}
-                    secondTextBoxPlaceHolder='Enter Folder Name'
+                    secondTextBoxPlaceHolder='Enter Folder Name (not path)'
                     execType={ExecType.GenExcelOfGoogleDriveLink} />
             </Box>
         </Box>

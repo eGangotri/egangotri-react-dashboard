@@ -56,7 +56,7 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
               placeholder={placeholder}
               {...register('userInput', { required: "This field is required" })}
               error={Boolean(errors.userInput)}
-              sx={{ paddingRight: "30px", paddingBottom: "20px" }}
+              sx={{ paddingRight: "30px", paddingBottom: "20px", width: "200%"  }}
               helperText={errors.userInput?.message} />
             {isLoading && <Spinner />}
           </Stack>
