@@ -1,4 +1,16 @@
 a.active {
     color: blue;
+}
+
+a.active .menuItem {
     background-color: lightblue;
+}
+
+.menuItem {
+    padding: 10px;
+    margin: 10px;
+    border: 1px solid black;
+    border-radius: 5px;
+    text-align: center;
+    cursor: pointer;
 }

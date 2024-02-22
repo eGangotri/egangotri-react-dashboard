@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { Grid } from '@mui/material';
+import { Box, Grid } from '@mui/material';
 import {
   FILE_MOVER_PATH, EXEC_LAUNCHER_PATH, UPLOADS_QUEUED_PATH,
   UPLOADS_USHERED_PATH,
@@ -15,24 +15,25 @@ import './topPanel.css';
 import Tiff2Pdf from 'scriptsThruExec/Tiff2Pdf';
 
 const TopPanel: React.FC = () => {
+  const border = "1px solid black";
   const location = useLocation();
   const { pathname } = location;
   const splitLocation = pathname.split("/");
 
   const activeClass = (_route: string) => {
-    return splitLocation[1] === _route ? "active" : ""
+    return splitLocation[1] === _route ? "active" : "" ;
   }
   return (
     <Grid container spacing={1} columns={{ sm: 6, md: 18 }} direction="row" sx={{ margin: "20px 0" }}>
-      <Grid item xs={1} sm={1} md={2}><NavLink to={LANDING_PAGE_PATH} className={activeClass(LANDING_PAGE_PATH)}>Uploads Cycles</NavLink></Grid>
-      <Grid item xs={1} sm={1} md={2}><NavLink to={UPLOADS_USHERED_PATH} className={activeClass(UPLOADS_USHERED_PATH)} >Uploads Ushered</NavLink></Grid>
-      <Grid item xs={1} sm={1} md={2}><NavLink to={UPLOADS_QUEUED_PATH} className={activeClass(UPLOADS_QUEUED_PATH)}>Uploads Queued</NavLink></Grid>
-      <Grid item xs={1} sm={1} md={2}><NavLink to={EXEC_LAUNCHER_PATH} className={activeClass(EXEC_LAUNCHER_PATH)}>Script Launcher</NavLink></Grid>
-      <Grid item xs={1} sm={1} md={2}><NavLink to={EXEC_LAUNCHER_TWO_PATH} className={activeClass(EXEC_LAUNCHER_TWO_PATH)}>Script Launcher-2</NavLink></Grid>
-      <Grid item xs={1} sm={1} md={2}><NavLink to={TALLY_UPLOADED_DATA} className={activeClass(TALLY_UPLOADED_DATA)}>Tally Upload Database</NavLink></Grid>
-      <Grid item xs={1} sm={1} md={2}><NavLink to={TIFF_2_PDF} className={activeClass(TIFF_2_PDF)}>Tiff 2 Pdf</NavLink></Grid>
-      <Grid item xs={1} sm={1} md={2}><NavLink to={AI_TEXT_IDENTIFIER} className={activeClass(AI_TEXT_IDENTIFIER)}>AI Identify Text</NavLink></Grid>
-      <Grid item xs={1} sm={1} md={2}><NavLink to={FILE_MOVER_PATH} className={activeClass(FILE_MOVER_PATH)}>File Mover</NavLink></Grid>
+      <Grid item xs={1} sm={1} md={2}><NavLink to={LANDING_PAGE_PATH} className={activeClass(LANDING_PAGE_PATH)}><Box className="menuItem">Uploads Cycles</Box></NavLink></Grid>
+      <Grid item xs={1} sm={1} md={2}><NavLink to={UPLOADS_USHERED_PATH} className={activeClass(UPLOADS_USHERED_PATH)} ><Box className="menuItem">Uploads Ushered</Box></NavLink></Grid>
+      <Grid item xs={1} sm={1} md={2}><NavLink to={UPLOADS_QUEUED_PATH} className={activeClass(UPLOADS_QUEUED_PATH)}><Box className="menuItem">Uploads Queued</Box></NavLink></Grid>
+      <Grid item xs={1} sm={1} md={2}><NavLink to={EXEC_LAUNCHER_PATH} className={activeClass(EXEC_LAUNCHER_PATH)}><Box className="menuItem">Script Launcher</Box></NavLink></Grid>
+      <Grid item xs={1} sm={1} md={2}><NavLink to={EXEC_LAUNCHER_TWO_PATH} className={activeClass(EXEC_LAUNCHER_TWO_PATH)}><Box className="menuItem">Script Launcher-2</Box></NavLink></Grid>
+      <Grid item xs={1} sm={1} md={2}><NavLink to={TALLY_UPLOADED_DATA} className={activeClass(TALLY_UPLOADED_DATA)}><Box className="menuItem">Tally Upload Database</Box></NavLink></Grid>
+      <Grid item xs={1} sm={1} md={2}><NavLink to={TIFF_2_PDF} className={activeClass(TIFF_2_PDF)}><Box className="menuItem">Tiff 2 Pdf</Box></NavLink></Grid>
+      <Grid item xs={1} sm={1} md={2}><NavLink to={AI_TEXT_IDENTIFIER} className={activeClass(AI_TEXT_IDENTIFIER)}><Box className="menuItem">AI-Text-Identify</Box></NavLink></Grid>
+      <Grid item xs={1} sm={1} md={2}><NavLink to={FILE_MOVER_PATH} className={activeClass(FILE_MOVER_PATH)}><Box className="menuItem">File Mover</Box></NavLink></Grid>
     </Grid>
   );
 };
