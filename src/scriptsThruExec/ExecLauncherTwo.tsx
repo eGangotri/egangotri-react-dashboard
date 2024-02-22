@@ -20,8 +20,8 @@ const ExecLauncherTwo: React.FC = () => {
             </Box>
 
             <Box display="flex" gap={4} mb={2} flexDirection="column">
-                <ExecComponent buttonText="Add Footer to PDFs"
-                    execType={ExecType.ReverseMove} />
+                <ExecComponent buttonText="Add Header/Footer to PDFs"
+                    execType={ExecType.AddHeaderFooter} />
 
                 <ExecComponent buttonText="List Files in Folder"
                     placeholder='Folder Path'

@@ -49,6 +49,21 @@ export async function launchGoogleDriveDownload(googleDriveLink: string,
     return result.response as ExecResponseDetails
 }
 
+export async function addHeaderFooter(
+    profile: string): Promise<ExecResponseDetails> {
+    const resource =
+        backendServer +
+        `yarn/addHeaderFooter`;
+
+    const result = await makePostCall({
+        "profile": profile
+    },
+        resource);
+    return result.response as ExecResponseDetails
+}
+
+
+
 export async function launchGoogleDriveExcelListing(googleDriveLink: string, folderName: string): Promise<ExecResponseDetails> {
     const resource =
         backendServer +
