@@ -16,6 +16,7 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
   execType = ExecType.LoginToArchive,
   secondTextBox = false,
   secondTextBoxPlaceHolder = "",
+  reactComponent = <></>
 }) => {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const { register, handleSubmit, formState: { errors }, reset } = useForm<ExecComponentFormData>();
@@ -82,6 +83,8 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
               helperText={errors.userInputSecond?.message} />
             : null
           }
+          
+          {reactComponent}
           <Button variant="contained" color="primary" type="submit" sx={{marginRight:"10px"}}>
             {buttonText}
           </Button>

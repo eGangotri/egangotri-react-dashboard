@@ -31,8 +31,19 @@ export async function launchBulkRename(profiles: string) {
     return launchGradle(profiles, 'bulkRename')
 }
 
-export async function launchLocalFolderListing(argFirst: string) {
-    return _launchGradle(argFirst, 'bookTitles')
+export async function launchLocalFolderListingForAll(params: string) {
+    return _launchGradlev2({
+        "argFirst": params,
+        "pdfsOnly": "false"
+
+    }, 'bookTitles')
+}
+
+export async function launchLocalFolderListingForPdf(params: string) {
+    return _launchGradlev2({
+        "argFirst": params,
+        "pdfsOnly": "true"
+    }, 'bookTitles')
 }
 
 export async function launchGoogleDriveDownload(googleDriveLink: string,
@@ -116,6 +127,17 @@ export async function launchGradle(profiles: string, gradleTask: string) {
 
 export async function _launchGradle(argFirst: string, gradleTask: string) {
     const _url = `${backendServer}execLauncher/${gradleTask}?argFirst=${argFirst}`
+    console.log(`_url ${_url}`);
+    const res = await fetch(_url);
+    const jsonResp = res.json()
+    console.log(`res ${JSON.stringify(jsonResp)}`);
+    return jsonResp;
+}
+
+
+export async function _launchGradlev2(args: { [key: string]: string }, gradleTask: string) {
+    const params = new URLSearchParams(args).toString();
+    const _url = `${backendServer}execLauncher/${gradleTask}?${params}`
     console.log(`_url ${_url}`);
     const res = await fetch(_url);
     const jsonResp = res.json()

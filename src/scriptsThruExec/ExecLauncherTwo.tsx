@@ -1,10 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ExecComponent from './ExecComponent';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { ExecType } from './util';
+import { Radio, RadioGroup, FormControlLabel, FormControl } from '@mui/material';
+import { ChangeEvent } from 'react';
 
 const ExecLauncherTwo: React.FC = () => {
+    const [genListingOfLocalFolder, setGenListingOfLocalFolder] = useState<number>(ExecType.GenListingsofLocalFolderAsPdf);
+    
+    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const _val = event.target.value;
+        console.log("_val", _val)
+        const _listingType = _val === `${ExecType.GenListingsofLocalFolderAsAll}` ? ExecType.GenListingsofLocalFolderAsAll : ExecType.GenListingsofLocalFolderAsPdf
+        console.log("_listingType", _listingType)
+        setGenListingOfLocalFolder(_listingType);
+    };
 
     return (
         <Box display="flex" gap={4} mb={2} flexDirection="row">
@@ -25,7 +36,14 @@ const ExecLauncherTwo: React.FC = () => {
 
                 <ExecComponent buttonText="List Files in Folder"
                     placeholder='Folder Path'
-                    execType={ExecType.GenListingsofLocalFolder} />
+                    execType={genListingOfLocalFolder}
+                    reactComponent={<>
+                        <RadioGroup aria-label="fileType" name="fileType" value={genListingOfLocalFolder} onChange={handleChange} row>
+                            <FormControlLabel value={ExecType.GenListingsofLocalFolderAsPdf} control={<Radio />} label="PDF-ONLY" />
+                            <FormControlLabel value={ExecType.GenListingsofLocalFolderAsAll} control={<Radio />} label="ALL" />
+                        </RadioGroup>
+                    </>}
+                />
 
                 <ExecComponent
                     buttonText="Create Drive Excel"

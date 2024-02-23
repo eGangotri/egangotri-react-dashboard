@@ -1,4 +1,10 @@
-import { addHeaderFooter, launchArchiveExcelDownload, launchBulkRename, launchGoogleDriveDownload, launchGoogleDriveExcelListing, launchGradleMoveToFreeze, launchLocalFolderListing, launchReverseMove, launchUploader, loginToArchive } from "service/launchGradle";
+import {
+  addHeaderFooter, launchArchiveExcelDownload, launchBulkRename,
+  launchGoogleDriveDownload, launchGoogleDriveExcelListing, launchGradleMoveToFreeze,
+  launchLocalFolderListingForAll,
+  launchLocalFolderListingForPdf,
+  launchReverseMove, launchUploader, loginToArchive
+} from "service/launchGradle";
 import { ExecComponentFormData, ExecResponse, ExecResponseDetails } from "./types";
 
 export enum ExecType {
@@ -10,7 +16,8 @@ export enum ExecType {
   DownloadGoogleDriveLink = 6,
   GenExcelOfArchiveLink = 7,
   GenExcelOfGoogleDriveLink = 8,
-  GenListingsofLocalFolder = 9,
+  GenListingsofLocalFolderAsPdf = 91,
+  GenListingsofLocalFolderAsAll = 92,
   AddHeaderFooter = 10,
 }
 
@@ -63,8 +70,12 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
     case ExecType.GenExcelOfGoogleDriveLink:
       _resp = await launchGoogleDriveExcelListing(dataUserInput, data.userInputSecond || "D:\\");
       break;
-    case ExecType.GenListingsofLocalFolder:
-      _resp = await launchLocalFolderListing(dataUserInput);
+    case ExecType.GenListingsofLocalFolderAsPdf:
+      _resp = await launchLocalFolderListingForPdf(dataUserInput);
+      break;
+
+    case ExecType.GenListingsofLocalFolderAsAll:
+      _resp = await launchLocalFolderListingForAll(dataUserInput);
       break;
     case ExecType.AddHeaderFooter:
       _resp = await addHeaderFooter(dataUserInput);

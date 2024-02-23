@@ -9,6 +9,7 @@ export type ExecComponentProps = {
     execType?: number;
     secondTextBox?: boolean;
     secondTextBoxPlaceHolder?: string;
+    reactComponent ?: JSX.Element;
 };
 
 export type ExecResponse = {
