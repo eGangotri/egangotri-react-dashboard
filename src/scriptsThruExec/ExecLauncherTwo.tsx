@@ -44,13 +44,6 @@ const ExecLauncherTwo: React.FC = () => {
                         </RadioGroup>
                     </>}
                 />
-
-                <ExecComponent
-                    buttonText="Create Drive Excel"
-                    placeholder='Enter Google Drive Link'
-                    secondTextBox={true}
-                    secondTextBoxPlaceHolder='Enter Folder Name (not path)'
-                    execType={ExecType.GenExcelOfGoogleDriveLink} />
             </Box>
 
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
