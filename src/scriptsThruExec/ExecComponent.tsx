@@ -9,6 +9,8 @@ import Spinner from '../widgets/Spinner';
 import { Popover, Typography, Stack } from '@mui/material';
 import ExecResponsePanel from './ExecResponsePanel';
 import { ExecComponentFormData, ExecComponentProps } from './types';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
 
 const ExecComponent: React.FC<ExecComponentProps> = ({
   placeholder = 'Comma Separated Profile Codes',
@@ -28,6 +30,7 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
     setAnchorEl(null);
   };
   const [execLogsForPopover, setExecLogsForPopover] = React.useState(<></>);
+  const [backendResp, setBackendResp] = React.useState({} );
 
   const funcToInvoke = async (event: React.MouseEvent<HTMLButtonElement>) => {
     const currentTarget = event.currentTarget
@@ -36,7 +39,7 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
     const _resp = await invokeFuncBasedOnExecType(execType, formData);
     console.log(`_resp ${JSON.stringify(_resp)}`);
     setIsLoading(false);
-
+    setBackendResp(_resp);
     setExecLogsForPopover(<ExecResponsePanel response={_resp} />);
     setAnchorEl(currentTarget);
 
@@ -57,7 +60,7 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
               placeholder={placeholder}
               {...register('userInput', { required: "This field is required" })}
               error={Boolean(errors.userInput)}
-              sx={{ paddingRight: "30px", paddingBottom: "20px", width: "200%"  }}
+              sx={{ paddingRight: "30px", paddingBottom: "20px", width: "200%" }}
               helperText={errors.userInput?.message} />
             {isLoading && <Spinner />}
           </Stack>
@@ -66,13 +69,52 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
             open={open}
             anchorEl={anchorEl}
             onClose={handleClose}
+            sx={{
+              width: '80%', // Reduce width by 20%
+              height: '80%', // Reduce height by 20%
+            }}
             anchorOrigin={{
               vertical: 'bottom',
               horizontal: 'right',
             }}
-          ><Typography sx={{ p: 2 }}>{execLogsForPopover}</Typography>
+          >
+            <Box sx={{
+              p: 2,
+              width: '80%', // Reduce width by 20%
+              height: '10%', // Reduce height by 20%
+            }}>
+              <Button
+                variant="contained"
+                onClick={async (e: React.MouseEvent<HTMLButtonElement>) => {
+                  //  await findMissingAndSetInPopover(e, row)
+                  try {
+                    await navigator.clipboard.writeText(JSON.stringify(backendResp));
+                    console.log('Text copied to clipboard');
+                  } catch (err) {
+                    console.error('Failed to copy text: ', err);
+                  }
+                }
+                }
+                size="small"
+                sx={{ color: "#f38484", width: "200px", marginTop: "10px" }}
+                disabled={isLoading}
+              >
+                Copy Logs
+              </Button>
+              <IconButton
+                aria-label="close"
+                onClick={handleClose}
+                sx={{
+                  position: 'absolute',
+                  right: 8,
+                  top: 8,
+                }}
+              >
+                <CloseIcon />
+              </IconButton>
+            </Box>
+            <Typography sx={{ p: 2 }}>{execLogsForPopover}</Typography>
           </Popover>
-
 
           {secondTextBoxPlaceHolder?.length > 0 ?
             <TextField variant="outlined"
@@ -83,12 +125,12 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
               helperText={errors.userInputSecond?.message} />
             : null
           }
-          
+
           {reactComponent}
-          <Button variant="contained" color="primary" type="submit" sx={{marginRight:"10px"}}>
+          <Button variant="contained" color="primary" type="submit" sx={{ marginRight: "10px" }}>
             {buttonText}
           </Button>
-          <Button variant="contained" color="primary" type="reset" onClick={()=>reset()}>
+          <Button variant="contained" color="primary" type="reset" onClick={() => reset()}>
             Reset
           </Button>
         </form>
