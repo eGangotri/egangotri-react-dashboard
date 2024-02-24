@@ -1,3 +1,6 @@
+import { SxProps } from '@mui/system';
+import { Theme } from '@mui/material/styles';
+
 export type ExecComponentFormData = {
     userInput: string;
     userInputSecond?: string;
@@ -10,6 +13,7 @@ export type ExecComponentProps = {
     secondTextBox?: boolean;
     secondTextBoxPlaceHolder?: string;
     reactComponent ?: JSX.Element;
+    css?: SxProps<Theme>;
 };
 
 export type ExecResponse = {

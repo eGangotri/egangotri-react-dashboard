@@ -18,7 +18,8 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
   execType = ExecType.LoginToArchive,
   secondTextBox = false,
   secondTextBoxPlaceHolder = "",
-  reactComponent = <></>
+  reactComponent = <></>,
+  css = {}
 }) => {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const { register, handleSubmit, formState: { errors }, reset } = useForm<ExecComponentFormData>();
@@ -60,7 +61,7 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
               placeholder={placeholder}
               {...register('userInput', { required: "This field is required" })}
               error={Boolean(errors.userInput)}
-              sx={{ paddingRight: "30px", paddingBottom: "20px", width: "200%" }}
+              sx={{ marginRight: "30px", marginBottom: "20px", width: "200%", ...css }}
               helperText={errors.userInput?.message} />
             {isLoading && <Spinner />}
           </Stack>
@@ -96,7 +97,7 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
                 }
                 }
                 size="small"
-                sx={{ color: "#f38484", width: "200px", marginTop: "10px" }}
+                sx={{ color: "#f38484", width: "200px", marginTop: "10px"}}
                 disabled={isLoading}
               >
                 Copy Logs
@@ -121,7 +122,7 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
               placeholder={secondTextBoxPlaceHolder}
               {...register('userInputSecond', { required: "This field is required" })}
               error={Boolean(errors.userInputSecond)}
-              sx={{ paddingRight: "30px", width: "250px" }}
+              sx={{ marginRight: "30px", width: "250px", ...css }}
               helperText={errors.userInputSecond?.message} />
             : null
           }
