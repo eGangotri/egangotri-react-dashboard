@@ -16,9 +16,6 @@ const ExecLauncher: React.FC = () => {
                 <ExecComponent buttonText="Move Folder Contents"
                     placeholder='Move QA-Passed-to-Pipeline'
                     execType={ExecType.MoveFolderContents} />
-
-                <Typography>Make Dialog and Popover for gradle console display</Typography>
-
             </Box>
 
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">

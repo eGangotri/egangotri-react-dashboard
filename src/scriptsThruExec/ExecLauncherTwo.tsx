@@ -26,8 +26,6 @@ const ExecLauncherTwo: React.FC = () => {
                 <ExecComponent buttonText="Vanitize Folder Contents"
                     placeholder='Vanitize'
                     execType={ExecType.MoveFolderContents} />
-
-                <Typography>Make Dialog and Popover for gradle console display</Typography>
             </Box>
 
             <Box display="flex" gap={4} mb={2} flexDirection="column">
