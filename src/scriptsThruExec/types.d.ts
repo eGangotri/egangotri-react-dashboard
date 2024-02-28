@@ -4,6 +4,7 @@ import { Theme } from '@mui/material/styles';
 export type ExecComponentFormData = {
     userInput: string;
     userInputSecond?: string;
+    userInputSecond3?: string;
 };
 
 export type ExecComponentProps = {

@@ -25,7 +25,7 @@ const ExecLauncherTwo: React.FC = () => {
 
                 <ExecComponent buttonText="Vanitize Folder Contents"
                     placeholder='Vanitize'
-                    execType={ExecType.MoveFolderContents} />
+                    execType={ExecType.MoveFolderContents_PROFILE} />
             </Box>
 
             <Box display="flex" gap={4} mb={2} flexDirection="column">

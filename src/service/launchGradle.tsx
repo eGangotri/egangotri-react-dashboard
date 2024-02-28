@@ -60,6 +60,17 @@ export async function launchGoogleDriveDownload(googleDriveLink: string,
     return result.response as ExecResponseDetails
 }
 
+export async function launchYarnQaToDestFileMover(
+    postParams: Record<string, string>): Promise<ExecResponseDetails> {
+    const resource =
+        backendServer +
+        `yarn/qaToDestFileMover`;
+
+    const result = await makePostCall(postParams,
+        resource);
+    return result.response as ExecResponseDetails
+}
+
 export async function addHeaderFooter(
     profile: string): Promise<ExecResponseDetails> {
     const resource =

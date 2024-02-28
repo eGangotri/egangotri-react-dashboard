@@ -3,13 +3,14 @@ import {
   launchGoogleDriveDownload, launchGoogleDriveExcelListing, launchGradleMoveToFreeze,
   launchLocalFolderListingForAll,
   launchLocalFolderListingForPdf,
-  launchReverseMove, launchUploader, loginToArchive
+  launchReverseMove, launchUploader, launchYarnQaToDestFileMover, loginToArchive
 } from "service/launchGradle";
 import { ExecComponentFormData, ExecResponse, ExecResponseDetails } from "./types";
 
 export enum ExecType {
   UploadPdfs = 1,
-  MoveFolderContents = 2,
+  MoveFolderContents_PROFILE = 21,
+  MoveFolderContents_PATH = 22,
   ReverseMove = 3,
   LoginToArchive = 4,
   UseBulkRenameConventions = 5,
@@ -48,8 +49,21 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
     case ExecType.UploadPdfs:
       _resp = await launchUploader(dataUserInput);
       break;
-    case ExecType.MoveFolderContents:
-      _resp = await launchGradleMoveToFreeze(dataUserInput);
+    case ExecType.MoveFolderContents_PROFILE:
+      _resp = await launchYarnQaToDestFileMover({
+        "qaPath": dataUserInput,
+        "dest": data.userInputSecond || "",
+        profile: "true",
+        flatten: "true"
+      });
+      break;
+    case ExecType.MoveFolderContents_PATH:
+      _resp = await launchYarnQaToDestFileMover({
+        qaPath: dataUserInput,
+        "dest": data.userInputSecond || "",
+        profile: "false",
+        flatten: "true"
+      });
       break;
     case ExecType.ReverseMove:
       _resp = await launchReverseMove(dataUserInput);
