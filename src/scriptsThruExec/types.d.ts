@@ -11,7 +11,6 @@ export type ExecComponentProps = {
     placeholder?: string;
     buttonText?: string;
     execType?: number;
-    secondTextBox?: boolean;
     secondTextBoxPlaceHolder?: string;
     reactComponent ?: JSX.Element;
     css?: SxProps<Theme>;

@@ -1,10 +1,8 @@
 import React, { ChangeEvent, useState } from 'react';
 import ExecComponent from './ExecComponent';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import UploadDialog from 'pages/UploadCycles/UploadDialog';
 import { ExecType } from './util';
-import { Checkbox, FormControlLabel, Radio, RadioGroup } from '@mui/material';
+import { FormControlLabel, Radio, RadioGroup } from '@mui/material';
 
 const ExecLauncher: React.FC = () => {
     const [profileOrPath, setProfileOrPath] = useState<number>(ExecType.MoveFolderContents_PROFILE);
@@ -30,20 +28,19 @@ const ExecLauncher: React.FC = () => {
                 <ExecComponent
                     buttonText="Move Folder Contents"
                     placeholder='Src Path for Moving QA-Passed-to-Pipeline'
-                    secondTextBox={true}
                     secondTextBoxPlaceHolder={profileOrPath === ExecType.MoveFolderContents_PROFILE ? 'Enter Profile' : 'Enter Dest Folder Path'}
                     execType={profileOrPath}
-                    reactComponent={<>
+                    reactComponent={<Box>
                         <RadioGroup aria-label="fileType" name="fileType" value={profileOrPath} onChange={handleChange} row>
                             <FormControlLabel value={ExecType.MoveFolderContents_PROFILE} control={<Radio />} label="Profile" />
                             <FormControlLabel value={ExecType.MoveFolderContents_PATH} control={<Radio />} label="Path" />
                         </RadioGroup>
-
+                        {/* 
                         <FormControlLabel
                             control={<Checkbox checked={flatten} onChange={handleChange2} />}
                             label="Flatten Folder Contents"
-                        />
-                    </>}
+                        /> */}
+                    </Box>}
                 />
             </Box>
 
@@ -51,7 +48,6 @@ const ExecLauncher: React.FC = () => {
                 <ExecComponent
                     buttonText="Download Pdfs"
                     placeholder='Enter Google Drive Link'
-                    secondTextBox={true}
                     secondTextBoxPlaceHolder='Enter Destination Folder'
                     execType={ExecType.DownloadGoogleDriveLink}
                     css={{ backgroundColor: "lightgreen", color: "cyan" }} />
@@ -59,7 +55,6 @@ const ExecLauncher: React.FC = () => {
                 <ExecComponent
                     buttonText="Create Drive Excel"
                     placeholder='Enter Google Drive Link'
-                    secondTextBox={true}
                     secondTextBoxPlaceHolder='Enter Folder Name (not path)'
                     execType={ExecType.GenExcelOfGoogleDriveLink} />
             </Box>

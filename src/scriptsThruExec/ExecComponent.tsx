@@ -16,7 +16,6 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
   placeholder = 'Comma Separated Profile Codes',
   buttonText = 'Click me',
   execType = ExecType.LoginToArchive,
-  secondTextBox = false,
   secondTextBoxPlaceHolder = "",
   reactComponent = <></>,
   css = {}

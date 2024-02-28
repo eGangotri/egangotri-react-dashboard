@@ -49,6 +49,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
     case ExecType.UploadPdfs:
       _resp = await launchUploader(dataUserInput);
       break;
+
     case ExecType.MoveFolderContents_PROFILE:
       _resp = await launchYarnQaToDestFileMover({
         "qaPath": dataUserInput,
@@ -57,6 +58,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         flatten: "true"
       });
       break;
+
     case ExecType.MoveFolderContents_PATH:
       _resp = await launchYarnQaToDestFileMover({
         qaPath: dataUserInput,
@@ -65,12 +67,15 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         flatten: "true"
       });
       break;
+
     case ExecType.ReverseMove:
       _resp = await launchReverseMove(dataUserInput);
       break;
+
     case ExecType.LoginToArchive:
       _resp = await loginToArchive(dataUserInput);
       break;
+
     case ExecType.UseBulkRenameConventions:
       _resp = await launchBulkRename(dataUserInput);
       break;

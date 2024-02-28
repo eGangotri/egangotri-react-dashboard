@@ -14,3 +14,11 @@ a.active .menuItem {
     text-align: center;
     cursor: pointer;
 }
+
+.menuItem:hover {
+    background-color: lightgray;
+}
+
+.menuItem_special {
+    border: 2px solid lightgreen;
+}

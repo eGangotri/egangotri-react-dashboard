@@ -48,7 +48,6 @@ const ExecLauncherTwo: React.FC = () => {
                 <ExecComponent
                     buttonText="Upload Pdfs to Archive"
                     placeholder='Enter Google Drive Link'
-                    secondTextBox={true}
                     secondTextBoxPlaceHolder='Enter Destination Folder'
                     execType={ExecType.DownloadGoogleDriveLink} />
 

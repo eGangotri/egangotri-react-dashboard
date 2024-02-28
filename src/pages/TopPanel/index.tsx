@@ -28,7 +28,7 @@ const TopPanel: React.FC = () => {
       <Grid item xs={1} sm={1} md={2}><NavLink to={LANDING_PAGE_PATH} className={activeClass(LANDING_PAGE_PATH)}><Box className="menuItem">Uploads Cycles</Box></NavLink></Grid>
       <Grid item xs={1} sm={1} md={2}><NavLink to={UPLOADS_USHERED_PATH} className={activeClass(UPLOADS_USHERED_PATH)} ><Box className="menuItem">Uploads Ushered</Box></NavLink></Grid>
       <Grid item xs={1} sm={1} md={2}><NavLink to={UPLOADS_QUEUED_PATH} className={activeClass(UPLOADS_QUEUED_PATH)}><Box className="menuItem">Uploads Queued</Box></NavLink></Grid>
-      <Grid item xs={1} sm={1} md={2}><NavLink to={EXEC_LAUNCHER_PATH} className={activeClass(EXEC_LAUNCHER_PATH)}><Box className="menuItem">Script Launcher</Box></NavLink></Grid>
+      <Grid item xs={1} sm={1} md={2}><NavLink to={EXEC_LAUNCHER_PATH} className={activeClass(EXEC_LAUNCHER_PATH)}><Box className="menuItem menuItem_special">Script Launcher</Box></NavLink></Grid>
       <Grid item xs={1} sm={1} md={2}><NavLink to={EXEC_LAUNCHER_TWO_PATH} className={activeClass(EXEC_LAUNCHER_TWO_PATH)}><Box className="menuItem">Script Launcher-2</Box></NavLink></Grid>
       <Grid item xs={1} sm={1} md={2}><NavLink to={TALLY_UPLOADED_DATA} className={activeClass(TALLY_UPLOADED_DATA)}><Box className="menuItem">Tally Upload Database</Box></NavLink></Grid>
       <Grid item xs={1} sm={1} md={2}><NavLink to={TIFF_2_PDF} className={activeClass(TIFF_2_PDF)}><Box className="menuItem">Tiff 2 Pdf</Box></NavLink></Grid>
