@@ -8,7 +8,7 @@ import { ChangeEvent } from 'react';
 
 const ExecLauncherTwo: React.FC = () => {
     const [genListingOfLocalFolder, setGenListingOfLocalFolder] = useState<number>(ExecType.GenListingsofLocalFolderAsPdf);
-    
+
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
         const _val = event.target.value;
         console.log("_val", _val)
@@ -56,6 +56,11 @@ const ExecLauncherTwo: React.FC = () => {
                     buttonText="Create Archive Excel"
                     placeholder='Archive Link'
                     execType={ExecType.GenExcelOfArchiveLink} />
+
+                <ExecComponent
+                    buttonText='Gradle Move to _freeze'
+                    placeholder='profiles as csv'
+                    execType={ExecType.MoveToFreeze} />
             </Box>
         </Box>
     );

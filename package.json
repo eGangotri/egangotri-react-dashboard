@@ -39,7 +39,7 @@
     "@testing-library/user-event": "latest",
     "@types/jest": "^27.0.1",
     "@types/lodash": "latest",
-    "@types/node": "^16.7.6",
+    "@types/node": "18.17.x",
     "@types/react": "^18.0.21",
     "@types/react-dom": "^18.0.6",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
@@ -95,5 +95,8 @@
     "whitelist": [
       "REACT_APP_DEV_ENV"
     ]
+  },
+  "engines": {
+    "node": "18.17.x"
   }
 }

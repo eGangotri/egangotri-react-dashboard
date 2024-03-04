@@ -20,6 +20,7 @@ export enum ExecType {
   GenListingsofLocalFolderAsPdf = 91,
   GenListingsofLocalFolderAsAll = 92,
   AddHeaderFooter = 10,
+  MoveToFreeze = 11,
 }
 
 export enum Tif2PdfExecType {
@@ -98,6 +99,10 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       break;
     case ExecType.AddHeaderFooter:
       _resp = await addHeaderFooter(dataUserInput);
+      break;
+
+    case ExecType.MoveToFreeze:
+      _resp = await launchGradleMoveToFreeze(dataUserInput)
       break;
     default:
       _resp = {}
