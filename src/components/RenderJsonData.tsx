@@ -1,28 +1,42 @@
 import React from 'react';
+import { ExecResponseDetails } from 'scriptsThruExec/types';
+import './styles.css';
 
-interface RenderJsonDataProps {
-  data: string //Record<string, any>;
+// Assuming your JSON response might have various structures
+interface ApiResponse {
+  response: ExecResponseDetails | ExecResponseDetails[]
 }
 
-const RenderJsonData: React.FC<RenderJsonDataProps> = ({ data }) => {
- // const renderData = (obj: Record<string, any>) => {
-    return (<></>)
-    // return Object.entries(obj).map(([key, value]) => (
-    //   <td key={key}>
-    //     <strong>{key}:</strong>
-    //     {typeof value === 'object' ? renderData(value) : <span>{value}</span>}
-    //   </td>
-    // ));
-  //};
+const RenderJsonData: React.FC<ApiResponse> = ({ response }) => {
+  const renderJson = (json: any) => {
+    if (Array.isArray(json)) {
+      return (
+        <ul>
+          {json.map((item, index) => (
+              <li key={index}>{renderJson(item)}</li>
+          ))}
+        </ul>
+      );
+    } else if (typeof json === 'object' && json !== null) {
+      return (
+        <ul>
+          {Object.entries(json).map(([key, value]) => (
+            <li key={key}>
+              <strong>{key}:</strong> {renderJson(value)}
+            </li>
+          ))}
+        </ul>
+      );
+    }
+    else if (typeof json === 'boolean' && json !== null) {
+      return <span>{json.toString()}</span>;
+    }
+    else {
+      return <span>{json}</span>;
+    }
+  };
 
-  return (<table>
-    <tr>
-      <th></th>
-    </tr>
-    <tr>
-    {/* {renderData(data)} */}
-    </tr>
-  </table>)
+  return <div>{renderJson(response)}</div>;
 };
 
 export default RenderJsonData;

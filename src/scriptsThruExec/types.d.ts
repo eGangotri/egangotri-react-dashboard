@@ -17,7 +17,7 @@ export type ExecComponentProps = {
 };
 
 export type ExecResponse = {
-    response: ExecResponseDetails
+    response: ExecResponseDetails | ExecResponseDetails[]
 }
 
 export type ExecResponseDetails = {

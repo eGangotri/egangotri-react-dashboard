@@ -1,0 +1,12 @@
+ul {
+    padding-left: 10px;
+    padding-bottom: 20px;
+  }
+  
+  u:nth-child(odd) {
+    background-color: lightblue;
+  }
+  
+  u:nth-child(even) {
+    background-color: lightblue;
+  }

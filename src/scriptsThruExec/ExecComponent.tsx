@@ -30,7 +30,7 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
     setAnchorEl(null);
   };
   const [execLogsForPopover, setExecLogsForPopover] = React.useState(<></>);
-  const [backendResp, setBackendResp] = React.useState({} );
+  const [backendResp, setBackendResp] = React.useState({});
 
   const funcToInvoke = async (event: React.MouseEvent<HTMLButtonElement>) => {
     const currentTarget = event.currentTarget
