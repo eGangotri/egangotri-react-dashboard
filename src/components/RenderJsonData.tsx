@@ -8,12 +8,13 @@ interface ApiResponse {
 }
 
 const RenderJsonData: React.FC<ApiResponse> = ({ response }) => {
+  /* eslint-disable  @typescript-eslint/no-explicit-any */
   const renderJson = (json: any) => {
     if (Array.isArray(json)) {
       return (
         <ul>
           {json.map((item, index) => (
-              <li key={index}>{renderJson(item)}</li>
+            <li key={index}>{renderJson(item)}</li>
           ))}
         </ul>
       );

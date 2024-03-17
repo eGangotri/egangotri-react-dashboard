@@ -54,7 +54,7 @@ const ExecLauncherTwo: React.FC = () => {
 
                 <ExecComponent
                     buttonText="Create Archive Excel"
-                    placeholder='Archive Link'
+                    placeholder='Archive Link(s) or Profile Name(s) as csv'
                     execType={ExecType.GenExcelOfArchiveLink} />
 
                 <ExecComponent

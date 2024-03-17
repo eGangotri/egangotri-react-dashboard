@@ -116,7 +116,8 @@ export async function launchArchiveExcelDownload(archiveLink: string): Promise<E
     if (_result?.success == true) {
         //  generateExcel(_result.links, _result.excelFileName);
         return {
-            msg: _result.msg
+            msg: _result.msg,
+            ..._result
         } as ExecResponseDetails;
     }
     else {
