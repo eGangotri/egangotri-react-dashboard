@@ -26,6 +26,14 @@ const ExecLauncherTwo: React.FC = () => {
                 <ExecComponent buttonText="Vanitize Folder Contents"
                     placeholder='Vanitize'
                     execType={ExecType.MoveFolderContents_PROFILE} />
+
+                <ExecComponent
+                    buttonText="Download All Pdfs from Archive"
+                    placeholder='Space/Comma-Separated Archive Link(s) or Profile Name(s)'
+                    secondTextBoxPlaceHolder='Enter Profile'
+                    execType={ExecType.DownloadArchivePdfs}
+                />
+
             </Box>
 
             <Box display="flex" gap={4} mb={2} flexDirection="column">
@@ -48,13 +56,13 @@ const ExecLauncherTwo: React.FC = () => {
                 <ExecComponent
                     buttonText="Upload Pdfs to Archive"
                     placeholder='Enter Google Drive Link'
-                    secondTextBoxPlaceHolder='Enter Destination Folder'
+                    secondTextBoxPlaceHolder='Enter Profile'
                     execType={ExecType.DownloadGoogleDriveLink} />
 
 
                 <ExecComponent
                     buttonText="Create Archive Excel"
-                    placeholder='Archive Link(s) or Profile Name(s) as csv'
+                    placeholder='Space/Comma-Separated Archive Link(s) or Profile Name(s)'
                     execType={ExecType.GenExcelOfArchiveLink} />
 
                 <ExecComponent

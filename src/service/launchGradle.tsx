@@ -107,25 +107,42 @@ export async function launchArchiveExcelDownload(archiveLink: string): Promise<E
         backendServer +
         `yarn/getArchiveListing`;
 
+    if (!archiveLink.trim().includes(',') && /\s/.test(archiveLink.trim())) {
+        archiveLink = archiveLink.split(' ').join(',');
+        console.log(`archiveLink ${JSON.stringify(archiveLink)}`)
+
+    }
     const result = await makePostCall({
         "archiveLink": archiveLink
     }, resource);
 
     const _result = result.response;
     console.log(`_result ${JSON.stringify(_result)}`)
-    if (_result?.success == true) {
-        //  generateExcel(_result.links, _result.excelFileName);
-        return {
-            msg: _result.msg,
-            ..._result
-        } as ExecResponseDetails;
-    }
-    else {
-        return {
-            msg: "Error. failure Reported from backend. Please check logs.",
-        } as ExecResponseDetails;
+    return {
+        ..._result
+    } as ExecResponseDetails;
+}
 
+export async function launchArchivePdfDownload(archiveLink: string, profileOrFilePath: string): Promise<ExecResponseDetails> {
+    const resource =
+        backendServer +
+        `yarn/downloadArchivePdfs`;
+
+    if (!archiveLink.trim().includes(',') && /\s/.test(archiveLink.trim())) {
+        archiveLink = archiveLink.split(' ').join(',');
+        console.log(`archiveLink ${JSON.stringify(archiveLink)}`)
     }
+
+    const result = await makePostCall({
+        "archiveLink": archiveLink,
+        "profile": profileOrFilePath
+    }, resource);
+
+    const _result = result.response;
+    console.log(`_result ${JSON.stringify(_result)}`)
+    return {
+        ..._result
+    } as ExecResponseDetails;
 }
 
 export async function launchGradle(profiles: string, gradleTask: string) {

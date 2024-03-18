@@ -1,5 +1,5 @@
 import {
-  addHeaderFooter, launchArchiveExcelDownload, launchBulkRename,
+  addHeaderFooter, launchArchiveExcelDownload, launchArchivePdfDownload, launchBulkRename,
   launchGoogleDriveDownload, launchGoogleDriveExcelListing, launchGradleMoveToFreeze,
   launchLocalFolderListingForAll,
   launchLocalFolderListingForPdf,
@@ -21,6 +21,8 @@ export enum ExecType {
   GenListingsofLocalFolderAsAll = 92,
   AddHeaderFooter = 10,
   MoveToFreeze = 11,
+  DownloadArchivePdfs = 12,
+
 }
 
 export enum Tif2PdfExecType {
@@ -44,7 +46,8 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
   data: ExecComponentFormData): Promise<ExecResponseDetails> => {
   let _resp: ExecResponseDetails = {}
   const dataUserInput = data.userInput;
-  console.log(`data.userInput ${dataUserInput}`);
+  const dataUserInput2 = data.userInputSecond || "";
+  console.log(`data.userInput ${dataUserInput} dataUserInput2 ${dataUserInput2}`);
 
   switch (execType) {
     case ExecType.UploadPdfs:
@@ -81,7 +84,6 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       _resp = await launchBulkRename(dataUserInput);
       break;
     case ExecType.DownloadGoogleDriveLink:
-      const dataUserInput2 = data.userInputSecond || "";
       _resp = await launchGoogleDriveDownload(dataUserInput, dataUserInput2);
       break;
     case ExecType.GenExcelOfArchiveLink:
@@ -100,10 +102,14 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
     case ExecType.AddHeaderFooter:
       _resp = await addHeaderFooter(dataUserInput);
       break;
-
     case ExecType.MoveToFreeze:
       _resp = await launchGradleMoveToFreeze(dataUserInput)
       break;
+    case ExecType.DownloadArchivePdfs:
+      _resp = await launchArchivePdfDownload(dataUserInput,dataUserInput2)
+      break;
+
+
     default:
       _resp = {}
       // Handle unknown execType value
