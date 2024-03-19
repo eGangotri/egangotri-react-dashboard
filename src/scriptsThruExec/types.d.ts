@@ -14,6 +14,7 @@ export type ExecComponentProps = {
     secondTextBoxPlaceHolder?: string;
     reactComponent?: JSX.Element;
     css?: SxProps<Theme>;
+    css2?: SxProps<Theme>;
 };
 
 export type ExecResponse = {

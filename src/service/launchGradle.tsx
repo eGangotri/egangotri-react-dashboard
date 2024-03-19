@@ -102,18 +102,19 @@ export async function launchGoogleDriveExcelListing(googleDriveLink: string, fol
 
 
 
-export async function launchArchiveExcelDownload(archiveLink: string): Promise<ExecResponseDetails> {
+export async function launchArchiveExcelDownload(archiveLinks: string): Promise<ExecResponseDetails> {
     const resource =
         backendServer +
         `yarn/getArchiveListing`;
 
-    if (!archiveLink.trim().includes(',') && /\s/.test(archiveLink.trim())) {
-        archiveLink = archiveLink.split(' ').join(',');
-        console.log(`archiveLink ${JSON.stringify(archiveLink)}`)
+    if (!archiveLinks.trim().includes(',') && /\s/.test(archiveLinks.trim())) {
+        archiveLinks = archiveLinks.split(' ').join(',');
+        console.log(`archiveLink ${JSON.stringify(archiveLinks)}`)
 
     }
     const result = await makePostCall({
-        "archiveLink": archiveLink
+        "archiveLinks": archiveLinks,
+        onlyLinks:false
     }, resource);
 
     const _result = result.response;

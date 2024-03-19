@@ -18,7 +18,8 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
   execType = ExecType.LoginToArchive,
   secondTextBoxPlaceHolder = "",
   reactComponent = <></>,
-  css = {}
+  css = {},
+  css2 = {}
 }) => {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const { register, handleSubmit, formState: { errors }, reset } = useForm<ExecComponentFormData>();
@@ -121,7 +122,7 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
               placeholder={secondTextBoxPlaceHolder}
               {...register('userInputSecond', { required: "This field is required" })}
               error={Boolean(errors.userInputSecond)}
-              sx={{ marginRight: "30px", width: "250px", ...css }}
+              sx={{ marginRight: "30px", width: "250px", ...css2 }}
               helperText={errors.userInputSecond?.message} />
             : null
           }

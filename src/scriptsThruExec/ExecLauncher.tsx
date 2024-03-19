@@ -50,7 +50,8 @@ const ExecLauncher: React.FC = () => {
                     placeholder='Enter Google Drive Link'
                     secondTextBoxPlaceHolder='Enter Profile'
                     execType={ExecType.DownloadGoogleDriveLink}
-                    css={{ backgroundColor: "lightgreen", color: "cyan" }} />
+                    css={{ backgroundColor: "lightgreen" }}
+                    css2={{ backgroundColor: "lightgreen" }} />
 
                 <ExecComponent
                     buttonText="Create Drive Excel"

@@ -20,18 +20,21 @@ const ExecLauncherTwo: React.FC = () => {
     return (
         <Box display="flex" gap={4} mb={2} flexDirection="row">
             <Box display="flex" alignItems="center" gap={4} mb={2} flexDirection="column">
-                <ExecComponent buttonText="jpeg to pdf"
-                    execType={ExecType.UploadPdfs} />
 
-                <ExecComponent buttonText="Vanitize Folder Contents"
-                    placeholder='Vanitize'
-                    execType={ExecType.MoveFolderContents_PROFILE} />
+                <ExecComponent
+                    buttonText="Create Archive Excel"
+                    placeholder='Space/Comma-Separated Archive Link(s) or Identifier(s)'
+                    execType={ExecType.GenExcelOfArchiveLink}
+                    css={{ width: "450px" }}
+                />
 
                 <ExecComponent
                     buttonText="Download All Pdfs from Archive"
-                    placeholder='Space/Comma-Separated Archive Link(s) or Profile Name(s)'
-                    secondTextBoxPlaceHolder='Enter Profile'
+                    placeholder='Space/Comma-Separated Archive Link(s) or Identifier(s)'
+                    secondTextBoxPlaceHolder='Enter Profile or File Path'
                     execType={ExecType.DownloadArchivePdfs}
+                    css={{ width: "450px" }}
+
                 />
 
             </Box>
@@ -53,17 +56,12 @@ const ExecLauncherTwo: React.FC = () => {
             </Box>
 
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
-                <ExecComponent
-                    buttonText="Upload Pdfs to Archive"
-                    placeholder='Enter Google Drive Link'
-                    secondTextBoxPlaceHolder='Enter Profile'
-                    execType={ExecType.DownloadGoogleDriveLink} />
+                <ExecComponent buttonText="jpeg to pdf"
+                    execType={ExecType.UploadPdfs} />
 
-
-                <ExecComponent
-                    buttonText="Create Archive Excel"
-                    placeholder='Space/Comma-Separated Archive Link(s) or Profile Name(s)'
-                    execType={ExecType.GenExcelOfArchiveLink} />
+                <ExecComponent buttonText="Vanitize Folder Contents"
+                    placeholder='Vanitize'
+                    execType={ExecType.MoveFolderContents_PROFILE} />
 
                 <ExecComponent
                     buttonText='Gradle Move to _freeze'
