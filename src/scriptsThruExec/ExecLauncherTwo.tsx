@@ -31,7 +31,7 @@ const ExecLauncherTwo: React.FC = () => {
                 <ExecComponent
                     buttonText="Download All Pdfs from Archive"
                     placeholder='Space/Comma-Separated Archive Link(s) or Identifier(s)'
-                    secondTextBoxPlaceHolder='Enter Profile or File Path'
+                    secondTextBoxPlaceHolder='Enter Profile or File Abs Path'
                     execType={ExecType.DownloadArchivePdfs}
                     css={{ width: "450px" }}
 
@@ -44,7 +44,7 @@ const ExecLauncherTwo: React.FC = () => {
                     execType={ExecType.AddHeaderFooter} />
 
                 <ExecComponent buttonText="List Files in Folder"
-                    placeholder='Folder Path'
+                    placeholder='Folder Path or Freezed Profile'
                     execType={genListingOfLocalFolder}
                     reactComponent={<>
                         <RadioGroup aria-label="fileType" name="fileType" value={genListingOfLocalFolder} onChange={handleChange} row>

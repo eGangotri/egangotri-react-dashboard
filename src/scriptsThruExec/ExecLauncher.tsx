@@ -46,16 +46,16 @@ const ExecLauncher: React.FC = () => {
 
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
                 <ExecComponent
-                    buttonText="Download Pdfs"
-                    placeholder='Enter Google Drive Link'
-                    secondTextBoxPlaceHolder='Enter Profile'
+                    buttonText="Download Pdfs from GDrive"
+                    placeholder='Enter Google Drive Link(s)/Identifiers as csv'
+                    secondTextBoxPlaceHolder='Enter Profile or File Abs Path'
                     execType={ExecType.DownloadGoogleDriveLink}
-                    css={{ backgroundColor: "lightgreen" }}
+                    css={{ backgroundColor: "lightgreen", width: "450px" }}
                     css2={{ backgroundColor: "lightgreen" }} />
 
                 <ExecComponent
                     buttonText="Create Drive Excel"
-                    placeholder='Enter Google Drive Link'
+                    placeholder='Enter Google Drive Link(s)/Identifiers as csv'
                     secondTextBoxPlaceHolder='Enter Folder Name (not path)'
                     execType={ExecType.GenExcelOfGoogleDriveLink} />
             </Box>
