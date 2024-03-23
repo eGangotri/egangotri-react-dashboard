@@ -59,9 +59,9 @@ const ExecLauncherTwo: React.FC = () => {
                 <ExecComponent buttonText="jpeg to pdf"
                     execType={ExecType.UploadPdfs} />
 
-                <ExecComponent buttonText="Vanitize Folder Contents"
+                <ExecComponent buttonText="Vanitize Folder or Profile"
                     placeholder='Vanitize'
-                    execType={ExecType.MoveFolderContents_PROFILE} />
+                    execType={ExecType.VANITIZE} />
 
                 <ExecComponent
                     buttonText='Gradle Move to _freeze'

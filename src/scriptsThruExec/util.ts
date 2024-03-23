@@ -1,10 +1,16 @@
 import {
-  addHeaderFooter, launchArchiveExcelDownload, launchArchivePdfDownload, launchBulkRename,
-  launchGoogleDriveDownload, launchGoogleDriveExcelListing, launchGradleMoveToFreeze,
+   launchGradleMoveToFreeze,
   launchLocalFolderListingForAll,
-  launchLocalFolderListingForPdf,
-  launchReverseMove, launchUploader, launchYarnQaToDestFileMover, loginToArchive
+  launchLocalFolderListingForPdf,launchBulkRename,
+  launchReverseMove, launchUploader, loginToArchive
 } from "service/launchGradle";
+
+import {
+  addHeaderFooter,
+  launchArchiveExcelDownload, launchArchivePdfDownload, 
+  launchGoogleDriveDownload, launchGoogleDriveExcelListing,launchVanitizeModule,launchYarnQaToDestFileMover
+} from "service/launchYarn";
+
 import { ExecComponentFormData, ExecResponse, ExecResponseDetails } from "./types";
 
 export enum ExecType {
@@ -22,7 +28,7 @@ export enum ExecType {
   AddHeaderFooter = 10,
   MoveToFreeze = 11,
   DownloadArchivePdfs = 12,
-
+  VANITIZE = 100
 }
 
 export enum Tif2PdfExecType {
@@ -106,10 +112,11 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       _resp = await launchGradleMoveToFreeze(dataUserInput)
       break;
     case ExecType.DownloadArchivePdfs:
-      _resp = await launchArchivePdfDownload(dataUserInput,dataUserInput2)
+      _resp = await launchArchivePdfDownload(dataUserInput, dataUserInput2)
       break;
-
-
+    case ExecType.VANITIZE:
+      _resp = await launchVanitizeModule(dataUserInput)
+      break;
     default:
       _resp = {}
       // Handle unknown execType value
