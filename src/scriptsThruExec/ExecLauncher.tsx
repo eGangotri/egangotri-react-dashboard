@@ -5,17 +5,9 @@ import { ExecType } from './util';
 import { FormControlLabel, Radio, RadioGroup } from '@mui/material';
 
 const ExecLauncher: React.FC = () => {
-    const [profileOrPath, setProfileOrPath] = useState<number>(ExecType.MoveFolderContents_PROFILE);
     const [flatten, setFlatten] = useState<boolean>(true);
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-        const _val = event.target.value;
-        const _profileOrPath = _val === `${ExecType.MoveFolderContents_PROFILE}` ? ExecType.MoveFolderContents_PROFILE : ExecType.MoveFolderContents_PATH
-        console.log("setProfileOrPath", _profileOrPath)
-        setProfileOrPath(_profileOrPath);
-    };
-
-    const handleChange2 = (event: ChangeEvent<HTMLInputElement>) => {
         setFlatten(event.target.checked);
     };
 
@@ -28,19 +20,15 @@ const ExecLauncher: React.FC = () => {
                 <ExecComponent
                     buttonText="Move Folder Contents"
                     placeholder='Src Path for Moving QA-Passed-to-Pipeline'
-                    secondTextBoxPlaceHolder={profileOrPath === ExecType.MoveFolderContents_PROFILE ? 'Enter Profile' : 'Enter Dest Folder Path'}
-                    execType={profileOrPath}
-                    reactComponent={<Box>
-                        <RadioGroup aria-label="fileType" name="fileType" value={profileOrPath} onChange={handleChange} row>
-                            <FormControlLabel value={ExecType.MoveFolderContents_PROFILE} control={<Radio />} label="Profile" />
-                            <FormControlLabel value={ExecType.MoveFolderContents_PATH} control={<Radio />} label="Path" />
-                        </RadioGroup>
-                        {/* 
-                        <FormControlLabel
-                            control={<Checkbox checked={flatten} onChange={handleChange2} />}
-                            label="Flatten Folder Contents"
-                        /> */}
-                    </Box>}
+                    secondTextBoxPlaceHolder="Profile Name or Absolute Path"
+                    execType={ExecType.MoveFolderContents}
+                    // reactComponent={<Box>
+                    //     { 
+                    //     <FormControlLabel
+                    //         control={<Checkbox checked={flatten} onChange={handleChange2} />}
+                    //         label="Flatten Folder Contents"
+                    //     /> }
+                    // </Box>}
                 />
             </Box>
 

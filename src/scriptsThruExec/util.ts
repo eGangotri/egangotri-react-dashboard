@@ -15,8 +15,7 @@ import { ExecComponentFormData, ExecResponse, ExecResponseDetails } from "./type
 
 export enum ExecType {
   UploadPdfs = 1,
-  MoveFolderContents_PROFILE = 21,
-  MoveFolderContents_PATH = 22,
+  MoveFolderContents = 2,
   ReverseMove = 3,
   LoginToArchive = 4,
   UseBulkRenameConventions = 5,
@@ -60,20 +59,10 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       _resp = await launchUploader(dataUserInput);
       break;
 
-    case ExecType.MoveFolderContents_PROFILE:
-      _resp = await launchYarnQaToDestFileMover({
-        "qaPath": dataUserInput,
-        "dest": data.userInputSecond || "",
-        profile: "true",
-        flatten: "true"
-      });
-      break;
-
-    case ExecType.MoveFolderContents_PATH:
+    case ExecType.MoveFolderContents:
       _resp = await launchYarnQaToDestFileMover({
         qaPath: dataUserInput,
         "dest": data.userInputSecond || "",
-        profile: "false",
         flatten: "true"
       });
       break;
