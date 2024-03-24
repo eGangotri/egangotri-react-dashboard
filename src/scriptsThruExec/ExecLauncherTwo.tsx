@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import ExecComponent from './ExecComponent';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 import { ExecType } from './util';
-import { Radio, RadioGroup, FormControlLabel, FormControl } from '@mui/material';
+import { Radio, RadioGroup, FormControlLabel, FormControl, Checkbox } from '@mui/material';
 import { ChangeEvent } from 'react';
+import { CheckBox } from '@mui/icons-material';
 
 const ExecLauncherTwo: React.FC = () => {
     const [genListingOfLocalFolder, setGenListingOfLocalFolder] = useState<number>(ExecType.GenListingsofLocalFolderAsPdf);
+    const [checked, setChecked] = useState(false);
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
         const _val = event.target.value;
@@ -17,6 +18,10 @@ const ExecLauncherTwo: React.FC = () => {
         setGenListingOfLocalFolder(_listingType);
     };
 
+    const handleCheck = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setChecked(event.target.checked);
+    };
+
     return (
         <Box display="flex" gap={4} mb={2} flexDirection="row">
             <Box display="flex" alignItems="center" gap={4} mb={2} flexDirection="column">
@@ -24,8 +29,14 @@ const ExecLauncherTwo: React.FC = () => {
                 <ExecComponent
                     buttonText="Create Archive Excel"
                     placeholder='Space/Comma-Separated Archive Link(s) or Identifier(s)'
-                    execType={ExecType.GenExcelOfArchiveLink}
+                    execType={checked === true ? ExecType.GenExcelOfArchiveLinkLimitedFields : ExecType.GenExcelOfArchiveLink}
                     css={{ width: "450px" }}
+                    reactComponent={<Box>
+                        <FormControlLabel
+                            control={<Checkbox checked={checked} onChange={handleCheck} />}
+                            label="Dont Generate Direct Downloadable Links (Blazing Fast)"
+                        />
+                    </Box>}
                 />
 
                 <ExecComponent

@@ -9,7 +9,7 @@ export async function launchVanitizeModule(
         backendServer +
         `yarn/vanitizePdfs`;
 
-    const result = await makePostCall({profile},
+    const result = await makePostCall({ profile },
         resource);
     return result.response as ExecResponseDetails
 }
@@ -65,19 +65,19 @@ export async function launchGoogleDriveExcelListing(googleDriveLink: string, fol
     return result.response as ExecResponseDetails
 }
 
-export async function launchArchiveExcelDownload(archiveLinks: string): Promise<ExecResponseDetails> {
+export async function launchArchiveExcelDownload(archiveLinks: string, limitedFields = false): Promise<ExecResponseDetails> {
     const resource =
         backendServer +
         `yarn/getArchiveListing`;
 
     if (!archiveLinks.trim().includes(',') && /\s/.test(archiveLinks.trim())) {
-        archiveLinks = archiveLinks.split(' ').join(',');
+        archiveLinks = archiveLinks.split(/\s+/).join(',');
         console.log(`archiveLink ${JSON.stringify(archiveLinks)}`)
-
     }
     const result = await makePostCall({
-        "archiveLinks": archiveLinks,
-        onlyLinks:false
+        archiveLinks,
+        limitedFields,
+        onlyLinks: false
     }, resource);
 
     const _result = result.response;

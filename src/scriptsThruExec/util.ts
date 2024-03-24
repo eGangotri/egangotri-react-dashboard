@@ -1,14 +1,14 @@
 import {
-   launchGradleMoveToFreeze,
+  launchGradleMoveToFreeze,
   launchLocalFolderListingForAll,
-  launchLocalFolderListingForPdf,launchBulkRename,
+  launchLocalFolderListingForPdf, launchBulkRename,
   launchReverseMove, launchUploader, loginToArchive
 } from "service/launchGradle";
 
 import {
   addHeaderFooter,
-  launchArchiveExcelDownload, launchArchivePdfDownload, 
-  launchGoogleDriveDownload, launchGoogleDriveExcelListing,launchVanitizeModule,launchYarnQaToDestFileMover
+  launchArchiveExcelDownload, launchArchivePdfDownload,
+  launchGoogleDriveDownload, launchGoogleDriveExcelListing, launchVanitizeModule, launchYarnQaToDestFileMover
 } from "service/launchYarn";
 
 import { ExecComponentFormData, ExecResponse, ExecResponseDetails } from "./types";
@@ -20,7 +20,8 @@ export enum ExecType {
   LoginToArchive = 4,
   UseBulkRenameConventions = 5,
   DownloadGoogleDriveLink = 6,
-  GenExcelOfArchiveLink = 7,
+  GenExcelOfArchiveLink = 71,
+  GenExcelOfArchiveLinkLimitedFields = 72,
   GenExcelOfGoogleDriveLink = 8,
   GenListingsofLocalFolderAsPdf = 91,
   GenListingsofLocalFolderAsAll = 92,
@@ -82,7 +83,10 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       _resp = await launchGoogleDriveDownload(dataUserInput, dataUserInput2);
       break;
     case ExecType.GenExcelOfArchiveLink:
-      _resp = await launchArchiveExcelDownload(dataUserInput);
+      _resp = await launchArchiveExcelDownload(dataUserInput, false);
+      break;
+    case ExecType.GenExcelOfArchiveLinkLimitedFields:
+      _resp = await launchArchiveExcelDownload(dataUserInput, true);
       break;
     case ExecType.GenExcelOfGoogleDriveLink:
       _resp = await launchGoogleDriveExcelListing(dataUserInput, data.userInputSecond || "D:\\");
