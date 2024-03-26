@@ -39,6 +39,17 @@ export async function launchYarnQaToDestFileMover(
     return result.response as ExecResponseDetails
 }
 
+export async function launchYarnMoveToFreeze(
+    postParams: Record<string, string>): Promise<ExecResponseDetails> {
+    const resource =
+        backendServer +
+        `yarn/yarnMoveProfilesToFreeze`;
+
+    const result = await makePostCall(postParams,
+        resource);
+    return result.response as ExecResponseDetails
+}
+
 export async function addHeaderFooter(
     profile: string): Promise<ExecResponseDetails> {
     const resource =

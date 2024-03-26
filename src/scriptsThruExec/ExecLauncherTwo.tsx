@@ -75,7 +75,7 @@ const ExecLauncherTwo: React.FC = () => {
                     execType={ExecType.VANITIZE} />
 
                 <ExecComponent
-                    buttonText='Gradle Move to _freeze'
+                    buttonText='Move to _freeze'
                     placeholder='profiles as csv'
                     execType={ExecType.MoveToFreeze} />
             </Box>

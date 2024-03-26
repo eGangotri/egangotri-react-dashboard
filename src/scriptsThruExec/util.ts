@@ -8,7 +8,7 @@ import {
 import {
   addHeaderFooter,
   launchArchiveExcelDownload, launchArchivePdfDownload,
-  launchGoogleDriveDownload, launchGoogleDriveExcelListing, launchVanitizeModule, launchYarnQaToDestFileMover
+  launchGoogleDriveDownload, launchGoogleDriveExcelListing, launchVanitizeModule, launchYarnMoveToFreeze, launchYarnQaToDestFileMover
 } from "service/launchYarn";
 
 import { ExecComponentFormData, ExecResponse, ExecResponseDetails } from "./types";
@@ -102,7 +102,10 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       _resp = await addHeaderFooter(dataUserInput);
       break;
     case ExecType.MoveToFreeze:
-      _resp = await launchGradleMoveToFreeze(dataUserInput)
+      _resp = await launchYarnMoveToFreeze({
+        profileAsCSV: dataUserInput,
+        flatten: "true"
+      });
       break;
     case ExecType.DownloadArchivePdfs:
       _resp = await launchArchivePdfDownload(dataUserInput, dataUserInput2)
