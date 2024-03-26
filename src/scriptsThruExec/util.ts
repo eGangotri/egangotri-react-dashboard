@@ -103,7 +103,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       break;
     case ExecType.MoveToFreeze:
       _resp = await launchYarnMoveToFreeze({
-        profileAsCSV: dataUserInput,
+        profileAsCSV: "dataUserInput",        
         flatten: "true"
       });
       break;

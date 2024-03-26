@@ -22,10 +22,11 @@ import IconButton from '@mui/material/IconButton';
 import InfoIcon from '@mui/icons-material/Info';
 import Tooltip from '@mui/material/Tooltip';
 import { DARK_RED, ERROR_RED, LIGHT_RED, SUCCESS_GREEN, WHITE_SMOKE } from 'constants/colors';
-import { ellipsis } from 'pages/upload/ItemTooltip';
 import Spinner from 'widgets/Spinner';
-import { launchGradleMoveToFreeze, launchGradleReuploadMissed } from 'service/launchGradle';
+import { launchGradleReuploadMissed } from 'service/launchGradle';
 import UploadDialog from './UploadDialog';
+import { launchYarnMoveToFreeze } from 'service/launchYarn';
+import ExecResponsePanel from 'scriptsThruExec/ExecResponsePanel';
 
 
 const UploadCycles = () => {
@@ -121,16 +122,15 @@ const UploadCycles = () => {
         setOpenDialog(false)
         console.log(`_profiles ${chosenProfilesForMove} ${JSON.stringify(chosenProfilesForMove)}`)
         setIsLoading(true);
-        const _resp = await launchGradleMoveToFreeze(chosenProfilesForMove.join(","))
+        const _resp = await launchYarnMoveToFreeze(
+            {
+                profileAsCSV: chosenProfilesForMove.join(","),
+                flatten: "true"
+            }
+        )
         setIsLoading(false);
         const moveToFreezeRespPanel = (
-            <>
-                <Typography>Gradle Logs</Typography>
-                {_resp?.response?.split("\n").map((item: string, index: number) => {
-                    return (<Box sx={{ color: SUCCESS_GREEN }}>({index + 1}) {item}</Box>)
-                })
-                }
-            </>
+            <ExecResponsePanel response={_resp} />
         )
         setMoveToFreezeRespPopover(moveToFreezeRespPanel);
         setAnchorEl4(currentTarget);
@@ -335,7 +335,7 @@ const UploadCycles = () => {
                             sx={{ width: "200px", marginTop: "10px" }}
                             disabled={isLoading}
                         >
-                            Gradle Move to Freeze
+                            Yarn Move to Freeze
                         </Button>
                         <Popover
                             id={id4}

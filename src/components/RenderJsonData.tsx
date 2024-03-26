@@ -1,6 +1,8 @@
 import React from 'react';
 import { ExecResponseDetails } from 'scriptsThruExec/types';
 import './styles.css';
+import { Box } from '@mui/material';
+import { ERROR_RED, SUCCESS_GREEN } from 'constants/colors';
 
 // Assuming your JSON response might have various structures
 interface ApiResponse {
@@ -30,7 +32,11 @@ const RenderJsonData: React.FC<ApiResponse> = ({ response }) => {
       );
     }
     else if (typeof json === 'boolean' && json !== null) {
-      return <span>{json.toString()}</span>;
+      return (
+        <span style={{ color: json.toString() === 'true' ? SUCCESS_GREEN : ERROR_RED }}>
+          {json.toString()}
+        </span>
+      );
     }
     else {
       return <span>{json}</span>;
