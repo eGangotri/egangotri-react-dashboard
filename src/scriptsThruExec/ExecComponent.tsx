@@ -97,7 +97,7 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
                 }
                 }
                 size="small"
-                sx={{ color: "#f38484", width: "200px", marginTop: "10px"}}
+                sx={{ color: "#f38484", width: "200px", marginTop: "10px" }}
                 disabled={isLoading}
               >
                 Copy Logs
@@ -129,12 +129,14 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
 
 
           {reactComponent}
-          <Button variant="contained" color="primary" type="submit" sx={{ marginRight: "10px" }}>
-            {buttonText}
-          </Button>
-          <Button variant="contained" color="primary" type="reset" onClick={() => reset()}>
-            Reset
-          </Button>
+          <Box sx= {{ marginTop: "10px"}}>
+            <Button variant="contained" color="primary" type="submit" sx={{ marginRight: "10px" }}>
+              {buttonText}
+            </Button>
+            <Button variant="contained" color="primary" type="reset" onClick={() => reset()}>
+              Reset
+            </Button>
+          </Box>
         </form>
         <UploadDialog openDialog={openDialog}
           handleClose={handleClose}
