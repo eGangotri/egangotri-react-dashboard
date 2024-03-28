@@ -8,10 +8,10 @@ import {
 import {
   addHeaderFooter,
   launchArchiveExcelDownload, launchArchivePdfDownload,
-  launchGoogleDriveDownload, launchGoogleDriveExcelListing, launchVanitizeModule, launchYarnMoveToFreeze, launchYarnQaToDestFileMover
+  launchGoogleDriveDownload, launchGoogleDriveExcelListing, launchLocalFolderListingYarn, launchVanitizeModule, launchYarnMoveToFreeze, launchYarnQaToDestFileMover
 } from "service/launchYarn";
 
-import { ExecComponentFormData, ExecResponse, ExecResponseDetails } from "./types";
+import { ExecComponentFormData, ExecResponseDetails } from "./types";
 
 export enum ExecType {
   UploadPdfs = 1,
@@ -25,6 +25,8 @@ export enum ExecType {
   GenExcelOfGoogleDriveLink = 8,
   GenListingsofLocalFolderAsPdf = 91,
   GenListingsofLocalFolderAsAll = 92,
+  GenListingsofLocalFolderAsPdfYarn = 93,
+  GenListingsofLocalFolderAsAllYarn = 94,
   AddHeaderFooter = 10,
   MoveToFreeze = 11,
   DownloadArchivePdfs = 12,
@@ -98,15 +100,32 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
     case ExecType.GenListingsofLocalFolderAsAll:
       _resp = await launchLocalFolderListingForAll(dataUserInput);
       break;
+
+    case ExecType.GenListingsofLocalFolderAsPdfYarn:
+      _resp = await launchLocalFolderListingYarn({
+        argFirst: dataUserInput,
+        pdfsOnly: "true"
+      });
+      break;
+
+    case ExecType.GenListingsofLocalFolderAsAllYarn:
+      _resp = await launchLocalFolderListingYarn({
+        argFirst: dataUserInput,
+        pdfsOnly: "false"
+      });
+      break;
+
     case ExecType.AddHeaderFooter:
       _resp = await addHeaderFooter(dataUserInput);
       break;
+
     case ExecType.MoveToFreeze:
       _resp = await launchYarnMoveToFreeze({
-        profileAsCSV: "dataUserInput",        
+        profileAsCSV: dataUserInput,
         flatten: "true"
       });
       break;
+
     case ExecType.DownloadArchivePdfs:
       _resp = await launchArchivePdfDownload(dataUserInput, dataUserInput2)
       break;

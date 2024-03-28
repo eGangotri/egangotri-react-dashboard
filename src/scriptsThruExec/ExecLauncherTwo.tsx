@@ -20,6 +20,18 @@ const ExecLauncherTwo: React.FC = () => {
 
     const handleCheck = (event: React.ChangeEvent<HTMLInputElement>) => {
         setChecked(event.target.checked);
+    }; 
+    
+    const [genListingOfLocalFolderYarn, setGenListingOfLocalFolderYarn] = useState<number>(ExecType.GenListingsofLocalFolderAsPdf);
+
+    const handleChangeYarn = (event: ChangeEvent<HTMLInputElement>) => {
+        const _val = event.target.value;
+        console.log("_val", _val)
+        const _listingType = _val === `${ExecType.GenListingsofLocalFolderAsAllYarn}` ? 
+        ExecType.GenListingsofLocalFolderAsAllYarn :
+         ExecType.GenListingsofLocalFolderAsPdfYarn
+        console.log("_listingType", _listingType)
+        setGenListingOfLocalFolderYarn(_listingType);
     };
 
     return (
@@ -54,7 +66,7 @@ const ExecLauncherTwo: React.FC = () => {
                 <ExecComponent buttonText="Add Header/Footer to PDFs"
                     execType={ExecType.AddHeaderFooter} />
 
-                <ExecComponent buttonText="List Files in Folder"
+                <ExecComponent buttonText="List Files in Folder-Gradle(Slow)"
                     placeholder='Folder Path or Freezed Profile'
                     execType={genListingOfLocalFolder}
                     reactComponent={<>
@@ -64,6 +76,17 @@ const ExecLauncherTwo: React.FC = () => {
                         </RadioGroup>
                     </>}
                 />
+                <ExecComponent buttonText="List Files in Folder - Yarn(Fast)"
+                    placeholder='Folder Path or Freezed Profile'
+                    execType={genListingOfLocalFolderYarn}
+                    reactComponent={<>
+                        <RadioGroup aria-label="fileType" name="fileType" value={genListingOfLocalFolderYarn} onChange={handleChangeYarn} row>
+                            <FormControlLabel value={ExecType.GenListingsofLocalFolderAsPdfYarn} control={<Radio />} label="PDF-ONLY" />
+                            <FormControlLabel value={ExecType.GenListingsofLocalFolderAsAllYarn} control={<Radio />} label="ALL" />
+                        </RadioGroup>
+                    </>}
+                />
+
             </Box>
 
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">

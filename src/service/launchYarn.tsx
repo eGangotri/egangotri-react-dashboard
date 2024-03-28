@@ -50,6 +50,18 @@ export async function launchYarnMoveToFreeze(
     return result.response as ExecResponseDetails
 }
 
+export async function launchLocalFolderListingYarn(
+    postParams: Record<string, string>): Promise<ExecResponseDetails> {
+    const resource =
+        backendServer +
+        `yarn/yarnGetBookDetails`;
+
+    const result = await makePostCall(postParams,
+        resource);
+    return result.response as ExecResponseDetails
+}
+
+
 export async function addHeaderFooter(
     profile: string): Promise<ExecResponseDetails> {
     const resource =
