@@ -8,7 +8,9 @@ import {
   EXEC_LAUNCHER_TWO_PATH,
   TALLY_UPLOADED_DATA,
   TIFF_2_PDF,
-  AI_TEXT_IDENTIFIER
+  AI_TEXT_IDENTIFIER,
+  EXEC_LAUNCHER_THREE_PATH,
+  EXEC_LAUNCHER_FOUR_PATH
 } from 'Routes';
 import { useLocation } from "react-router-dom";
 import './topPanel.css';
@@ -28,12 +30,13 @@ const TopPanel: React.FC = () => {
       <Grid item xs={1} sm={1} md={2}><NavLink to={LANDING_PAGE_PATH} className={activeClass(LANDING_PAGE_PATH)}><Box className="menuItem">Uploads Cycles</Box></NavLink></Grid>
       <Grid item xs={1} sm={1} md={2}><NavLink to={UPLOADS_USHERED_PATH} className={activeClass(UPLOADS_USHERED_PATH)} ><Box className="menuItem">Uploads Ushered</Box></NavLink></Grid>
       <Grid item xs={1} sm={1} md={2}><NavLink to={UPLOADS_QUEUED_PATH} className={activeClass(UPLOADS_QUEUED_PATH)}><Box className="menuItem">Uploads Queued</Box></NavLink></Grid>
-      <Grid item xs={1} sm={1} md={2}><NavLink to={EXEC_LAUNCHER_PATH} className={activeClass(EXEC_LAUNCHER_PATH)}><Box className="menuItem menuItem_special">Script Launcher</Box></NavLink></Grid>
-      <Grid item xs={1} sm={1} md={2}><NavLink to={EXEC_LAUNCHER_TWO_PATH} className={activeClass(EXEC_LAUNCHER_TWO_PATH)}><Box className="menuItem">Script Launcher-2</Box></NavLink></Grid>
+      <Grid item xs={1} sm={1} md={2}><NavLink to={EXEC_LAUNCHER_PATH} className={activeClass(EXEC_LAUNCHER_PATH)}><Box className="menuItem menuItem_special">Script Launcher(G-Drive)</Box></NavLink></Grid>
+      <Grid item xs={1} sm={1} md={2}><NavLink to={EXEC_LAUNCHER_TWO_PATH} className={activeClass(EXEC_LAUNCHER_TWO_PATH)}><Box className="menuItem">Script Launcher (archive.org)</Box></NavLink></Grid>
+      <Grid item xs={1} sm={1} md={2}><NavLink to={EXEC_LAUNCHER_THREE_PATH} className={activeClass(EXEC_LAUNCHER_THREE_PATH)}><Box className="menuItem">Script Launcher (Files-Related)</Box></NavLink></Grid>
+      <Grid item xs={1} sm={1} md={2}><NavLink to={EXEC_LAUNCHER_FOUR_PATH} className={activeClass(EXEC_LAUNCHER_FOUR_PATH)}><Box className="menuItem">Script Launcher (Rest)</Box></NavLink></Grid>
       <Grid item xs={1} sm={1} md={2}><NavLink to={TALLY_UPLOADED_DATA} className={activeClass(TALLY_UPLOADED_DATA)}><Box className="menuItem">Tally Upload Database</Box></NavLink></Grid>
       <Grid item xs={1} sm={1} md={2}><NavLink to={TIFF_2_PDF} className={activeClass(TIFF_2_PDF)}><Box className="menuItem">Tiff 2 Pdf</Box></NavLink></Grid>
       <Grid item xs={1} sm={1} md={2}><NavLink to={AI_TEXT_IDENTIFIER} className={activeClass(AI_TEXT_IDENTIFIER)}><Box className="menuItem">AI-Text-Identify</Box></NavLink></Grid>
-      <Grid item xs={1} sm={1} md={2}><NavLink to={FILE_MOVER_PATH} className={activeClass(FILE_MOVER_PATH)}><Box className="menuItem">File Mover</Box></NavLink></Grid>
     </Grid>
   );
 };

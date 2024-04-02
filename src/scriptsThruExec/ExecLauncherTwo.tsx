@@ -7,31 +7,10 @@ import { ChangeEvent } from 'react';
 import { CheckBox } from '@mui/icons-material';
 
 const ExecLauncherTwo: React.FC = () => {
-    const [genListingOfLocalFolder, setGenListingOfLocalFolder] = useState<number>(ExecType.GenListingsofLocalFolderAsPdf);
-    const [checked, setChecked] = useState(false);
+    const [dontGenerateCheck, setDontGenerateCheck] = useState(false);
 
-    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-        const _val = event.target.value;
-        console.log("_val", _val)
-        const _listingType = _val === `${ExecType.GenListingsofLocalFolderAsAll}` ? ExecType.GenListingsofLocalFolderAsAll : ExecType.GenListingsofLocalFolderAsPdf
-        console.log("_listingType", _listingType)
-        setGenListingOfLocalFolder(_listingType);
-    };
-
-    const handleCheck = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setChecked(event.target.checked);
-    }; 
-    
-    const [genListingOfLocalFolderYarn, setGenListingOfLocalFolderYarn] = useState<number>(ExecType.GenListingsofLocalFolderAsPdf);
-
-    const handleChangeYarn = (event: ChangeEvent<HTMLInputElement>) => {
-        const _val = event.target.value;
-        console.log("_val", _val)
-        const _listingType = _val === `${ExecType.GenListingsofLocalFolderAsAllYarn}` ? 
-        ExecType.GenListingsofLocalFolderAsAllYarn :
-         ExecType.GenListingsofLocalFolderAsPdfYarn
-        console.log("_listingType", _listingType)
-        setGenListingOfLocalFolderYarn(_listingType);
+    const handleDontGenerateCheck = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setDontGenerateCheck(event.target.checked);
     };
 
     return (
@@ -41,11 +20,11 @@ const ExecLauncherTwo: React.FC = () => {
                 <ExecComponent
                     buttonText="Create Archive Excel"
                     placeholder='Space/Comma-Separated Archive Link(s) or Identifier(s)'
-                    execType={checked === true ? ExecType.GenExcelOfArchiveLinkLimitedFields : ExecType.GenExcelOfArchiveLink}
+                    execType={dontGenerateCheck === true ? ExecType.GenExcelOfArchiveLinkLimitedFields : ExecType.GenExcelOfArchiveLink}
                     css={{ width: "450px" }}
                     reactComponent={<Box>
                         <FormControlLabel
-                            control={<Checkbox checked={checked} onChange={handleCheck} />}
+                            control={<Checkbox checked={dontGenerateCheck} onChange={handleDontGenerateCheck} />}
                             label="Dont Generate Direct Downloadable Links (Blazing Fast)"
                         />
                     </Box>}
@@ -63,44 +42,16 @@ const ExecLauncherTwo: React.FC = () => {
             </Box>
 
             <Box display="flex" gap={4} mb={2} flexDirection="column">
-                <ExecComponent buttonText="Add Header/Footer to PDFs"
-                    execType={ExecType.AddHeaderFooter} />
+                <ExecComponent buttonText="Upload Pdfs to Archive for Profile"
+                    placeholder='Profiles as CSV'
+                    execType={ExecType.UploadPdfs} />
 
-                <ExecComponent buttonText="List Files in Folder-Gradle(Slow)"
-                    placeholder='Folder Path or Freezed Profile'
-                    execType={genListingOfLocalFolder}
-                    reactComponent={<>
-                        <RadioGroup aria-label="fileType" name="fileType" value={genListingOfLocalFolder} onChange={handleChange} row>
-                            <FormControlLabel value={ExecType.GenListingsofLocalFolderAsPdf} control={<Radio />} label="PDF-ONLY" />
-                            <FormControlLabel value={ExecType.GenListingsofLocalFolderAsAll} control={<Radio />} label="ALL" />
-                        </RadioGroup>
-                    </>}
-                />
-                <ExecComponent buttonText="List Files in Folder - Yarn(Fast)"
-                    placeholder='Folder Path or Freezed Profile - Under Construction'
-                    execType={genListingOfLocalFolderYarn}
-                    reactComponent={<>
-                        <RadioGroup aria-label="fileType" name="fileType" value={genListingOfLocalFolderYarn} onChange={handleChangeYarn} row>
-                            <FormControlLabel value={ExecType.GenListingsofLocalFolderAsPdfYarn} control={<Radio />} label="PDF-ONLY" />
-                            <FormControlLabel value={ExecType.GenListingsofLocalFolderAsAllYarn} control={<Radio />} label="ALL" />
-                        </RadioGroup>
-                    </>}
-                />
-
+                <ExecComponent buttonText="Login to Archive"
+                    placeholder='Profiles as CSV'
+                    execType={ExecType.LoginToArchive} />
             </Box>
 
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
-                <ExecComponent buttonText="jpeg to pdf"
-                    execType={ExecType.UploadPdfs} />
-
-                <ExecComponent buttonText="Vanitize Folder or Profile"
-                    placeholder='Vanitize'
-                    execType={ExecType.VANITIZE} />
-
-                <ExecComponent
-                    buttonText='Move to _freeze'
-                    placeholder='profiles as csv'
-                    execType={ExecType.MoveToFreeze} />
             </Box>
         </Box>
     );
