@@ -44,7 +44,9 @@ const ExecLauncherTwo: React.FC = () => {
             <Box display="flex" gap={4} mb={2} flexDirection="column">
                 <ExecComponent buttonText="Upload Pdfs to Archive for Profile"
                     placeholder='Profiles as CSV'
-                    execType={ExecType.UploadPdfs} />
+                    execType={ExecType.UploadPdfs}
+                    css={{ backgroundColor: "turquoise", width: "450px" }}
+                />
 
                 <ExecComponent buttonText="Login to Archive"
                     placeholder='Profiles as CSV'

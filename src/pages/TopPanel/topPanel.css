@@ -22,3 +22,8 @@ a.active .menuItem {
 .menuItem_special {
     border: 2px solid lightgreen;
 }
+
+
+.menuItem_special2 {
+    border: 2px solid turquoise;
+}

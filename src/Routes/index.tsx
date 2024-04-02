@@ -11,6 +11,7 @@ import Tiff2Pdf from 'scriptsThruExec/Tiff2Pdf';
 import AITextIdentifier from 'scriptsThruExec/AITextIdentifier';
 import ExecLauncherThree from 'scriptsThruExec/ExecLauncherThree';
 import ExecLauncherFour from 'scriptsThruExec/ExecLauncherFour';
+import SearchDB from 'pages/search/SearchDB';
 
 export const LANDING_PAGE_PATH = "/"
 export const UPLOADS_USHERED_PATH = "/uploadsUshered";
@@ -22,6 +23,7 @@ export const EXEC_LAUNCHER_THREE_PATH = "/execLauncher3";
 export const EXEC_LAUNCHER_FOUR_PATH = "/execLauncher4";
 export const TALLY_UPLOADED_DATA = "/tallyData";
 export const FILE_MOVER_PATH = "/fileMover";
+export const SEARCH_DB_PATH = "/searchDB";
 export const TIFF_2_PDF = "/tiff2pdf";
 export const AI_TEXT_IDENTIFIER = "/ai";
 
@@ -40,6 +42,7 @@ const DashboardRoutes: React.FC = () => (
             {<Route path={TIFF_2_PDF} element={<Tiff2Pdf />} />}
             {<Route path={AI_TEXT_IDENTIFIER} element={<AITextIdentifier />} />}
             {<Route path={FILE_MOVER_PATH} element={<FileMover />} />}
+            {<Route path={SEARCH_DB_PATH} element={<SearchDB />} />}
         </Route>
     </Routes>
 );
