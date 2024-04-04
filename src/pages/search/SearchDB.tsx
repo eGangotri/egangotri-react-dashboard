@@ -9,6 +9,10 @@ import { useForm } from 'react-hook-form';
 import { DD_MM_YYYY_WITH_TIME_FORMAT } from 'utils/utils';
 import Spinner from 'widgets/Spinner';
 
+const generateThumbnail = (identifier: string) => {
+    return `https://archive.org/services/img/${identifier}`;
+
+}
 interface ArchiveData {
     link: string,
     allDownloads: string,
@@ -34,8 +38,9 @@ const SearchDB = () => {
     const { register, handleSubmit, formState: { errors }, reset } = useForm<SearchDBProps>();
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [sortedData, setSortedData] = useState<ArchiveData[]>([]);
+    const [filteredData, setFilteredData] = useState<ArchiveData[]>([]);
     const [page, setPage] = useState(0);
-    const emptyRows = rowsPerPage - Math.min(rowsPerPage, sortedData?.length - page * rowsPerPage);
+    const emptyRows = rowsPerPage - Math.min(rowsPerPage, filteredData?.length - page * rowsPerPage);
 
     const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
         setPage(newPage);
@@ -47,23 +52,31 @@ const SearchDB = () => {
     };
 
     const handleSort = (column: keyof ArchiveData) => {
-        const sorted = [...sortedData].sort((a, b) => {
+        const sorted = [...filteredData].sort((a, b) => {
             const aCom = a[column] || "";
             const bCol = b[column] || "";
             if (aCom < bCol) return -1;
             if (aCom > bCol) return 1;
             return 0;
         });
-        setSortedData(sorted);
+        setFilteredData(sorted);
     }
     const onSubmit = async (searchItem: SearchDBProps) => {
+        searchArchiveDB(searchItem.searchTerm);
+    };
+
+    const searchArchiveDB = async (searchItem: string) => {
+        if (searchItem === "") {
+            setFilteredData(sortedData);
+        }
         setIsLoading(true);
         console.log(`searchItem ${JSON.stringify(searchItem)}`)
-        const regex = new RegExp(searchItem.searchTerm, 'i'); // 'i' makes it case insensitive
+        const regex = new RegExp(searchItem, 'i'); // 'i' makes it case insensitive
         const filteredData = sortedData.filter(item => regex.test(item.originalTitle));
-        setSortedData(filteredData);
+        setFilteredData(filteredData);
         setIsLoading(false);
     };
+
 
     async function fetchData() {
         // const response =
@@ -127,6 +140,7 @@ const SearchDB = () => {
         (async () => {
             const _data = await fetchData();
             setSortedData(_data);
+            setFilteredData(_data);
         })();
     }, []);
 
@@ -140,7 +154,12 @@ const SearchDB = () => {
                             {...register('searchTerm', { required: "This field is required" })}
                             error={Boolean(errors.searchTerm)}
                             sx={{ marginRight: "30px", marginBottom: "20px", width: "200%" }}
-                            helperText={errors.searchTerm?.message} />
+                            helperText={errors.searchTerm?.message}
+                            onChange={(e: React.FocusEvent<HTMLInputElement>) => {
+                                console.log(`e.target.value ${e.target.value}`)
+                                searchArchiveDB(e.target.value);
+                            }}
+                        />
                         {isLoading && <Spinner />}
                     </Stack>
 
@@ -160,6 +179,7 @@ const SearchDB = () => {
                         <TableHead>
                             <TableRow>
                                 <TableCell onClick={() => handleSort('link')}><Link>Link</Link></TableCell>
+                                <TableCell>Thumbnail</TableCell>
                                 <TableCell onClick={() => handleSort('allDownloads')}><Link>All Downloads Link Page</Link></TableCell>
                                 <TableCell onClick={() => handleSort('pdfDownloadLink')}><Link>Pdf Download Link</Link></TableCell>
                                 <TableCell onClick={() => handleSort('originalTitle')}><Link>Original Title</Link></TableCell>
@@ -178,13 +198,17 @@ const SearchDB = () => {
                         </TableHead>
                         <TableBody>
                             {(rowsPerPage > 0
-                                ? sortedData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                : sortedData
+                                ? filteredData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                : filteredData
                             ).map((row: ArchiveData) => (
                                 <TableRow key={row.link}>
                                     <TableCell sx={{ verticalAlign: "top" }}>
                                         <ItemToolTip input={row.link} url={true} />
                                     </TableCell>
+                                    <TableCell>
+                                        <img src={generateThumbnail(row.identifier)} alt={row.originalTitle} />
+                                    </TableCell>
+
                                     <TableCell sx={{ verticalAlign: "top" }}>
                                         <ItemToolTip input={row.allDownloads} url={true} />
                                     </TableCell>
@@ -238,7 +262,7 @@ const SearchDB = () => {
                 <TablePagination
                     rowsPerPageOptions={[5, 10, 25]}
                     component="div"
-                    count={sortedData.length}
+                    count={filteredData.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onPageChange={handleChangePage}
