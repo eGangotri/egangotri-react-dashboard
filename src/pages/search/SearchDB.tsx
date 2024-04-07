@@ -6,6 +6,8 @@ import ItemToolTip from 'pages/upload/ItemTooltip';
 import React, { useEffect } from 'react'
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { makePostCall } from 'service/UploadDataRetrievalService';
+import { backendServer } from 'utils/constants';
 import { DD_MM_YYYY_WITH_TIME_FORMAT } from 'utils/utils';
 import Spinner from 'widgets/Spinner';
 
@@ -25,11 +27,14 @@ interface ArchiveData {
     acct: string,
     identifier: string,
     type: string,
-    mediaType: string, size: string, sizeFormatted: string
+    mediaType: string,
+    size: string,
+    sizeFormatted: string
 }
 
 interface SearchDBProps {
     searchTerm: string
+    filter?: string
 }
 
 const SearchDB = () => {
@@ -52,7 +57,7 @@ const SearchDB = () => {
     };
 
     const handleSort = (column: keyof ArchiveData) => {
-        const sorted = [...filteredData].sort((a, b) => {
+        const sorted = [...filteredData]?.sort((a, b) => {
             const aCom = a[column] || "";
             const bCol = b[column] || "";
             if (aCom < bCol) return -1;
@@ -61,88 +66,43 @@ const SearchDB = () => {
         });
         setFilteredData(sorted);
     }
-    const onSubmit = async (searchItem: SearchDBProps) => {
-        searchArchiveDB(searchItem.searchTerm);
-    };
 
-    const searchArchiveDB = async (searchItem: string) => {
-        if (searchItem === "") {
-            setFilteredData(sortedData);
-        }
+
+    const resetData = () => {
+        setFilteredData([]);
+        setSortedData([]);
+    }
+
+
+
+    const onSubmit = async (searchItem: SearchDBProps) => {
         setIsLoading(true);
-        console.log(`searchItem ${JSON.stringify(searchItem)}`)
-        const regex = new RegExp(searchItem, 'i'); // 'i' makes it case insensitive
-        const filteredData = sortedData.filter(item => regex.test(item.originalTitle));
-        setFilteredData(filteredData);
+        const result = await fetchData(searchItem.searchTerm);
+        setSortedData(result);
+        setFilteredData(result);
         setIsLoading(false);
     };
 
+    const filterData = async (filterTerm: string) => {
+        if (!filterTerm || filterTerm?.trim() === "") {
+            setFilteredData(sortedData);
+        }
+        console.log(`filterTerm ${JSON.stringify(filterTerm)}`)
+        const regex = new RegExp(filterTerm, 'i'); // 'i' makes it case insensitive
+        const filteredData = sortedData.filter(item => regex.test(item.originalTitle));
+        setFilteredData(filteredData);
+    };
 
-    async function fetchData() {
-        // const response =
-        //     await fetch('https://mocki.io/v1/72027344-f5b0-46a3-9dcc-8c7394070193');
-        // const data = await response.json();
-        const data: ArchiveData[] = [
-            {
-                link: 'https://archive.org/details/ShivaPuranaHindiPg.1371024NavalKishorePress',
-                allDownloads: 'https://archive.org/download/ShivaPuranaHindiPg.1371024NavalKishorePress',
-                pdfDownloadLink: 'https://archive.org/download/ShivaPuranaHindiPg.1371024NavalKishorePress/Shiva Purana Hindi Pg. 137 - 1024 - Naval Kishore Press.pdf',
-                originalTitle: 'Shiva Purana Hindi Pg. 137 - 1024 - Naval Kishore Press',
-                titleArchive: 'Shiva Purana Hindi Pg. 137 1024 Naval Kishore Press',
-                description: 'Naval Kishore Press(1858-Present) Publications',
-                subject: 'Naval Kishor Press Publications,नवल किशोर प्रेस प्रकाशन',
-                date: '2017-05-10T14:19:56Z',
-                acct: 'navalkishorepress',
-                identifier: 'ShivaPuranaHindiPg.1371024NavalKishorePress',
-                type: 'item',
-                mediaType: 'texts',
-                size: '5305052202',
-                sizeFormatted: '4.94 GB'
-            },
-            {
-                "link": "https://archive.org/details/VasantikaByGangaPrasadPandey1940NavalKishorePress",
-                "allDownloads": "https://archive.org/download/VasantikaByGangaPrasadPandey1940NavalKishorePress",
-                "pdfDownloadLink": "https://archive.org/download/VasantikaByGangaPrasadPandey1940NavalKishorePress/Vasantika by Ganga Prasad Pandey 1940 - Naval Kishore Press.pdf",
-                "originalTitle": "Vasantika by Ganga Prasad Pandey 1940 - Naval Kishore Press",
-                "titleArchive": "Vasantika By Ganga Prasad Pandey 1940 Naval Kishore Press",
-                "description": "Naval Kishore Press(1858-Present) Publications",
-                "subject": "Naval Kishor Press Publications,नवल किशोर प्रेस प्रकाशन",
-                "date": "2017-05-10T12:30:07Z",
-                "acct": "navalkishorepress",
-                "identifier": "VasantikaByGangaPrasadPandey1940NavalKishorePress",
-                "type": "item",
-                "mediaType": "texts",
-                "size": "165269984",
-                "sizeFormatted": "157.61 MB"
-            },
-            {
-                "link": "https://archive.org/details/UpanishadSarSangrahaWithEnglishTranslationOfRaiBahadurPt.Kashinath1933NavalKishorePress",
-                "allDownloads": "https://archive.org/download/UpanishadSarSangrahaWithEnglishTranslationOfRaiBahadurPt.Kashinath1933NavalKishorePress",
-                "pdfDownloadLink": "https://archive.org/download/UpanishadSarSangrahaWithEnglishTranslationOfRaiBahadurPt.Kashinath1933NavalKishorePress/Upanishad Sar Sangraha with English Translation of Rai Bahadur Pt. Kashinath 1933 - Naval Kishore Press.pdf",
-                "originalTitle": "Upanishad Sar Sangraha with English Translation of Rai Bahadur Pt. Kashinath 1933 - Naval Kishore Press",
-                "titleArchive": "Upanishad Sar Sangraha With English Translation Of Rai Bahadur Pt. Kashinath 1933 Naval Kishore Press",
-                "description": "Naval Kishore Press(1858-Present) Publications",
-                "subject": "Naval Kishor Press Publications,नवल किशोर प्रेस प्रकाशन",
-                "date": "2017-05-10T12:24:49Z",
-                "acct": "navalkishorepress",
-                "identifier": "UpanishadSarSangrahaWithEnglishTranslationOfRaiBahadurPt.Kashinath1933NavalKishorePress",
-                "type": "item",
-                "mediaType": "texts",
-                "size": "467168753",
-                "sizeFormatted": "445.53 MB"
-            }
-        ];
+    async function fetchData(searchTerm: string) {
+        const resource =
+            backendServer +
+            `searchArchives/search`;
+
+        const data = await makePostCall({ searchTerm },
+            resource);
         console.log(`data ${JSON.stringify(data)}`);
-        return data;
+        return data.response;
     }
-
-    useEffect(() => {
-        (async () => {
-            const _data = await fetchData();
-            setSortedData(_data);
-            setFilteredData(_data);
-        })();
-    }, []);
 
     return (
         <Stack spacing={2} sx={{ width: '100%' }}>
@@ -155,10 +115,6 @@ const SearchDB = () => {
                             error={Boolean(errors.searchTerm)}
                             sx={{ marginRight: "30px", marginBottom: "20px", width: "200%" }}
                             helperText={errors.searchTerm?.message}
-                            onChange={(e: React.FocusEvent<HTMLInputElement>) => {
-                                console.log(`e.target.value ${e.target.value}`)
-                                searchArchiveDB(e.target.value);
-                            }}
                         />
                         {isLoading && <Spinner />}
                     </Stack>
@@ -167,9 +123,22 @@ const SearchDB = () => {
                         <Button variant="contained" color="primary" type="submit" sx={{ marginRight: "10px" }}>
                             Search
                         </Button>
-                        <Button variant="contained" color="primary" type="reset" onClick={() => reset()}>
+                        <Button variant="contained" color="primary" type="reset" onClick={() => resetData()}>
                             Reset
                         </Button>
+                    </Box>
+                    <Box sx={{ marginTop: "10px" }}>
+                        <TextField variant="outlined"
+                            placeholder="Filter Results"
+                            {...register('filter')}
+                            error={Boolean(errors.filter)}
+                            sx={{ marginRight: "30px", marginBottom: "20px", width: "100%" }}
+                            helperText={errors.filter?.message}
+                            onChange={(e: React.FocusEvent<HTMLInputElement>) => {
+                                console.log(`e.target.value ${e.target.value}`)
+                                filterData(e.target.value);
+                            }}
+                        />
                     </Box>
                 </form>
             </Box>
@@ -184,9 +153,9 @@ const SearchDB = () => {
                                 <TableCell onClick={() => handleSort('pdfDownloadLink')}><Link>Pdf Download Link</Link></TableCell>
                                 <TableCell onClick={() => handleSort('originalTitle')}><Link>Original Title</Link></TableCell>
                                 <TableCell onClick={() => handleSort('titleArchive')}><Link>Title-Archive</Link></TableCell>
-                                <TableCell onClick={() => handleSort('description')}><Link>Description</Link></TableCell>
-                                <TableCell onClick={() => handleSort('subject')}><Link>Subject</Link></TableCell>
-                                <TableCell onClick={() => handleSort('date')}><Link>Date</Link></TableCell>
+                                {/* <TableCell onClick={() => handleSort('description')}><Link>Description</Link></TableCell>
+                                <TableCell onClick={() => handleSort('subject')}><Link>Subject</Link></TableCell> */}
+                                <TableCell onClick={() => handleSort('date')}><Link>Archive.org Upload Date</Link></TableCell>
                                 <TableCell onClick={() => handleSort('acct')}><Link>Acct</Link></TableCell>
                                 <TableCell onClick={() => handleSort('identifier')}><Link>Identifier</Link></TableCell>
                                 {/* <TableCell onClick={() => handleSort('type')}><Link>Type</Link></TableCell>
@@ -198,9 +167,9 @@ const SearchDB = () => {
                         </TableHead>
                         <TableBody>
                             {(rowsPerPage > 0
-                                ? filteredData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                ? filteredData?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 : filteredData
-                            ).map((row: ArchiveData) => (
+                            )?.map((row: ArchiveData) => (
                                 <TableRow key={row.link}>
                                     <TableCell sx={{ verticalAlign: "top" }}>
                                         <ItemToolTip input={row.link} url={true} />
@@ -223,12 +192,12 @@ const SearchDB = () => {
                                     <TableCell sx={{ verticalAlign: "top" }}>
                                         <ItemToolTip input={row.titleArchive} />
                                     </TableCell>
-                                    <TableCell sx={{ verticalAlign: "top" }}>
+                                    {/* <TableCell sx={{ verticalAlign: "top" }}>
                                         <ItemToolTip input={row.description} />
                                     </TableCell>
                                     <TableCell sx={{ verticalAlign: "top" }}>
                                         <ItemToolTip input={row.subject} />
-                                    </TableCell>
+                                    </TableCell> */}
                                     <TableCell sx={{ verticalAlign: "top" }}>{moment(row.date).format(DD_MM_YYYY_WITH_TIME_FORMAT)}</TableCell>
                                     <TableCell sx={{ verticalAlign: "top" }}>
                                         <ItemToolTip input={row.acct} />
@@ -262,7 +231,7 @@ const SearchDB = () => {
                 <TablePagination
                     rowsPerPageOptions={[5, 10, 25]}
                     component="div"
-                    count={filteredData.length}
+                    count={filteredData?.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onPageChange={handleChangePage}
