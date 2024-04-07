@@ -3,11 +3,13 @@ import React from "react";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import Link from "@mui/material/Link";
+import { Box, IconButton } from "@mui/material";
+import { FaCopy } from "react-icons/fa";
 
 const DEFAULT_COUNT_FOR_ELLIPSIS = 20;
 
 export const ellipsis = (
-  input: string|number,
+  input: string | number,
   alphabetCount = DEFAULT_COUNT_FOR_ELLIPSIS
 ) => {
   const inputAsString = input?.toString();
@@ -43,13 +45,25 @@ const ItemToolTip: React.FC<ItemToolTipPropsType> = ({
     : ellipsis(input, alphabetCount);
   return (
     <Tooltip title={input} arrow placement="right">
-      {url ? (
-        <Link href={input} target="_blank">
-          {withEllipsis}
-        </Link>
-      ) : (
-        <Typography>{withEllipsis}</Typography>
-      )}
+      <Box>
+        {url ? (
+          <Link href={input} target="_blank">
+            {withEllipsis}
+          </Link>
+        ) : (
+          <Typography>{withEllipsis}</Typography>
+        )}
+        <IconButton
+          aria-label="copy"
+          color="inherit"
+          size="small"
+          onClick={async () => {
+            await navigator.clipboard.writeText(input);
+          }}
+        >
+          <FaCopy fontSize="inherit" />
+        </IconButton>
+      </Box>
     </Tooltip>
   );
 };

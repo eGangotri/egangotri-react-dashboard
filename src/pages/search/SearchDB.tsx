@@ -1,4 +1,4 @@
-import { Box, Button, Paper, Stack, Table, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, Link, TablePagination, TableBody } from '@mui/material';
+import { Box, Button, Paper, Stack, Table, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, Link, TablePagination, TableBody, Select, OutlinedInput, Checkbox, ListItemText, MenuItem, SelectChangeEvent, useTheme } from '@mui/material';
 import { LIGHT_RED } from 'constants/colors';
 import { UploadCycleTableData } from 'mirror/types';
 import moment from 'moment';
@@ -9,6 +9,7 @@ import { useForm } from 'react-hook-form';
 import { makePostCall } from 'service/UploadDataRetrievalService';
 import { backendServer } from 'utils/constants';
 import { DD_MM_YYYY_WITH_TIME_FORMAT } from 'utils/utils';
+import { getStyles, MenuProps } from 'utils/widgetUtils';
 import Spinner from 'widgets/Spinner';
 
 const generateThumbnail = (identifier: string) => {
@@ -17,7 +18,7 @@ const generateThumbnail = (identifier: string) => {
 }
 interface ArchiveData {
     link: string,
-    allDownloads: string,
+    allDownloadsLinkPage: string,
     pdfDownloadLink: string,
     originalTitle: string,
     titleArchive: string,
@@ -38,8 +39,8 @@ interface SearchDBProps {
 }
 
 const SearchDB = () => {
-
     const [isLoading, setIsLoading] = React.useState<boolean>(false);
+    const [archiveProfiles, setArchiveProfiles] = React.useState<string[]>([]);
     const { register, handleSubmit, formState: { errors }, reset } = useForm<SearchDBProps>();
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [sortedData, setSortedData] = useState<ArchiveData[]>([]);
@@ -56,6 +57,11 @@ const SearchDB = () => {
         setPage(0);
     };
 
+    const handleArchiveProfileChange = (event: SelectChangeEvent<typeof archiveProfiles>) => {
+
+        console.log(`handleArchiveProfileChange:event.target.value ${event.target.value}`)
+    }
+
     const handleSort = (column: keyof ArchiveData) => {
         const sorted = [...filteredData]?.sort((a, b) => {
             const aCom = a[column] || "";
@@ -67,19 +73,19 @@ const SearchDB = () => {
         setFilteredData(sorted);
     }
 
-
     const resetData = () => {
         setFilteredData([]);
         setSortedData([]);
+        setArchiveProfiles([]);
     }
-
-
 
     const onSubmit = async (searchItem: SearchDBProps) => {
         setIsLoading(true);
         const result = await fetchData(searchItem.searchTerm);
         setSortedData(result);
         setFilteredData(result);
+        const _profiles = result.map((item: ArchiveData) => item.acct);
+        setArchiveProfiles(Array.from(new Set<string>(_profiles)));
         setIsLoading(false);
     };
 
@@ -104,11 +110,13 @@ const SearchDB = () => {
         return data.response;
     }
 
+    const theme = useTheme();
+
     return (
         <Stack spacing={2} sx={{ width: '100%' }}>
             <Box display="flex" alignItems="center" gap={4} mb={2}>
                 <form onSubmit={handleSubmit(onSubmit)}>
-                    <Stack direction={"row"}>
+                    <Stack direction={"column"}>
                         <TextField variant="outlined"
                             placeholder="Search"
                             {...register('searchTerm', { required: "This field is required" })}
@@ -116,40 +124,64 @@ const SearchDB = () => {
                             sx={{ marginRight: "30px", marginBottom: "20px", width: "200%" }}
                             helperText={errors.searchTerm?.message}
                         />
+                        <Select
+                            labelId="demo-multiple-checkbox-label"
+                            id="demo-multiple-checkbox"
+                            multiple
+                            value={archiveProfiles}
+                            onChange={(e) => handleArchiveProfileChange(e)}
+                            input={<OutlinedInput label="Profiles" />}
+                            renderValue={(selected) => {
+                                return selected.join(', ')
+                            }
+                            }
+                            MenuProps={MenuProps}
+                        >
+                            {archiveProfiles.map((profile: string) => (
+                                <MenuItem
+                                    key={profile}
+                                    value={profile}
+                                    style={getStyles(profile, archiveProfiles, theme)}
+                                >
+                                    <Checkbox checked={archiveProfiles.indexOf(profile) > -1} />
+                                    <ListItemText primary={profile} />
+                                </MenuItem>
+                            ))}
+                        </Select>
                         {isLoading && <Spinner />}
-                    </Stack>
 
-                    <Box sx={{ marginTop: "10px" }}>
-                        <Button variant="contained" color="primary" type="submit" sx={{ marginRight: "10px" }}>
-                            Search
-                        </Button>
-                        <Button variant="contained" color="primary" type="reset" onClick={() => resetData()}>
-                            Reset
-                        </Button>
-                    </Box>
-                    <Box sx={{ marginTop: "10px" }}>
-                        <TextField variant="outlined"
-                            placeholder="Filter Results"
-                            {...register('filter')}
-                            error={Boolean(errors.filter)}
-                            sx={{ marginRight: "30px", marginBottom: "20px", width: "100%" }}
-                            helperText={errors.filter?.message}
-                            onChange={(e: React.FocusEvent<HTMLInputElement>) => {
-                                console.log(`e.target.value ${e.target.value}`)
-                                filterData(e.target.value);
-                            }}
-                        />
-                    </Box>
+                        <Box sx={{ marginTop: "10px" }}>
+                            <Button variant="contained" color="primary" type="submit" sx={{ marginRight: "10px" }}>
+                                Search
+                            </Button>
+                            <Button variant="contained" color="primary" type="reset" onClick={() => resetData()}>
+                                Reset
+                            </Button>
+                        </Box>
+                        <Box sx={{ marginTop: "10px" }}>
+                            <TextField variant="outlined"
+                                placeholder="Filter Results"
+                                {...register('filter')}
+                                error={Boolean(errors.filter)}
+                                sx={{ marginRight: "30px", marginBottom: "20px", width: "100%" }}
+                                helperText={errors.filter?.message}
+                                onChange={(e: React.FocusEvent<HTMLInputElement>) => {
+                                    console.log(`e.target.value ${e.target.value}`)
+                                    filterData(e.target.value);
+                                }}
+                            />
+                        </Box>
+                    </Stack>
                 </form>
-            </Box>
+            </Box >
             <Box>
                 <TableContainer component={Paper}>
                     <Table>
                         <TableHead>
                             <TableRow>
-                                <TableCell onClick={() => handleSort('link')}><Link>Link</Link></TableCell>
                                 <TableCell>Thumbnail</TableCell>
-                                <TableCell onClick={() => handleSort('allDownloads')}><Link>All Downloads Link Page</Link></TableCell>
+                                <TableCell onClick={() => handleSort('link')}><Link>Pdf View Link</Link></TableCell>
+                                <TableCell onClick={() => handleSort('allDownloadsLinkPage')}><Link>All Downloads Link Page</Link></TableCell>
                                 <TableCell onClick={() => handleSort('pdfDownloadLink')}><Link>Pdf Download Link</Link></TableCell>
                                 <TableCell onClick={() => handleSort('originalTitle')}><Link>Original Title</Link></TableCell>
                                 <TableCell onClick={() => handleSort('titleArchive')}><Link>Title-Archive</Link></TableCell>
@@ -171,15 +203,15 @@ const SearchDB = () => {
                                 : filteredData
                             )?.map((row: ArchiveData) => (
                                 <TableRow key={row.link}>
-                                    <TableCell sx={{ verticalAlign: "top" }}>
-                                        <ItemToolTip input={row.link} url={true} />
-                                    </TableCell>
                                     <TableCell>
                                         <img src={generateThumbnail(row.identifier)} alt={row.originalTitle} />
                                     </TableCell>
+                                    <TableCell sx={{ verticalAlign: "top" }}>
+                                        <ItemToolTip input={row.link} url={true} />
+                                    </TableCell>
 
                                     <TableCell sx={{ verticalAlign: "top" }}>
-                                        <ItemToolTip input={row.allDownloads} url={true} />
+                                        <ItemToolTip input={row.allDownloadsLinkPage} url={true} />
                                     </TableCell>
                                     <TableCell sx={{ verticalAlign: "top" }}>
                                         <ItemToolTip input={row.pdfDownloadLink} url={true} />
@@ -238,7 +270,7 @@ const SearchDB = () => {
                     onRowsPerPageChange={handleChangeRowsPerPage}
                 />
             </Box>
-        </Stack>
+        </Stack >
     )
 
 }

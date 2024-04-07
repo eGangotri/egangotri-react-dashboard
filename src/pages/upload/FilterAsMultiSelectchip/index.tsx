@@ -9,26 +9,8 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import ListItemText from '@mui/material/ListItemText';
 import Checkbox from '@mui/material/Checkbox';
 import { WIDTH_OF_WIDGETS } from "utils/constants";
+import { MenuProps } from "utils/widgetUtils";
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
-
-function getStyles(name: string, profileName: readonly string[], theme: Theme) {
-  return {
-    fontWeight:
-      profileName.indexOf(name) === -1
-        ? theme.typography.fontWeightRegular
-        : theme.typography.fontWeightMedium,
-  };
-}
 
 type FilterAsMultipleSelectChipPropsType = {
   profiles: string[];
