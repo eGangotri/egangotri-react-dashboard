@@ -48,7 +48,7 @@ const ExecLauncher: React.FC = () => {
                 reject(error);
             };
         });
-
+        /* eslint-disable  @typescript-eslint/no-explicit-any */
         promise.then((d: any) => {
             setItems(d);
         });
@@ -57,26 +57,26 @@ const ExecLauncher: React.FC = () => {
     const readExcel = async (file: File | null) => {
         if (!file) return;
         try {
-          const fileReader = new FileReader();
-          const readedFile = await new Promise((resolve, reject) => {
-            fileReader.onload = (e) => resolve(e.target?.result);
-            fileReader.onerror = reject;
-            fileReader.readAsArrayBuffer(file);
-          });
-      
-          const wb = XLSX.read(readedFile, { type: 'buffer' });
-      
-          const wsname = wb.SheetNames[0];
-      
-          const ws = wb.Sheets[wsname];
-          console.log("ws", JSON.stringify(ws))
-          const data = XLSX.utils.sheet_to_json(ws);
-      
-          return data;
+            const fileReader = new FileReader();
+            const readedFile = await new Promise((resolve, reject) => {
+                fileReader.onload = (e) => resolve(e.target?.result);
+                fileReader.onerror = reject;
+                fileReader.readAsArrayBuffer(file);
+            });
+
+            const wb = XLSX.read(readedFile, { type: 'buffer' });
+
+            const wsname = wb.SheetNames[0];
+
+            const ws = wb.Sheets[wsname];
+            console.log("ws", JSON.stringify(ws))
+            const data = XLSX.utils.sheet_to_json(ws);
+
+            return data;
         } catch (error) {
-          console.error(error);
+            console.error(error);
         }
-      };
+    };
     return (
         <Box display="flex" gap={4} mb={2} flexDirection="row">
 
