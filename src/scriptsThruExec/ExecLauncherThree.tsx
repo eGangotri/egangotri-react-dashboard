@@ -22,10 +22,23 @@ const ExecLauncherThree: React.FC = () => {
     const handleChangeYarn = (event: ChangeEvent<HTMLInputElement>) => {
         const _val = event.target.value;
         console.log("_val", _val)
-        const _listingType = _val === `${ExecType.GenListingsofLocalFolderAsAllYarn}` ?
-            ExecType.GenListingsofLocalFolderAsAllYarn :
-            ExecType.GenListingsofLocalFolderAsPdfYarn
-        console.log("_listingType", _listingType)
+        // const _listingType = _val === `${ExecType.GenListingsofLocalFolderAsAllYarn}` ?
+        //     ExecType.GenListingsofLocalFolderAsAllYarn :
+        //     ExecType.GenListingsofLocalFolderAsPdfYarn
+        // console.log("_listingType", _listingType)
+
+        let _listingType;
+        switch (Number(_val)) {
+            case ExecType.GenListingsofLocalFolderAsLinksYarn:
+                _listingType = ExecType.GenListingsofLocalFolderAsLinksYarn;
+                break;
+            case ExecType.GenListingsofLocalFolderAsAllYarn:
+                _listingType = ExecType.GenListingsofLocalFolderAsAllYarn;
+                break;
+            default:
+                _listingType = ExecType.GenListingsofLocalFolderAsPdfYarn;
+        }
+        console.log("_listingType", _listingType);
         setGenListingOfLocalFolderYarn(_listingType);
     };
 
@@ -60,11 +73,12 @@ const ExecLauncherThree: React.FC = () => {
 
                 <ExecComponent buttonText="List Files in Folder - Yarn(Fast)"
                     placeholder='Folder Path or Freezed Profile'
-                    execType={ExecType.GenListingsofLocalFolderAsPdfYarn}
+                    execType={genListingOfLocalFolderYarn}
                     reactComponent={<>
                         <RadioGroup aria-label="fileType" name="fileType" value={genListingOfLocalFolderYarn} onChange={handleChangeYarn} row>
                             <FormControlLabel value={ExecType.GenListingsofLocalFolderAsPdfYarn} control={<Radio />} label="PDF-ONLY" />
                             <FormControlLabel value={ExecType.GenListingsofLocalFolderAsAllYarn} control={<Radio />} label="ALL" />
+                            <FormControlLabel value={ExecType.GenListingsofLocalFolderAsLinksYarn} control={<Radio />} label="SHOW LINKS ONLY" />
                         </RadioGroup>
                     </>}
                 />

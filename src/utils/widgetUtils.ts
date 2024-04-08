@@ -1,3 +1,5 @@
+import { Theme } from "@mui/material";
+
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 export const MenuProps = {

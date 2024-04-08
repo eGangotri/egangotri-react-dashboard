@@ -9,7 +9,7 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import ListItemText from '@mui/material/ListItemText';
 import Checkbox from '@mui/material/Checkbox';
 import { WIDTH_OF_WIDGETS } from "utils/constants";
-import { MenuProps } from "utils/widgetUtils";
+import { getStyles, MenuProps } from "utils/widgetUtils";
 
 
 type FilterAsMultipleSelectChipPropsType = {

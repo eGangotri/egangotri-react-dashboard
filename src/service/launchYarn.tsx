@@ -52,9 +52,10 @@ export async function launchYarnMoveToFreeze(
 
 export async function launchLocalFolderListingYarn(
     postParams: Record<string, string>): Promise<ExecResponseDetails> {
+        console.log(`postParams ${JSON.stringify(postParams)}`)
     const resource =
         backendServer +
-        `yarn/yarnGetBookDetails`;
+        `yarn/yarnGetTitleListings`;
 
     const result = await makePostCall(postParams,
         resource);

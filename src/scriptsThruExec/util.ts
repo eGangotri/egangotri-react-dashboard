@@ -27,6 +27,7 @@ export enum ExecType {
   GenListingsofLocalFolderAsAll = 92,
   GenListingsofLocalFolderAsPdfYarn = 93,
   GenListingsofLocalFolderAsAllYarn = 94,
+  GenListingsofLocalFolderAsLinksYarn = 95,
   AddHeaderFooter = 10,
   MoveToFreeze = 11,
   DownloadArchivePdfs = 12,
@@ -102,6 +103,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       break;
 
     case ExecType.GenListingsofLocalFolderAsPdfYarn:
+      console.log("GenListingsofLocalFolderAsPdfYarn", dataUserInput)
       _resp = await launchLocalFolderListingYarn({
         argFirst: dataUserInput,
         pdfsOnly: "true"
@@ -109,11 +111,23 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       break;
 
     case ExecType.GenListingsofLocalFolderAsAllYarn:
+      console.log("GenListingsofLocalFolderAsAllYarn", dataUserInput)
+
       _resp = await launchLocalFolderListingYarn({
         argFirst: dataUserInput,
         pdfsOnly: "false"
       });
       break;
+
+    case ExecType.GenListingsofLocalFolderAsLinksYarn:
+      console.log("GenListingsofLocalFolderAsLinksYarn", dataUserInput)
+      _resp = await launchLocalFolderListingYarn({
+        argFirst: dataUserInput,
+        linksOnly: "true",
+        pdfsOnly: "true",
+      });
+      break;
+
 
     case ExecType.AddHeaderFooter:
       _resp = await addHeaderFooter(dataUserInput);
