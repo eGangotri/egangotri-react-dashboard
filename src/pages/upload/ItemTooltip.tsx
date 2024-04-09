@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactElement } from "react";
 
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
@@ -32,6 +32,7 @@ type ItemToolTipPropsType = {
   alphabetCount?: number;
   reverse?: boolean;
   url?: boolean;
+  reactComponent?: ReactElement
 };
 
 const ItemToolTip: React.FC<ItemToolTipPropsType> = ({
@@ -39,6 +40,7 @@ const ItemToolTip: React.FC<ItemToolTipPropsType> = ({
   alphabetCount = DEFAULT_COUNT_FOR_ELLIPSIS,
   reverse = false,
   url = false,
+  reactComponent
 }) => {
   const withEllipsis = reverse
     ? reverseEllipsis(input, alphabetCount)
@@ -62,6 +64,9 @@ const ItemToolTip: React.FC<ItemToolTipPropsType> = ({
           }}
         >
           <FaCopy fontSize="inherit" />
+          {
+            reactComponent && <span className="p-3 border-red-50">{reactComponent}</span>
+          }
         </IconButton>
       </Box>
     </Tooltip>

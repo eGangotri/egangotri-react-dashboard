@@ -1,6 +1,4 @@
 import { Box, Button, Paper, Stack, Table, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, Link, TablePagination, TableBody, Select, OutlinedInput, Checkbox, ListItemText, MenuItem, SelectChangeEvent, useTheme } from '@mui/material';
-import { LIGHT_RED } from 'constants/colors';
-import { UploadCycleTableData } from 'mirror/types';
 import moment from 'moment';
 import ItemToolTip from 'pages/upload/ItemTooltip';
 import React, { useEffect } from 'react'
@@ -9,28 +7,14 @@ import { useForm } from 'react-hook-form';
 import { makePostCall } from 'service/UploadDataRetrievalService';
 import { backendServer } from 'utils/constants';
 import { DD_MM_YYYY_WITH_TIME_FORMAT } from 'utils/utils';
-import { getStyles, MenuProps } from 'utils/widgetUtils';
 import Spinner from 'widgets/Spinner';
+import ArchiveProfileSelector from './ArchiveProfileSelector';
+import { ArchiveData } from './types';
+import { FaDownload } from "react-icons/fa";
 
 const generateThumbnail = (identifier: string) => {
     return `https://archive.org/services/img/${identifier}`;
 
-}
-interface ArchiveData {
-    link: string,
-    allDownloadsLinkPage: string,
-    pdfDownloadLink: string,
-    originalTitle: string,
-    titleArchive: string,
-    description: string,
-    subject: string,
-    date: string,
-    acct: string,
-    identifier: string,
-    type: string,
-    mediaType: string,
-    size: string,
-    sizeFormatted: string
 }
 
 interface SearchDBProps {
@@ -124,30 +108,7 @@ const SearchDB = () => {
                             sx={{ marginRight: "30px", marginBottom: "20px", width: "200%" }}
                             helperText={errors.searchTerm?.message}
                         />
-                        <Select
-                            labelId="demo-multiple-checkbox-label"
-                            id="demo-multiple-checkbox"
-                            multiple
-                            value={archiveProfiles}
-                            onChange={(e) => handleArchiveProfileChange(e)}
-                            input={<OutlinedInput label="Profiles" />}
-                            renderValue={(selected) => {
-                                return selected.join(', ')
-                            }
-                            }
-                            MenuProps={MenuProps}
-                        >
-                            {archiveProfiles.map((profile: string) => (
-                                <MenuItem
-                                    key={profile}
-                                    value={profile}
-                                    style={getStyles(profile, archiveProfiles, theme)}
-                                >
-                                    <Checkbox checked={archiveProfiles.indexOf(profile) > -1} />
-                                    <ListItemText primary={profile} />
-                                </MenuItem>
-                            ))}
-                        </Select>
+                        <ArchiveProfileSelector archiveProfiles={archiveProfiles} setFilteredData={setFilteredData} filteredData={filteredData} />
                         {isLoading && <Spinner />}
 
                         <Box sx={{ marginTop: "10px" }}>
@@ -182,14 +143,13 @@ const SearchDB = () => {
                                 <TableCell>Thumbnail</TableCell>
                                 <TableCell onClick={() => handleSort('link')}><Link>Pdf View Link</Link></TableCell>
                                 <TableCell onClick={() => handleSort('allDownloadsLinkPage')}><Link>All Downloads Link Page</Link></TableCell>
-                                <TableCell onClick={() => handleSort('pdfDownloadLink')}><Link>Pdf Download Link</Link></TableCell>
                                 <TableCell onClick={() => handleSort('originalTitle')}><Link>Original Title</Link></TableCell>
                                 <TableCell onClick={() => handleSort('titleArchive')}><Link>Title-Archive</Link></TableCell>
                                 {/* <TableCell onClick={() => handleSort('description')}><Link>Description</Link></TableCell>
                                 <TableCell onClick={() => handleSort('subject')}><Link>Subject</Link></TableCell> */}
                                 <TableCell onClick={() => handleSort('date')}><Link>Archive.org Upload Date</Link></TableCell>
                                 <TableCell onClick={() => handleSort('acct')}><Link>Acct</Link></TableCell>
-                                <TableCell onClick={() => handleSort('identifier')}><Link>Identifier</Link></TableCell>
+                                <TableCell>Page Count</TableCell>
                                 {/* <TableCell onClick={() => handleSort('type')}><Link>Type</Link></TableCell>
                                 <TableCell onClick={() => handleSort('mediaType')}><Link>Media Type</Link></TableCell>
                                 <TableCell onClick={() => handleSort('size')}><Link>Size</Link></TableCell> */}
@@ -207,14 +167,14 @@ const SearchDB = () => {
                                         <img src={generateThumbnail(row.identifier)} alt={row.originalTitle} />
                                     </TableCell>
                                     <TableCell sx={{ verticalAlign: "top" }}>
-                                        <ItemToolTip input={row.link} url={true} />
+                                        <ItemToolTip input={row.link} url={true}
+                                            reactComponent={<FaDownload onClick={() => {
+                                                window.open(row.pdfDownloadLink, '_blank');
+                                            }}></FaDownload>}
+                                        />
                                     </TableCell>
-
                                     <TableCell sx={{ verticalAlign: "top" }}>
                                         <ItemToolTip input={row.allDownloadsLinkPage} url={true} />
-                                    </TableCell>
-                                    <TableCell sx={{ verticalAlign: "top" }}>
-                                        <ItemToolTip input={row.pdfDownloadLink} url={true} />
                                     </TableCell>
                                     <TableCell sx={{ verticalAlign: "top" }}>
                                         <ItemToolTip input={row.originalTitle} />
@@ -235,7 +195,7 @@ const SearchDB = () => {
                                         <ItemToolTip input={row.acct} />
                                     </TableCell>
                                     <TableCell sx={{ verticalAlign: "top" }}>
-                                        <ItemToolTip input={row.identifier} />
+                                        {row.pageCount}
                                     </TableCell>
                                     {/* <TableCell sx={{ verticalAlign: "top" }}>
                                         <ItemToolTip input={row.type} />
