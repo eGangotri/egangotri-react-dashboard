@@ -5,6 +5,7 @@ import Typography from "@mui/material/Typography";
 import Link from "@mui/material/Link";
 import { Box, IconButton } from "@mui/material";
 import { FaCopy } from "react-icons/fa";
+import { blueGrey } from "@mui/material/colors";
 
 const DEFAULT_COUNT_FOR_ELLIPSIS = 20;
 
@@ -55,7 +56,7 @@ const ItemToolTip: React.FC<ItemToolTipPropsType> = ({
         ) : (
           <Typography>{withEllipsis}</Typography>
         )}
-        <div className="flex items-center">
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <IconButton
             aria-label="copy"
             color="inherit"
@@ -67,9 +68,9 @@ const ItemToolTip: React.FC<ItemToolTipPropsType> = ({
             <FaCopy fontSize="inherit" />
           </IconButton>
           {
-            reactComponent && <span className="pl-3 border-red-500">{reactComponent}</span>
+            reactComponent && <Box component="span" sx={{ paddingLeft: "5px", backgroundColor:blueGrey }}>{reactComponent}</Box>
           }
-        </div>
+        </Box>
       </Box>
     </Tooltip>
   );
