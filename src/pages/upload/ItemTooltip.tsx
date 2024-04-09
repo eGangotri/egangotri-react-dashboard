@@ -55,19 +55,21 @@ const ItemToolTip: React.FC<ItemToolTipPropsType> = ({
         ) : (
           <Typography>{withEllipsis}</Typography>
         )}
-        <IconButton
-          aria-label="copy"
-          color="inherit"
-          size="small"
-          onClick={async () => {
-            await navigator.clipboard.writeText(input);
-          }}
-        >
-          <FaCopy fontSize="inherit" />
+        <div className="flex items-center">
+          <IconButton
+            aria-label="copy"
+            color="inherit"
+            size="small"
+            onClick={async () => {
+              await navigator.clipboard.writeText(input);
+            }}
+          >
+            <FaCopy fontSize="inherit" />
+          </IconButton>
           {
-            reactComponent && <span className="p-3 border-red-50">{reactComponent}</span>
+            reactComponent && <span className="pl-3 border-red-500">{reactComponent}</span>
           }
-        </IconButton>
+        </div>
       </Box>
     </Tooltip>
   );

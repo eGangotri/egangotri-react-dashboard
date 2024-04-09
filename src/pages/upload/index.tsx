@@ -10,8 +10,6 @@ import * as _ from 'lodash';
 import {
   getUploadStatusData,
 } from "service/UploadDataRetrievalService";
-import { getArchiveProfiles, validateArchiveUrls } from "./utils";
-import { isAfter, isBefore } from "date-fns";
 import { FaRegTrashAlt } from "react-icons/fa";
 
 import dayjs, { Dayjs } from 'dayjs';
