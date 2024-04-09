@@ -6,6 +6,7 @@
     "@emotion/react": "latest",
     "@emotion/styled": "latest",
     "@fontsource/roboto": "latest",
+    "@fortawesome/free-solid-svg-icons": "^6.5.2",
     "@mui/icons-material": "latest",
     "@mui/material": "^5.13.3",
     "@mui/x-data-grid": "6.5.0",
