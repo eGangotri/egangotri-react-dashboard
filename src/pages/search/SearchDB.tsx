@@ -84,18 +84,14 @@ const SearchDB = () => {
     };
 
     async function fetchData(searchTerm: string) {
-        // const resource =
-        //     backendServer +
-        //     `searchArchives/search`;
+        const resource =
+            backendServer +
+            `searchArchives/search`;
 
-        // const data = await makePostCall({ searchTerm },
-        //     resource);
-        // console.log(`data ${JSON.stringify(data)}`);
-       // return data.response;
-        return [{"_id":"6613161bae7819c3f3b6c481",
-        "link":"https://archive.org/details/4171UPSSBhagawatGitaSharada",
-        "allDownloadsLinkPage":"https://archive.org/download/4171UPSSBhagawatGitaSharada",
-        "pdfDownloadLink":"https://archive.org/download/4171UPSSBhagawatGitaSharada/4171_UPSS_Bhagawat_Gita_Sharada.pdf","pageCount":182,"originalTitle":"4171_UPSS_Bhagawat_Gita_Sharada","titleArchive":"4171 UPSS Bhagawat Gita Sharada","size":"200865952","sizeFormatted":"191.56 MB","subject":"Sharada Manuscripts,शारदा पाण्डुलिपयः,Kashmir Shaivism","description":"Sharada Manuscripts,Manuscripts at UPSS Lucknow, उत्तर प्रदेश संस्कृत संस्थान लखनऊ, शारदा पाण्डुलिपयः","date":"25-Jul-2017","acct":"upss_manuscripts","identifier":"4171UPSSBhagawatGitaSharada","type":"item","mediaType":"texts","emailUser":"indicjournals18@gmail.com","createdAt":"2024-04-07T21:54:35.848Z","updatedAt":"2024-04-07T21:54:35.848Z"}]
+        const data = await makePostCall({ searchTerm },
+            resource);
+        console.log(`data ${JSON.stringify(data)}`);
+        return data.response;
     }
 
     const theme = useTheme();
@@ -107,7 +103,13 @@ const SearchDB = () => {
                     <Stack direction={"column"}>
                         <TextField variant="outlined"
                             placeholder="Search"
-                            {...register('searchTerm', { required: "This field is required" })}
+                            {...register('searchTerm', {
+                                required: "This field is required",
+                                minLength: {
+                                    value: 3,
+                                    message: "This field requires a minimum of 3 characters"
+                                }
+                            })}
                             error={Boolean(errors.searchTerm)}
                             sx={{ marginRight: "30px", marginBottom: "20px", width: "200%" }}
                             helperText={errors.searchTerm?.message}
