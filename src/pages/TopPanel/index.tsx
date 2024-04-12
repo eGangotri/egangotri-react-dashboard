@@ -11,7 +11,8 @@ import {
   AI_TEXT_IDENTIFIER,
   EXEC_LAUNCHER_THREE_PATH,
   EXEC_LAUNCHER_FOUR_PATH,
-  SEARCH_DB_PATH
+  SEARCH_ARCHIVE_DB_PATH,
+  SEARCH_G_DRIVE_DB_PATH
 } from 'Routes';
 import { useLocation } from "react-router-dom";
 import './topPanel.css';
@@ -38,7 +39,8 @@ const TopPanel: React.FC = () => {
       <Grid item xs={1} sm={1} md={2}><NavLink to={TALLY_UPLOADED_DATA} className={activeClass(TALLY_UPLOADED_DATA)}><Box className="menuItem">Tally Upload Database</Box></NavLink></Grid>
       <Grid item xs={1} sm={1} md={2}><NavLink to={TIFF_2_PDF} className={activeClass(TIFF_2_PDF)}><Box className="menuItem">Tiff 2 Pdf</Box></NavLink></Grid>
       <Grid item xs={1} sm={1} md={2}><NavLink to={AI_TEXT_IDENTIFIER} className={activeClass(AI_TEXT_IDENTIFIER)}><Box className="menuItem">AI-Text-Identify</Box></NavLink></Grid>
-      <Grid item xs={1} sm={1} md={2}><NavLink to={SEARCH_DB_PATH} className={activeClass(SEARCH_DB_PATH)}><Box className="menuItem">Search DB</Box></NavLink></Grid>
+      <Grid item xs={1} sm={1} md={2}><NavLink to={SEARCH_ARCHIVE_DB_PATH} className={activeClass(SEARCH_ARCHIVE_DB_PATH)}><Box className="menuItem">Search Archive DB</Box></NavLink></Grid>
+      <Grid item xs={1} sm={1} md={2}><NavLink to={SEARCH_G_DRIVE_DB_PATH} className={activeClass(SEARCH_ARCHIVE_DB_PATH)}><Box className="menuItem">Search G-Drive DB</Box></NavLink></Grid>
     </Grid>
   );
 };

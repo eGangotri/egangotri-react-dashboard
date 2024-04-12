@@ -22,7 +22,7 @@ interface SearchDBProps {
     filter?: string
 }
 
-const SearchDB = () => {
+const SearchGDriveDB = () => {
     const [isLoading, setIsLoading] = React.useState<boolean>(false);
     const [archiveProfiles, setArchiveProfiles] = React.useState<string[]>([]);
     const { register, handleSubmit, formState: { errors }, reset } = useForm<SearchDBProps>();
@@ -240,4 +240,4 @@ const SearchDB = () => {
     )
 
 }
-export default SearchDB;
+export default SearchGDriveDB;
