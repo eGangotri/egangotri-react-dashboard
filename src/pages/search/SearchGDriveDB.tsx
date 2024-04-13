@@ -8,8 +8,7 @@ import { makePostCall } from 'service/UploadDataRetrievalService';
 import { backendServer } from 'utils/constants';
 import { DD_MM_YYYY_WITH_TIME_FORMAT } from 'utils/utils';
 import Spinner from 'widgets/Spinner';
-import ArchiveProfileSelector from './ArchiveProfileSelector';
-import { ArchiveData } from './types';
+import { GDriveData } from './types';
 import { FaDownload } from "react-icons/fa";
 
 const generateThumbnail = (identifier: string) => {
@@ -27,8 +26,8 @@ const SearchGDriveDB = () => {
     const [archiveProfiles, setArchiveProfiles] = React.useState<string[]>([]);
     const { register, handleSubmit, formState: { errors }, reset } = useForm<SearchDBProps>();
     const [rowsPerPage, setRowsPerPage] = useState(5);
-    const [sortedData, setSortedData] = useState<ArchiveData[]>([]);
-    const [filteredData, setFilteredData] = useState<ArchiveData[]>([]);
+    const [sortedData, setSortedData] = useState<GDriveData[]>([]);
+    const [filteredData, setFilteredData] = useState<GDriveData[]>([]);
     const [page, setPage] = useState(0);
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, filteredData?.length - page * rowsPerPage);
 
@@ -42,11 +41,10 @@ const SearchGDriveDB = () => {
     };
 
     const handleArchiveProfileChange = (event: SelectChangeEvent<typeof archiveProfiles>) => {
-
         console.log(`handleArchiveProfileChange:event.target.value ${event.target.value}`)
     }
 
-    const handleSort = (column: keyof ArchiveData) => {
+    const handleSort = (column: keyof GDriveData) => {
         const sorted = [...filteredData]?.sort((a, b) => {
             const aCom = a[column] || "";
             const bCol = b[column] || "";
@@ -66,10 +64,12 @@ const SearchGDriveDB = () => {
     const onSubmit = async (searchItem: SearchDBProps) => {
         setIsLoading(true);
         const result = await fetchData(searchItem.searchTerm);
-        setSortedData(result);
-        setFilteredData(result);
-        const _profiles = result.map((item: ArchiveData) => item.acct);
-        setArchiveProfiles(Array.from(new Set<string>(_profiles)));
+        if (result?.length > 0) {
+            setSortedData(result);
+            setFilteredData(result);
+            // const _profiles = result?.map((item: GDriveData) => item.acct);
+            // setArchiveProfiles(Array.from(new Set<string>(_profiles)));
+        }
         setIsLoading(false);
     };
 
@@ -79,14 +79,14 @@ const SearchGDriveDB = () => {
         }
         console.log(`filterTerm ${JSON.stringify(filterTerm)}`)
         const regex = new RegExp(filterTerm, 'i'); // 'i' makes it case insensitive
-        const filteredData = sortedData.filter(item => regex.test(item.originalTitle));
+        const filteredData = sortedData.filter(item => regex.test(item.titleGDrive));
         setFilteredData(filteredData);
     };
 
     async function fetchData(searchTerm: string) {
         const resource =
             backendServer +
-            `searchArchives/search`;
+            `searchGDriveDB/search`;
 
         const data = await makePostCall({ searchTerm },
             resource);
@@ -114,7 +114,7 @@ const SearchGDriveDB = () => {
                             sx={{ marginRight: "30px", marginBottom: "20px", width: "200%" }}
                             helperText={errors.searchTerm?.message}
                         />
-                        <ArchiveProfileSelector archiveProfiles={archiveProfiles} setFilteredData={setFilteredData} filteredData={filteredData} />
+                        {/* <ArchiveProfileSelector archiveProfiles={archiveProfiles} setFilteredData={setFilteredData} filteredData={filteredData} /> */}
                         {isLoading && <Spinner />}
 
                         <Box sx={{ marginTop: "10px" }}>
@@ -147,19 +147,13 @@ const SearchGDriveDB = () => {
                         <TableHead>
                             <TableRow>
                                 <TableCell>Thumbnail</TableCell>
-                                <TableCell onClick={() => handleSort('link')}><Link>Pdf View Link</Link></TableCell>
-                                <TableCell onClick={() => handleSort('allDownloadsLinkPage')}><Link>All Downloads Link Page</Link></TableCell>
-                                <TableCell onClick={() => handleSort('originalTitle')}><Link>Original Title</Link></TableCell>
-                                <TableCell onClick={() => handleSort('titleArchive')}><Link>Title-Archive</Link></TableCell>
-                                {/* <TableCell onClick={() => handleSort('description')}><Link>Description</Link></TableCell>
-                                <TableCell onClick={() => handleSort('subject')}><Link>Subject</Link></TableCell> */}
-                                <TableCell onClick={() => handleSort('date')}><Link>Archive.org Upload Date</Link></TableCell>
-                                <TableCell onClick={() => handleSort('acct')}><Link>Acct</Link></TableCell>
+                                <TableCell onClick={() => handleSort('titleGDrive')}><Link>Title - Google Drive</Link></TableCell>
+                                <TableCell onClick={() => handleSort('gDriveLink')}><Link>Google Drive Link</Link></TableCell>
+                                <TableCell onClick={() => handleSort('truncFileLink')}><Link>Truncated File Link</Link></TableCell>
                                 <TableCell>Page Count</TableCell>
-                                {/* <TableCell onClick={() => handleSort('type')}><Link>Type</Link></TableCell>
-                                <TableCell onClick={() => handleSort('mediaType')}><Link>Media Type</Link></TableCell>
-                                <TableCell onClick={() => handleSort('size')}><Link>Size</Link></TableCell> */}
-                                <TableCell onClick={() => handleSort('sizeFormatted')}><Link>Size Formatted</Link></TableCell>
+                                <TableCell onClick={() => handleSort('sizeWithUnits')}><Link>Size With Units</Link></TableCell>
+                                <TableCell onClick={() => handleSort('createdTime')}><Link>Date</Link></TableCell>
+                                <TableCell onClick={() => handleSort('source')}><Link>Source</Link></TableCell>
 
                             </TableRow>
                         </TableHead>
@@ -167,55 +161,36 @@ const SearchGDriveDB = () => {
                             {(rowsPerPage > 0
                                 ? filteredData?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 : filteredData
-                            )?.map((row: ArchiveData) => (
-                                <TableRow key={row.link}>
-                                    <TableCell>
-                                        <img src={generateThumbnail(row.identifier)} alt={row.originalTitle} />
+                            )?.map((row: GDriveData) => (
+                                <TableRow key={row.titleGDrive}>
+                                    <TableCell sx={{ verticalAlign: "top" }}>
+                                        Thumbnail - Not Yet Implemented
+                                    </TableCell>
+
+                                    <TableCell sx={{ verticalAlign: "top" }}>
+                                        {row.titleGDrive}
                                     </TableCell>
                                     <TableCell sx={{ verticalAlign: "top" }}>
-                                        <ItemToolTip input={row.link} url={true}
+                                        <ItemToolTip input={row.gDriveLink} url={true}
                                             reactComponent={<FaDownload onClick={() => {
-                                                window.open(row.pdfDownloadLink, '_blank');
-                                            }}></FaDownload>}
-                                        />
+                                                window.open(row.gDriveLink, '_blank');
+                                            }}></FaDownload>} />
                                     </TableCell>
                                     <TableCell sx={{ verticalAlign: "top" }}>
-                                        <ItemToolTip input={row.allDownloadsLinkPage} url={true} />
-                                    </TableCell>
-                                    <TableCell sx={{ verticalAlign: "top" }}>
-                                        <ItemToolTip input={row.originalTitle} />
-                                    </TableCell>
-
-
-                                    <TableCell sx={{ verticalAlign: "top" }}>
-                                        <ItemToolTip input={row.titleArchive} />
-                                    </TableCell>
-                                    {/* <TableCell sx={{ verticalAlign: "top" }}>
-                                        <ItemToolTip input={row.description} />
-                                    </TableCell>
-                                    <TableCell sx={{ verticalAlign: "top" }}>
-                                        <ItemToolTip input={row.subject} />
-                                    </TableCell> */}
-                                    <TableCell sx={{ verticalAlign: "top" }}>{moment(row.date).format(DD_MM_YYYY_WITH_TIME_FORMAT)}</TableCell>
-                                    <TableCell sx={{ verticalAlign: "top" }}>
-                                        <ItemToolTip input={row.acct} />
+                                        <ItemToolTip input={row.truncFileLink} url={true} reactComponent={<FaDownload onClick={() => {
+                                            window.open(row.truncFileLink, '_blank');
+                                        }}></FaDownload>} />
                                     </TableCell>
                                     <TableCell sx={{ verticalAlign: "top" }}>
                                         {row.pageCount}
                                     </TableCell>
-                                    {/* <TableCell sx={{ verticalAlign: "top" }}>
-                                        <ItemToolTip input={row.type} />
-                                    </TableCell>
                                     <TableCell sx={{ verticalAlign: "top" }}>
-                                        <ItemToolTip input={row.mediaType} />
+                                        <ItemToolTip input={row.sizeWithUnits} />
                                     </TableCell>
+                                    <TableCell sx={{ verticalAlign: "top" }}>{moment(row.createdTime).format(DD_MM_YYYY_WITH_TIME_FORMAT)}</TableCell>
                                     <TableCell sx={{ verticalAlign: "top" }}>
-                                        <ItemToolTip input={row.size} />
-                                    </TableCell> */}
-                                    <TableCell sx={{ verticalAlign: "top" }}>
-                                        <ItemToolTip input={row.sizeFormatted} />
+                                        {row.source}
                                     </TableCell>
-
                                 </TableRow>
                             ))}
                             {emptyRows > 0 && (

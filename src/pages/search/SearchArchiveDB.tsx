@@ -86,7 +86,7 @@ const SearchArchiveDB = () => {
     async function fetchData(searchTerm: string) {
         const resource =
             backendServer +
-            `searchArchives/search`;
+            `searchArchivesDB/search`;
 
         const data = await makePostCall({ searchTerm },
             resource);

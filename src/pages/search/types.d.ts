@@ -15,3 +15,36 @@ export interface ArchiveData {
     size: string,
     sizeFormatted: string
 }
+
+
+export interface GDriveData {
+    serialNo: string,
+    titleGDrive: string,
+    gDriveLink: string,
+    truncFileLink: string,
+    textType: string,
+    titleinEnglish: string,
+    titleOriginalScript: string,
+    subTitle: string,
+    author: string,
+    editor: string,
+    languages: string,
+    script: string,
+    subect: string,
+    publisher: string,
+    edition: string,
+    placePub: string,
+    yearPub: string,
+    pageCount: number,
+    isbn: string,
+    remarks: string,
+    commentaries: string,
+    commentator: string,
+    series: string,
+    sizeWithUnits: string,
+    sizeInBytes: string,
+    folderName: string,
+    thumbnail: string,
+    createdTime: string,
+    source: string,
+}
