@@ -18,6 +18,7 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
   execType = ExecType.LoginToArchive,
   secondTextBoxPlaceHolder = "",
   thirdTextBoxPlaceHolder = "",
+  thirdTextBoxDefaultValue = "",
   reactComponent = <></>,
   css = {},
   css2 = {},
@@ -134,6 +135,7 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
               placeholder={thirdTextBoxPlaceHolder}
               {...register('userInputThird', { required: "This field is required" })}
               error={Boolean(errors.userInputThird)}
+              defaultValue={thirdTextBoxDefaultValue || ""}
               sx={{ marginRight: "30px", width: "250px", ...css3 }}
               helperText={errors.userInputThird?.message} />
             : null

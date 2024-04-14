@@ -32,8 +32,18 @@ export const makePostCall = async (body: Record<string, unknown>, resource: stri
 
   try {
     const response = await fetch(resource, requestOptions);
-    const data = await response.json();
-    return data;
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    }
+    else {
+      return {
+        error: {
+          status: response.status,
+          statusText: response?.statusText
+        }
+      }
+    }
   }
   catch (err) {
     return {

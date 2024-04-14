@@ -105,6 +105,9 @@ const UploadCycles = () => {
 
             </Box>
         )
+
+        // setFailedUploadsForPopover(<ExecResponsePanel response={result} />);
+
         setFailedUploadsForPopover(failedUploadListPanel);
         setAnchorEl3(currentTarget);
     };

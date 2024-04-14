@@ -86,6 +86,9 @@ export async function launchGoogleDriveExcelListing(googleDriveLink: string, fol
         "folderName": folderName
     },
         resource);
+    if (result?.error) {
+        return result?.error;
+    }
     return result.response as ExecResponseDetails
 }
 
@@ -123,7 +126,7 @@ export async function launchGetFirstAndLastNPages(postParams: Record<string, str
 }
 
 
-export async function makePsotCallToPath(path:string, postParams: Record<string, string>): Promise<ExecResponseDetails> {
+export async function makePsotCallToPath(path: string, postParams: Record<string, string>): Promise<ExecResponseDetails> {
     const resource =
         backendServer + path;
     const result = await makePostCall(postParams,

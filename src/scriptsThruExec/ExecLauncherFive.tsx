@@ -2,6 +2,7 @@ import React from 'react';
 import ExecComponent from './ExecComponent';
 import Box from '@mui/material/Box';
 import { ExecType } from './util';
+import { Typography } from '@mui/material';
 
 
 const ExecLauncherFive: React.FC = () => {
@@ -29,6 +30,7 @@ const ExecLauncherFive: React.FC = () => {
                     placeholder='Absolute Path to PDFs Folder(s) as CSV'
                     secondTextBoxPlaceHolder='Absolute Path to Destination Folder'
                     thirdTextBoxPlaceHolder='N Pages to Extract from Start and End'
+                    thirdTextBoxDefaultValue={"9"}
                     execType={ExecType.GET_FIRST_N_PAGES}
                     css2={{ width: "100%" }}
                     css3={{ marginTop: "30px", width: "100%" }}
@@ -58,6 +60,19 @@ const ExecLauncherFive: React.FC = () => {
                     placeholder='C:\_catalogWork\_collation\_catCombinedExcels\Treasures 60'
                     secondTextBoxPlaceHolder='Enter Folder Name (not path)'
                     execType={ExecType.GenExcelOfGoogleDriveLink} />
+                <Box>
+                    <Typography variant="h6" component="div" gutterBottom>
+                        <ol>
+                            <li>1. Generate Excel of Google Drive Links</li>
+                            <li>2. Generate Excel of Corresponding Local Files</li>
+                            <li>?. Do we combine G-Drive/Local Excels</li>
+                            <li>3. Create Reduced PDFs with First and Last 10 Pages</li>
+                            <li>4. Dump Reduced PDFs to Google Drive</li>
+                            <li>5. Generate Excel of Reduced PDFs</li>
+                            <li>6. Combine Excel in Step 5 with 1</li>
+                        </ol>
+                    </Typography>
+                </Box>
             </Box>
         </Box>
 

@@ -13,6 +13,8 @@ export type ExecComponentProps = {
     execType?: number;
     secondTextBoxPlaceHolder?: string;
     thirdTextBoxPlaceHolder?: string;
+    secondTextBoxDefaultValue?: string;
+    thirdTextBoxDefaultValue?:string;
     reactComponent?: JSX.Element;
     css?: SxProps<Theme>;
     css2?: SxProps<Theme>;
