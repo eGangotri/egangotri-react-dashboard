@@ -21,11 +21,11 @@ export interface UploadCycleTableData {
     countIntended?: number;
     archiveProfileAndCountIntended?: ArchiveProfileAndCountAndTitles[];
     archiveProfileAndCount: ArchiveProfileAndCount[];
-    datetimeUploadStarted: Date|string;
+    datetimeUploadStarted: Date | string;
     totalCount: number;
     archiveProfileAndCountForQueue?: ArchiveProfileAndCount[];
-    totalQueueCount?:number;
-    dateTimeQueueUploadStarted?:Date;
+    totalQueueCount?: number;
+    dateTimeQueueUploadStarted?: Date;
 }
 
 export interface UploadCycleTableDataDictionary {
@@ -37,7 +37,11 @@ export interface UploadCycleTableDataResponse {
 }
 
 export interface SelectedUploadItem {
-    id:number|string;
-    archiveId:string;
+    id: number | string;
+    archiveId: string;
     isValid?: boolean;
+}
+export interface SelectedUploadItemResponse {
+    status: string,
+    results: SelectedUploadItem[]
 }

@@ -15,7 +15,7 @@ import { getUploadStatusDataForUshered, verifyUploadStatusForUploadCycleId } fro
 
 import { DD_MM_YYYY_WITH_TIME_FORMAT } from 'utils/utils';
 import { getDataForUploadCycle, getUploadStatusData } from 'service/UploadDataRetrievalService';
-import { ArchiveProfileAndCount, ArchiveProfileAndCountAndTitles, ArchiveProfileAndTitle, SelectedUploadItem, UploadCycleTableData, UploadCycleTableDataDictionary, UploadCycleTableDataResponse } from 'mirror/types';
+import { ArchiveProfileAndCount, ArchiveProfileAndCountAndTitles, ArchiveProfileAndTitle, SelectedUploadItem, SelectedUploadItemResponse, UploadCycleTableData, UploadCycleTableDataDictionary, UploadCycleTableDataResponse } from 'mirror/types';
 import { UPLOADS_QUEUED_PATH, UPLOADS_USHERED_PATH } from 'Routes';
 import { MAX_ITEMS_LISTABLE } from 'utils/constants';
 import IconButton from '@mui/material/IconButton';
@@ -83,28 +83,30 @@ const UploadCycles = () => {
 
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, sortedData?.length - page * rowsPerPage);
 
-    const _verifyUploadStatus = async (event: React.MouseEvent<HTMLButtonElement>, _uploadCycleId: string) => {
+    const _verifyUploadStatus = async (event: React.MouseEvent<HTMLButtonElement>,
+        _uploadCycleId: string
+    ) => {
         const currentTarget = event.currentTarget
         setIsLoading(true);
-        const result: SelectedUploadItem[] = await verifyUploadStatusForUploadCycleId(_uploadCycleId);
+        const result: SelectedUploadItemResponse = await verifyUploadStatusForUploadCycleId(_uploadCycleId);
+        console.log(`result ${JSON.stringify(result)}`);
         setIsLoading(false);
-        const failedUploads = result.filter((item: SelectedUploadItem) => !item.isValid);
+        const failedUploads = result.results.filter((item: SelectedUploadItem) => !item.isValid);
         const noFailedUploads = failedUploads.length === 0;
         const failedUploadListPanel = (
-            <>
-
+            <Box sx={{ marginY: "30px" }}>
                 <h4>
+                    <Typography>{result.status}</Typography>
                     <Typography sx={{ color: noFailedUploads ? SUCCESS_GREEN : DARK_RED }}>{noFailedUploads ? "No Failed Uploads" : "Following Items Failed Upload:"}</Typography>
                 </h4>
-                {result?.map((item, index) =>
+                {result.results?.map((item, index) =>
                     !item.isValid && <Box sx={{ color: ERROR_RED }}>({index + 1}) {item.archiveId.replaceAll(".pdf", "")}</Box>
                 )}
 
-            </>
+            </Box>
         )
         setFailedUploadsForPopover(failedUploadListPanel);
         setAnchorEl3(currentTarget);
-        console.log(`result ${JSON.stringify(result)}`);
     };
 
     const showDialog = (event: React.MouseEvent<HTMLButtonElement>, profiles: string[]) => {
