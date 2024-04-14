@@ -10,7 +10,8 @@ import {
   launchArchiveExcelDownload,
   launchArchivePdfDownload,
   launchGetFirstAndLastNPages,
-  launchGoogleDriveDownload, launchGoogleDriveExcelListing, launchLocalFolderListingYarn, launchVanitizeModule, launchYarnMoveToFreeze, launchYarnQaToDestFileMover
+  launchGoogleDriveDownload, launchGoogleDriveExcelListing, launchLocalFolderListingYarn, launchVanitizeModule, launchYarnMoveToFreeze, launchYarnQaToDestFileMover,
+  makePsotCallToPath as makePostCallToPath
 } from "service/launchYarn";
 
 import { ExecComponentFormData, ExecResponseDetails } from "./types";
@@ -34,7 +35,8 @@ export enum ExecType {
   MoveToFreeze = 11,
   DownloadArchivePdfs = 12,
   VANITIZE = 100,
-  GET_FIRST_N_PAGES = 200
+  GET_FIRST_N_PAGES = 200,
+  COMBINE_GDRIVE_AND_REDUCED_PDF_DRIVE_EXCELS = 201
 }
 
 export enum Tif2PdfExecType {
@@ -147,10 +149,20 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       break;
 
     case ExecType.GET_FIRST_N_PAGES:
-      _resp = await launchGetFirstAndLastNPages({
+      _resp = await makePostCallToPath(`yarnListMaker/getFirstAndLastNPages`, {
         srcFolders: dataUserInput,
         destRootFolder: dataUserInput2,
         nPages: dataUserInput3,
+      });
+      break;
+
+
+    case ExecType.COMBINE_GDRIVE_AND_REDUCED_PDF_DRIVE_EXCELS:
+      _resp = await makePostCallToPath(
+        `yarnListMaker/combineGDriveAndReducedPdfExcels`, {
+        mainExcelPath: dataUserInput,
+        secondaryExcelPath: dataUserInput2,
+        destExcelPath: dataUserInput3,
       });
       break;
 

@@ -122,6 +122,15 @@ export async function launchGetFirstAndLastNPages(postParams: Record<string, str
     return result.response as ExecResponseDetails
 }
 
+
+export async function makePsotCallToPath(path:string, postParams: Record<string, string>): Promise<ExecResponseDetails> {
+    const resource =
+        backendServer + path;
+    const result = await makePostCall(postParams,
+        resource);
+    return result.response as ExecResponseDetails
+}
+
 export async function launchArchivePdfDownload(archiveLink: string, profileOrFilePath: string): Promise<ExecResponseDetails> {
     const resource =
         backendServer +
