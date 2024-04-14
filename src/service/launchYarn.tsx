@@ -52,7 +52,7 @@ export async function launchYarnMoveToFreeze(
 
 export async function launchLocalFolderListingYarn(
     postParams: Record<string, string>): Promise<ExecResponseDetails> {
-        console.log(`postParams ${JSON.stringify(postParams)}`)
+    console.log(`postParams ${JSON.stringify(postParams)}`)
     const resource =
         backendServer +
         `yarn/yarnGetTitleListings`;
@@ -79,7 +79,7 @@ export async function addHeaderFooter(
 export async function launchGoogleDriveExcelListing(googleDriveLink: string, folderName: string): Promise<ExecResponseDetails> {
     const resource =
         backendServer +
-        `yarn/getGoogleDriveListing`;
+        `yarnListMaker/getGoogleDriveListing`;
 
     const result = await makePostCall({
         "googleDriveLink": googleDriveLink,
@@ -92,7 +92,7 @@ export async function launchGoogleDriveExcelListing(googleDriveLink: string, fol
 export async function launchArchiveExcelDownload(archiveLinks: string, limitedFields = false): Promise<ExecResponseDetails> {
     const resource =
         backendServer +
-        `yarn/getArchiveListing`;
+        `yarnListMaker/getArchiveListing`;
 
     if (!archiveLinks.trim().includes(',') && /\s/.test(archiveLinks.trim())) {
         archiveLinks = archiveLinks.split(/\s+/).join(',');
@@ -109,6 +109,17 @@ export async function launchArchiveExcelDownload(archiveLinks: string, limitedFi
     return {
         ..._result
     } as ExecResponseDetails;
+}
+
+
+export async function launchGetFirstAndLastNPages(postParams: Record<string, string>): Promise<ExecResponseDetails> {
+    const resource =
+        backendServer +
+        `yarnListMaker/getFirstAndLastNPages`;
+
+    const result = await makePostCall(postParams,
+        resource);
+    return result.response as ExecResponseDetails
 }
 
 export async function launchArchivePdfDownload(archiveLink: string, profileOrFilePath: string): Promise<ExecResponseDetails> {

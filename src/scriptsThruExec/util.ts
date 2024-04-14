@@ -7,7 +7,9 @@ import {
 
 import {
   addHeaderFooter,
-  launchArchiveExcelDownload, launchArchivePdfDownload,
+  launchArchiveExcelDownload,
+  launchArchivePdfDownload,
+  launchGetFirstAndLastNPages,
   launchGoogleDriveDownload, launchGoogleDriveExcelListing, launchLocalFolderListingYarn, launchVanitizeModule, launchYarnMoveToFreeze, launchYarnQaToDestFileMover
 } from "service/launchYarn";
 
@@ -31,7 +33,8 @@ export enum ExecType {
   AddHeaderFooter = 10,
   MoveToFreeze = 11,
   DownloadArchivePdfs = 12,
-  VANITIZE = 100
+  VANITIZE = 100,
+  GET_FIRST_N_PAGES = 200
 }
 
 export enum Tif2PdfExecType {
@@ -56,7 +59,11 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
   let _resp: ExecResponseDetails = {}
   const dataUserInput = data.userInput;
   const dataUserInput2 = data.userInputSecond || "";
-  console.log(`data.userInput ${dataUserInput} dataUserInput2 ${dataUserInput2}`);
+  const dataUserInput3 = data.userInputThird || "";
+  console.log(`data.userInput ${dataUserInput} 
+  dataUserInput2 ${dataUserInput2}
+  dataUserInput3 ${dataUserInput3}
+  `);
 
   switch (execType) {
     case ExecType.UploadPdfs:
@@ -128,7 +135,6 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       });
       break;
 
-
     case ExecType.AddHeaderFooter:
       _resp = await addHeaderFooter(dataUserInput);
       break;
@@ -137,6 +143,14 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       _resp = await launchYarnMoveToFreeze({
         profileAsCSV: dataUserInput,
         flatten: "true"
+      });
+      break;
+
+    case ExecType.GET_FIRST_N_PAGES:
+      _resp = await launchGetFirstAndLastNPages({
+        srcFolders: dataUserInput,
+        destRootFolder: dataUserInput2,
+        nPages: dataUserInput3,
       });
       break;
 

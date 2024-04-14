@@ -13,6 +13,7 @@ import ExecLauncherThree from 'scriptsThruExec/ExecLauncherThree';
 import ExecLauncherFour from 'scriptsThruExec/ExecLauncherFour';
 import SearchArchiveDB from 'pages/search/SearchArchiveDB';
 import SearchGDriveDB from 'pages/search/SearchGDriveDB';
+import ExecLauncherFive from 'scriptsThruExec/ExecLauncherFive';
 
 export const LANDING_PAGE_PATH = "/"
 export const UPLOADS_USHERED_PATH = "/uploadsUshered";
@@ -47,7 +48,7 @@ const DashboardRoutes: React.FC = () => (
             {<Route path={FILE_MOVER_PATH} element={<FileMover />} />}
             {<Route path={SEARCH_ARCHIVE_DB_PATH} element={<SearchArchiveDB />} />}
             {<Route path={SEARCH_G_DRIVE_DB_PATH} element={<SearchGDriveDB />} />}
-            {<Route path={G_DRIVE_LISTING_MAKER_PATH} element={<SearchGDriveDB />} />}
+            {<Route path={G_DRIVE_LISTING_MAKER_PATH} element={<ExecLauncherFive />} />}
         </Route>
     </Routes>
 );

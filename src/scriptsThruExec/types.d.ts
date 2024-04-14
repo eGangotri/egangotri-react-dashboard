@@ -4,7 +4,7 @@ import { Theme } from '@mui/material/styles';
 export type ExecComponentFormData = {
     userInput: string;
     userInputSecond?: string;
-    userInputSecond3?: string;
+    userInputThird?: string;
 };
 
 export type ExecComponentProps = {
@@ -12,9 +12,11 @@ export type ExecComponentProps = {
     buttonText?: string;
     execType?: number;
     secondTextBoxPlaceHolder?: string;
+    thirdTextBoxPlaceHolder?: string;
     reactComponent?: JSX.Element;
     css?: SxProps<Theme>;
     css2?: SxProps<Theme>;
+    css3?: SxProps<Theme>;
 };
 
 export type ExecResponse = {

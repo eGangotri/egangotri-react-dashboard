@@ -17,9 +17,11 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
   buttonText = 'Click me',
   execType = ExecType.LoginToArchive,
   secondTextBoxPlaceHolder = "",
+  thirdTextBoxPlaceHolder = "",
   reactComponent = <></>,
   css = {},
-  css2 = {}
+  css2 = {},
+  css3 = {},
 }) => {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const { register, handleSubmit, formState: { errors }, reset } = useForm<ExecComponentFormData>();
@@ -127,9 +129,18 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
             : null
           }
 
+          {thirdTextBoxPlaceHolder?.length > 0 ?
+            <TextField variant="outlined"
+              placeholder={thirdTextBoxPlaceHolder}
+              {...register('userInputThird', { required: "This field is required" })}
+              error={Boolean(errors.userInputThird)}
+              sx={{ marginRight: "30px", width: "250px", ...css3 }}
+              helperText={errors.userInputThird?.message} />
+            : null
+          }
 
           {reactComponent}
-          <Box sx= {{ marginTop: "10px"}}>
+          <Box sx={{ marginTop: "10px" }}>
             <Button variant="contained" color="primary" type="submit" sx={{ marginRight: "10px" }}>
               {buttonText}
             </Button>
