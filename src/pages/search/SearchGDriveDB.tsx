@@ -10,12 +10,16 @@ import { DD_MM_YYYY_WITH_TIME_FORMAT } from 'utils/utils';
 import Spinner from 'widgets/Spinner';
 import { GDriveData } from './types';
 import { FaDownload } from "react-icons/fa";
+import { getGDrivePdfDownloadLink } from 'mirror/GoogleDriveUtilsCommonCode';
 
 const generateThumbnail = (identifier: string) => {
     return `https://archive.org/services/img/${identifier}`;
 
 }
 
+export const getPdfDownloadLink = (driveId: string) => {
+    return `https://drive.usercontent.google.com/download?id=${driveId}&export=download&authuser=0&confirm=t`
+}
 interface SearchDBProps {
     searchTerm: string
     filter?: string
@@ -173,12 +177,12 @@ const SearchGDriveDB = () => {
                                     <TableCell sx={{ verticalAlign: "top" }}>
                                         <ItemToolTip input={row.gDriveLink} url={true}
                                             reactComponent={<FaDownload onClick={() => {
-                                                window.open(row.gDriveLink, '_blank');
+                                                window.open(getGDrivePdfDownloadLink(row.identifier), '_blank');
                                             }}></FaDownload>} />
                                     </TableCell>
                                     <TableCell sx={{ verticalAlign: "top" }}>
                                         <ItemToolTip input={row.truncFileLink} url={true} reactComponent={<FaDownload onClick={() => {
-                                            window.open(row.truncFileLink, '_blank');
+                                            window.open(getGDrivePdfDownloadLink(row.identifierTruncFile), '_blank');
                                         }}></FaDownload>} />
                                     </TableCell>
                                     <TableCell sx={{ verticalAlign: "top" }}>

@@ -12,7 +12,8 @@ import {
   EXEC_LAUNCHER_THREE_PATH,
   EXEC_LAUNCHER_FOUR_PATH,
   SEARCH_ARCHIVE_DB_PATH,
-  SEARCH_G_DRIVE_DB_PATH
+  SEARCH_G_DRIVE_DB_PATH,
+  G_DRIVE_LISTING_MAKER_PATH
 } from 'Routes';
 import { useLocation } from "react-router-dom";
 import './topPanel.css';
@@ -41,6 +42,7 @@ const TopPanel: React.FC = () => {
       <Grid item xs={1} sm={1} md={2}><NavLink to={AI_TEXT_IDENTIFIER} className={activeClass(AI_TEXT_IDENTIFIER)}><Box className="menuItem">AI-Text-Identify</Box></NavLink></Grid>
       <Grid item xs={1} sm={1} md={2}><NavLink to={SEARCH_ARCHIVE_DB_PATH} className={activeClass(SEARCH_ARCHIVE_DB_PATH)}><Box className="menuItem">Search Archive DB</Box></NavLink></Grid>
       <Grid item xs={1} sm={1} md={2}><NavLink to={SEARCH_G_DRIVE_DB_PATH} className={activeClass(SEARCH_ARCHIVE_DB_PATH)}><Box className="menuItem">Search G-Drive DB</Box></NavLink></Grid>
+      <Grid item xs={1} sm={1} md={2}><NavLink to={G_DRIVE_LISTING_MAKER_PATH} className={activeClass(G_DRIVE_LISTING_MAKER_PATH)}><Box className="menuItem">G-Drive Listing Maker</Box></NavLink></Grid>
     </Grid>
   );
 };

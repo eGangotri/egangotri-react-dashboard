@@ -66,10 +66,12 @@ const SearchArchiveDB = () => {
     const onSubmit = async (searchItem: SearchDBProps) => {
         setIsLoading(true);
         const result = await fetchData(searchItem.searchTerm);
-        setSortedData(result);
-        setFilteredData(result);
-        const _profiles = result.map((item: ArchiveData) => item.acct);
-        setArchiveProfiles(Array.from(new Set<string>(_profiles)));
+        if (result?.length > 0) {
+            setSortedData(result);
+            setFilteredData(result);
+            const _profiles = result.map((item: ArchiveData) => item.acct);
+            setArchiveProfiles(Array.from(new Set<string>(_profiles)));
+        }
         setIsLoading(false);
     };
 

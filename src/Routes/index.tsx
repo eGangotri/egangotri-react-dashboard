@@ -2,7 +2,7 @@ import ProtectedRoute from 'ProtectedRoute';
 import UploadCycles from 'pages/UploadCycles';
 import Uploads from 'pages/upload';
 import FileMover from 'pages/widget/fileMover';
-import ExecLauncher from 'scriptsThruExec/ExecLauncher';
+import ExecLauncher from 'scriptsThruExec/ExecLauncherOne';
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import ExecLauncherTwo from 'scriptsThruExec/ExecLauncherTwo';
@@ -26,6 +26,7 @@ export const TALLY_UPLOADED_DATA = "/tallyData";
 export const FILE_MOVER_PATH = "/fileMover";
 export const SEARCH_ARCHIVE_DB_PATH = "/searchArchiveDB";
 export const SEARCH_G_DRIVE_DB_PATH = "/searchGDriveDB";
+export const G_DRIVE_LISTING_MAKER_PATH = "/GDriveListingMaker";
 export const TIFF_2_PDF = "/tiff2pdf";
 export const AI_TEXT_IDENTIFIER = "/ai";
 
@@ -46,6 +47,7 @@ const DashboardRoutes: React.FC = () => (
             {<Route path={FILE_MOVER_PATH} element={<FileMover />} />}
             {<Route path={SEARCH_ARCHIVE_DB_PATH} element={<SearchArchiveDB />} />}
             {<Route path={SEARCH_G_DRIVE_DB_PATH} element={<SearchGDriveDB />} />}
+            {<Route path={G_DRIVE_LISTING_MAKER_PATH} element={<SearchGDriveDB />} />}
         </Route>
     </Routes>
 );
