@@ -4,7 +4,7 @@ import Stack from "@mui/material/Stack";
 import TablePagination from "@mui/material/TablePagination";
 import { Alert, Box, Checkbox, Collapse, IconButton, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
-import { verifyUploadStatus } from "service/UploadDataRetrievalService";
+import { verifyUploadStatus } from "service/BackendFetchService";
 import { SelectedUploadItem } from "mirror/types"
 import { itemToSelectedUploadItem } from "./utils";
 import { FaCheck } from "react-icons/fa";

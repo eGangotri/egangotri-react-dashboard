@@ -11,7 +11,7 @@ import {
   launchArchivePdfDownload,
   launchGetFirstAndLastNPages,
   launchGoogleDriveDownload, launchGoogleDriveExcelListing, launchLocalFolderListingYarn, launchVanitizeModule, launchYarnMoveToFreeze, launchYarnQaToDestFileMover,
-  makePsotCallToPath as makePostCallToPath
+  makePostCallToPath as makePostCallToPath
 } from "service/launchYarn";
 
 import { ExecComponentFormData, ExecResponseDetails } from "./types";

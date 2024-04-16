@@ -1,5 +1,5 @@
 import { MAX_ITEMS_LISTABLE, backendServer } from "utils/constants";
-import { chooseApiPrefix, makePostCall } from "./UploadDataRetrievalService";
+import { chooseApiPrefix, makePostCall } from "./BackendFetchService";
 
 export const reUploadOneItem = async (row: Item) => {
   const resource =

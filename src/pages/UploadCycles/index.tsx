@@ -11,10 +11,10 @@ import "pages/UploadCycles/UploadCycles.css"
 import * as _ from 'lodash';
 import moment from 'moment';
 
-import { getUploadStatusDataForUshered, verifyUploadStatusForUploadCycleId } from "service/UploadDataRetrievalService";
+import { getUploadStatusDataForUshered, verifyUploadStatusForUploadCycleId } from "service/BackendFetchService";
 
 import { DD_MM_YYYY_WITH_TIME_FORMAT } from 'utils/utils';
-import { getDataForUploadCycle, getUploadStatusData } from 'service/UploadDataRetrievalService';
+import { getDataForUploadCycle, getUploadStatusData } from 'service/BackendFetchService';
 import { ArchiveProfileAndCount, ArchiveProfileAndCountAndTitles, ArchiveProfileAndTitle, SelectedUploadItem, SelectedUploadItemResponse, UploadCycleTableData, UploadCycleTableDataDictionary, UploadCycleTableDataResponse } from 'mirror/types';
 import { UPLOADS_QUEUED_PATH, UPLOADS_USHERED_PATH } from 'Routes';
 import { MAX_ITEMS_LISTABLE } from 'utils/constants';

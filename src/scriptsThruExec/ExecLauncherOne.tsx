@@ -93,7 +93,7 @@ const ExecLauncherOne: React.FC = () => {
 
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
                 <ExecComponent
-                    buttonText="Create Drive Excel"
+                    buttonText="Create G-Drive Excel"
                     placeholder='Enter Google Drive Link(s)/Identifiers as csv'
                     secondTextBoxPlaceHolder='Enter Folder Name (not path)'
                     execType={ExecType.GenExcelOfGoogleDriveLink} />

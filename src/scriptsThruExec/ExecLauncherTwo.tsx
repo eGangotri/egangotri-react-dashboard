@@ -16,7 +16,6 @@ const ExecLauncherTwo: React.FC = () => {
     return (
         <Box display="flex" gap={4} mb={2} flexDirection="row">
             <Box display="flex" alignItems="center" gap={4} mb={2} flexDirection="column">
-
                 <ExecComponent
                     buttonText="Create Archive Excel"
                     placeholder='Space/Comma-Separated Archive Link(s) or Identifier(s)'
@@ -29,7 +28,6 @@ const ExecLauncherTwo: React.FC = () => {
                         />
                     </Box>}
                 />
-
                 <ExecComponent
                     buttonText="Download All Pdfs from Archive"
                     placeholder='Space/Comma-Separated Archive Link(s) or Identifier(s)'

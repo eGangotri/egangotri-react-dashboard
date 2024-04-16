@@ -4,7 +4,7 @@ import ItemToolTip from 'pages/upload/ItemTooltip';
 import React, { useEffect } from 'react'
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { makePostCall } from 'service/UploadDataRetrievalService';
+import { makePostCall } from 'service/BackendFetchService';
 import { backendServer } from 'utils/constants';
 import { DD_MM_YYYY_WITH_TIME_FORMAT } from 'utils/utils';
 import Spinner from 'widgets/Spinner';

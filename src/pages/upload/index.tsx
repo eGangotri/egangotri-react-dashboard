@@ -9,7 +9,7 @@ import * as _ from 'lodash';
 
 import {
   getUploadStatusData,
-} from "service/UploadDataRetrievalService";
+} from "service/BackendFetchService";
 import { FaRegTrashAlt } from "react-icons/fa";
 
 import dayjs, { Dayjs } from 'dayjs';

@@ -1,5 +1,5 @@
 import { backendServer } from 'utils/constants';
-import { makePostCall } from './UploadDataRetrievalService';
+import { makePostCall, makePostCallWithErrorHandling } from './BackendFetchService';
 import { ArchiveProfileAndTitle } from 'mirror/types';
 import { ExecResponseDetails } from 'scriptsThruExec/types';
 
@@ -16,16 +16,11 @@ export async function launchVanitizeModule(
 
 export async function launchGoogleDriveDownload(googleDriveLink: string,
     profile: string): Promise<ExecResponseDetails> {
-    const resource =
-        backendServer +
-        `yarn/downloadFromGoogleDrive`;
-
-    const result = await makePostCall({
+    const result = await makePostCallWithErrorHandling({
         "googleDriveLink": googleDriveLink,
         "profile": profile
-    },
-        resource);
-    return result.response as ExecResponseDetails
+    }, `yarn/downloadFromGoogleDrive`)
+    return result;
 }
 
 export async function launchYarnQaToDestFileMover(
@@ -77,41 +72,25 @@ export async function addHeaderFooter(
 }
 
 export async function launchGoogleDriveExcelListing(googleDriveLink: string, folderName: string): Promise<ExecResponseDetails> {
-    const resource =
-        backendServer +
-        `yarnListMaker/getGoogleDriveListing`;
 
-    const result = await makePostCall({
+    const result = await makePostCallWithErrorHandling({
         "googleDriveLink": googleDriveLink,
         "folderName": folderName
-    },
-        resource);
-    if (result?.error) {
-        return result?.error;
-    }
-    return result.response as ExecResponseDetails
+    }, `yarnListMaker/getGoogleDriveListing`);
+    return result;
 }
 
 export async function launchArchiveExcelDownload(archiveLinks: string, limitedFields = false): Promise<ExecResponseDetails> {
-    const resource =
-        backendServer +
-        `yarnListMaker/getArchiveListing`;
-
     if (!archiveLinks.trim().includes(',') && /\s/.test(archiveLinks.trim())) {
         archiveLinks = archiveLinks.split(/\s+/).join(',');
         console.log(`archiveLink ${JSON.stringify(archiveLinks)}`)
     }
-    const result = await makePostCall({
+    const result = await makePostCallWithErrorHandling({
         archiveLinks,
         limitedFields,
         onlyLinks: false
-    }, resource);
-
-    const _result = result.response;
-    console.log(`_result ${JSON.stringify(_result)}`)
-    return {
-        ..._result
-    } as ExecResponseDetails;
+    }, `yarnListMaker/getArchiveListing`)
+    return result;
 }
 
 
@@ -126,7 +105,7 @@ export async function launchGetFirstAndLastNPages(postParams: Record<string, str
 }
 
 
-export async function makePsotCallToPath(path: string, postParams: Record<string, string>): Promise<ExecResponseDetails> {
+export async function makePostCallToPath(path: string, postParams: Record<string, string>): Promise<ExecResponseDetails> {
     const resource =
         backendServer + path;
     const result = await makePostCall(postParams,

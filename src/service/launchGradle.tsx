@@ -1,5 +1,5 @@
 import { backendServer } from 'utils/constants';
-import { makePostCall } from './UploadDataRetrievalService';
+import { makePostCall } from './BackendFetchService';
 import { ArchiveProfileAndTitle } from 'mirror/types';
 import { ExecResponseDetails } from 'scriptsThruExec/types';
 

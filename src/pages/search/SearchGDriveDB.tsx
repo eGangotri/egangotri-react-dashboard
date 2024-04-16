@@ -4,7 +4,7 @@ import ItemToolTip, { ellipsis } from 'pages/upload/ItemTooltip';
 import React, { useEffect } from 'react'
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { makePostCall } from 'service/UploadDataRetrievalService';
+import { makePostCall } from 'service/BackendFetchService';
 import { backendServer } from 'utils/constants';
 import { DD_MM_YYYY_WITH_TIME_FORMAT } from 'utils/utils';
 import Spinner from 'widgets/Spinner';
@@ -168,7 +168,9 @@ const SearchGDriveDB = () => {
                             )?.map((row: GDriveData) => (
                                 <TableRow key={row.titleGDrive}>
                                     <TableCell sx={{ verticalAlign: "top" }}>
-                                        <img src={row.thumbnail} alt={ellipsis(row.thumbnail) as string} />
+                                        <img src={row.thumbnail}
+                                            referrerPolicy="no-referrer"
+                                            alt={ellipsis(row.thumbnail) as string} />
                                     </TableCell>
 
                                     <TableCell sx={{ verticalAlign: "top" }}>
