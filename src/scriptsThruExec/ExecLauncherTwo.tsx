@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ExecComponent from './ExecComponent';
 import Box from '@mui/material/Box';
-import { ExecType } from './util';
+import { ExecType } from './ExecLauncherUtil';
 import { Radio, RadioGroup, FormControlLabel, FormControl, Checkbox } from '@mui/material';
 import { ChangeEvent } from 'react';
 import { CheckBox } from '@mui/icons-material';

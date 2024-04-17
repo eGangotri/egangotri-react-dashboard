@@ -1,7 +1,7 @@
 import React from 'react';
 import ExecComponent from './ExecComponent';
 import Box from '@mui/material/Box';
-import { ExecType } from './util';
+import { ExecType } from './ExecLauncherUtil';
 import { Typography } from '@mui/material';
 
 

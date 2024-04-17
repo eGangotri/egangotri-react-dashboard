@@ -1,7 +1,7 @@
 import React from 'react';
 import ExecComponent from './ExecComponent';
 import Box from '@mui/material/Box';
-import { AITextIdentifierExecType } from './util';
+import { AITextIdentifierExecType } from './ExecLauncherUtil';
 import { Link, Typography } from '@mui/material';
 
 const AITextIdentifier: React.FC = () => {

@@ -1,7 +1,7 @@
 import React from 'react';
 import ExecComponent from './ExecComponent';
 import Box from '@mui/material/Box';
-import { Tif2PdfExecType } from './util';
+import { Tif2PdfExecType } from './ExecLauncherUtil';
 
 const Tiff2Pdf: React.FC = () => {
 
