@@ -38,7 +38,9 @@ export enum ExecType {
   DownloadArchivePdfs = 12,
   VANITIZE = 100,
   GET_FIRST_N_PAGES = 200,
-  COMBINE_GDRIVE_AND_REDUCED_PDF_DRIVE_EXCELS = 201
+  COMBINE_GDRIVE_AND_REDUCED_PDF_DRIVE_EXCELS = 201,
+  DUMP_GDRIVE_COMBO_EXCEL_TO_MONGO = 202,
+  DUMP_ARCHIVE_EXCEL_TO_MONGO = 203
 }
 
 export enum Tif2PdfExecType {
@@ -176,12 +178,25 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
 
 
     case ExecType.COMBINE_GDRIVE_AND_REDUCED_PDF_DRIVE_EXCELS:
-      _resp = await makePostCallToPath(
-        `yarnListMaker/combineGDriveAndReducedPdfExcels`, {
+      _resp = await makePostCallWithErrorHandling({
         mainExcelPath: dataUserInput,
         secondaryExcelPath: dataUserInput2,
         destExcelPath: dataUserInput3,
-      });
+      },
+        `yarnListMaker/combineGDriveAndReducedPdfExcels`);
+      break;
+
+    case ExecType.DUMP_GDRIVE_COMBO_EXCEL_TO_MONGO:
+      _resp = await makePostCallWithErrorHandling({
+        comboExcelPath: dataUserInput,
+      }, `yarnListMaker/dumpGDriveExcelToMongo`);
+      break;
+
+      
+    case ExecType.DUMP_ARCHIVE_EXCEL_TO_MONGO:
+      _resp = await makePostCallWithErrorHandling({
+        archiveExcelPath: dataUserInput,
+      }, `yarnListMaker/dumpArchiveExcelToMongo`);
       break;
 
     case ExecType.DownloadArchivePdfs:

@@ -69,7 +69,7 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
                 placeholder={placeholder}
                 {...register('userInput', { required: "This field is required" })}
                 error={Boolean(errors.userInput)}
-                sx={{ marginRight: "30px", marginBottom: "20px", width: "200%", ...css }}
+                sx={{ marginRight: "30px", marginBottom: "20px", ...css }}
                 helperText={errors.userInput?.message} />
               {userInputOneInfo && <InfoIconWithTooltip input={userInputOneInfo} />
               }
@@ -151,10 +151,10 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
 
           {reactComponent}
           <Box sx={{ marginTop: "10px" }}>
-            <Button variant="contained" color="primary" type="submit" sx={{ marginRight: "10px" }}>
+            <Button variant="contained" color="primary" type="submit" sx={{ marginRight: "10px", marginBottom: "10px" }}>
               {buttonText}
             </Button>
-            <Button variant="contained" color="primary" type="reset" onClick={() => reset()}>
+            <Button variant="contained" color="primary" type="reset" onClick={() => reset()} sx={{ marginRight: "10px", marginBottom: "10px" }}>
               Reset
             </Button>
           </Box>

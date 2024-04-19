@@ -53,6 +53,13 @@ const ExecLauncherTwo: React.FC = () => {
             </Box>
 
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
+
+                <ExecComponent
+                    buttonText="Dump Archive Excel to MongoDB"
+                    placeholder='Absolute Path to Archive Excel Folder'
+                    execType={ExecType.DUMP_ARCHIVE_EXCEL_TO_MONGO}
+                    userInputOneInfo="It will pick the latest Excel from the Folders"
+                />
             </Box>
         </Box>
     );

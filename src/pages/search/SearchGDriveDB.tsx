@@ -12,11 +12,6 @@ import { GDriveData } from './types';
 import { FaDownload } from "react-icons/fa";
 import { getGDrivePdfDownloadLink } from 'mirror/GoogleDriveUtilsCommonCode';
 
-const generateThumbnail = (identifier: string) => {
-    return `https://archive.org/services/img/${identifier}`;
-
-}
-
 export const getPdfDownloadLink = (driveId: string) => {
     return `https://drive.usercontent.google.com/download?id=${driveId}&export=download&authuser=0&confirm=t`
 }
@@ -168,9 +163,11 @@ const SearchGDriveDB = () => {
                             )?.map((row: GDriveData) => (
                                 <TableRow key={row.titleGDrive}>
                                     <TableCell sx={{ verticalAlign: "top" }}>
-                                        <img src={row.thumbnail}
-                                            referrerPolicy="no-referrer"
-                                            alt={ellipsis(row.thumbnail) as string} />
+                                        <ItemToolTip input={""} url={true}
+                                            reactComponent={
+                                                <img src={row.thumbnail}
+                                                    referrerPolicy="no-referrer"
+                                                    alt={ellipsis(row.thumbnail) as string} />} />
                                     </TableCell>
 
                                     <TableCell sx={{ verticalAlign: "top" }}>

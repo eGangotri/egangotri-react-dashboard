@@ -32,6 +32,7 @@ const ExecLauncherFive: React.FC = () => {
                     placeholder='Enter Google Drive Link(s)/Identifiers as csv'
                     secondTextBoxPlaceHolder='Enter Folder Name (not path)'
                     execType={excelGDrive}
+                    css={{ minWidth: "23vw" }}
                     reactComponent={<>
                         <RadioGroup aria-label="fileType" name="fileType" value={excelGDrive} onChange={handleChange} row>
                             <FormControlLabel value={ExecType.GenExcelOfGoogleDriveLink} control={<Radio />} label="ALL" />
@@ -39,32 +40,7 @@ const ExecLauncherFive: React.FC = () => {
                         </RadioGroup>
                     </>}
                 />
-            </Box>
 
-            <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
-                <ExecComponent
-                    buttonText="Get First and Last N Pages"
-                    placeholder='Absolute Path to PDFs Folder(s) as CSV'
-                    secondTextBoxPlaceHolder='Absolute Path to Destination Folder'
-                    thirdTextBoxPlaceHolder='N Pages to Extract from Start and End'
-                    thirdTextBoxDefaultValue={"10"}
-                    execType={ExecType.GET_FIRST_N_PAGES}
-                    css2={{ width: "100%" }}
-                    css3={{ marginTop: "30px", width: "100%" }}
-                />
-            </Box>
-
-            <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
-                <ExecComponent
-                    buttonText="Combine G Drive and Reduced PDF Drive Excels"
-                    placeholder='Absolute Path to Main Excel Folder'
-                    secondTextBoxPlaceHolder='Absolute Path to Secondary Excel Folder'
-                    //  thirdTextBoxPlaceHolder='Optional Output Excel Path'
-                    execType={ExecType.COMBINE_GDRIVE_AND_REDUCED_PDF_DRIVE_EXCELS}
-                    css2={{ width: "100%" }}
-                    userInputOneInfo="It will pick the latest Excel from the Folders"
-                //  css3={{marginTop: "30px", width: "100%"}}
-                />
                 <Box>
                     <Typography variant="h6" component="div" gutterBottom>
                         <ol>
@@ -76,6 +52,43 @@ const ExecLauncherFive: React.FC = () => {
                         </ol>
                     </Typography>
                 </Box>
+            </Box>
+
+            <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
+                <ExecComponent
+                    buttonText="Get First and Last N Pages"
+                    placeholder='Absolute Path to PDFs Folder(s) as CSV'
+                    secondTextBoxPlaceHolder='Absolute Path to Destination Folder'
+                    thirdTextBoxPlaceHolder='N Pages to Extract from Start and End'
+                    thirdTextBoxDefaultValue={"10"}
+                    execType={ExecType.GET_FIRST_N_PAGES}
+                    css={{ minWidth: "23vw" }}
+                    css2={{ minWidth: "23vw" }}
+                    css3={{ marginTop: "30px", minWidth: "23vw" }}
+                />
+            </Box>
+
+            <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
+                <ExecComponent
+                    buttonText="Combine G Drive and Reduced PDF Drive Excels"
+                    placeholder='Absolute Path to Main Excel Folder'
+                    secondTextBoxPlaceHolder='Absolute Path to Secondary Excel Folder'
+                    //  thirdTextBoxPlaceHolder='Optional Output Excel Path'
+                    execType={ExecType.COMBINE_GDRIVE_AND_REDUCED_PDF_DRIVE_EXCELS}
+                    css={{ minWidth: "23vw" }}
+                    css2={{ minWidth: "23vw" }}
+                    userInputOneInfo="It will pick the latest Excel from the Folders"
+                //  css3={{marginTop: "30px", width: "100%"}}
+                />
+
+                <ExecComponent
+                    buttonText="Dump Combination Excel to MongoDB"
+                    placeholder='Absolute Path to Combination Excel Folder'
+                    execType={ExecType.DUMP_GDRIVE_COMBO_EXCEL_TO_MONGO}
+                    css={{ minWidth: "33vw" }}
+                    userInputOneInfo="It will pick the latest Excel from the Folders"
+                //  css3={{marginTop: "30px", width: "100%"}}
+                />
             </Box>
         </Box>
 
