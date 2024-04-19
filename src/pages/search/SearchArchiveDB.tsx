@@ -1,6 +1,6 @@
 import { Box, Button, Paper, Stack, Table, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, Link, TablePagination, TableBody, Select, OutlinedInput, Checkbox, ListItemText, MenuItem, SelectChangeEvent, useTheme } from '@mui/material';
 import moment from 'moment';
-import ItemToolTip from 'pages/upload/ItemTooltip';
+import ItemToolTip from 'widgets/ItemTooltip';
 import React, { useEffect } from 'react'
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -153,14 +153,9 @@ const SearchArchiveDB = () => {
                                 <TableCell onClick={() => handleSort('allDownloadsLinkPage')}><Link>All Downloads Link Page</Link></TableCell>
                                 <TableCell onClick={() => handleSort('originalTitle')}><Link>Original Title</Link></TableCell>
                                 <TableCell onClick={() => handleSort('titleArchive')}><Link>Title-Archive</Link></TableCell>
-                                {/* <TableCell onClick={() => handleSort('description')}><Link>Description</Link></TableCell>
-                                <TableCell onClick={() => handleSort('subject')}><Link>Subject</Link></TableCell> */}
                                 <TableCell onClick={() => handleSort('date')}><Link>Archive.org Upload Date</Link></TableCell>
                                 <TableCell onClick={() => handleSort('acct')}><Link>Acct</Link></TableCell>
                                 <TableCell>Page Count</TableCell>
-                                {/* <TableCell onClick={() => handleSort('type')}><Link>Type</Link></TableCell>
-                                <TableCell onClick={() => handleSort('mediaType')}><Link>Media Type</Link></TableCell>
-                                <TableCell onClick={() => handleSort('size')}><Link>Size</Link></TableCell> */}
                                 <TableCell onClick={() => handleSort('sizeFormatted')}><Link>Size Formatted</Link></TableCell>
 
                             </TableRow>
@@ -192,12 +187,6 @@ const SearchArchiveDB = () => {
                                     <TableCell sx={{ verticalAlign: "top" }}>
                                         <ItemToolTip input={row.titleArchive} />
                                     </TableCell>
-                                    {/* <TableCell sx={{ verticalAlign: "top" }}>
-                                        <ItemToolTip input={row.description} />
-                                    </TableCell>
-                                    <TableCell sx={{ verticalAlign: "top" }}>
-                                        <ItemToolTip input={row.subject} />
-                                    </TableCell> */}
                                     <TableCell sx={{ verticalAlign: "top" }}>{moment(row.date).format(DD_MM_YYYY_WITH_TIME_FORMAT)}</TableCell>
                                     <TableCell sx={{ verticalAlign: "top" }}>
                                         <ItemToolTip input={row.acct} />
@@ -205,15 +194,6 @@ const SearchArchiveDB = () => {
                                     <TableCell sx={{ verticalAlign: "top" }}>
                                         {row.pageCount}
                                     </TableCell>
-                                    {/* <TableCell sx={{ verticalAlign: "top" }}>
-                                        <ItemToolTip input={row.type} />
-                                    </TableCell>
-                                    <TableCell sx={{ verticalAlign: "top" }}>
-                                        <ItemToolTip input={row.mediaType} />
-                                    </TableCell>
-                                    <TableCell sx={{ verticalAlign: "top" }}>
-                                        <ItemToolTip input={row.size} />
-                                    </TableCell> */}
                                     <TableCell sx={{ verticalAlign: "top" }}>
                                         <ItemToolTip input={row.sizeFormatted} />
                                     </TableCell>

@@ -21,6 +21,7 @@ const ExecLauncherTwo: React.FC = () => {
                     placeholder='Space/Comma-Separated Archive Link(s) or Identifier(s)'
                     execType={dontGenerateCheck === true ? ExecType.GenExcelOfArchiveLinkLimitedFields : ExecType.GenExcelOfArchiveLink}
                     css={{ width: "450px" }}
+                    userInputOneInfo="Enter Archive Link(s) or Identifier(s) as CSV or Space-Separated"
                     reactComponent={<Box>
                         <FormControlLabel
                             control={<Checkbox checked={dontGenerateCheck} onChange={handleDontGenerateCheck} />}

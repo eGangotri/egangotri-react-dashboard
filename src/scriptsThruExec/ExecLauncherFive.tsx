@@ -1,11 +1,28 @@
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 import ExecComponent from './ExecComponent';
 import Box from '@mui/material/Box';
 import { ExecType } from './ExecLauncherUtil';
-import { Typography } from '@mui/material';
+import { FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material';
 
 
 const ExecLauncherFive: React.FC = () => {
+    const [excelGDrive, setExcelGDrive] = React.useState<number>(ExecType.GenExcelOfGoogleDriveLink);
+
+    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const _val = event.target.value;
+        console.log("_val", _val)
+        let _listingType;
+        switch (Number(_val)) {
+            case ExecType.GenExcelOfGoogleDriveLink:
+                _listingType = ExecType.GenExcelOfGoogleDriveLink;
+                break;
+            case ExecType.GenExcelOfGoogleDriveLinkForReduced:
+                _listingType = ExecType.GenExcelOfGoogleDriveLinkForReduced;
+                break;
+        }
+        console.log("_listingType", _listingType);
+        setExcelGDrive(_listingType || ExecType.GenExcelOfGoogleDriveLink);
+    };
     return (
         <Box display="flex" gap={4} mb={2} flexDirection="row">
 
@@ -14,7 +31,14 @@ const ExecLauncherFive: React.FC = () => {
                     buttonText="Create G-Drive Excel"
                     placeholder='Enter Google Drive Link(s)/Identifiers as csv'
                     secondTextBoxPlaceHolder='Enter Folder Name (not path)'
-                    execType={ExecType.GenExcelOfGoogleDriveLink} />
+                    execType={excelGDrive}
+                    reactComponent={<>
+                        <RadioGroup aria-label="fileType" name="fileType" value={excelGDrive} onChange={handleChange} row>
+                            <FormControlLabel value={ExecType.GenExcelOfGoogleDriveLink} control={<Radio />} label="ALL" />
+                            <FormControlLabel value={ExecType.GenExcelOfGoogleDriveLinkForReduced} control={<Radio />} label="REDUCED" />
+                        </RadioGroup>
+                    </>}
+                />
             </Box>
 
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
@@ -28,19 +52,17 @@ const ExecLauncherFive: React.FC = () => {
                     css2={{ width: "100%" }}
                     css3={{ marginTop: "30px", width: "100%" }}
                 />
-
-
-
             </Box>
 
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
                 <ExecComponent
                     buttonText="Combine G Drive and Reduced PDF Drive Excels"
-                    placeholder='Absolute Path to Main Excel'
-                    secondTextBoxPlaceHolder='Absolute Path to Secondary Excel'
+                    placeholder='Absolute Path to Main Excel Folder'
+                    secondTextBoxPlaceHolder='Absolute Path to Secondary Excel Folder'
                     //  thirdTextBoxPlaceHolder='Optional Output Excel Path'
                     execType={ExecType.COMBINE_GDRIVE_AND_REDUCED_PDF_DRIVE_EXCELS}
                     css2={{ width: "100%" }}
+                    userInputOneInfo="It will pick the latest Excel from the Folders"
                 //  css3={{marginTop: "30px", width: "100%"}}
                 />
                 <Box>

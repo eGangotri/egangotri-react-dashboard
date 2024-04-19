@@ -6,11 +6,14 @@ import Box from '@mui/material/Box';
 import { ExecType, invokeFuncBasedOnExecType } from './ExecLauncherUtil';
 import UploadDialog from '../pages/UploadCycles/UploadDialog';
 import Spinner from '../widgets/Spinner';
-import { Popover, Typography, Stack } from '@mui/material';
+import { Popover, Typography, Stack, Tooltip } from '@mui/material';
 import ExecResponsePanel from './ExecResponsePanel';
 import { ExecComponentFormData, ExecComponentProps } from './types';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
+import { FaInfoCircle } from 'react-icons/fa';
+import ItemToolTip from 'widgets/ItemTooltip';
+import InfoIconWithTooltip from 'widgets/InfoIconWithTooltip';
 
 const ExecComponent: React.FC<ExecComponentProps> = ({
   placeholder = 'Comma Separated Profile Codes',
@@ -23,6 +26,7 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
   css = {},
   css2 = {},
   css3 = {},
+  userInputOneInfo = ""
 }) => {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const { register, handleSubmit, formState: { errors }, reset } = useForm<ExecComponentFormData>();
@@ -60,12 +64,16 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
       <Box display="flex" alignItems="center" gap={4} mb={2}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Stack direction={"row"}>
-            <TextField variant="outlined"
-              placeholder={placeholder}
-              {...register('userInput', { required: "This field is required" })}
-              error={Boolean(errors.userInput)}
-              sx={{ marginRight: "30px", marginBottom: "20px", width: "200%", ...css }}
-              helperText={errors.userInput?.message} />
+            <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end' }}>
+              <TextField variant="outlined"
+                placeholder={placeholder}
+                {...register('userInput', { required: "This field is required" })}
+                error={Boolean(errors.userInput)}
+                sx={{ marginRight: "30px", marginBottom: "20px", width: "200%", ...css }}
+                helperText={errors.userInput?.message} />
+              {userInputOneInfo && <InfoIconWithTooltip input={userInputOneInfo} />
+              }
+            </Box>
             {isLoading && <Spinner />}
           </Stack>
           <Popover

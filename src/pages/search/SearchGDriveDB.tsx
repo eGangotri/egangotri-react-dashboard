@@ -1,6 +1,6 @@
 import { Box, Button, Paper, Stack, Table, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, Link, TablePagination, TableBody, Select, OutlinedInput, Checkbox, ListItemText, MenuItem, SelectChangeEvent, useTheme } from '@mui/material';
 import moment from 'moment';
-import ItemToolTip, { ellipsis } from 'pages/upload/ItemTooltip';
+import ItemToolTip, { ellipsis } from 'widgets/ItemTooltip';
 import React, { useEffect } from 'react'
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';

@@ -15,6 +15,7 @@ import {
 } from "service/launchYarn";
 
 import { ExecComponentFormData, ExecResponseDetails } from "./types";
+import { makePostCallWithErrorHandling } from "service/BackendFetchService";
 
 export enum ExecType {
   UploadPdfs = 1,
@@ -25,7 +26,8 @@ export enum ExecType {
   DownloadGoogleDriveLink = 6,
   GenExcelOfArchiveLink = 71,
   GenExcelOfArchiveLinkLimitedFields = 72,
-  GenExcelOfGoogleDriveLink = 8,
+  GenExcelOfGoogleDriveLink = 81,
+  GenExcelOfGoogleDriveLinkForReduced = 82,
   GenListingsofLocalFolderAsPdf = 91,
   GenListingsofLocalFolderAsAll = 92,
   GenListingsofLocalFolderAsPdfYarn = 93,
@@ -100,9 +102,25 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
     case ExecType.GenExcelOfArchiveLinkLimitedFields:
       _resp = await launchArchiveExcelDownload(dataUserInput, true);
       break;
+
+
     case ExecType.GenExcelOfGoogleDriveLink:
-      _resp = await launchGoogleDriveExcelListing(dataUserInput, data.userInputSecond || "D:\\");
+      _resp = await makePostCallWithErrorHandling({
+        "googleDriveLink": dataUserInput,
+        "folderName": data.userInputSecond || "D:\\",
+        "reduced": false
+      }, `yarnListMaker/getGoogleDriveListing`);
       break;
+
+    case ExecType.GenExcelOfGoogleDriveLinkForReduced:
+      _resp = await makePostCallWithErrorHandling({
+        "googleDriveLink": dataUserInput,
+        "folderName": data.userInputSecond || "D:\\",
+        "reduced": true
+      }, `yarnListMaker/getGoogleDriveListing`);
+      break;
+
+
     case ExecType.GenListingsofLocalFolderAsPdf:
       _resp = await launchLocalFolderListingForPdf(dataUserInput);
       break;

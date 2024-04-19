@@ -22,11 +22,6 @@ const ExecLauncherThree: React.FC = () => {
     const handleChangeYarn = (event: ChangeEvent<HTMLInputElement>) => {
         const _val = event.target.value;
         console.log("_val", _val)
-        // const _listingType = _val === `${ExecType.GenListingsofLocalFolderAsAllYarn}` ?
-        //     ExecType.GenListingsofLocalFolderAsAllYarn :
-        //     ExecType.GenListingsofLocalFolderAsPdfYarn
-        // console.log("_listingType", _listingType)
-
         let _listingType;
         switch (Number(_val)) {
             case ExecType.GenListingsofLocalFolderAsLinksYarn:

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { DAY_MONTH_YEAR_HOUR_MIN_FORMAT } from "utils/date-constants";
 import format from "date-fns/format";
-import ItemToolTip, { ellipsis } from "./ItemTooltip";
+import ItemToolTip, { ellipsis } from "../../widgets/ItemTooltip";
 import { Box, Button, Checkbox } from "@mui/material";
 import * as _ from "lodash";
 import { createArchiveLink } from "mirror";
