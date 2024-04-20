@@ -1,7 +1,7 @@
+import React, { useEffect } from 'react'
 import { Box, Button, Paper, Stack, Table, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, Link, TablePagination, TableBody, Select, OutlinedInput, Checkbox, ListItemText, MenuItem, SelectChangeEvent, useTheme } from '@mui/material';
 import moment from 'moment';
 import ItemToolTip, { ellipsis } from 'widgets/ItemTooltip';
-import React, { useEffect } from 'react'
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { makePostCall } from 'service/BackendFetchService';
@@ -163,13 +163,10 @@ const SearchGDriveDB = () => {
                             )?.map((row: GDriveData) => (
                                 <TableRow key={row.titleGDrive}>
                                     <TableCell sx={{ verticalAlign: "top" }}>
-                                        <ItemToolTip input={""} url={true}
-                                            reactComponent={
-                                                <img src={row.thumbnail}
-                                                    referrerPolicy="no-referrer"
-                                                    alt={ellipsis(row.thumbnail) as string} />} />
+                                        <img src={"https://drive.google.com/thumbnail?id="+row.identifierTruncFile}
+                                            referrerPolicy="no-referrer"
+                                            alt={ellipsis(`https://lh3.googleusercontent.com/d/${row.identifierTruncFile}?authuser=0`) as string} />
                                     </TableCell>
-
                                     <TableCell sx={{ verticalAlign: "top" }}>
                                         {row.titleGDrive}
                                     </TableCell>

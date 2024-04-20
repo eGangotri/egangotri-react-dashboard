@@ -75,11 +75,11 @@ const ExecLauncherFive: React.FC = () => {
                     secondTextBoxPlaceHolder='Absolute Path to Secondary Excel Folder'
                     //  thirdTextBoxPlaceHolder='Optional Output Excel Path'
                     execType={ExecType.COMBINE_GDRIVE_AND_REDUCED_PDF_DRIVE_EXCELS}
-                    css={{ minWidth: "23vw" }}
-                    css2={{ minWidth: "23vw" }}
+                    css={{ minWidth: "33vw" }}
+                    css2={{ minWidth: "35vw" }}
                     userInputOneInfo="It will pick the latest Excel from the Folders"
                 //  css3={{marginTop: "30px", width: "100%"}}
-                />
+                /> 
 
                 <ExecComponent
                     buttonText="Dump Combination Excel to MongoDB"
