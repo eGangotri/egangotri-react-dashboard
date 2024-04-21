@@ -6,15 +6,19 @@ import reportWebVitals from './reportWebVitals';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import './assets/main.css';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 const root = createRoot(document.getElementById('root') as Element);
+const googleClientID = process.env.REACT_APP_GOOGLE_CLIENT_ID || '';
 
 root.render(
+  <GoogleOAuthProvider clientId={googleClientID}>
     <BrowserRouter>
       <Dashboard />
-    </BrowserRouter>,
-  );
-  
+    </BrowserRouter>
+  </GoogleOAuthProvider>,
+);
+
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

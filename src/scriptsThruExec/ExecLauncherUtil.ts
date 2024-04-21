@@ -16,6 +16,7 @@ import {
 
 import { ExecComponentFormData, ExecResponseDetails } from "./types";
 import { makePostCallWithErrorHandling } from "service/BackendFetchService";
+import { downloadFromExcelUsingFrontEnd } from "service/launchFrontEnd";
 
 export enum ExecType {
   UploadPdfs = 1,
@@ -24,6 +25,7 @@ export enum ExecType {
   LoginToArchive = 4,
   UseBulkRenameConventions = 5,
   DownloadGoogleDriveLink = 6,
+  DownloadFilesFromExcel = 61,
   GenExcelOfArchiveLink = 71,
   GenExcelOfArchiveLinkLimitedFields = 72,
   GenExcelOfGoogleDriveLink = 81,
@@ -98,6 +100,10 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
     case ExecType.DownloadGoogleDriveLink:
       _resp = await launchGoogleDriveDownload(dataUserInput, dataUserInput2);
       break;
+
+    case ExecType.DownloadFilesFromExcel:
+      _resp = await downloadFromExcelUsingFrontEnd(dataUserInput, dataUserInput2);
+      break;  
     case ExecType.GenExcelOfArchiveLink:
       _resp = await launchArchiveExcelDownload(dataUserInput, false);
       break;
