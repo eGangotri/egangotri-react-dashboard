@@ -35,6 +35,7 @@ export enum ExecType {
   GenListingsofLocalFolderAsPdfYarn = 93,
   GenListingsofLocalFolderAsAllYarn = 94,
   GenListingsofLocalFolderAsLinksYarn = 95,
+  GenListingsWithStatsofLocalFolderAsLinksYarn = 96,
   AddHeaderFooter = 10,
   MoveToFreeze = 11,
   DownloadArchivePdfs = 12,
@@ -103,7 +104,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
 
     case ExecType.DownloadFilesFromExcel:
       _resp = await downloadFromExcelUsingFrontEnd(dataUserInput, dataUserInput2);
-      break;  
+      break;
     case ExecType.GenExcelOfArchiveLink:
       _resp = await launchArchiveExcelDownload(dataUserInput, false);
       break;
@@ -139,28 +140,39 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
 
     case ExecType.GenListingsofLocalFolderAsPdfYarn:
       console.log("GenListingsofLocalFolderAsPdfYarn", dataUserInput)
-      _resp = await launchLocalFolderListingYarn({
+      _resp = await makePostCallWithErrorHandling({
         argFirst: dataUserInput,
-        pdfsOnly: "true"
-      });
+        pdfsOnly: "true",
+      },
+        `yarn/yarnGetTitleListings`);
       break;
 
     case ExecType.GenListingsofLocalFolderAsAllYarn:
       console.log("GenListingsofLocalFolderAsAllYarn", dataUserInput)
-
-      _resp = await launchLocalFolderListingYarn({
+      _resp = await makePostCallWithErrorHandling({
         argFirst: dataUserInput,
-        pdfsOnly: "false"
-      });
+        pdfsOnly: "false",
+      },
+        `yarn/yarnGetTitleListings`);
       break;
 
     case ExecType.GenListingsofLocalFolderAsLinksYarn:
       console.log("GenListingsofLocalFolderAsLinksYarn", dataUserInput)
-      _resp = await launchLocalFolderListingYarn({
+      _resp = await makePostCallWithErrorHandling({
         argFirst: dataUserInput,
         linksOnly: "true",
         pdfsOnly: "true",
-      });
+      },
+        `yarn/yarnGetTitleListings`);
+      break;
+
+    case ExecType.GenListingsWithStatsofLocalFolderAsLinksYarn:
+      _resp = await makePostCallWithErrorHandling({
+        argFirst: dataUserInput,
+        linksWithStatsOnly: "true",
+        pdfsOnly: "true",
+      },
+        `yarn/yarnGetTitleListings`);
       break;
 
     case ExecType.AddHeaderFooter:
@@ -198,7 +210,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       }, `yarnListMaker/dumpGDriveExcelToMongo`);
       break;
 
-      
+
     case ExecType.DUMP_ARCHIVE_EXCEL_TO_MONGO:
       _resp = await makePostCallWithErrorHandling({
         archiveExcelPath: dataUserInput,
