@@ -30,7 +30,7 @@ const handleExcel = (excelPath: string, column: string) => {
     const worksheet = workbook.Sheets[workbook.SheetNames[0]];
     const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
     console.log(`jsonData ${JSON.stringify(jsonData)}`)
-    return jsonData.map((row: any) => row[column]);
+    return jsonData//.map(row => row[column]);
 }
 
 const downloadPdf = async (url: string, filename: string) => {
