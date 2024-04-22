@@ -30,6 +30,9 @@ const ExecLauncherThree: React.FC = () => {
             case ExecType.GenListingsofLocalFolderAsAllYarn:
                 _listingType = ExecType.GenListingsofLocalFolderAsAllYarn;
                 break;
+            case ExecType.GenListingsWithStatsofLocalFolderAsLinksYarn:
+                _listingType = ExecType.GenListingsWithStatsofLocalFolderAsLinksYarn;
+                break;
             default:
                 _listingType = ExecType.GenListingsofLocalFolderAsPdfYarn;
         }
