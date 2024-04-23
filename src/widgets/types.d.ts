@@ -5,5 +5,6 @@ export type ItemToolTipPropsType = {
     reverse?: boolean;
     url?: boolean;
     reactComponent?: ReactElement
+    noEllipsis?:boolean
   };
   

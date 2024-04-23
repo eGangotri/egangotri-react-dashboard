@@ -160,7 +160,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       console.log("GenListingsofLocalFolderAsLinksYarn", dataUserInput)
       _resp = await makePostCallWithErrorHandling({
         argFirst: dataUserInput,
-        linksOnly: "true",
+        links: "true",
         pdfsOnly: "true",
       },
         `yarn/yarnGetTitleListings`);

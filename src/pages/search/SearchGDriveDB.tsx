@@ -148,7 +148,7 @@ const SearchGDriveDB = () => {
                                 <TableCell>Thumbnail</TableCell>
                                 <TableCell onClick={() => handleSort('titleGDrive')}><Link>Title - Google Drive</Link></TableCell>
                                 <TableCell onClick={() => handleSort('gDriveLink')}><Link>Google Drive Link</Link></TableCell>
-                                <TableCell onClick={() => handleSort('truncFileLink')}><Link>Truncated File Link</Link></TableCell>
+                                <TableCell onClick={() => handleSort('truncFileLink')}><Link>First and Last 10 Pages</Link></TableCell>
                                 <TableCell>Page Count</TableCell>
                                 <TableCell onClick={() => handleSort('sizeWithUnits')}><Link>Size With Units</Link></TableCell>
                                 <TableCell onClick={() => handleSort('createdTime')}><Link>Date</Link></TableCell>
@@ -168,7 +168,7 @@ const SearchGDriveDB = () => {
                                             alt={ellipsis(`https://lh3.googleusercontent.com/d/${row.identifierTruncFile}?authuser=0`) as string} />
                                     </TableCell>
                                     <TableCell sx={{ verticalAlign: "top" }}>
-                                        {row.titleGDrive}
+                                        <ItemToolTip input={row.titleGDrive} noEllipsis={true}/>
                                     </TableCell>
                                     <TableCell sx={{ verticalAlign: "top" }}>
                                         <ItemToolTip input={row.gDriveLink} url={true}

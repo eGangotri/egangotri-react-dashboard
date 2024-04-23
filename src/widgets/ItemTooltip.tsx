@@ -35,6 +35,7 @@ const ItemToolTip: React.FC<ItemToolTipPropsType> = ({
   alphabetCount = DEFAULT_COUNT_FOR_ELLIPSIS,
   reverse = false,
   url = false,
+  noEllipsis = false,
   reactComponent
 }) => {
   const withEllipsis = reverse
@@ -45,10 +46,10 @@ const ItemToolTip: React.FC<ItemToolTipPropsType> = ({
       <Box>
         {url ? (
           <Link href={input} target="_blank">
-            {withEllipsis}
+            {noEllipsis ? input : withEllipsis}
           </Link>
         ) : (
-          <Typography>{withEllipsis}</Typography>
+          <Typography>{noEllipsis ? input : withEllipsis}</Typography>
         )}
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <IconButton
@@ -62,7 +63,7 @@ const ItemToolTip: React.FC<ItemToolTipPropsType> = ({
             <FaCopy fontSize="inherit" />
           </IconButton>
           {
-            reactComponent && <Box component="span" sx={{ paddingLeft: "5px", backgroundColor:blueGrey }}>{reactComponent}</Box>
+            reactComponent && <Box component="span" sx={{ paddingLeft: "5px", backgroundColor: blueGrey }}>{reactComponent}</Box>
           }
         </Box>
       </Box>
