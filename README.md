@@ -24,6 +24,7 @@ $env:NODE_OPTIONS = "--openssl-legacy-provider
 
 Source: https://stackoverflow.com/questions/69692842/error-message-error0308010cdigital-envelope-routinesunsupported
 
+#### for login use eg***trust@gmail.com
 ## Docker
 docker build . -t egangotri/egangotri-react-dashboard
 docker run -d -p 5000:3000  egangotri/egangotri-react-dashboard:latest
@@ -47,7 +48,7 @@ WEBSITES_PORT=3000
 OR in Azure CLI
 az webapp config appsettings set --resource-group cp-bq-specialist-rq --name eg-react-fe --settings WEBSITES_PORT=3000
 
-
+#firebase login is in eg***trust@gmail.com
 ### firebase Deployment
 First time
  npm install -g firebase-tools
