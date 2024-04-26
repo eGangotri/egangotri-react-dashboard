@@ -2,6 +2,7 @@ import { MAX_ITEMS_LISTABLE, backendServer } from "utils/constants";
 import * as _ from 'lodash';
 import { SelectedUploadItem } from "mirror/types"
 import { ExecResponseDetails } from "scriptsThruExec/types";
+import { makePostCall } from "mirror/utils";
 const QUEUE_API_PREFIX = "itemsQueued";
 const USHERED_API_PREFIX = "itemsushered";
 
@@ -33,37 +34,8 @@ export const makePostCallWithErrorHandling = async (body: Record<string, unknown
     ...result
   } as ExecResponseDetails;
 }
-export const makePostCall = async (body: Record<string, unknown>, resource: string) => {
-  const requestOptions: RequestInit = {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  };
 
-  try {
-    console.log(`going to fetch ${JSON.stringify(body)}`)
-    const response = await fetch(resource, requestOptions);
-    console.log(`response ${JSON.stringify(response)}`)
-    if (response.ok) {
-      const data = await response.json();
-      return data;
-    }
-  }
-  catch (error) {
-    const err = error as Error;
-    console.log(`catch err ${err.message}`)
-    return {
-      success: false,
-      error: "Exception thrown. May be Backend Server down."+ err.message
-    };
-  }
-  console.log(`response not ok`)
-  return {
-    error: {
-      success: false,
-    }
-  }
-};
+
 
 export const getUploadStatusData = async (limit: number,
   forQueues = false,

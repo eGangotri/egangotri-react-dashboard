@@ -1,17 +1,19 @@
 import {
-  launchGradleMoveToFreeze,
   launchLocalFolderListingForAll,
   launchLocalFolderListingForPdf, launchBulkRename,
-  launchReverseMove, launchUploader, loginToArchive
+  launchReverseMove, launchUploader, loginToArchive,
+  _launchGradlev2
 } from "service/launchGradle";
 
 import {
   addHeaderFooter,
   launchArchiveExcelDownload,
   launchArchivePdfDownload,
-  launchGetFirstAndLastNPages,
-  launchGoogleDriveDownload, launchGoogleDriveExcelListing, launchLocalFolderListingYarn, launchVanitizeModule, launchYarnMoveToFreeze, launchYarnQaToDestFileMover,
-  makePostCallToPath as makePostCallToPath
+  launchGoogleDriveDownload,
+  launchVanitizeModule,
+  launchYarnMoveToFreeze,
+  launchYarnQaToDestFileMover,
+  makePostCallToPath
 } from "service/launchYarn";
 
 import { ExecComponentFormData, ExecResponseDetails } from "./types";
@@ -26,6 +28,7 @@ export enum ExecType {
   UseBulkRenameConventions = 5,
   DownloadGoogleDriveLink = 6,
   DownloadFilesFromExcel = 61,
+  DirectoryCompare = 62,
   GenExcelOfArchiveLink = 71,
   GenExcelOfArchiveLinkLimitedFields = 72,
   GenExcelOfGoogleDriveLink = 81,
@@ -112,6 +115,12 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       _resp = await launchArchiveExcelDownload(dataUserInput, true);
       break;
 
+    case ExecType.DirectoryCompare:
+      _resp = await makePostCallWithErrorHandling({
+        "srcDir": dataUserInput,
+        "destDir": data.userInputSecond,
+      }, `yarn/compareDirectories`);
+      break;
 
     case ExecType.GenExcelOfGoogleDriveLink:
       _resp = await makePostCallWithErrorHandling({
@@ -144,7 +153,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         argFirst: dataUserInput,
         pdfsOnly: "true",
       },
-        `yarn/yarnGetTitleListings`);
+        `yarnListMaker/createListingsOfLocalFolder`);
       break;
 
     case ExecType.GenListingsofLocalFolderAsAllYarn:
@@ -153,7 +162,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         argFirst: dataUserInput,
         pdfsOnly: "false",
       },
-        `yarn/yarnGetTitleListings`);
+        `yarnListMaker/createListingsOfLocalFolder`);
       break;
 
     case ExecType.GenListingsofLocalFolderAsLinksYarn:
@@ -163,7 +172,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         links: "true",
         pdfsOnly: "true",
       },
-        `yarn/yarnGetTitleListings`);
+        `yarnListMaker/createListingsOfLocalFolder`);
       break;
 
     case ExecType.GenListingsWithStatsofLocalFolderAsLinksYarn:
@@ -172,7 +181,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         linksWithStatsOnly: "true",
         pdfsOnly: "true",
       },
-        `yarn/yarnGetTitleListings`);
+        `yarnListMaker/createListingsOfLocalFolder`);
       break;
 
     case ExecType.AddHeaderFooter:

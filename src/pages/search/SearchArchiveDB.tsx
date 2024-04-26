@@ -4,13 +4,13 @@ import ItemToolTip from 'widgets/ItemTooltip';
 import React, { useEffect } from 'react'
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { makePostCall } from 'service/BackendFetchService';
 import { backendServer } from 'utils/constants';
 import { DD_MM_YYYY_WITH_TIME_FORMAT } from 'utils/utils';
 import Spinner from 'widgets/Spinner';
 import ArchiveProfileSelector from './ArchiveProfileSelector';
 import { ArchiveData } from './types';
 import { FaDownload } from "react-icons/fa";
+import { makePostCall } from 'mirror/utils';
 
 const generateThumbnail = (identifier: string) => {
     return `https://archive.org/services/img/${identifier}`;

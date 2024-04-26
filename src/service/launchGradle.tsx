@@ -1,11 +1,11 @@
 import { backendServer } from 'utils/constants';
-import { makePostCall } from './BackendFetchService';
 import { ArchiveProfileAndTitle } from 'mirror/types';
 import { ExecResponseDetails } from 'scriptsThruExec/types';
 
 import { utils, writeFile } from 'xlsx';
 import os from 'os';
 import path from 'path';
+import { makePostCall } from 'mirror/utils';
 
 export async function launchUploader(profiles: string) {
     return launchGradle(profiles, 'launchUploader')
@@ -69,10 +69,31 @@ export async function _launchGradlev2(args: { [key: string]: string }, gradleTas
     const params = new URLSearchParams(args).toString();
     const _url = `${backendServer}execLauncher/${gradleTask}?${params}`
     console.log(`_url ${_url}`);
-    const res = await fetch(_url);
-    const jsonResp = res.json()
-    console.log(`res ${JSON.stringify(jsonResp)}`);
-    return jsonResp;
+    try {
+        const response = await fetch(_url);
+        if (response.ok) {
+            const jsonResp = response.json()
+            console.log(`res ${JSON.stringify(jsonResp)}`);
+            return {
+                ...jsonResp
+            } as ExecResponseDetails;
+        }
+        else {
+            console.log(`response not ok ${response.statusText}`)
+            return {
+                success: false,
+                error: response.statusText
+            };
+        }
+    }
+    catch (error) {
+        const err = error as Error;
+        console.log(`catch err ${err.message}`)
+        return {
+            success: false,
+            error: "Exception thrown. May be Backend Server down." + err.message
+        };
+    }
 }
 
 export async function launchGradleWithPostData(

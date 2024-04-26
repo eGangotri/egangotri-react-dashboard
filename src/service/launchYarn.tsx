@@ -1,7 +1,7 @@
 import { backendServer } from 'utils/constants';
-import { makePostCall, makePostCallWithErrorHandling } from './BackendFetchService';
-import { ArchiveProfileAndTitle } from 'mirror/types';
+import { makePostCallWithErrorHandling } from './BackendFetchService';
 import { ExecResponseDetails } from 'scriptsThruExec/types';
+import { makePostCall } from 'mirror/utils';
 
 export async function launchVanitizeModule(
     profile: string): Promise<ExecResponseDetails> {
@@ -50,7 +50,7 @@ export async function launchLocalFolderListingYarn(
     console.log(`postParams ${JSON.stringify(postParams)}`)
     const resource =
         backendServer +
-        `yarn/yarnGetTitleListings`;
+        `yarnListMaker/createListingsOfLocalFolder`;
 
     const result = await makePostCall(postParams,
         resource);
@@ -82,7 +82,7 @@ export async function launchGoogleDriveExcelListing(googleDriveLink: string, fol
 
 export async function launchArchiveExcelDownload(archiveLinks: string, limitedFields = false): Promise<ExecResponseDetails> {
     if (!archiveLinks.trim().includes(',') && /\s/.test(archiveLinks.trim())) {
-        archiveLinks = archiveLinks.trim().split(/\s+/).map((x:string)=>x.trim()).join(',');
+        archiveLinks = archiveLinks.trim().split(/\s+/).map((x: string) => x.trim()).join(',');
         console.log(`archiveLink ${JSON.stringify(archiveLinks)}`)
     }
     const result = await makePostCallWithErrorHandling({

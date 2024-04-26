@@ -4,13 +4,13 @@ import moment from 'moment';
 import ItemToolTip, { ellipsis } from 'widgets/ItemTooltip';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { makePostCall } from 'service/BackendFetchService';
 import { backendServer } from 'utils/constants';
 import { DD_MM_YYYY_WITH_TIME_FORMAT } from 'utils/utils';
 import Spinner from 'widgets/Spinner';
 import { GDriveData } from './types';
 import { FaDownload } from "react-icons/fa";
 import { getGDrivePdfDownloadLink } from 'mirror/GoogleDriveUtilsCommonCode';
+import { makePostCall } from 'mirror/utils';
 
 export const getPdfDownloadLink = (driveId: string) => {
     return `https://drive.usercontent.google.com/download?id=${driveId}&export=download&authuser=0&confirm=t`
