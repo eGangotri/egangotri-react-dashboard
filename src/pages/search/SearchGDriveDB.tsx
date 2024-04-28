@@ -89,6 +89,7 @@ const SearchGDriveDB = () => {
 
         const data = await makePostCall({ searchTerm },
             resource);
+
         console.log(`data ${JSON.stringify(data)}`);
         return data.response;
     }
@@ -163,12 +164,12 @@ const SearchGDriveDB = () => {
                             )?.map((row: GDriveData) => (
                                 <TableRow key={row.titleGDrive}>
                                     <TableCell sx={{ verticalAlign: "top" }}>
-                                        <img src={"https://drive.google.com/thumbnail?id="+row.identifierTruncFile}
+                                        <img src={"https://drive.google.com/thumbnail?id=" + row.identifierTruncFile}
                                             referrerPolicy="no-referrer"
                                             alt={ellipsis(`https://lh3.googleusercontent.com/d/${row.identifierTruncFile}?authuser=0`) as string} />
                                     </TableCell>
                                     <TableCell sx={{ verticalAlign: "top" }}>
-                                        <ItemToolTip input={row.titleGDrive} noEllipsis={true}/>
+                                        <ItemToolTip input={row.titleGDrive} noEllipsis={true} />
                                     </TableCell>
                                     <TableCell sx={{ verticalAlign: "top" }}>
                                         <ItemToolTip input={row.gDriveLink} url={true}
