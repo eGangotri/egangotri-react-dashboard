@@ -36,9 +36,13 @@ export enum ExecType {
   GenListingsofLocalFolderAsPdf = 91,
   GenListingsofLocalFolderAsAll = 92,
   GenListingsofLocalFolderAsPdfYarn = 93,
+  GenListingsofLocalFolderAsPdfWithStatsYarn = 931,
   GenListingsofLocalFolderAsAllYarn = 94,
-  GenListingsofLocalFolderAsLinksYarn = 95,
-  GenListingsWithStatsofLocalFolderAsLinksYarn = 96,
+  GenListingsofLocalFolderAsAllWithStatsYarn = 941,
+  GenListingsofLocalPdfFolderAsLinksYarn = 95,
+  GenListingsWithStatsofPdfLocalFolderAsLinksYarn = 96,
+  GenListingsofAllLocalFolderAsLinksYarn = 961,
+  GenListingsWithStatsofAllLocalFolderAsLinksYarn = 962,
   AddHeaderFooter = 10,
   MoveToFreeze = 11,
   DownloadArchivePdfs = 12,
@@ -86,7 +90,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       _resp = await launchYarnQaToDestFileMover({
         qaPath: dataUserInput,
         "dest": data.userInputSecond || "",
-        flatten: "true"
+        flatten: true
       });
       break;
 
@@ -151,7 +155,18 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       console.log("GenListingsofLocalFolderAsPdfYarn", dataUserInput)
       _resp = await makePostCallWithErrorHandling({
         argFirst: dataUserInput,
-        pdfsOnly: "true",
+        pdfsOnly: true,
+        withStats: false,
+      },
+        `yarnListMaker/createListingsOfLocalFolder`);
+      break;
+
+    case ExecType.GenListingsofLocalFolderAsPdfWithStatsYarn:
+      console.log("GenListingsofLocalFolderAsPdfWithStatsYarn", dataUserInput)
+      _resp = await makePostCallWithErrorHandling({
+        argFirst: dataUserInput,
+        pdfsOnly: true,
+        withStats: true,
       },
         `yarnListMaker/createListingsOfLocalFolder`);
       break;
@@ -160,29 +175,64 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       console.log("GenListingsofLocalFolderAsAllYarn", dataUserInput)
       _resp = await makePostCallWithErrorHandling({
         argFirst: dataUserInput,
-        pdfsOnly: "false",
+        pdfsOnly: false,
+        withStats: false,
       },
         `yarnListMaker/createListingsOfLocalFolder`);
       break;
 
-    case ExecType.GenListingsofLocalFolderAsLinksYarn:
+    case ExecType.GenListingsofLocalFolderAsAllWithStatsYarn:
+      console.log("GenListingsofLocalFolderAsAllWithStatsYarn", dataUserInput)
+      _resp = await makePostCallWithErrorHandling({
+        argFirst: dataUserInput,
+        pdfsOnly: false,
+        withStats: true,
+      },
+        `yarnListMaker/createListingsOfLocalFolder`);
+      break;
+
+
+    case ExecType.GenListingsofLocalPdfFolderAsLinksYarn:
       console.log("GenListingsofLocalFolderAsLinksYarn", dataUserInput)
       _resp = await makePostCallWithErrorHandling({
         argFirst: dataUserInput,
-        links: "true",
-        pdfsOnly: "true",
+        withLinks: true,
+        withStats: false,
+        pdfsOnly: true,
       },
         `yarnListMaker/createListingsOfLocalFolder`);
       break;
 
-    case ExecType.GenListingsWithStatsofLocalFolderAsLinksYarn:
+    case ExecType.GenListingsWithStatsofPdfLocalFolderAsLinksYarn:
       _resp = await makePostCallWithErrorHandling({
         argFirst: dataUserInput,
-        linksWithStatsOnly: "true",
-        pdfsOnly: "true",
+        withStats: true,
+        withLinks: true,
+        pdfsOnly: true,
       },
         `yarnListMaker/createListingsOfLocalFolder`);
       break;
+
+    case ExecType.GenListingsofAllLocalFolderAsLinksYarn:
+      _resp = await makePostCallWithErrorHandling({
+        argFirst: dataUserInput,
+        withStats: false,
+        withLinks: true,
+        pdfsOnly: false,
+      },
+        `yarnListMaker/createListingsOfLocalFolder`);
+      break;
+
+    case ExecType.GenListingsWithStatsofAllLocalFolderAsLinksYarn:
+      _resp = await makePostCallWithErrorHandling({
+        argFirst: dataUserInput,
+        withStats: true,
+        withLinks: true,
+        pdfsOnly: false,
+      },
+        `yarnListMaker/createListingsOfLocalFolder`);
+      break;
+
 
     case ExecType.AddHeaderFooter:
       _resp = await addHeaderFooter(dataUserInput);
@@ -191,7 +241,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
     case ExecType.MoveToFreeze:
       _resp = await launchYarnMoveToFreeze({
         profileAsCSV: dataUserInput,
-        flatten: "true"
+        flatten: true
       });
       break;
 

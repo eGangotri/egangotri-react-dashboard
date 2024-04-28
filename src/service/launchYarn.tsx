@@ -24,7 +24,7 @@ export async function launchGoogleDriveDownload(googleDriveLink: string,
 }
 
 export async function launchYarnQaToDestFileMover(
-    postParams: Record<string, string>): Promise<ExecResponseDetails> {
+    postParams: Record<string, unknown>): Promise<ExecResponseDetails> {
     const resource =
         backendServer +
         `yarn/qaToDestFileMover`;
@@ -35,7 +35,7 @@ export async function launchYarnQaToDestFileMover(
 }
 
 export async function launchYarnMoveToFreeze(
-    postParams: Record<string, string>): Promise<ExecResponseDetails> {
+    postParams: Record<string, unknown>): Promise<ExecResponseDetails> {
     const resource =
         backendServer +
         `yarn/yarnMoveProfilesToFreeze`;
