@@ -22,6 +22,8 @@ import { downloadFromExcelUsingFrontEnd } from "service/launchFrontEnd";
 
 export enum ExecType {
   UploadPdfs = 1,
+  UploadPdfsViaExcel = 12,
+  UploadPdfsViaAbsPath = 13,
   MoveFolderContents = 2,
   ReverseMove = 3,
   LoginToArchive = 4,
@@ -83,6 +85,21 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
 
   switch (execType) {
     case ExecType.UploadPdfs:
+      _resp = await launchUploader(dataUserInput);
+
+      // _resp = await _launchGradlev2({
+      //   profiles: dataUserInput
+      // }, "launchUploader");
+      break;
+
+    case ExecType.UploadPdfsViaExcel:
+      _resp = await _launchGradlev2({
+      gradleArgs: `${dataUserInput},${dataUserInput2}`,
+      }, "launchUploaderViaExcel");
+      break;
+      
+      //launchUploaderViaAbsPath
+    case ExecType.UploadPdfsViaAbsPath:
       _resp = await launchUploader(dataUserInput);
       break;
 
