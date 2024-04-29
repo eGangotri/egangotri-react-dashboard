@@ -22,8 +22,8 @@ import { downloadFromExcelUsingFrontEnd } from "service/launchFrontEnd";
 
 export enum ExecType {
   UploadPdfs = 1,
-  UploadPdfsViaExcel = 12,
-  UploadPdfsViaAbsPath = 13,
+  UploadPdfsViaExcel = 111,
+  UploadPdfsViaAbsPath = 113,
   MoveFolderContents = 2,
   ReverseMove = 3,
   LoginToArchive = 4,
