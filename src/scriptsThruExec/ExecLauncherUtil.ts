@@ -19,6 +19,7 @@ import {
 import { ExecComponentFormData, ExecResponseDetails } from "./types";
 import { makePostCallWithErrorHandling } from "service/BackendFetchService";
 import { downloadFromExcelUsingFrontEnd } from "service/launchFrontEnd";
+import { replaceQuotes } from "mirror/utils";
 
 export enum ExecType {
   UploadPdfs = 1,
@@ -93,8 +94,9 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       break;
 
     case ExecType.UploadPdfsViaExcel:
+      const removeQuotes = 
       _resp = await _launchGradlev2({
-      gradleArgs: `${dataUserInput},'${dataUserInput2}','${dataUserInput3}'`,
+      gradleArgs: `${dataUserInput},'${replaceQuotes(dataUserInput2)}','${dataUserInput3}'`,
       }, "launchUploaderViaExcel");
       console.log("UploadPdfsViaExcel", JSON.stringify(_resp))
       break;
