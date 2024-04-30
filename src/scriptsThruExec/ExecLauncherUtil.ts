@@ -94,14 +94,15 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
 
     case ExecType.UploadPdfsViaExcel:
       _resp = await _launchGradlev2({
-      gradleArgs: `${dataUserInput},'${dataUserInput2}'`,
+      gradleArgs: `${dataUserInput},'${dataUserInput2}','${dataUserInput3}'`,
       }, "launchUploaderViaExcel");
+      console.log("UploadPdfsViaExcel", JSON.stringify(_resp))
       break;
       
       //launchUploaderViaAbsPath
     case ExecType.UploadPdfsViaAbsPath:
       _resp = await _launchGradlev2({
-        gradleArgs: `${dataUserInput} # '${dataUserInput2}'`,
+        gradleArgs: `${dataUserInput} # '${dataUserInput2} '`,
         }, "launchUploaderViaAbsPath");
         break;
 

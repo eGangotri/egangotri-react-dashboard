@@ -20,6 +20,8 @@ export type ExecComponentProps = {
     css2?: SxProps<Theme>;
     css3?: SxProps<Theme>;
     userInputOneInfo ?:string;
+    userInputTwoInfo ?:string;
+    userInputThreeInfo ?:string;
 };
 
 export type ExecResponse = {

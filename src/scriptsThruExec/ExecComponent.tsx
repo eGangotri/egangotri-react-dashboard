@@ -26,7 +26,9 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
   css = {},
   css2 = {},
   css3 = {},
-  userInputOneInfo = ""
+  userInputOneInfo = "",
+  userInputTwoInfo = "",
+  userInputThreeInfo = ""
 }) => {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const { register, handleSubmit, formState: { errors }, reset } = useForm<ExecComponentFormData>();
@@ -129,23 +131,31 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
           </Popover>
 
           {secondTextBoxPlaceHolder?.length > 0 ?
-            <TextField variant="outlined"
-              placeholder={secondTextBoxPlaceHolder}
-              {...register('userInputSecond', { required: "This field is required" })}
-              error={Boolean(errors.userInputSecond)}
-              sx={{ marginRight: "30px", width: "250px", ...css2 }}
-              helperText={errors.userInputSecond?.message} />
+            <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start' }}>
+              <TextField variant="outlined"
+                placeholder={secondTextBoxPlaceHolder}
+                {...register('userInputSecond', { required: "This field is required" })}
+                error={Boolean(errors.userInputSecond)}
+                sx={{ marginRight: "30px", width: "250px", ...css2 }}
+                helperText={errors.userInputSecond?.message} />
+              {userInputTwoInfo && <InfoIconWithTooltip input={userInputTwoInfo} />}
+            </Box>
             : null
           }
 
           {thirdTextBoxPlaceHolder?.length > 0 ?
-            <TextField variant="outlined"
-              placeholder={thirdTextBoxPlaceHolder}
-              {...register('userInputThird', { required: "This field is required" })}
-              error={Boolean(errors.userInputThird)}
-              defaultValue={thirdTextBoxDefaultValue || ""}
-              sx={{ marginRight: "30px", width: "250px", ...css3 }}
-              helperText={errors.userInputThird?.message} />
+            <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start' }}>
+
+              <TextField variant="outlined"
+                placeholder={thirdTextBoxPlaceHolder}
+                {...register('userInputThird')}
+                error={Boolean(errors.userInputThird)}
+                defaultValue={thirdTextBoxDefaultValue || ""}
+                sx={{ marginTop: "30px", width: "250px", ...css3 }}
+                helperText={errors.userInputThird?.message} />
+              {userInputThreeInfo && <InfoIconWithTooltip input={userInputThreeInfo} />}
+
+            </Box>
             : null
           }
 

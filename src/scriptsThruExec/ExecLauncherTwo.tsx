@@ -49,8 +49,10 @@ const ExecLauncherTwo: React.FC = () => {
                 <ExecComponent buttonText="Upload Pdfs to Archive for Profile via Excel"
                     placeholder='Profile Name'
                     secondTextBoxPlaceHolder='Enter Excel Abs Path'
+                    thirdTextBoxPlaceHolder='Range (eg. 1-00) (Optional)'
                     execType={ExecType.UploadPdfsViaExcel}
                     userInputOneInfo="Excel File Format: Col1. Abs Path. Col2. Suject. Col 3. Description Col 4. Creator"
+                    userInputThreeInfo="Range of Whole Numbers. Ex 1-10 (Optional)"
                     css={{ width: "250px" }}
                     css2={{ width: "450px" }}
                 />
