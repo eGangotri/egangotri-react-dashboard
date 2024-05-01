@@ -80,7 +80,11 @@ export async function launchGoogleDriveExcelListing(googleDriveLink: string, fol
     return result;
 }
 
-export async function launchArchiveExcelDownload(archiveLinks: string, limitedFields = false): Promise<ExecResponseDetails> {
+export async function launchArchiveExcelDownload(archiveLinks: string,
+    dateRange: string,
+    limitedFields = false,
+    onlyLinks = false):
+    Promise<ExecResponseDetails> {
     if (!archiveLinks.trim().includes(',') && /\s/.test(archiveLinks.trim())) {
         archiveLinks = archiveLinks.trim().split(/\s+/).map((x: string) => x.trim()).join(',');
         console.log(`archiveLink ${JSON.stringify(archiveLinks)}`)
@@ -88,8 +92,9 @@ export async function launchArchiveExcelDownload(archiveLinks: string, limitedFi
     const result = await makePostCallWithErrorHandling({
         archiveLinks,
         limitedFields,
-        onlyLinks: false
-    }, `yarnListMaker/getArchiveListing`)
+        dateRange,
+        onlyLinks
+    }, `yarnArchive/getArchiveListing`)
     return result;
 }
 
@@ -116,7 +121,7 @@ export async function makePostCallToPath(path: string, postParams: Record<string
 export async function launchArchivePdfDownload(archiveLink: string, profileOrFilePath: string): Promise<ExecResponseDetails> {
     const resource =
         backendServer +
-        `yarn/downloadArchivePdfs`;
+        `yarnArchive/downloadArchivePdfs`;
 
     if (!archiveLink.trim().includes(',') && /\s/.test(archiveLink.trim())) {
         archiveLink = archiveLink.split(' ').join(',');

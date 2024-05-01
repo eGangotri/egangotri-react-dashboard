@@ -8,34 +8,64 @@ import { CheckBox } from '@mui/icons-material';
 
 const ExecLauncherTwo: React.FC = () => {
     const [dontGenerateCheck, setDontGenerateCheck] = useState(false);
+    const [listingsOnly, setListingsOnly] = useState(false);
+    const [archiveExcelExecType, setArchiveExcelExecType] = useState(ExecType.GenExcelOfArchiveLink);
 
     const handleDontGenerateCheck = (event: React.ChangeEvent<HTMLInputElement>) => {
         setDontGenerateCheck(event.target.checked);
+        setArchiveExcelExecType(_archiveExcelExecType({
+            dontGenerateCheck: event.target.checked,
+            listingsOnly: listingsOnly
+        }));
+    };
+    const handleListingsOnly = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setListingsOnly(event.target.checked);
+        setArchiveExcelExecType(_archiveExcelExecType({
+            dontGenerateCheck: dontGenerateCheck,
+            listingsOnly: event.target.checked
+        }));
     };
 
+    const _archiveExcelExecType = (options:{dontGenerateCheck:boolean, listingsOnly:boolean}):number =>{
+        let retType = ExecType.GenExcelOfArchiveLink;
+        if(options.listingsOnly === true ){
+            retType = (options.dontGenerateCheck ?
+             ExecType.GenExcelOfArchiveLinkLimitedFieldsWithListing: ExecType.GenExcelOfArchiveLinkListingOnly);
+        }
+        else if (options.dontGenerateCheck === true){
+            retType =  ExecType.GenExcelOfArchiveLinkLimitedFields 
+        }
+        console.log(`retType ${retType}`)
+        return retType;
+    }
     return (
         <Box display="flex" gap={4} mb={2} flexDirection="row">
             <Box display="flex" alignItems="center" gap={4} mb={2} flexDirection="column">
                 <ExecComponent
                     buttonText="Create Archive Excel"
                     placeholder='Space/Comma-Separated Archive Link(s) or Identifier(s)'
-                    execType={dontGenerateCheck === true ? ExecType.GenExcelOfArchiveLinkLimitedFields : ExecType.GenExcelOfArchiveLink}
+                    execType={archiveExcelExecType}
                     css={{ width: "450px" }}
                     userInputOneInfo="Enter Archive Link(s) or Identifier(s) as CSV or Space-Separated"
+                    userInputThreeInfo="YYYY/MM/DD-YYYY/MM/DD (Optional). Example 2021/01/01-2021/01/31"
+                    thirdTextBoxPlaceHolder='Date Range (Optional)'
                     reactComponent={<Box>
                         <FormControlLabel
                             control={<Checkbox checked={dontGenerateCheck} onChange={handleDontGenerateCheck} />}
                             label="Dont Generate Direct Downloadable Links (Blazing Fast)"
+                        />
+                        <FormControlLabel
+                            control={<Checkbox checked={listingsOnly} onChange={handleListingsOnly} />}
+                            label="Listings Only"
                         />
                     </Box>}
                 />
                 <ExecComponent
                     buttonText="Download All Pdfs from Archive"
                     placeholder='Space/Comma-Separated Archive Link(s) or Identifier(s)'
-                    secondTextBoxPlaceHolder='Enter Profile or File Abs Path'
+                    secondTextBoxPlaceHolder='Enter Profile or File Abs Path for Dumping PDFs'
                     execType={ExecType.DownloadArchivePdfs}
                     css={{ width: "450px" }}
-
                 />
 
             </Box>

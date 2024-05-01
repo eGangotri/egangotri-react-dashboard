@@ -34,6 +34,8 @@ export enum ExecType {
   DirectoryCompare = 62,
   GenExcelOfArchiveLink = 71,
   GenExcelOfArchiveLinkLimitedFields = 72,
+  GenExcelOfArchiveLinkLimitedFieldsWithListing = 721,
+  GenExcelOfArchiveLinkListingOnly = 722,
   GenExcelOfGoogleDriveLink = 81,
   GenExcelOfGoogleDriveLinkForReduced = 82,
   GenListingsofLocalFolderAsPdf = 91,
@@ -135,11 +137,18 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       _resp = await downloadFromExcelUsingFrontEnd(dataUserInput, dataUserInput2);
       break;
     case ExecType.GenExcelOfArchiveLink:
-      _resp = await launchArchiveExcelDownload(dataUserInput, false);
+      _resp = await launchArchiveExcelDownload(dataUserInput, dataUserInput3, false,false);
       break;
     case ExecType.GenExcelOfArchiveLinkLimitedFields:
-      _resp = await launchArchiveExcelDownload(dataUserInput, true);
+      _resp = await launchArchiveExcelDownload(dataUserInput, dataUserInput3, true,false);
       break;
+      
+    case ExecType.GenExcelOfArchiveLinkLimitedFieldsWithListing:
+      _resp = await launchArchiveExcelDownload(dataUserInput, dataUserInput3, true,true);
+      break;
+      case ExecType.GenExcelOfArchiveLinkListingOnly:
+        _resp = await launchArchiveExcelDownload(dataUserInput, dataUserInput3, true,true);
+        break;
 
     case ExecType.DirectoryCompare:
       _resp = await makePostCallWithErrorHandling({
@@ -295,7 +304,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
     case ExecType.DUMP_ARCHIVE_EXCEL_TO_MONGO:
       _resp = await makePostCallWithErrorHandling({
         archiveExcelPath: dataUserInput,
-      }, `yarnListMaker/dumpArchiveExcelToMongo`);
+      }, `yarnArchive/dumpArchiveExcelToMongo`);
       break;
 
     case ExecType.DownloadArchivePdfs:
