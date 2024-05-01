@@ -35,7 +35,6 @@ const ExecLauncherTwo: React.FC = () => {
         else if (options.dontGenerateCheck === true){
             retType =  ExecType.GenExcelOfArchiveLinkLimitedFields 
         }
-        console.log(`retType ${retType}`)
         return retType;
     }
     return (
