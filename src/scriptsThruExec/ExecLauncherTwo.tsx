@@ -95,8 +95,17 @@ const ExecLauncherTwo: React.FC = () => {
             </Box>
 
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
+            <ExecComponent buttonText="Mark Uploaded In Archive Excel post verification"
+                    placeholder='Profile Name Or Upload CycleId'
+                    secondTextBoxPlaceHolder='Enter Excel Abs Path'
+                    execType={ExecType.MARK_AS_UPLOADED_ENTRIES_IN_ARCHIVE_EXCEL}
+                    userInputOneInfo="Excel File Format: Col1. Abs Path. Col2. Suject. Col 3. Description Col 4. Creator Col5 . uploadFlag"
+                    css={{ width: "250px" }}
+                    css2={{ width: "450px" }}
+                />
+
                 <ExecComponent
-                    buttonText="Dump Archive Excel to MongoDB"
+                    buttonText="Dump Archive-DB Excel Entries to MongoDB"
                     placeholder='Absolute Path to Archive Excel Folder'
                     execType={ExecType.DUMP_ARCHIVE_EXCEL_TO_MONGO}
                     userInputOneInfo="It will pick the latest Excel from the Folders"

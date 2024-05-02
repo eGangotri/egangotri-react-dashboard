@@ -16,7 +16,7 @@ export function getServer(): string {
   return BACKEND_SERVER;
 }
 
-export const MAX_ITEMS_LISTABLE = 500;
+export const MAX_ITEMS_LISTABLE = 2500;
 
 export const backendServer = getServer();
 

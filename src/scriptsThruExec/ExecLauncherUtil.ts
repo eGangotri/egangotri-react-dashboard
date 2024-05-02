@@ -55,7 +55,8 @@ export enum ExecType {
   GET_FIRST_N_PAGES = 200,
   COMBINE_GDRIVE_AND_REDUCED_PDF_DRIVE_EXCELS = 201,
   DUMP_GDRIVE_COMBO_EXCEL_TO_MONGO = 202,
-  DUMP_ARCHIVE_EXCEL_TO_MONGO = 203
+  DUMP_ARCHIVE_EXCEL_TO_MONGO = 203,
+  MARK_AS_UPLOADED_ENTRIES_IN_ARCHIVE_EXCEL = 204
 }
 
 export enum Tif2PdfExecType {
@@ -96,19 +97,19 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       break;
 
     case ExecType.UploadPdfsViaExcel:
-      const removeQuotes = 
-      _resp = await _launchGradlev2({
-      gradleArgs: `${dataUserInput},'${replaceQuotes(dataUserInput2)}','${dataUserInput3}'`,
-      }, "launchUploaderViaExcel");
+      const removeQuotes =
+        _resp = await _launchGradlev2({
+          gradleArgs: `${dataUserInput},'${replaceQuotes(dataUserInput2)}','${dataUserInput3}'`,
+        }, "launchUploaderViaExcel");
       console.log("UploadPdfsViaExcel", JSON.stringify(_resp))
       break;
-      
-      //launchUploaderViaAbsPath
+
+    //launchUploaderViaAbsPath
     case ExecType.UploadPdfsViaAbsPath:
       _resp = await _launchGradlev2({
         gradleArgs: `${dataUserInput} # '${dataUserInput2} '`,
-        }, "launchUploaderViaAbsPath");
-        break;
+      }, "launchUploaderViaAbsPath");
+      break;
 
     case ExecType.MoveFolderContents:
       _resp = await launchYarnQaToDestFileMover({
@@ -137,18 +138,18 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       _resp = await downloadFromExcelUsingFrontEnd(dataUserInput, dataUserInput2);
       break;
     case ExecType.GenExcelOfArchiveLink:
-      _resp = await launchArchiveExcelDownload(dataUserInput, dataUserInput3, false,false);
+      _resp = await launchArchiveExcelDownload(dataUserInput, dataUserInput3, false, false);
       break;
     case ExecType.GenExcelOfArchiveLinkLimitedFields:
-      _resp = await launchArchiveExcelDownload(dataUserInput, dataUserInput3, true,false);
+      _resp = await launchArchiveExcelDownload(dataUserInput, dataUserInput3, true, false);
       break;
-      
+
     case ExecType.GenExcelOfArchiveLinkLimitedFieldsWithListing:
-      _resp = await launchArchiveExcelDownload(dataUserInput, dataUserInput3, true,true);
+      _resp = await launchArchiveExcelDownload(dataUserInput, dataUserInput3, true, true);
       break;
-      case ExecType.GenExcelOfArchiveLinkListingOnly:
-        _resp = await launchArchiveExcelDownload(dataUserInput, dataUserInput3, true,true);
-        break;
+    case ExecType.GenExcelOfArchiveLinkListingOnly:
+      _resp = await launchArchiveExcelDownload(dataUserInput, dataUserInput3, true, true);
+      break;
 
     case ExecType.DirectoryCompare:
       _resp = await makePostCallWithErrorHandling({
@@ -306,6 +307,14 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         archiveExcelPath: dataUserInput,
       }, `yarnArchive/dumpArchiveExcelToMongo`);
       break;
+
+    case ExecType.MARK_AS_UPLOADED_ENTRIES_IN_ARCHIVE_EXCEL:
+      _resp = await makePostCallWithErrorHandling({
+        pathOrUploadCycleId: replaceQuotes(dataUserInput),
+        archiveExcelPath:  replaceQuotes(dataUserInput2),
+      }, `yarnArchive/markAsUploadedEntriesInArchiveExcel`);
+      break;
+
 
     case ExecType.DownloadArchivePdfs:
       _resp = await launchArchivePdfDownload(dataUserInput, dataUserInput2)
