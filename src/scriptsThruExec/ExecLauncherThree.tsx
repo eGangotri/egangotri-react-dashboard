@@ -67,7 +67,7 @@ const ExecLauncherThree: React.FC = () => {
                             <FormControlLabel value={ExecType.GenListingsofLocalPdfFolderAsLinksYarn} control={<Radio />} label="PDF-LISTING ONLY" />
                             <FormControlLabel value={ExecType.GenListingsWithStatsofPdfLocalFolderAsLinksYarn} control={<Radio />} label="PDF-LISTING-ONLY WITH STATS" />
                             <FormControlLabel value={ExecType.GenListingsofAllLocalFolderAsLinksYarn} control={<Radio />} label="ALL-LISTING ONLY" />
-                            <FormControlLabel value={ExecType.GenListingsWithStatsofAllLocalFolderAsLinksYarn} control={<Radio />} label="PDF-LISTING ONLY WITH STATS" />
+                            <FormControlLabel value={ExecType.GenListingsWithStatsofAllLocalFolderAsLinksYarn} control={<Radio />} label="ALL-LISTING ONLY WITH STATS" />
                         </RadioGroup>
                     </>}
                 />
