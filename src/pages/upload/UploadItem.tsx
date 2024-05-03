@@ -7,6 +7,8 @@ import * as _ from "lodash";
 import { createArchiveLink } from "mirror";
 import { SelectedUploadItem } from "mirror/types"
 import { uploadSingleItemViaGradle } from "service/UploadServices";
+import { hi } from "date-fns/locale";
+import { LIGHT_GREEN, LIGHT_RED, LIGHT_YELLOW } from "constants/colors";
 
 type UploadPropsType = {
   item: Item;
@@ -15,7 +17,7 @@ type UploadPropsType = {
   setSelectedRows?: React.Dispatch<React.SetStateAction<SelectedUploadItem[]>>;
 };
 
-const runItem = (row:Item) => {
+const runItem = (row: Item) => {
   console.log(`row ${row.uploadLink} ${row.localPath} `);
   uploadSingleItemViaGradle(row)
 }
@@ -53,25 +55,31 @@ const UploadItem: React.FC<UploadPropsType> = ({
     return selectedRows.map(x => x.id).includes(id);
   };
 
-  const isErroneous = (id: number) => {
-    const row = selectedRows.find(x => x.id === id && x.isValid === false)
-    return !_.isEmpty(row);
-  };
-
-  const stylesForErroneous = (id: number) => {
-    if (isErroneous(id)) {
+  const highlightRow = (item: Item) => {
+    // console.log(`item.hasOwnProperty("uploadFlag") ${"uploadFlag" in item}`)
+    // console.log(`item.hasOwnProperty("uploadFlag") ${item.uploadFlag}`)
+    if ("uploadFlag" in item && item?.uploadFlag === false) {
       return {
-        backgroundColor: "red",
-        color: "white"
+        backgroundColor: LIGHT_RED,
+        color: "black"
       }
     }
-    return {
-
+    else if (item?.uploadFlag === null) {
+      return {
+        backgroundColor: LIGHT_YELLOW,
+        color: "black"
+      }
     }
-  }
+    else {
+      return {
+        backgroundColor: LIGHT_GREEN,
+        color: "black"
+      }
+    }
 
+  }
   return (
-    <tr key={item._id} style={stylesForErroneous(item._id)}>
+    <tr key={item._id} style={highlightRow(item)}>
       <td>
         <Checkbox
           checked={isSelected(item._id)}
@@ -110,11 +118,11 @@ const UploadItem: React.FC<UploadPropsType> = ({
       </td>
       <td>{item.csvName}</td>
       <td>
-        <Button 
-        sx={{ width: 300, color: "primary" }}
-        variant="contained"
-        size="medium"
-        onClick={() => runItem(item)}>Run Item # {ellipsis(item._id,7)}</Button>
+        <Button
+          sx={{ width: 300, color: "primary" }}
+          variant="contained"
+          size="medium"
+          onClick={() => runItem(item)}>Run Item # {ellipsis(item._id, 7)}</Button>
       </td>
     </tr>
   );

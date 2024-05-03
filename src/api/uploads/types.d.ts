@@ -15,5 +15,6 @@ interface Item {
   "__v": number,
   "createdAt": string;
   "updatedAt": string;
+  "uploadFlag": boolean;
 }
 

@@ -12,8 +12,9 @@ import { FaTimes } from "react-icons/fa";
 import Spinner from "widgets/Spinner";
 
 import * as _ from 'lodash';
-import { ERROR_RED, SUCCESS_GREEN } from "constants/colors";
+import { ERROR_RED, LIGHT_GREEN, LIGHT_RED, LIGHT_YELLOW, SUCCESS_GREEN, WARNING_YELLOW } from "constants/colors";
 import { GridCloseIcon } from "@mui/x-data-grid";
+import InfoIconWithTooltip from "widgets/InfoIconWithTooltip";
 
 type UploadType = {
   items: Item[];
@@ -31,7 +32,7 @@ const UploadsPanel: React.FC<UploadType> = ({ items, forQueues = false, selected
 
   const _verifyUploadStatus = async () => {
     setFailCount(-1);
-    if(selectedRows.length === 0){
+    if (selectedRows.length === 0) {
       setAlertOpen(true);
       return;
     }
@@ -69,30 +70,36 @@ const UploadsPanel: React.FC<UploadType> = ({ items, forQueues = false, selected
       {isLoading && <Spinner />}
 
       <Box>
-      <Collapse in={alertOpen}>
-        <Alert
-          action={
-            <IconButton
-              aria-label="close"
-              color="inherit"
-              size="small"
-              onClick={() => {
-                setAlertOpen(false);
-              }}
-            >
-              <GridCloseIcon fontSize="inherit" />
-            </IconButton>
-          }
-          sx={{ mb: 2 }}
-        >
-          Pls. check atleast one item to proceed with verification
-        </Alert>
-      </Collapse>
-      <Button
-          sx={{ width: 300, color: "primary" }}
-          onClick={_verifyUploadStatus}
-          variant="contained"
-          size="large">Verify Upload Status</Button>
+        <Collapse in={alertOpen}>
+          <Alert
+            action={
+              <IconButton
+                aria-label="close"
+                color="inherit"
+                size="small"
+                onClick={() => {
+                  setAlertOpen(false);
+                }}
+              >
+                <GridCloseIcon fontSize="inherit" />
+              </IconButton>
+            }
+            sx={{ mb: 2 }}
+          >
+            Pls. check atleast one item to proceed with verification
+          </Alert>
+        </Collapse>
+        <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start' }}>
+          <Button
+            sx={{ width: 300, color: "primary", marginRight:"1rem" }}
+            onClick={_verifyUploadStatus}
+            variant="contained"
+            size="large">Verify Upload Status</Button>
+          <InfoIconWithTooltip input="It will mark uploadFlag in DB permanently" />
+        </Box>
+        <Typography><span style={{ color: WARNING_YELLOW,  }}>Yellow implies never checked.</span>
+        <span style={{ color: LIGHT_GREEN }}>Green implies Verfied-Uploaded.</span> 
+        <span style={{ color: LIGHT_RED }}>Red implies Not Uploaded</span> </Typography>
         <Box sx={{ display: `${failCount === -1 ? 'none' : 'inline'}` }}>
           <IconButton>
             {failCount > 0 ? <FaCheck color={ERROR_RED} /> : <FaTimes color={SUCCESS_GREEN} />}
