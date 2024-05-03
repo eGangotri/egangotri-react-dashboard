@@ -21,7 +21,7 @@ import { MAX_ITEMS_LISTABLE } from 'utils/constants';
 import IconButton from '@mui/material/IconButton';
 import InfoIcon from '@mui/icons-material/Info';
 import Tooltip from '@mui/material/Tooltip';
-import { DARK_RED, ERROR_RED, LIGHT_RED, SUCCESS_GREEN, WHITE_SMOKE } from 'constants/colors';
+import { BURGUNDY_RED, DARK_RED, ERROR_RED, LIGHT_RED, SUCCESS_GREEN, WHITE_SMOKE } from 'constants/colors';
 import Spinner from 'widgets/Spinner';
 import { launchGradleReuploadMissed } from 'service/launchGradle';
 import UploadDialog from './UploadDialog';
@@ -241,7 +241,8 @@ const UploadCycles = () => {
         const equality = hasUploadCycleGlobalValues ? ((row?.totalCount === row?.totalQueueCount) && (row?.countIntended === row?.totalQueueCount)) : (row?.totalCount === row?.totalQueueCount)
         return {
             hasUploadCycleGlobalValues,
-            equality
+            //            equality: equality || row.allUploadVerified === false
+            equality: row?.allUploadVerified === true
         }
     }
 
@@ -474,6 +475,26 @@ const UploadCycles = () => {
         return dataForUploadCycle;
     }
 
+    const createBackgroundForRow = (row: UploadCycleTableData) => {
+        console.log(`createBackgroundForRowrow ${JSON.stringify(row)}`);
+        if (row?.countIntended !== row?.totalCount) {
+            return {
+                backgroundColor: `${LIGHT_RED}`
+            }
+        }
+
+        if (row?.allUploadVerified === true) {
+            return {
+                backgroundColor: `${SUCCESS_GREEN}`
+            }
+        }
+        if (row?.allUploadVerified === false) {
+            return {
+                backgroundColor: `${BURGUNDY_RED}`
+            }
+        }
+    }
+
     useEffect(() => {
         (async () => {
             const _data = await fetchUploadCycles();
@@ -484,7 +505,15 @@ const UploadCycles = () => {
     return (
         <Stack spacing="2">
             {isLoading && <Spinner />}
+            <Typography variant="h6">
+                <ul>
+                    <li style={{ color: LIGHT_RED }}>Light Red Row Highlight Color implies Intended Count mismatch</li>
+                    <li style={{ color: BURGUNDY_RED }}>Burgundy Red implies Failed Uploads</li>
+                    <li style={{ color: SUCCESS_GREEN }}>Green implies All Intended Uploads uploaded and verfied</li>
+                    <li>White implies All Uploaded but Actual Upload Verification not done.</li>
+                </ul>
 
+            </Typography>
             <div>
                 <TableContainer component={Paper}>
                     <Table>
@@ -504,7 +533,7 @@ const UploadCycles = () => {
                                 ? sortedData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 : sortedData
                             ).map((row: UploadCycleTableData) => (
-                                <TableRow key={row.uploadCycleId} sx={{ backgroundColor: `${row?.countIntended !== row?.totalCount ? LIGHT_RED : ""}` }}>
+                                <TableRow key={row.uploadCycleId} sx={createBackgroundForRow(row)}>
                                     <TableCell sx={{ verticalAlign: "top" }}>
                                         <Link href={`${UPLOADS_USHERED_PATH}?uploadCycleId=${row.uploadCycleId}`}>{row.uploadCycleId}</Link>
                                     </TableCell>

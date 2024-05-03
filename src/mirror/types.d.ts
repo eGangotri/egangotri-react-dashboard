@@ -26,6 +26,7 @@ export interface UploadCycleTableData {
     archiveProfileAndCountForQueue?: ArchiveProfileAndCount[];
     totalQueueCount?: number;
     dateTimeQueueUploadStarted?: Date;
+    allUploadVerified ?:boolean;
 }
 
 export interface UploadCycleTableDataDictionary {
