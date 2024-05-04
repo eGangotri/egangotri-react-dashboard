@@ -56,7 +56,8 @@ export enum ExecType {
   COMBINE_GDRIVE_AND_REDUCED_PDF_DRIVE_EXCELS = 201,
   DUMP_GDRIVE_COMBO_EXCEL_TO_MONGO = 202,
   DUMP_ARCHIVE_EXCEL_TO_MONGO = 203,
-  MARK_AS_UPLOADED_ENTRIES_IN_ARCHIVE_EXCEL = 204
+  MARK_AS_UPLOADED_ENTRIES_IN_ARCHIVE_EXCEL = 204,
+  REUPLOAD_USING_JSON = 205
 }
 
 export enum Tif2PdfExecType {
@@ -97,11 +98,16 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       break;
 
     case ExecType.UploadPdfsViaExcel:
-      const removeQuotes =
-        _resp = await _launchGradlev2({
-          gradleArgs: `${dataUserInput},'${replaceQuotes(dataUserInput2)}','${dataUserInput3}'`,
-        }, "launchUploaderViaExcel");
+      _resp = await _launchGradlev2({
+        gradleArgs: `${dataUserInput},'${replaceQuotes(dataUserInput2)}','${dataUserInput3}'`,
+      }, "launchUploaderViaExcel");
       console.log("UploadPdfsViaExcel", JSON.stringify(_resp))
+      break;
+
+    case ExecType.REUPLOAD_USING_JSON:
+      _resp = await _launchGradlev2({
+        gradleArgs: `'${replaceQuotes(dataUserInput)}','${dataUserInput3}'`,
+      }, "launchUploaderViaJson");
       break;
 
     //launchUploaderViaAbsPath
@@ -311,10 +317,9 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
     case ExecType.MARK_AS_UPLOADED_ENTRIES_IN_ARCHIVE_EXCEL:
       _resp = await makePostCallWithErrorHandling({
         pathOrUploadCycleId: replaceQuotes(dataUserInput),
-        archiveExcelPath:  replaceQuotes(dataUserInput2),
+        archiveExcelPath: replaceQuotes(dataUserInput2),
       }, `yarnArchive/markAsUploadedEntriesInArchiveExcel`);
       break;
-
 
     case ExecType.DownloadArchivePdfs:
       _resp = await launchArchivePdfDownload(dataUserInput, dataUserInput2)

@@ -26,20 +26,25 @@ const ExecLauncherTwo: React.FC = () => {
         }));
     };
 
-    const _archiveExcelExecType = (options:{dontGenerateCheck:boolean, listingsOnly:boolean}):number =>{
+    const _archiveExcelExecType = (options: { dontGenerateCheck: boolean, listingsOnly: boolean }): number => {
         let retType = ExecType.GenExcelOfArchiveLink;
-        if(options.listingsOnly === true ){
+        if (options.listingsOnly === true) {
             retType = (options.dontGenerateCheck ?
-             ExecType.GenExcelOfArchiveLinkLimitedFieldsWithListing: ExecType.GenExcelOfArchiveLinkListingOnly);
+                ExecType.GenExcelOfArchiveLinkLimitedFieldsWithListing : ExecType.GenExcelOfArchiveLinkListingOnly);
         }
-        else if (options.dontGenerateCheck === true){
-            retType =  ExecType.GenExcelOfArchiveLinkLimitedFields 
+        else if (options.dontGenerateCheck === true) {
+            retType = ExecType.GenExcelOfArchiveLinkLimitedFields
         }
         return retType;
     }
     return (
         <Box display="flex" gap={4} mb={2} flexDirection="row">
             <Box display="flex" alignItems="center" gap={4} mb={2} flexDirection="column">
+
+                <ExecComponent buttonText="Login to Archive"
+                    placeholder='Profiles as CSV'
+                    execType={ExecType.LoginToArchive} />
+
                 <ExecComponent
                     buttonText="Create Archive Excel"
                     placeholder='Space/Comma-Separated Archive Link(s) or Identifier(s)'
@@ -95,7 +100,18 @@ const ExecLauncherTwo: React.FC = () => {
             </Box>
 
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
-            <ExecComponent buttonText="Mark Uploaded In Archive Excel post verification"
+
+                
+            <ExecComponent buttonText="Reupload Using MongoDB Json"
+                    placeholder='Enter Json Abs Path'
+                    execType={ExecType.REUPLOAD_USING_JSON}
+                    userInputOneInfo="Run 'Verify Uploads'. Then From Mongo DB filter using UploadCycleId extract JSON "
+                    thirdTextBoxPlaceHolder='Range (eg. 1-00) (Optional).inclusive'
+                    css={{ width: "250px" }}
+                    userInputThreeInfo="Range of Whole Numbers. Ex 1-10 (Optional).inclusive"
+                />
+
+                <ExecComponent buttonText="Mark Uploaded In Archive Excel post verification"
                     placeholder='Profile Name Or Upload CycleId'
                     secondTextBoxPlaceHolder='Enter Excel Abs Path'
                     execType={ExecType.MARK_AS_UPLOADED_ENTRIES_IN_ARCHIVE_EXCEL}
@@ -111,9 +127,6 @@ const ExecLauncherTwo: React.FC = () => {
                     userInputOneInfo="It will pick the latest Excel from the Folders"
                 />
 
-                <ExecComponent buttonText="Login to Archive"
-                    placeholder='Profiles as CSV'
-                    execType={ExecType.LoginToArchive} />
             </Box>
         </Box>
     );
