@@ -19,7 +19,6 @@ import { ArchiveProfileAndCount, ArchiveProfileAndCountAndTitles, ArchiveProfile
 import { UPLOADS_QUEUED_PATH, UPLOADS_USHERED_PATH } from 'Routes';
 import { MAX_ITEMS_LISTABLE } from 'utils/constants';
 import IconButton from '@mui/material/IconButton';
-import InfoIcon from '@mui/icons-material/Info';
 import Tooltip from '@mui/material/Tooltip';
 import { BURGUNDY_RED, DARK_RED, ERROR_RED, LIGHT_RED, SUCCESS_GREEN, WHITE_SMOKE } from 'constants/colors';
 import Spinner from 'widgets/Spinner';
@@ -28,9 +27,10 @@ import UploadDialog from './UploadDialog';
 import { launchYarnMoveToFreeze } from 'service/launchYarn';
 import ExecResponsePanel from 'scriptsThruExec/ExecResponsePanel';
 import { ExecResponse } from 'scriptsThruExec/types';
-import { createBackgroundForRow } from './utils';
+import { checkCountEquality, createBackgroundForRow } from './utils';
 import { ProfileAndCount } from './ProfileAndCount';
 import { TableHeaderCellForEqualityCount } from './TableHeaderCellForEqualityCount';
+import { TableHeaderCellForUploadCycleStats } from './TableHeaderCellForUploadCycleStats';
 
 
 const UploadCycles = () => {
@@ -254,16 +254,7 @@ const UploadCycles = () => {
         setSortedData(sorted);
     };
 
-    const checkCountEquality = (row: UploadCycleTableData) => {
-        const hasUploadCycleGlobalValues = (row?.countIntended || 0) > 0;
-        const equality = hasUploadCycleGlobalValues ? ((row?.totalCount === row?.totalQueueCount) && (row?.countIntended === row?.totalQueueCount)) : (row?.totalCount === row?.totalQueueCount)
-        return {
-            hasUploadCycleGlobalValues,
-            //            equality: equality || row.allUploadVerified === false
-            equality: row?.allUploadVerified === true
-        }
-    }
-
+ 
     const TableRowCellForEqualityCount: React.FC<{ row: UploadCycleTableData }> = ({ row }) => {
         const { hasUploadCycleGlobalValues, equality } = checkCountEquality(row);
         const equalityLabel =
@@ -422,18 +413,7 @@ const UploadCycles = () => {
         )
     }
 
-    const TableHeaderCellForUploadCycleStats: React.FC = () => {
-        return (
-            <TableCell>Uploads Intended
-                <Tooltip title="Right at the time uploads are initiated a snapshot of the Total Intended Count, Profile Name and Titles is taken. This column is for that reading">
-                    <IconButton aria-label="info"><InfoIcon />
-                    </IconButton>
-                </Tooltip>
-            </TableCell>
-        )
-    }
-
-
+ 
 
     async function fetchUploadCycles() {
         const dataForUploadCycle: UploadCycleTableDataDictionary[] = await getDataForUploadCycle(MAX_ITEMS_LISTABLE);
