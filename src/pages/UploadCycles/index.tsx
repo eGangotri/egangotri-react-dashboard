@@ -27,6 +27,10 @@ import { launchGradleReuploadFailed, launchGradleReuploadMissed } from 'service/
 import UploadDialog from './UploadDialog';
 import { launchYarnMoveToFreeze } from 'service/launchYarn';
 import ExecResponsePanel from 'scriptsThruExec/ExecResponsePanel';
+import { ExecResponse } from 'scriptsThruExec/types';
+import { createBackgroundForRow } from './utils';
+import { ProfileAndCount } from './ProfileAndCount';
+import { TableHeaderCellForEqualityCount } from './TableHeaderCellForEqualityCount';
 
 
 const UploadCycles = () => {
@@ -50,7 +54,7 @@ const UploadCycles = () => {
     const [openDialogForReuploadFailed, setOpenDialogForReuploadFailed] = useState<boolean>(false);
     const [chosenProfilesForMove, setChosenProfilesForMove] = useState<string[]>([]);
     const [reuploadables, setReuploadables] = useState<UploadCycleTableData>();
-    
+
     const handleTitleClick = (event: React.MouseEvent<HTMLButtonElement>, titles: string[]) => {
         const _titles = (
             <>
@@ -93,27 +97,10 @@ const UploadCycles = () => {
     ) => {
         const currentTarget = event.currentTarget
         setIsLoading(true);
-        const result: SelectedUploadItemResponse = await verifyUploadStatusForUploadCycleId(_uploadCycleId);
+        const result: ExecResponse = await verifyUploadStatusForUploadCycleId(_uploadCycleId);
         console.log(`result ${JSON.stringify(result)}`);
         setIsLoading(false);
-        const failedUploads = result.results.filter((item: SelectedUploadItem) => !item.isValid);
-        const noFailedUploads = failedUploads.length === 0;
-        const failedUploadListPanel = (
-            <Box sx={{ marginY: "30px" }}>
-                <h4>
-                    <Typography>{result.status}</Typography>
-                    <Typography sx={{ color: noFailedUploads ? SUCCESS_GREEN : DARK_RED }}>{noFailedUploads ? "No Failed Uploads" : "Following Items Failed Upload:"}</Typography>
-                </h4>
-                {result.results?.map((item, index) =>
-                    !item.isValid && <Box sx={{ color: ERROR_RED }}>({index + 1}) {item.archiveId.replaceAll(".pdf", "")}</Box>
-                )}
-
-            </Box>
-        )
-
-        // setFailedUploadsForPopover(<ExecResponsePanel response={result} />);
-
-        setFailedUploadsForPopover(failedUploadListPanel);
+        setFailedUploadsForPopover(<ExecResponsePanel response={result} />);
         setAnchorEl3(currentTarget);
     };
 
@@ -361,8 +348,6 @@ const UploadCycles = () => {
                             ><Typography sx={{ p: 2 }}>{titlesForPopover}</Typography>
                             </Popover>
                         </> : <></>}
-
-
                     </Typography>
                     <Typography component="span">
                         <Button
@@ -392,9 +377,8 @@ const UploadCycles = () => {
     }
 
     const TableRowCellForUploadCycleGlobalStats: React.FC<{ row: UploadCycleTableData }> = ({ row }) => {
-        const hasUploadCycleGlobalValues = (row?.countIntended || 0) > 0;
         const uploadstats =
-            hasUploadCycleGlobalValues ? (
+            (
                 <Box key={row.uploadCycleId}>
                     {row.countIntended}
 
@@ -430,37 +414,13 @@ const UploadCycles = () => {
                     ))
                     }
                 </Box>
-            ) : <>-</>
+            )
         return (
             <TableCell sx={{ verticalAlign: "top" }} key={row.uploadCycleId}>
                 {uploadstats}
             </TableCell>
         )
     }
-
-    const TableHeaderCellForEqualityCount: React.FC = () => {
-
-        const infoText = (
-            <>
-                <Typography>Four Set of Checks</Typography>
-                <Typography>The Intended Count at the Beginning of the Cycle(If this is higher then find the missine one by going to Titles)</Typography>
-                <Typography>Count of Items Queued</Typography>
-                <Typography>Count of Items Ushered</Typography>
-                <Typography>Finally Check for All Items properly uploaded post-ushering(Verify Upload Status)</Typography>
-            </>
-        )
-
-        return (
-            <TableCell>Intended/Ushered/Queued Equality
-                <Tooltip title={infoText}>
-                    <IconButton aria-label="info"><InfoIcon />
-                    </IconButton>
-                </Tooltip>
-                <Typography>Intended count == Queued Count == Ushered Count. Then Manual Upload Verifcation</Typography>
-            </TableCell>
-        )
-    }
-
 
     const TableHeaderCellForUploadCycleStats: React.FC = () => {
         return (
@@ -473,57 +433,13 @@ const UploadCycles = () => {
         )
     }
 
-    type UploadCycleDataProp = {
-        row: UploadCycleTableData,
-        forQueue: boolean
 
-    }
-    const ProfileAndCount: React.FC<UploadCycleDataProp> = ({ row, forQueue = false }) => {
-        const archiveProfileAndCountMap = forQueue ? row.archiveProfileAndCountForQueue : row.archiveProfileAndCount;
-        const _path = forQueue ? UPLOADS_QUEUED_PATH : UPLOADS_USHERED_PATH
-        return (
-            <>
-                {
-                    archiveProfileAndCountMap?.map((arcProfAndCount: ArchiveProfileAndCount) =>
-                    (
-                        <TableRow key={arcProfAndCount.archiveProfile}>
-                            <TableCell className="centerAligned">
-                                <Link href={`${_path}?uploadCycleId=${row.uploadCycleId}&archiveProfile=${arcProfAndCount.archiveProfile}`}>
-                                    {arcProfAndCount.archiveProfile}
-                                </Link>
-                            </TableCell>
-                            <TableCell className="centerAligned">{arcProfAndCount.count}</TableCell>
-                        </TableRow>
-                    )
-                    )
-                }
-            </>
-        )
-    }
 
     async function fetchUploadCycles() {
         const dataForUploadCycle: UploadCycleTableDataDictionary[] = await getDataForUploadCycle(MAX_ITEMS_LISTABLE);
         return dataForUploadCycle;
     }
 
-    const createBackgroundForRow = (row: UploadCycleTableData) => {
-        if (row?.countIntended !== row?.totalCount) {
-            return {
-                backgroundColor: `${LIGHT_RED}`
-            }
-        }
-
-        if (row?.allUploadVerified === true) {
-            return {
-                backgroundColor: `${SUCCESS_GREEN}`
-            }
-        }
-        if (row?.allUploadVerified === false) {
-            return {
-                backgroundColor: `${BURGUNDY_RED}`
-            }
-        }
-    }
 
     useEffect(() => {
         (async () => {
