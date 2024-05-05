@@ -19,6 +19,10 @@ export async function launchGradleReuploadMissed(reuploadables: ArchiveProfileAn
     return launchGradleWithPostData(reuploadables, 'reuploadMissed')
 }
 
+export async function launchGradleReuploadFailed(uploadCycleId: string) {
+    return _launchGradlev2({ uploadCycleId }, 'reuploadFailed')
+}
+
 export async function launchReverseMove(profiles: string) {
     return launchGradle(profiles, 'reverseMove')
 }

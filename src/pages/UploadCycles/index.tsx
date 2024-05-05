@@ -23,7 +23,7 @@ import InfoIcon from '@mui/icons-material/Info';
 import Tooltip from '@mui/material/Tooltip';
 import { BURGUNDY_RED, DARK_RED, ERROR_RED, LIGHT_RED, SUCCESS_GREEN, WHITE_SMOKE } from 'constants/colors';
 import Spinner from 'widgets/Spinner';
-import { launchGradleReuploadMissed } from 'service/launchGradle';
+import { launchGradleReuploadFailed, launchGradleReuploadMissed } from 'service/launchGradle';
 import UploadDialog from './UploadDialog';
 import { launchYarnMoveToFreeze } from 'service/launchYarn';
 import ExecResponsePanel from 'scriptsThruExec/ExecResponsePanel';
@@ -38,6 +38,7 @@ const UploadCycles = () => {
     const [anchorEl3, setAnchorEl3] = React.useState<HTMLButtonElement | null>(null);
     const [anchorEl4, setAnchorEl4] = React.useState<HTMLButtonElement | null>(null);
     const [anchorElReuploadMissed, setAnchorElReuploadMissed] = React.useState<HTMLButtonElement | null>(null);
+    const [anchorElReuploadFailed, setAnchorElReuploadFailed] = React.useState<HTMLButtonElement | null>(null);
 
     const [titlesForPopover, setTitlesForPopover] = useState(<></>);
     const [failedUploadsForPopover, setFailedUploadsForPopover] = useState(<></>);
@@ -46,9 +47,10 @@ const UploadCycles = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [openDialog, setOpenDialog] = useState<boolean>(false);
     const [openDialogForReuploadMissed, setOpenDialogForReuploadMissed] = useState<boolean>(false);
+    const [openDialogForReuploadFailed, setOpenDialogForReuploadFailed] = useState<boolean>(false);
     const [chosenProfilesForMove, setChosenProfilesForMove] = useState<string[]>([]);
     const [reuploadables, setReuploadables] = useState<UploadCycleTableData>();
-
+    
     const handleTitleClick = (event: React.MouseEvent<HTMLButtonElement>, titles: string[]) => {
         const _titles = (
             <>
@@ -66,6 +68,7 @@ const UploadCycles = () => {
         setAnchorEl3(null);
         setAnchorEl4(null);
         setAnchorElReuploadMissed(null);
+        setAnchorElReuploadFailed(null);
     };
 
     const open = Boolean(anchorEl);
@@ -73,11 +76,13 @@ const UploadCycles = () => {
     const open3 = Boolean(anchorEl3);
     const open4 = Boolean(anchorEl4);
     const openReuploadMiss = Boolean(anchorElReuploadMissed);
+    const openReuploadFail = Boolean(anchorElReuploadFailed);
     console.log(`open ${open} ${open2} ${open3} ${open4}`);
 
     const id = open ? 'simple-popover' : undefined;
     const id2 = open2 ? 'simple-popover2' : undefined;
     const idReuplodMissing = openReuploadMiss ? 'simple-popover-reupload-missing' : undefined;
+    const idReuplodFailing = openReuploadFail ? 'simple-popover-failed-missing' : undefined;
     const id3 = open3 ? 'simple-popover3' : undefined;
     const id4 = open4 ? 'simple-popover4' : undefined;
 
@@ -120,6 +125,11 @@ const UploadCycles = () => {
     const showDialogReuploadMissed = (event: React.MouseEvent<HTMLButtonElement>, row: UploadCycleTableData) => {
         setOpenDialogForReuploadMissed(true);
         setReuploadables(row);
+    }
+
+    const showDialogFailed = (event: React.MouseEvent<HTMLButtonElement>, row: UploadCycleTableData) => {
+        setOpenDialogForReuploadFailed(true);
+        setReuploadables(row)
     }
 
     const moveToFreeze = async (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -193,6 +203,27 @@ const UploadCycles = () => {
         setAnchorEl2(currentTarget);
         console.log(`_titles: ${event.currentTarget} ${JSON.stringify(missingTitlesPanel)}`)
     };
+
+
+    const reuploadFailed = async (event: React.MouseEvent<HTMLButtonElement>) => {
+        const currentTarget = event.currentTarget
+        setOpenDialogForReuploadFailed(false)
+        setIsLoading(true);
+        const _resp = await launchGradleReuploadFailed(reuploadables?.uploadCycleId || "");
+        setIsLoading(false);
+        console.log(JSON.stringify(_resp))
+        const responsePanel = (
+            <>
+                <Typography>Gradle Logs</Typography>
+                {_resp?.response?.split("\n").map((item: string, index: number) => {
+                    return (<Box sx={{ color: SUCCESS_GREEN }}>({index + 1}) {item}</Box>)
+                })
+                }
+            </>
+        )
+        setMoveToFreezeRespPopover(responsePanel);
+        setAnchorElReuploadMissed(currentTarget);
+    }
 
     const reuploadMissed = async (event: React.MouseEvent<HTMLButtonElement>) => {
         const currentTarget = event.currentTarget
@@ -292,7 +323,7 @@ const UploadCycles = () => {
                                 sx={{ color: "#f38484", width: "200px", marginTop: "10px" }}
                                 disabled={isLoading}
                             >
-                                Find Missing
+                                Find Missing (Unqueued/Unushered)
                             </Button>
                             <Popover
                                 id={id2}
@@ -311,17 +342,17 @@ const UploadCycles = () => {
                         {!equality ? <>
                             <Button
                                 variant="contained"
-                                onClick={async (e) => showDialogReuploadMissed(e, row)}
+                                onClick={async (e) => showDialogFailed(e, row)}
                                 size="small"
                                 sx={{ color: "#f38484", width: "200px", marginTop: "10px" }}
                                 disabled={isLoading}
                             >
-                                Reupload Missed
+                                Reupload Failed (Queued/Ushered/But Didnt Make it)
                             </Button>
                             <Popover
-                                id={idReuplodMissing}
-                                open={openReuploadMiss}
-                                anchorEl={anchorElReuploadMissed}
+                                id={idReuplodFailing}
+                                open={openReuploadFail}
+                                anchorEl={anchorElReuploadFailed}
                                 onClose={handleClose}
                                 anchorOrigin={{
                                     vertical: 'bottom',
@@ -364,7 +395,7 @@ const UploadCycles = () => {
         const hasUploadCycleGlobalValues = (row?.countIntended || 0) > 0;
         const uploadstats =
             hasUploadCycleGlobalValues ? (
-                <>
+                <Box key={row.uploadCycleId}>
                     {row.countIntended}
 
                     {row?.archiveProfileAndCountIntended?.map((archiveProfileAndCount: ArchiveProfileAndCountAndTitles) => (
@@ -398,10 +429,10 @@ const UploadCycles = () => {
                         </Box>
                     ))
                     }
-                </>
+                </Box>
             ) : <>-</>
         return (
-            <TableCell sx={{ verticalAlign: "top" }}>
+            <TableCell sx={{ verticalAlign: "top" }} key={row.uploadCycleId}>
                 {uploadstats}
             </TableCell>
         )
@@ -476,7 +507,6 @@ const UploadCycles = () => {
     }
 
     const createBackgroundForRow = (row: UploadCycleTableData) => {
-        console.log(`createBackgroundForRowrow ${JSON.stringify(row)}`);
         if (row?.countIntended !== row?.totalCount) {
             return {
                 backgroundColor: `${LIGHT_RED}`
@@ -584,6 +614,11 @@ const UploadCycles = () => {
                 handleClose={handleClose}
                 setOpenDialog={setOpenDialogForReuploadMissed}
                 invokeFuncOnClick={reuploadMissed} />
+
+            <UploadDialog openDialog={openDialogForReuploadFailed}
+                handleClose={handleClose}
+                setOpenDialog={setOpenDialogForReuploadFailed}
+                invokeFuncOnClick={reuploadFailed} />
         </Stack>
     );
 };
