@@ -78,9 +78,7 @@ export async function _launchGradlev2(args: { [key: string]: string }, gradleTas
         if (response.ok) {
             const jsonResp = response.json()
             console.log(`_launchGradlev2: res ${JSON.stringify(jsonResp)}`);
-            return {
-                ...jsonResp
-            } //as ExecResponseDetails;
+            return jsonResp
         }
         else {
             console.log(`response not ok ${response.statusText}`)
