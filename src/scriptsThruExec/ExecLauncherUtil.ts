@@ -17,7 +17,7 @@ import {
 } from "service/launchYarn";
 
 import { ExecComponentFormData, ExecResponseDetails } from "./types";
-import { makePostCallWithErrorHandling } from "service/BackendFetchService";
+import { makePostCallWithErrorHandling, verifyUploadStatusForUploadCycleId } from "service/BackendFetchService";
 import { downloadFromExcelUsingFrontEnd } from "service/launchFrontEnd";
 import { replaceQuotes } from "mirror/utils";
 
@@ -57,7 +57,9 @@ export enum ExecType {
   DUMP_GDRIVE_COMBO_EXCEL_TO_MONGO = 202,
   DUMP_ARCHIVE_EXCEL_TO_MONGO = 203,
   MARK_AS_UPLOADED_ENTRIES_IN_ARCHIVE_EXCEL = 204,
-  REUPLOAD_USING_JSON = 205
+  VERIFY_BY_UPLOAD_CYCLE_ID=205,
+  REUPLOAD_USING_JSON = 206,
+  REUPLOAD_USING_UPLOAD_CYCLE_ID = 207,
 }
 
 export enum Tif2PdfExecType {
@@ -109,6 +111,13 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         gradleArgs: `'${replaceQuotes(dataUserInput)}','${dataUserInput3}'`,
       }, "launchUploaderViaJson");
       break;
+
+    case ExecType.REUPLOAD_USING_UPLOAD_CYCLE_ID:
+      _resp = await _launchGradlev2({
+        uploadCycleId: replaceQuotes(dataUserInput),
+      }, "launchUploaderViaUploadCycleId");
+      break;
+
 
     //launchUploaderViaAbsPath
     case ExecType.UploadPdfsViaAbsPath:
@@ -312,6 +321,10 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       _resp = await makePostCallWithErrorHandling({
         archiveExcelPath: dataUserInput,
       }, `yarnArchive/dumpArchiveExcelToMongo`);
+      break;
+
+    case ExecType.VERIFY_BY_UPLOAD_CYCLE_ID:
+      _resp = await verifyUploadStatusForUploadCycleId(dataUserInput)
       break;
 
     case ExecType.MARK_AS_UPLOADED_ENTRIES_IN_ARCHIVE_EXCEL:

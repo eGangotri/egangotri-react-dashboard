@@ -2,41 +2,8 @@ import React, { useState } from 'react';
 import ExecComponent from './ExecComponent';
 import Box from '@mui/material/Box';
 import { ExecType } from './ExecLauncherUtil';
-import { Radio, RadioGroup, FormControlLabel, FormControl, Checkbox } from '@mui/material';
-import { ChangeEvent } from 'react';
-import { CheckBox } from '@mui/icons-material';
 
 const ExecLauncherTwo: React.FC = () => {
-    const [dontGenerateCheck, setDontGenerateCheck] = useState(false);
-    const [listingsOnly, setListingsOnly] = useState(false);
-    const [archiveExcelExecType, setArchiveExcelExecType] = useState(ExecType.GenExcelOfArchiveLink);
-
-    const handleDontGenerateCheck = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setDontGenerateCheck(event.target.checked);
-        setArchiveExcelExecType(_archiveExcelExecType({
-            dontGenerateCheck: event.target.checked,
-            listingsOnly: listingsOnly
-        }));
-    };
-    const handleListingsOnly = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setListingsOnly(event.target.checked);
-        setArchiveExcelExecType(_archiveExcelExecType({
-            dontGenerateCheck: dontGenerateCheck,
-            listingsOnly: event.target.checked
-        }));
-    };
-
-    const _archiveExcelExecType = (options: { dontGenerateCheck: boolean, listingsOnly: boolean }): number => {
-        let retType = ExecType.GenExcelOfArchiveLink;
-        if (options.listingsOnly === true) {
-            retType = (options.dontGenerateCheck ?
-                ExecType.GenExcelOfArchiveLinkLimitedFieldsWithListing : ExecType.GenExcelOfArchiveLinkListingOnly);
-        }
-        else if (options.dontGenerateCheck === true) {
-            retType = ExecType.GenExcelOfArchiveLinkLimitedFields
-        }
-        return retType;
-    }
     return (
         <Box display="flex" gap={4} mb={2} flexDirection="row">
             <Box display="flex" alignItems="center" gap={4} mb={2} flexDirection="column">
@@ -45,41 +12,6 @@ const ExecLauncherTwo: React.FC = () => {
                     placeholder='Profiles as CSV'
                     execType={ExecType.LoginToArchive} />
 
-                <ExecComponent
-                    buttonText="Create Archive Excel"
-                    placeholder='Space/Comma-Separated Archive Link(s) or Identifier(s)'
-                    execType={archiveExcelExecType}
-                    css={{ width: "450px" }}
-                    userInputOneInfo="Enter Archive Link(s) or Identifier(s) as CSV or Space-Separated"
-                    userInputThreeInfo="YYYY/MM/DD-YYYY/MM/DD (Optional). Example 2021/01/01-2021/01/31"
-                    thirdTextBoxPlaceHolder='Date Range (Optional)'
-                    reactComponent={<Box>
-                        <FormControlLabel
-                            control={<Checkbox checked={dontGenerateCheck} onChange={handleDontGenerateCheck} />}
-                            label="Dont Generate Direct Downloadable Links (Blazing Fast)"
-                        />
-                        <FormControlLabel
-                            control={<Checkbox checked={listingsOnly} onChange={handleListingsOnly} />}
-                            label="Listings Only"
-                        />
-                    </Box>}
-                />
-                <ExecComponent
-                    buttonText="Download All Pdfs from Archive"
-                    placeholder='Space/Comma-Separated Archive Link(s) or Identifier(s)'
-                    secondTextBoxPlaceHolder='Enter Profile or File Abs Path for Dumping PDFs'
-                    execType={ExecType.DownloadArchivePdfs}
-                    css={{ width: "450px" }}
-                />
-
-            </Box>
-
-            <Box display="flex" gap={4} mb={2} flexDirection="column">
-                <ExecComponent buttonText="Upload Pdfs to Archive for Profile"
-                    placeholder='Profiles as CSV'
-                    execType={ExecType.UploadPdfs}
-                    css={{ backgroundColor: "turquoise", width: "250px" }}
-                />
                 <ExecComponent buttonText="Upload Pdfs to Archive for Profile via Excel"
                     placeholder='Profile Name'
                     secondTextBoxPlaceHolder='Enter Excel Abs Path'
@@ -89,6 +21,14 @@ const ExecLauncherTwo: React.FC = () => {
                     userInputThreeInfo="Range of Whole Numbers. Ex 1-10 (Optional).inclusive"
                     css={{ width: "250px" }}
                     css2={{ width: "450px" }}
+                />
+            </Box>
+
+            <Box display="flex" gap={4} mb={2} flexDirection="column">
+                <ExecComponent buttonText="Upload Pdfs to Archive for Profile"
+                    placeholder='Profiles as CSV'
+                    execType={ExecType.UploadPdfs}
+                    css={{ backgroundColor: "turquoise", width: "250px" }}
                 />
                 <ExecComponent buttonText="Upload Pdfs to Archive for Profile via Path"
                     placeholder='Profile Name'
@@ -100,9 +40,14 @@ const ExecLauncherTwo: React.FC = () => {
             </Box>
 
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
+                <ExecComponent buttonText="Reupload Using Upload Cycle Id"
+                    placeholder='Enter UploadCycleId'
+                    execType={ExecType.REUPLOAD_USING_UPLOAD_CYCLE_ID}
+                    userInputOneInfo="Run 'Verify Uploads' first."
+                    css={{ width: "250px" }}
+                />
 
-                
-            <ExecComponent buttonText="Reupload Using MongoDB Json"
+                <ExecComponent buttonText="Reupload Using MongoDB Json"
                     placeholder='Enter Json Abs Path'
                     execType={ExecType.REUPLOAD_USING_JSON}
                     userInputOneInfo="Run 'Verify Uploads'. Then From Mongo DB filter using UploadCycleId extract JSON "
@@ -110,23 +55,6 @@ const ExecLauncherTwo: React.FC = () => {
                     css={{ width: "250px" }}
                     userInputThreeInfo="Range of Whole Numbers. Ex 1-10 (Optional).inclusive"
                 />
-
-                <ExecComponent buttonText="Mark Uploaded In Archive Excel post verification"
-                    placeholder='Profile Name Or Upload CycleId'
-                    secondTextBoxPlaceHolder='Enter Excel Abs Path'
-                    execType={ExecType.MARK_AS_UPLOADED_ENTRIES_IN_ARCHIVE_EXCEL}
-                    userInputOneInfo="Excel File Format: Col1. Abs Path. Col2. Suject. Col 3. Description Col 4. Creator Col5 . uploadFlag"
-                    css={{ width: "250px" }}
-                    css2={{ width: "450px" }}
-                />
-
-                <ExecComponent
-                    buttonText="Dump Archive-DB Excel Entries to MongoDB"
-                    placeholder='Absolute Path to Archive Excel Folder'
-                    execType={ExecType.DUMP_ARCHIVE_EXCEL_TO_MONGO}
-                    userInputOneInfo="It will pick the latest Excel from the Folders"
-                />
-
             </Box>
         </Box>
     );
