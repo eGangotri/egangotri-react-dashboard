@@ -79,7 +79,6 @@ export const getDataForUploadCycle = async (
   const resource =
     backendServer +
     `${chooseApiPrefix(forQueues)}/listForUploadCycle?limit=${limit}`;
-    //&startDate=2024-05-01&endDate=2024-12-31
   const result = await makeGetCall(resource);
   return result?.response || [];
 };
