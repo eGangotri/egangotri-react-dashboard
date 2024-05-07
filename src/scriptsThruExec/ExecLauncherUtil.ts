@@ -59,7 +59,8 @@ export enum ExecType {
   MARK_AS_UPLOADED_ENTRIES_IN_ARCHIVE_EXCEL = 204,
   VERIFY_BY_UPLOAD_CYCLE_ID = 205,
   REUPLOAD_USING_JSON = 206,
-  REUPLOAD_USING_UPLOAD_CYCLE_ID = 207,
+  REUPLOAD_FAILED_USING_UPLOAD_CYCLE_ID = 207,
+  REUPLOAD_MISSED_USING_UPLOAD_CYCLE_ID = 208,
 }
 
 export enum Tif2PdfExecType {
@@ -112,10 +113,16 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       }, "launchUploaderViaJson");
       break;
 
-    case ExecType.REUPLOAD_USING_UPLOAD_CYCLE_ID:
+    case ExecType.REUPLOAD_FAILED_USING_UPLOAD_CYCLE_ID:
       _resp = await _launchGradlev2({
         uploadCycleId: replaceQuotes(dataUserInput),
       }, "launchUploaderViaUploadCycleId");
+      break;
+
+    case ExecType.REUPLOAD_MISSED_USING_UPLOAD_CYCLE_ID:
+      _resp = await _launchGradlev2({
+        uploadCycleId: replaceQuotes(dataUserInput),
+      }, "launchUploaderForMissedViaUploadCycleId");
       break;
 
 

@@ -183,7 +183,17 @@ const UploadCycles = () => {
         const missing = await findMissingTitles(row);
         const missingTitlesPanel = (
             <>
+               {missing ? 
+               <> <Button
+                    variant="contained"
+                    onClick={async (e) => showDialogReuploadMissed(e, row)}
+                    size="small"
+                    sx={{ width: "200px", marginTop: "10px" }}
+                    disabled={isLoading}>Reupload Missed</Button>
                 {missing?.map((title, index) => <Box sx={{ color: ERROR_RED }}>({index + 1}) {title}</Box>)}
+                </>:
+                <Typography>No Missing Titles</Typography>
+               }
             </>
         )
         setTitlesForPopover(missingTitlesPanel);
@@ -254,7 +264,7 @@ const UploadCycles = () => {
         setSortedData(sorted);
     };
 
- 
+
     const TableRowCellForEqualityCount: React.FC<{ row: UploadCycleTableData }> = ({ row }) => {
         const { hasUploadCycleGlobalValues, equality } = checkCountEquality(row);
         const equalityLabel =
@@ -413,7 +423,7 @@ const UploadCycles = () => {
         )
     }
 
- 
+
 
     async function fetchUploadCycles() {
         const dataForUploadCycle: UploadCycleTableDataDictionary[] = await getDataForUploadCycle(MAX_ITEMS_LISTABLE);

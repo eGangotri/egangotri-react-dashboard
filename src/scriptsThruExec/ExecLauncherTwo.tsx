@@ -40,9 +40,16 @@ const ExecLauncherTwo: React.FC = () => {
             </Box>
 
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
-                <ExecComponent buttonText="Reupload Using Upload Cycle Id"
+                <ExecComponent buttonText="Reupload Upload Attmepted But Failed Using Upload Cycle Id"
                     placeholder='Enter UploadCycleId'
-                    execType={ExecType.REUPLOAD_USING_UPLOAD_CYCLE_ID}
+                    execType={ExecType.REUPLOAD_FAILED_USING_UPLOAD_CYCLE_ID}
+                    userInputOneInfo="Run 'Verify Uploads' first."
+                    css={{ width: "250px" }}
+                />
+
+                <ExecComponent buttonText="Reupload Queuing-Ushering-Missed Using Upload Cycle Id"
+                    placeholder='Enter UploadCycleId'
+                    execType={ExecType.REUPLOAD_MISSED_USING_UPLOAD_CYCLE_ID}
                     userInputOneInfo="Run 'Verify Uploads' first."
                     css={{ width: "250px" }}
                 />
