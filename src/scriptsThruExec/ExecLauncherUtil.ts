@@ -57,7 +57,7 @@ export enum ExecType {
   DUMP_GDRIVE_COMBO_EXCEL_TO_MONGO = 202,
   DUMP_ARCHIVE_EXCEL_TO_MONGO = 203,
   MARK_AS_UPLOADED_ENTRIES_IN_ARCHIVE_EXCEL = 204,
-  VERIFY_BY_UPLOAD_CYCLE_ID=205,
+  VERIFY_BY_UPLOAD_CYCLE_ID = 205,
   REUPLOAD_USING_JSON = 206,
   REUPLOAD_USING_UPLOAD_CYCLE_ID = 207,
 }
@@ -324,7 +324,10 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       break;
 
     case ExecType.VERIFY_BY_UPLOAD_CYCLE_ID:
-      _resp = await verifyUploadStatusForUploadCycleId(dataUserInput)
+      _resp = await makePostCallWithErrorHandling({
+        uploadCycleIdForVerification: dataUserInput,
+      }, `yarnArchive/verifyUploadStatus`);
+
       break;
 
     case ExecType.MARK_AS_UPLOADED_ENTRIES_IN_ARCHIVE_EXCEL:
