@@ -14,15 +14,13 @@ import moment from 'moment';
 import { getUploadStatusDataForUshered, verifyUploadStatusForUploadCycleId } from "service/BackendFetchService";
 
 import { DD_MM_YYYY_WITH_TIME_FORMAT } from 'utils/utils';
-import { getDataForUploadCycle, getUploadStatusData } from 'service/BackendFetchService';
+import { getDataForUploadCycle } from 'service/BackendFetchService';
 import { ArchiveProfileAndCount, ArchiveProfileAndCountAndTitles, ArchiveProfileAndTitle, SelectedUploadItem, SelectedUploadItemResponse, UploadCycleTableData, UploadCycleTableDataDictionary, UploadCycleTableDataResponse } from 'mirror/types';
-import { UPLOADS_QUEUED_PATH, UPLOADS_USHERED_PATH } from 'Routes';
+import { UPLOADS_USHERED_PATH } from 'Routes';
 import { MAX_ITEMS_LISTABLE } from 'utils/constants';
-import IconButton from '@mui/material/IconButton';
-import Tooltip from '@mui/material/Tooltip';
 import { BURGUNDY_RED, DARK_RED, ERROR_RED, LIGHT_RED, SUCCESS_GREEN, WHITE_SMOKE } from 'constants/colors';
 import Spinner from 'widgets/Spinner';
-import { launchGradleReuploadFailed, launchGradleReuploadMissed } from 'service/launchGradle';
+import { _launchGradlev2, launchGradleReuploadFailed, launchGradleReuploadMissed } from 'service/launchGradle';
 import UploadDialog from './UploadDialog';
 import { launchYarnMoveToFreeze } from 'service/launchYarn';
 import ExecResponsePanel from 'scriptsThruExec/ExecResponsePanel';
@@ -31,6 +29,7 @@ import { checkCountEquality, createBackgroundForRow } from './utils';
 import { ProfileAndCount } from './ProfileAndCount';
 import { TableHeaderCellForEqualityCount } from './TableHeaderCellForEqualityCount';
 import { TableHeaderCellForUploadCycleStats } from './TableHeaderCellForUploadCycleStats';
+import { ColorCodeInformationPanel } from './ColorCodedInformationPanel';
 
 
 const UploadCycles = () => {
@@ -152,18 +151,14 @@ const UploadCycles = () => {
     const findMissingTitlesWithProfile = async (row: UploadCycleTableData | undefined) => {
         const uploadStatusData: ItemListResponseType = await getUploadStatusDataForUshered(MAX_ITEMS_LISTABLE,
             row?.uploadCycleId);
-
-
         // Extract pairs of titles and archiveProfile
         const data = row?.archiveProfileAndCountIntended || [];
-
         const itemsIntended: ArchiveProfileAndTitle[] = data.flatMap(item =>
             item.titles ? item.titles.map(title => ({
                 archiveProfile: item.archiveProfile,
                 title: title.replace(".pdf", "").trim()
             })) : []
         );
-
         const itemsUshered: ArchiveProfileAndTitle[] = uploadStatusData?.response?.map((x: Item) => {
             return {
                 archiveProfile: x?.archiveProfile,
@@ -183,24 +178,28 @@ const UploadCycles = () => {
         const missing = await findMissingTitles(row);
         const missingTitlesPanel = (
             <>
-               {missing ? 
-               <> <Button
-                    variant="contained"
-                    onClick={async (e) => showDialogReuploadMissed(e, row)}
-                    size="small"
-                    sx={{ width: "200px", marginTop: "10px" }}
-                    disabled={isLoading}>Reupload Missed</Button>
-                {missing?.map((title, index) => <Box sx={{ color: ERROR_RED }}>({index + 1}) {title}</Box>)}
-                </>:
-                <Typography>No Missing Titles</Typography>
-               }
+                {missing ?
+                    <>
+                        <Box sx={{ paddingBottom: "30px" }}>
+                            <Button
+                                variant="contained"
+                                onClick={() => _launchGradlev2({
+                                    uploadCycleId: row.uploadCycleId,
+                                }, "launchUploaderForMissedViaUploadCycleId")}
+                                size="small"
+                                sx={{ width: "200px", marginTop: "20px" }}
+                                disabled={isLoading}>Reupload Missed</Button>
+                        </Box>
+                        {missing?.map((title, index) => <Box sx={{ color: ERROR_RED }}>({index + 1}) {title}</Box>)}
+                    </> :
+                    <Typography>No Missing Titles</Typography>
+                }
             </>
         )
         setTitlesForPopover(missingTitlesPanel);
         setAnchorEl2(currentTarget);
         console.log(`_titles: ${event.currentTarget} ${JSON.stringify(missingTitlesPanel)}`)
     };
-
 
     const reuploadFailed = async (event: React.MouseEvent<HTMLButtonElement>) => {
         const currentTarget = event.currentTarget
@@ -441,15 +440,7 @@ const UploadCycles = () => {
     return (
         <Stack spacing="2">
             {isLoading && <Spinner />}
-            <Typography variant="h6">
-                <ul>
-                    <li style={{ color: LIGHT_RED }}>Light Red Row Highlight Color implies Intended Count mismatch</li>
-                    <li style={{ color: BURGUNDY_RED }}>Burgundy Red implies Failed Uploads</li>
-                    <li style={{ color: SUCCESS_GREEN }}>Green implies All Intended Uploads uploaded and verfied</li>
-                    <li>White implies All Uploaded but Actual Upload Verification not done.</li>
-                </ul>
-
-            </Typography>
+            <ColorCodeInformationPanel />
             <div>
                 <TableContainer component={Paper}>
                     <Table>

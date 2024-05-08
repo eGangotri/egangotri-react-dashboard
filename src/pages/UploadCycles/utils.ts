@@ -25,8 +25,8 @@ export const checkCountEquality = (row: UploadCycleTableData) => {
     const equality = hasUploadCycleGlobalValues ? ((row?.totalCount === row?.totalQueueCount) && (row?.countIntended === row?.totalQueueCount)) : (row?.totalCount === row?.totalQueueCount)
     return {
         hasUploadCycleGlobalValues,
-        //            equality: equality || row.allUploadVerified === false
-        equality: row?.allUploadVerified === true
+        equality: equality || row.allUploadVerified === false
+       // equality: row?.allUploadVerified === true
     }
 }
 
