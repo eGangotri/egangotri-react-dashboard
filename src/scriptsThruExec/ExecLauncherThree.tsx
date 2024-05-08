@@ -36,13 +36,6 @@ const ExecLauncherThree: React.FC = () => {
                         placeholder='Src Path for Moving QA-Passed-to-Pipeline'
                         secondTextBoxPlaceHolder="Profile Name or Absolute Path"
                         execType={ExecType.MoveFolderContents}
-                    // reactComponent={<Box>
-                    //     { 
-                    //     <FormControlLabel
-                    //         control={<Checkbox checked={flatten} onChange={handleChange2} />}
-                    //         label="Flatten Folder Contents"
-                    //     /> }
-                    // </Box>}
                     />
                 </Box>
 

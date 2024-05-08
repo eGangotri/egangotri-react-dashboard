@@ -88,9 +88,14 @@ const ExecLauncherTwoB: React.FC = () => {
             </Box>
 
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
-                <ExecComponent buttonText="Verify By Upload Cycle Id"
+                <ExecComponent buttonText="Identify Upload-Failed By Upload Cycle Id"
                     placeholder='Enter UploadCycleId'
-                    execType={ExecType.VERIFY_BY_UPLOAD_CYCLE_ID}
+                    execType={ExecType.IDENTIFY_UPLOAD_MISSED_BY_UPLOAD_CYCLE_ID}
+                    css={{ width: "350px" }}
+                />
+                <ExecComponent buttonText="Identify Missed By Upload Cycle Id"
+                    placeholder='Enter UploadCycleId'
+                    execType={ExecType.IDENTIFY_FAILED_BY_UPLOAD_CYCLE_ID}
                     css={{ width: "350px" }}
                 />
             </Box>

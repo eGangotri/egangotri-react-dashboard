@@ -22,11 +22,10 @@ export const createBackgroundForRow = (row: UploadCycleTableData) => {
 
 export const checkCountEquality = (row: UploadCycleTableData) => {
     const hasUploadCycleGlobalValues = (row?.countIntended || 0) > 0;
-    const equality = hasUploadCycleGlobalValues ? ((row?.totalCount === row?.totalQueueCount) && (row?.countIntended === row?.totalQueueCount)) : (row?.totalCount === row?.totalQueueCount)
+    const equality = (row?.totalCount === row?.totalQueueCount) && (row?.countIntended === row?.totalQueueCount)
     return {
         hasUploadCycleGlobalValues,
-        equality: equality || row.allUploadVerified === false
-       // equality: row?.allUploadVerified === true
+        equality: equality 
     }
 }
 

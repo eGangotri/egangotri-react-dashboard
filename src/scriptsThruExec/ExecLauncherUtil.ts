@@ -57,10 +57,11 @@ export enum ExecType {
   DUMP_GDRIVE_COMBO_EXCEL_TO_MONGO = 202,
   DUMP_ARCHIVE_EXCEL_TO_MONGO = 203,
   MARK_AS_UPLOADED_ENTRIES_IN_ARCHIVE_EXCEL = 204,
-  VERIFY_BY_UPLOAD_CYCLE_ID = 205,
-  REUPLOAD_USING_JSON = 206,
-  REUPLOAD_FAILED_USING_UPLOAD_CYCLE_ID = 207,
-  REUPLOAD_MISSED_USING_UPLOAD_CYCLE_ID = 208,
+  IDENTIFY_UPLOAD_MISSED_BY_UPLOAD_CYCLE_ID = 205,
+  IDENTIFY_FAILED_BY_UPLOAD_CYCLE_ID = 206,
+  REUPLOAD_USING_JSON = 207,
+  REUPLOAD_FAILED_USING_UPLOAD_CYCLE_ID = 208,
+  REUPLOAD_MISSED_USING_UPLOAD_CYCLE_ID = 209,
 }
 
 export enum Tif2PdfExecType {
@@ -330,12 +331,18 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       }, `yarnArchive/dumpArchiveExcelToMongo`);
       break;
 
-    case ExecType.VERIFY_BY_UPLOAD_CYCLE_ID:
+    case ExecType.IDENTIFY_UPLOAD_MISSED_BY_UPLOAD_CYCLE_ID:
       _resp = await makePostCallWithErrorHandling({
         uploadCycleIdForVerification: dataUserInput,
       }, `yarnArchive/verifyUploadStatus`);
-
       break;
+
+    case ExecType.IDENTIFY_FAILED_BY_UPLOAD_CYCLE_ID:
+      _resp = await makePostCallWithErrorHandling({
+        uploadCycleId: replaceQuotes(dataUserInput),
+      }, `uploadCycleRoute/getUploadQueueUploadUsheredMissed`);
+      break;
+
 
     case ExecType.MARK_AS_UPLOADED_ENTRIES_IN_ARCHIVE_EXCEL:
       _resp = await makePostCallWithErrorHandling({

@@ -60,6 +60,7 @@ export const getUploadStatusDataForUshered = async (limit: number,
   return getUploadStatusData(limit, false, uploadCycleId, filteredProfiles)
 
 }
+
 export const getUploadStatusDataByProfile = async (
   limit: number,
   forQueues = false
