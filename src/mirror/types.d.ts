@@ -25,6 +25,7 @@ export interface ArchiveProfileAndTitle {
 export interface UploadCycleTableData {
     uploadCycleId: string;
     countIntended?: number;
+    mode?: string;
     archiveProfileAndCountIntended?: ArchiveProfileAndCountAndTitles[];
     archiveProfileAndCount: ArchiveProfileAndCount[];
     datetimeUploadStarted: Date | string;

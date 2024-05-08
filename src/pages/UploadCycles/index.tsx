@@ -10,7 +10,7 @@ import "pages/UploadCycles/UploadCycles.css"
 import * as _ from 'lodash';
 import moment from 'moment';
 
-import { getUploadStatusDataForUshered, makePostCallWithErrorHandling, verifyUploadStatusForUploadCycleId } from "service/BackendFetchService";
+import { makePostCallWithErrorHandling, verifyUploadStatusForUploadCycleId } from "service/BackendFetchService";
 
 import { DD_MM_YYYY_WITH_TIME_FORMAT } from 'utils/utils';
 import { getDataForUploadCycle } from 'service/BackendFetchService';
@@ -19,7 +19,7 @@ import { UPLOADS_USHERED_PATH } from 'Routes';
 import { MAX_ITEMS_LISTABLE } from 'utils/constants';
 import { ERROR_RED, SUCCESS_GREEN } from 'constants/colors';
 import Spinner from 'widgets/Spinner';
-import { _launchGradlev2, launchGradleReuploadFailed, launchGradleReuploadMissed } from 'service/launchGradle';
+import { _launchGradlev2, launchGradleReuploadFailed } from 'service/launchGradle';
 import UploadDialog from './UploadDialog';
 import { launchYarnMoveToFreeze } from 'service/launchYarn';
 import ExecResponsePanel from 'scriptsThruExec/ExecResponsePanel';
@@ -214,28 +214,6 @@ const UploadCycles = () => {
         setAnchorElReuploadMissed(currentTarget);
     }
 
-    // const _reuploadMissed = async (event: React.MouseEvent<HTMLButtonElement>) => {
-    //     const currentTarget = event.currentTarget
-    //     console.log("reuploadMissing: eventCurTarget" + currentTarget)
-    //     setOpenDialogForReuploadMissed(false)
-    //     const missing = await findMissingTitlesWithProfile(reuploadables);
-    //     setIsLoading(true);
-    //     const _resp = await launchGradleReuploadMissed(missing)
-    //     setIsLoading(false);
-    //     console.log(JSON.stringify(_resp))
-    //     const moveToFreezeRespPanel = (
-    //         <>
-    //             <Typography>Gradle Logs</Typography>
-    //             {_resp?.response?.split("\n").map((item: string, index: number) => {
-    //                 return (<Box sx={{ color: SUCCESS_GREEN }}>({index + 1}) {item}</Box>)
-    //             })
-    //             }
-    //         </>
-    //     )
-    //     // setMoveToFreezeRespPopover(moveToFreezeRespPanel);
-    //     setAnchorElReuploadMissed(currentTarget);
-    // }
-
     const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
         setPage(newPage);
     };
@@ -370,11 +348,19 @@ const UploadCycles = () => {
     }
 
     const TableRowCellForUploadCycleGlobalStats: React.FC<{ row: UploadCycleTableData }> = ({ row }) => {
+        const mode = row.mode?.split("-;");
+        const modePanel = (
+            <Box>
+                {mode?.map((item: string) => 
+                    <Typography>{item}</Typography>
+                )}
+            </Box>
+        )
         const uploadstats =
             (
                 <Box key={row.uploadCycleId}>
                     {row.countIntended}
-
+                    <Typography>{modePanel}</Typography>
                     {row?.archiveProfileAndCountIntended?.map((archiveProfileAndCount: ArchiveProfileAndCountAndTitles) => (
                         <Box>
                             <Typography component="span">{archiveProfileAndCount.archiveProfile} </Typography>
