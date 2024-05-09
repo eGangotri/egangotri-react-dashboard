@@ -11,12 +11,6 @@ export interface UploadCycleArchiveProfile {
     absolutePaths?: string[];
 }
 
-export interface ArchiveProfileAndCountAndTitles {
-    archiveProfile: string;
-    count: number;
-    titles?: string[];
-}
-
 export interface ArchiveProfileAndTitle {
     archiveProfile: string;
     title: string;
@@ -26,7 +20,7 @@ export interface UploadCycleTableData {
     uploadCycleId: string;
     countIntended?: number;
     mode?: string;
-    archiveProfileAndCountIntended?: ArchiveProfileAndCountAndTitles[];
+    archiveProfileAndCountIntended?: UploadCycleArchiveProfile[];
     archiveProfileAndCount: ArchiveProfileAndCount[];
     datetimeUploadStarted: Date | string;
     totalCount: number;

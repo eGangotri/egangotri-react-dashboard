@@ -14,7 +14,7 @@ import { makePostCallWithErrorHandling, verifyUploadStatusForUploadCycleId } fro
 
 import { DD_MM_YYYY_WITH_TIME_FORMAT } from 'utils/utils';
 import { getDataForUploadCycle } from 'service/BackendFetchService';
-import { ArchiveProfileAndCount, ArchiveProfileAndCountAndTitles, ArchiveProfileAndTitle, SelectedUploadItem, SelectedUploadItemResponse, UploadCycleArchiveProfile, UploadCycleTableData, UploadCycleTableDataDictionary, UploadCycleTableDataResponse } from 'mirror/types';
+import { ArchiveProfileAndCount, UploadCycleArchiveProfile, UploadCycleTableData, UploadCycleTableDataDictionary } from 'mirror/types';
 import { UPLOADS_USHERED_PATH } from 'Routes';
 import { MAX_ITEMS_LISTABLE } from 'utils/constants';
 import { ERROR_RED, SUCCESS_GREEN } from 'constants/colors';
@@ -29,6 +29,7 @@ import { ProfileAndCount } from './ProfileAndCount';
 import { TableHeaderCellForEqualityCount } from './TableHeaderCellForEqualityCount';
 import { TableHeaderCellForUploadCycleStats } from './TableHeaderCellForUploadCycleStats';
 import { ColorCodeInformationPanel } from './ColorCodedInformationPanel';
+import path from 'path';
 
 
 const UploadCycles = () => {
@@ -53,10 +54,10 @@ const UploadCycles = () => {
     const [chosenProfilesForMove, setChosenProfilesForMove] = useState<string[]>([]);
     const [reuploadables, setReuploadables] = useState<UploadCycleTableData>();
 
-    const handleTitleClick = (event: React.MouseEvent<HTMLButtonElement>, titles: string[]) => {
+    const handleTitleClick = (event: React.MouseEvent<HTMLButtonElement>, absolutePaths: string[]) => {
         const _titles = (
             <>
-                {titles?.map((title, index) => <Box>({index + 1}) {title.replaceAll(".pdf", "")}</Box>)}
+                {absolutePaths?.map((absPath, index) => <Box>({index + 1}) {path.basename(absPath)}</Box>)}
             </>
         )
         setTitlesForPopover(_titles);
@@ -367,7 +368,7 @@ const UploadCycles = () => {
                 <Box key={row.uploadCycleId}>
                     {row.countIntended}
                     <Typography>{modePanel}</Typography>
-                    {row?.archiveProfileAndCountIntended?.map((archiveProfileAndCount: ArchiveProfileAndCountAndTitles) => (
+                    {row?.archiveProfileAndCountIntended?.map((archiveProfileAndCount: UploadCycleArchiveProfile) => (
                         <Box>
                             <Typography component="span">{archiveProfileAndCount.archiveProfile} </Typography>
                             <Typography component="span">{archiveProfileAndCount.count}</Typography>
@@ -375,7 +376,7 @@ const UploadCycles = () => {
                             <Typography component="div" sx={{ fontWeight: 600 }}>
                                 <Button
                                     variant='contained'
-                                    onClick={(e) => handleTitleClick(e, archiveProfileAndCount?.titles || [])}
+                                    onClick={(e) => handleTitleClick(e, archiveProfileAndCount?.absolutePaths || [])}
                                     disabled={isLoading}
                                 >
                                     Fetch All Titles
