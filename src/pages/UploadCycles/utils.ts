@@ -21,11 +21,6 @@ export const createBackgroundForRow = (row: UploadCycleTableData) => {
 }
 
 export const checkCountEquality = (row: UploadCycleTableData) => {
-    const hasUploadCycleGlobalValues = (row?.countIntended || 0) > 0;
-    const equality = (row?.totalCount === row?.totalQueueCount) && (row?.countIntended === row?.totalQueueCount)
-    return {
-        hasUploadCycleGlobalValues,
-        equality: equality 
-    }
+    return (row?.totalCount === row?.totalQueueCount) && (row?.countIntended === row?.totalQueueCount)
 }
 

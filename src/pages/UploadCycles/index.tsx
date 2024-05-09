@@ -240,12 +240,12 @@ const UploadCycles = () => {
 
 
     const TableRowCellForEqualityCount: React.FC<{ row: UploadCycleTableData }> = ({ row }) => {
-        const { hasUploadCycleGlobalValues, equality } = checkCountEquality(row);
-        console.log(`equality ${equality} ${hasUploadCycleGlobalValues}`)  
+        const equality = checkCountEquality(row);
+        console.log(`equality ${equality}`)
         const equalityLabel =
-            hasUploadCycleGlobalValues ? (
+            (
                 <>{row?.countIntended} == {row?.totalCount} == {row?.totalQueueCount} </>
-            ) : <>{row?.totalCount} == {row?.totalQueueCount}</>
+            )
         const textColor = equality ? { color: SUCCESS_GREEN } : { color: ERROR_RED }
         return (
             <TableCell className="centerAligned" sx={{ verticalAlign: "top", ...textColor }}>
@@ -278,13 +278,14 @@ const UploadCycles = () => {
                         </Popover>
                     </Typography>
                     <Typography component="span">
-                        {!equality ? <>
+                        <>
                             <Button
                                 variant="contained"
                                 onClick={async (e: React.MouseEvent<HTMLButtonElement>) => await findMissingAndSetInPopover(e, row)}
                                 size="small"
                                 sx={{ color: "#f38484", width: "200px", marginTop: "10px" }}
-                                disabled={isLoading}
+                                disabled={isLoading || !equality}
+
                             >
                                 Find Missing (Unqueued/Unushered)
                             </Button>
@@ -299,10 +300,10 @@ const UploadCycles = () => {
                                 }}
                             ><Typography sx={{ p: 2 }}>{titlesForPopover}</Typography>
                             </Popover>
-                        </> : <></>}
+                        </>
                     </Typography>
                     <Typography component="span">
-                        {!equality ? <>
+                        <>
                             <Button
                                 variant="contained"
                                 onClick={async (e) => showDialogForFailed(e, row)}
@@ -323,7 +324,7 @@ const UploadCycles = () => {
                                 }}
                             ><Typography sx={{ p: 2 }}>{titlesForPopover}</Typography>
                             </Popover>
-                        </> : <></>}
+                        </>
                     </Typography>
                     <Typography component="span">
                         <Button
