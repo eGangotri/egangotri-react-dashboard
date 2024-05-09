@@ -31,7 +31,14 @@ const ExecLauncherFour: React.FC = () => {
             </Box>
 
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
-              
+
+                <ExecComponent
+                    buttonText="Snap2HTML"
+                    placeholder='Folder Abs Path'
+                    userInputOneInfo="Make Sure Snap2HTML.exe is set in the Path"
+                    css={{ width: "250px" }}
+                    execType={ExecType.SNAP_TO_HTML} />
+
                 <ExecComponent buttonText="Reverse Move (Python)"
                     execType={ExecType.ReverseMove} />
 

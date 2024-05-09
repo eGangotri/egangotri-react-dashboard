@@ -26,7 +26,8 @@ export enum ExecType {
   UploadPdfsViaExcel = 111,
   UploadPdfsViaAbsPath = 113,
   MoveFolderContents = 2,
-  ReverseMove = 3,
+  ReverseMove = 31,
+  SNAP_TO_HTML = 32,
   LoginToArchive = 4,
   UseBulkRenameConventions = 5,
   DownloadGoogleDriveLink = 6,
@@ -288,6 +289,11 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         `yarnListMaker/createListingsOfLocalFolder`);
       break;
 
+    case ExecType.SNAP_TO_HTML:
+      _resp = await _launchGradlev2({
+        rootFolder: `${dataUserInput}`,
+      }, "snap2html");
+      break;
 
     case ExecType.AddHeaderFooter:
       _resp = await addHeaderFooter(dataUserInput);
