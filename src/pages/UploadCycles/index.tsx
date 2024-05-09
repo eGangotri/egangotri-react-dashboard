@@ -241,6 +241,7 @@ const UploadCycles = () => {
 
     const TableRowCellForEqualityCount: React.FC<{ row: UploadCycleTableData }> = ({ row }) => {
         const { hasUploadCycleGlobalValues, equality } = checkCountEquality(row);
+        console.log(`equality ${equality} ${hasUploadCycleGlobalValues}`)  
         const equalityLabel =
             hasUploadCycleGlobalValues ? (
                 <>{row?.countIntended} == {row?.totalCount} == {row?.totalQueueCount} </>
