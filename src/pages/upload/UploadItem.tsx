@@ -6,7 +6,6 @@ import { Box, Button, Checkbox } from "@mui/material";
 import * as _ from "lodash";
 import { createArchiveLink } from "mirror";
 import { SelectedUploadItem } from "mirror/types"
-import { uploadSingleItemViaGradle } from "service/UploadServices";
 import { hi } from "date-fns/locale";
 import { LIGHT_GREEN, LIGHT_RED, LIGHT_YELLOW } from "constants/colors";
 
@@ -19,7 +18,6 @@ type UploadPropsType = {
 
 const runItem = (row: Item) => {
   console.log(`row ${row.uploadLink} ${row.localPath} `);
-  uploadSingleItemViaGradle(row)
 }
 
 const UploadItem: React.FC<UploadPropsType> = ({
@@ -117,13 +115,6 @@ const UploadItem: React.FC<UploadPropsType> = ({
         <ItemToolTip input={item.localPath} reverse={true} />
       </td>
       <td>{item.csvName}</td>
-      <td>
-        <Button
-          sx={{ width: 300, color: "primary" }}
-          variant="contained"
-          size="medium"
-          onClick={() => runItem(item)}>Run Item # {ellipsis(item._id, 7)}</Button>
-      </td>
     </tr>
   );
 };

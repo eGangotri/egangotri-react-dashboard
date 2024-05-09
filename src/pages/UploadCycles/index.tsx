@@ -112,7 +112,7 @@ const UploadCycles = () => {
         setReuploadables(row);
     }
 
-    const showDialogFailed = (event: React.MouseEvent<HTMLButtonElement>, row: UploadCycleTableData) => {
+    const showDialogForFailed = (event: React.MouseEvent<HTMLButtonElement>, row: UploadCycleTableData) => {
         setOpenDialogForReuploadFailed(true);
         setReuploadables(row)
     }
@@ -199,14 +199,18 @@ const UploadCycles = () => {
         setOpenDialogForReuploadFailed(false)
         setIsLoading(true);
         const _resp = await launchGradleReuploadFailed(reuploadables?.uploadCycleId || "");
+        const response = _resp.response;
         setIsLoading(false);
-        console.log(JSON.stringify(_resp))
+        console.log(JSON.stringify(_resp));
         const responsePanel = (
             <>
                 <Typography>Gradle Logs</Typography>
-                {_resp?.response?.split("\n").map((item: string, index: number) => {
-                    return (<Box sx={{ color: SUCCESS_GREEN }}>({index + 1}) {item}</Box>)
-                })
+                {response.success === false && <Typography sx={{ color: ERROR_RED }}>Error: {response.err}</Typography>}
+                {response?.noFailedUploads ? <Typography>{response.msg}</Typography> : <ExecResponsePanel response={_resp} />}
+                {response?.noFailedUploads === false &&
+                    _resp?.response?.split("\n").map((item: string, index: number) => {
+                        return (<Box sx={{ color: SUCCESS_GREEN }}>({index + 1}) {item}</Box>)
+                    })
                 }
             </>
         )
@@ -300,7 +304,7 @@ const UploadCycles = () => {
                         {!equality ? <>
                             <Button
                                 variant="contained"
-                                onClick={async (e) => showDialogFailed(e, row)}
+                                onClick={async (e) => showDialogForFailed(e, row)}
                                 size="small"
                                 sx={{ color: "#f38484", width: "200px", marginTop: "10px" }}
                                 disabled={isLoading}
@@ -351,7 +355,7 @@ const UploadCycles = () => {
         const mode = row.mode?.split("-;");
         const modePanel = (
             <Box>
-                {mode?.map((item: string) => 
+                {mode?.map((item: string) =>
                     <Typography>{item}</Typography>
                 )}
             </Box>

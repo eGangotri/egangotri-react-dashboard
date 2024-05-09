@@ -91,15 +91,15 @@ const UploadsPanel: React.FC<UploadType> = ({ items, forQueues = false, selected
         </Collapse>
         <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start' }}>
           <Button
-            sx={{ width: 300, color: "primary", marginRight:"1rem" }}
+            sx={{ width: 300, color: "primary", marginRight: "1rem" }}
             onClick={_verifyUploadStatus}
             variant="contained"
             size="large">Verify Upload Status</Button>
           <InfoIconWithTooltip input="It will mark uploadFlag in DB permanently" />
         </Box>
-        <Typography><span style={{ color: WARNING_YELLOW,  }}>Yellow implies never checked.</span>
-        <span style={{ color: LIGHT_GREEN }}>Green implies Verfied-Uploaded.</span> 
-        <span style={{ color: LIGHT_RED }}>Red implies Not Uploaded</span> </Typography>
+        <Typography><span style={{ color: WARNING_YELLOW, }}>Yellow implies never checked.</span>
+          <span style={{ color: LIGHT_GREEN }}>Green implies Verfied-Uploaded.</span>
+          <span style={{ color: LIGHT_RED }}>Red implies Not Uploaded</span> </Typography>
         <Box sx={{ display: `${failCount === -1 ? 'none' : 'inline'}` }}>
           <IconButton>
             {failCount > 0 ? <FaCheck color={ERROR_RED} /> : <FaTimes color={SUCCESS_GREEN} />}
@@ -132,7 +132,6 @@ const UploadsPanel: React.FC<UploadType> = ({ items, forQueues = false, selected
             <th>Local Path</th>
             <th>Csv Name</th>
             <th>createdAt</th>
-            <th>Rerun</th>
           </tr>
         </thead>
         <tbody>
