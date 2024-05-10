@@ -285,7 +285,7 @@ const UploadCycles = () => {
                                 onClick={async (e: React.MouseEvent<HTMLButtonElement>) => await findMissingAndSetInPopover(e, row)}
                                 size="small"
                                 sx={{ color: "#f38484", width: "200px", marginTop: "10px" }}
-                                disabled={isLoading || !equality}
+                                disabled={isLoading}
 
                             >
                                 Find Missing (Unqueued/Unushered)
