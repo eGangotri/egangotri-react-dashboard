@@ -63,6 +63,7 @@ export enum ExecType {
   REUPLOAD_USING_JSON = 207,
   REUPLOAD_FAILED_USING_UPLOAD_CYCLE_ID = 208,
   REUPLOAD_MISSED_USING_UPLOAD_CYCLE_ID = 209,
+  COMPARE_UPLOADS_VIA_EXCEL_WITH_ARCHIVE_ORG = 210,
 }
 
 export enum Tif2PdfExecType {
@@ -365,6 +366,13 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       break;
     case ExecType.VANITIZE:
       _resp = await launchVanitizeModule(dataUserInput)
+      break;
+    case ExecType.COMPARE_UPLOADS_VIA_EXCEL_WITH_ARCHIVE_ORG:
+      _resp = await makePostCallWithErrorHandling({
+        mainExcelPath:  replaceQuotes(dataUserInput),
+        archiveExcelPath: replaceQuotes(dataUserInput2),
+      },
+        `yarnArchive/compareUploadsViaExcelWithArchiveOrg`);
       break;
     default:
       _resp = {}

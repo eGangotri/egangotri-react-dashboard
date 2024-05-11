@@ -98,6 +98,22 @@ const ExecLauncherTwoB: React.FC = () => {
                     execType={ExecType.IDENTIFY_FAILED_BY_UPLOAD_CYCLE_ID}
                     css={{ width: "350px" }}
                 />
+                
+                <ExecComponent
+                 buttonText="Compare UploadsViaExcel-V1 against Archive.org"
+                    placeholder='Enter UploadCycleId'
+                    execType={ExecType.COMPARE_UPLOADS_VIA_EXCEL_WITH_ARCHIVE_ORG}
+                    css={{ width: "350px" }}
+                />
+                      <ExecComponent
+                    buttonText="Compare UploadsViaExcel-V1 against Archive.org"
+                    placeholder='Absolute Path to UploadsViaExcel-V1 Excel'
+                    execType={ExecType.COMPARE_UPLOADS_VIA_EXCEL_WITH_ARCHIVE_ORG}
+                    secondTextBoxPlaceHolder='Absolute Path to archive.org Excel'
+                    css={{ minWidth: "33vw" }}
+                    css2={{ minWidth: "35vw" }}
+                //  css3={{marginTop: "30px", width: "100%"}}
+                /> 
             </Box>
         </Box>
     );

@@ -151,6 +151,7 @@ const UploadCycles = () => {
         const _res = await _launchGradlev2({
             uploadCycleId: uploadCycleId,
         }, "launchUploaderForReuploadingMissedViaUploadCycleId")
+        console.log(`_res ${JSON.stringify(_res)}`)
         setIsLoading(false);
         setTitlesForPopover(<>{_res}</>);
 
