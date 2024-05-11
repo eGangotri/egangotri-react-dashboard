@@ -1,6 +1,5 @@
 import { backendServer } from 'utils/constants';
-import { ArchiveProfileAndTitle } from 'mirror/types';
-import { ExecResponseDetails } from 'scriptsThruExec/types';
+import { ArchiveProfileAndAbsPath } from 'mirror/types';
 
 import { utils, writeFile } from 'xlsx';
 import os from 'os';
@@ -15,8 +14,8 @@ export async function launchGradleMoveToFreeze(profiles: string) {
     return launchGradle(profiles, 'moveToFreeze')
 }
 
-export async function launchGradleReuploadMissed(reuploadables: ArchiveProfileAndTitle[]) {
-    return launchGradleWithPostData(reuploadables, 'reuploadMissed')
+export async function launchGradleReuploadMissed(reuploadables: ArchiveProfileAndAbsPath[]) {
+    return launchGradleWithPostData(reuploadables, 'reuploadMissedByProfileAndAbsPath')
 }
 
 export async function launchGradleReuploadFailed(uploadCycleId: string) {
@@ -99,7 +98,7 @@ export async function _launchGradlev2(args: { [key: string]: string }, gradleTas
 }
 
 export async function launchGradleWithPostData(
-    data: ArchiveProfileAndTitle[],
+    data: ArchiveProfileAndAbsPath[],
     gradleTask: string) {
 
     const _url = `${backendServer}execLauncher/${gradleTask}`;

@@ -11,9 +11,11 @@ export interface UploadCycleArchiveProfile {
     absolutePaths?: string[];
 }
 
-export interface ArchiveProfileAndTitle {
+export interface ArchiveProfileAndAbsPath {
     archiveProfile: string;
-    title: string;
+    title?: string;
+    absolutePaths?: string;
+
 }
 
 export interface UploadCycleTableData {
