@@ -153,7 +153,7 @@ const UploadCycles = () => {
         }, "reuploadMissedViaUploadCycleId")
         console.log(`_res ${JSON.stringify(_res)}`)
         setIsLoading(false);
-        setTitlesForPopover(<>{_res}</>);
+      //  setTitlesForPopover(<>{_res}</>);
 
     }
     const findMissingAndSetInPopover = async (event: React.MouseEvent<HTMLButtonElement>, row: UploadCycleTableData) => {
