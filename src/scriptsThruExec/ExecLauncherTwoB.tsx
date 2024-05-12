@@ -109,7 +109,7 @@ const ExecLauncherTwoB: React.FC = () => {
                     buttonText="Compare UploadsViaExcel-V1 against Archive.org"
                     placeholder='Absolute Path to UploadsViaExcel-V1 Excel'
                     execType={ExecType.COMPARE_UPLOADS_VIA_EXCEL_WITH_ARCHIVE_ORG}
-                    secondTextBoxPlaceHolder='Absolute Path to archive.org Excel'
+                    secondTextBoxPlaceHolder='Absolute Path to archive.org Excel(s) as CSV'
                     css={{ minWidth: "33vw" }}
                     css2={{ minWidth: "35vw" }}
                 //  css3={{marginTop: "30px", width: "100%"}}
