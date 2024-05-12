@@ -20,6 +20,7 @@ import { ExecComponentFormData, ExecResponseDetails } from "./types";
 import { makePostCallWithErrorHandling, verifyUploadStatusForUploadCycleId } from "service/BackendFetchService";
 import { downloadFromExcelUsingFrontEnd } from "service/launchFrontEnd";
 import { replaceQuotes } from "mirror/utils";
+import { handleYarnListingGeneration } from "./Utils";
 
 export enum ExecType {
   UploadPdfs = 1,
@@ -54,16 +55,21 @@ export enum ExecType {
 
   GenExcelOfGoogleDriveLink = 81,
   GenExcelOfGoogleDriveLinkForReduced = 82,
+
   GenListingsofLocalFolderAsPdf = 91,
   GenListingsofLocalFolderAsAll = 92,
-  GenListingsofLocalFolderAsPdfYarn = 93,
-  GenListingsofLocalFolderAsPdfWithStatsYarn = 931,
-  GenListingsofLocalFolderAsAllYarn = 94,
-  GenListingsofLocalFolderAsAllWithStatsYarn = 941,
-  GenListingsofLocalPdfFolderAsLinksYarn = 95,
-  GenListingsWithStatsofPdfLocalFolderAsLinksYarn = 96,
-  GenListingsofAllLocalFolderAsLinksYarn = 961,
-  GenListingsWithStatsofAllLocalFolderAsLinksYarn = 962,
+
+  GenListingsofLocalFolderAsPdfYarn = 2000,
+  GenListingsofLocalFolderAsPdfWithStatsYarn = 2001,
+  GenListingsofLocalFolderAsAllYarn = 2002,
+  GenListingsofLocalFolderAsAllWithStatsYarn = 2003,
+  GenListingsofLocalPdfFolderAsLinksYarn = 2004,
+  GenListingsWithStatsofPdfLocalFolderAsLinksYarn = 2005,
+  GenListingsofAllLocalFolderAsLinksYarn = 2006,
+  GenListingsWithStatsofAllLocalFolderAsLinksYarn = 2007,
+
+  GenExcelofAbsPathsFromProfile = 963,
+  GenExcelofAbsPathsForAllFileTypesFromProfile = 964,
   AddHeaderFooter = 10,
   MoveToFreeze = 11,
   DownloadArchivePdfs = 12,
@@ -109,11 +115,16 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
   dataUserInput3 ${dataUserInput3}
   `);
 
-  if (execType >= 1000) {
+  if (execType >= 1000 && execType < 2000) {
     const execAsString = execType.toString()
     _resp = await launchArchiveExcelDownload(dataUserInput,
       dataUserInput3, execAsString[1] === "1", execAsString[2] === "1", execAsString[2] === "1");
   }
+
+  else if (execType >= 2000) {
+    _resp = await handleYarnListingGeneration(execType, dataUserInput);
+  }
+
   else {
     switch (execType) {
       case ExecType.UploadPdfs:
@@ -220,86 +231,21 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         _resp = await launchLocalFolderListingForAll(dataUserInput);
         break;
 
-      case ExecType.GenListingsofLocalFolderAsPdfYarn:
-        console.log("GenListingsofLocalFolderAsPdfYarn", dataUserInput)
+
+      case ExecType.GenExcelofAbsPathsFromProfile:
         _resp = await makePostCallWithErrorHandling({
-          argFirst: dataUserInput,
-          pdfsOnly: true,
-          withStats: false,
+          profile: dataUserInput,
+          allNotJustPdfs: false,
         },
-          `yarnListMaker/createListingsOfLocalFolder`);
+          `yarnExcel/createExcelOfAbsPathFromProfile`);
         break;
 
-      case ExecType.GenListingsofLocalFolderAsPdfWithStatsYarn:
-        console.log("GenListingsofLocalFolderAsPdfWithStatsYarn", dataUserInput)
+      case ExecType.GenExcelofAbsPathsForAllFileTypesFromProfile:
         _resp = await makePostCallWithErrorHandling({
-          argFirst: dataUserInput,
-          pdfsOnly: true,
-          withStats: true,
+          profile: dataUserInput,
+          allNotJustPdfs: true,
         },
-          `yarnListMaker/createListingsOfLocalFolder`);
-        break;
-
-      case ExecType.GenListingsofLocalFolderAsAllYarn:
-        console.log("GenListingsofLocalFolderAsAllYarn", dataUserInput)
-        _resp = await makePostCallWithErrorHandling({
-          argFirst: dataUserInput,
-          pdfsOnly: false,
-          withStats: false,
-        },
-          `yarnListMaker/createListingsOfLocalFolder`);
-        break;
-
-      case ExecType.GenListingsofLocalFolderAsAllWithStatsYarn:
-        console.log("GenListingsofLocalFolderAsAllWithStatsYarn", dataUserInput)
-        _resp = await makePostCallWithErrorHandling({
-          argFirst: dataUserInput,
-          pdfsOnly: false,
-          withStats: true,
-        },
-          `yarnListMaker/createListingsOfLocalFolder`);
-        break;
-
-
-      case ExecType.GenListingsofLocalPdfFolderAsLinksYarn:
-        console.log("GenListingsofLocalFolderAsLinksYarn", dataUserInput)
-        _resp = await makePostCallWithErrorHandling({
-          argFirst: dataUserInput,
-          withLinks: true,
-          withStats: false,
-          pdfsOnly: true,
-        },
-          `yarnListMaker/createListingsOfLocalFolder`);
-        break;
-
-      case ExecType.GenListingsWithStatsofPdfLocalFolderAsLinksYarn:
-        _resp = await makePostCallWithErrorHandling({
-          argFirst: dataUserInput,
-          withStats: true,
-          withLinks: true,
-          pdfsOnly: true,
-        },
-          `yarnListMaker/createListingsOfLocalFolder`);
-        break;
-
-      case ExecType.GenListingsofAllLocalFolderAsLinksYarn:
-        _resp = await makePostCallWithErrorHandling({
-          argFirst: dataUserInput,
-          withStats: false,
-          withLinks: true,
-          pdfsOnly: false,
-        },
-          `yarnListMaker/createListingsOfLocalFolder`);
-        break;
-
-      case ExecType.GenListingsWithStatsofAllLocalFolderAsLinksYarn:
-        _resp = await makePostCallWithErrorHandling({
-          argFirst: dataUserInput,
-          withStats: true,
-          withLinks: true,
-          pdfsOnly: false,
-        },
-          `yarnListMaker/createListingsOfLocalFolder`);
+          `yarnExcel/createExcelOfAbsPathFromProfile`);
         break;
 
       case ExecType.SNAP_TO_HTML:

@@ -8,10 +8,6 @@ const ExecLauncherTwo: React.FC = () => {
         <Box display="flex" gap={4} mb={2} flexDirection="row">
             <Box display="flex" alignItems="center" gap={4} mb={2} flexDirection="column">
 
-                <ExecComponent buttonText="Login to Archive"
-                    placeholder='Profiles as CSV'
-                    execType={ExecType.LoginToArchive} />
-
                 <ExecComponent buttonText="Upload Pdfs to Archive for Profile via Excel"
                     placeholder='Profile Name'
                     secondTextBoxPlaceHolder='Enter Excel Abs Path'

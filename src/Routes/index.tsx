@@ -15,6 +15,7 @@ import SearchArchiveDB from 'pages/search/SearchArchiveDB';
 import SearchGDriveDB from 'pages/search/SearchGDriveDB';
 import ExecLauncherFive from 'scriptsThruExec/ExecLauncherFive';
 import ExecLauncherTwoB from 'scriptsThruExec/ExecLauncherTwoB';
+import ExecLauncherTwoC from 'scriptsThruExec/ExecLauncherTwoC';
 
 export const LANDING_PAGE_PATH = "/"
 export const UPLOADS_USHERED_PATH = "/uploadsUshered";
@@ -23,6 +24,7 @@ export const UPLOAD_CYCLES_PATH = "/uploadCycles";
 export const EXEC_LAUNCHER_PATH = "/execLauncher";
 export const EXEC_LAUNCHER_TWO_PATH = "/execLauncher2";
 export const EXEC_LAUNCHER_TWO_B_PATH = "/execLauncher2b";
+export const EXEC_LAUNCHER_TWO_C_PATH = "/execLauncher2c";
 export const EXEC_LAUNCHER_THREE_PATH = "/execLauncher3";
 export const EXEC_LAUNCHER_FOUR_PATH = "/execLauncher4";
 export const TALLY_UPLOADED_DATA = "/tallyData";
@@ -43,6 +45,7 @@ const DashboardRoutes: React.FC = () => (
             {<Route path={EXEC_LAUNCHER_PATH} element={<ExecLauncher />} />}
             {<Route path={EXEC_LAUNCHER_TWO_PATH} element={<ExecLauncherTwo />} />}
             {<Route path={EXEC_LAUNCHER_TWO_B_PATH} element={<ExecLauncherTwoB />} />}
+            {<Route path={EXEC_LAUNCHER_TWO_C_PATH} element={<ExecLauncherTwoC />} />}
             {<Route path={EXEC_LAUNCHER_THREE_PATH} element={<ExecLauncherThree />} />}
             {<Route path={EXEC_LAUNCHER_FOUR_PATH} element={<ExecLauncherFour />} />}
             {<Route path={TALLY_UPLOADED_DATA} element={<TallyUploadedData />} />}

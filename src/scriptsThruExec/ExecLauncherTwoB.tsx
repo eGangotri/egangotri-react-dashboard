@@ -10,6 +10,15 @@ const ExecLauncherTwoB: React.FC = () => {
     const [inAscOrder, setInAscOrder] = useState(false);
     const [archiveExcelExecType, setArchiveExcelExecType] = useState(ExecType.GenExcelOfArchiveLinkCombo1);
 
+    const [allNotJustPdfs, setAllNotJustPdfs] = useState(false);
+    const [uploadableExcelType, setUplodableExcelType] = useState(ExecType.GenExcelofAbsPathsFromProfile);
+
+    const handleAllNotJustPdfs = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setAllNotJustPdfs(event.target.checked);
+        setUplodableExcelType(_uploadableExcelCreateType(event.target.checked));
+
+    };
+
     const handleDontGenerateCheck = (event: React.ChangeEvent<HTMLInputElement>) => {
         setDontGenerateCheck(event.target.checked);
         setArchiveExcelExecType(_archiveExcelExecType({
@@ -18,6 +27,7 @@ const ExecLauncherTwoB: React.FC = () => {
             ascOrder: inAscOrder
         }));
     };
+
     const handleListingsOnly = (event: React.ChangeEvent<HTMLInputElement>) => {
         setListingsOnly(event.target.checked);
         setArchiveExcelExecType(_archiveExcelExecType({
@@ -35,6 +45,10 @@ const ExecLauncherTwoB: React.FC = () => {
             ascOrder: event.target.checked
         }));
     };
+
+    const _uploadableExcelCreateType = (all:boolean):number => {
+        return all === true ? ExecType.GenExcelofAbsPathsForAllFileTypesFromProfile : ExecType.GenExcelofAbsPathsFromProfile;
+    }
     const _archiveExcelExecType = (options: { dontGenerateCheck: boolean, listingsOnly: boolean, ascOrder: boolean }): number => {
         let retType = "1";
         retType += options.dontGenerateCheck === true ? "1" : "0";
@@ -44,6 +58,26 @@ const ExecLauncherTwoB: React.FC = () => {
     }
     return (
         <Box display="flex" gap={4} mb={2} flexDirection="row">
+            <Box display="flex" alignItems="center" gap={4} mb={2} flexDirection="column">
+
+                <ExecComponent buttonText="Login to Archive"
+                    placeholder='Profiles as CSV'
+                    execType={ExecType.LoginToArchive} />
+
+                <ExecComponent buttonText="Create Uplodable-Excel"
+                    placeholder='Folder Abs Path or Profile Name'
+                    userInputOneInfo="It will take all Abs Paths of PDFs in the Folder or Profile and create Excel for Uploads"
+                    execType={uploadableExcelType}
+                    reactComponent={<Box>
+                        <FormControlLabel
+                            control={<Checkbox checked={allNotJustPdfs} onChange={handleAllNotJustPdfs} />}
+                            label="ALL- Not Just PDFs"
+                        />
+                    </Box>}
+                />
+            </Box>
+
+
             <Box display="flex" alignItems="center" gap={4} mb={2} flexDirection="column">
 
                 <ExecComponent
@@ -69,6 +103,7 @@ const ExecLauncherTwoB: React.FC = () => {
                         />
                     </Box>}
                 />
+
                 <ExecComponent
                     buttonText="Download All Pdfs from Archive"
                     placeholder='Space/Comma-Separated Archive Link(s) or Identifier(s)'
@@ -76,54 +111,14 @@ const ExecLauncherTwoB: React.FC = () => {
                     execType={ExecType.DownloadArchivePdfs}
                     css={{ width: "450px" }}
                 />
-
             </Box>
 
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
-                <ExecComponent buttonText="Mark Uploaded In Archive Excel post verification"
-                    placeholder='Profile Name Or Upload CycleId'
-                    secondTextBoxPlaceHolder='Enter Excel Abs Path'
-                    execType={ExecType.MARK_AS_UPLOADED_ENTRIES_IN_ARCHIVE_EXCEL}
-                    userInputOneInfo="Excel File Format: Col1. Abs Path. Col2. Suject. Col 3. Description Col 4. Creator Col5 . uploadFlag"
-                    css={{ width: "250px" }}
-                    css2={{ width: "450px" }}
-                />
-
                 <ExecComponent
                     buttonText="Dump Archive-DB Excel Entries to MongoDB"
                     placeholder='Absolute Path to Archive Excel Folder'
                     execType={ExecType.DUMP_ARCHIVE_EXCEL_TO_MONGO}
                     userInputOneInfo="It will pick the latest Excel from the Folders"
-                />
-
-            </Box>
-
-            <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
-                <ExecComponent buttonText="Identify Upload-Failed By Upload Cycle Id"
-                    placeholder='Enter UploadCycleId'
-                    execType={ExecType.IDENTIFY_UPLOAD_MISSED_BY_UPLOAD_CYCLE_ID}
-                    css={{ width: "350px" }}
-                />
-                <ExecComponent buttonText="Identify Missed By Upload Cycle Id"
-                    placeholder='Enter UploadCycleId'
-                    execType={ExecType.IDENTIFY_FAILED_BY_UPLOAD_CYCLE_ID}
-                    css={{ width: "350px" }}
-                />
-
-                <ExecComponent
-                    buttonText="Compare UploadsViaExcel-V1 against Archive.org"
-                    placeholder='Enter UploadCycleId'
-                    execType={ExecType.COMPARE_UPLOADS_VIA_EXCEL_WITH_ARCHIVE_ORG}
-                    css={{ width: "350px" }}
-                />
-                <ExecComponent
-                    buttonText="Compare UploadsViaExcel-V1 against Archive.org"
-                    placeholder='Absolute Path to UploadsViaExcel-V1 Excel'
-                    execType={ExecType.COMPARE_UPLOADS_VIA_EXCEL_WITH_ARCHIVE_ORG}
-                    secondTextBoxPlaceHolder='Absolute Path to archive.org Excel(s) as CSV'
-                    css={{ minWidth: "33vw" }}
-                    css2={{ minWidth: "35vw" }}
-                //  css3={{marginTop: "30px", width: "100%"}}
                 />
             </Box>
         </Box>
