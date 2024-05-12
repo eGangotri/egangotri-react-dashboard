@@ -83,7 +83,8 @@ export async function launchGoogleDriveExcelListing(googleDriveLink: string, fol
 export async function launchArchiveExcelDownload(archiveLinks: string,
     dateRange: string,
     limitedFields = false,
-    onlyLinks = false):
+    onlyLinks = false,
+    ascOrder = false):
     Promise<ExecResponseDetails> {
     if (!archiveLinks.trim().includes(',') && /\s/.test(archiveLinks.trim())) {
         archiveLinks = archiveLinks.trim().split(/\s+/).map((x: string) => x.trim()).join(',');
@@ -93,7 +94,7 @@ export async function launchArchiveExcelDownload(archiveLinks: string,
         archiveLinks,
         limitedFields,
         dateRange,
-        onlyLinks
+        onlyLinks,ascOrder
     }, `yarnArchive/getArchiveListing`)
     return result;
 }

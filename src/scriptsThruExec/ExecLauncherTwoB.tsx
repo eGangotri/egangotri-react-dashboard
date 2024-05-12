@@ -7,33 +7,40 @@ import { FormControlLabel, Checkbox } from '@mui/material';
 const ExecLauncherTwoB: React.FC = () => {
     const [dontGenerateCheck, setDontGenerateCheck] = useState(false);
     const [listingsOnly, setListingsOnly] = useState(false);
-    const [archiveExcelExecType, setArchiveExcelExecType] = useState(ExecType.GenExcelOfArchiveLink);
+    const [inAscOrder, setInAscOrder] = useState(false);
+    const [archiveExcelExecType, setArchiveExcelExecType] = useState(ExecType.GenExcelOfArchiveLinkCombo1);
 
     const handleDontGenerateCheck = (event: React.ChangeEvent<HTMLInputElement>) => {
         setDontGenerateCheck(event.target.checked);
         setArchiveExcelExecType(_archiveExcelExecType({
             dontGenerateCheck: event.target.checked,
-            listingsOnly: listingsOnly
+            listingsOnly: listingsOnly,
+            ascOrder: inAscOrder
         }));
     };
     const handleListingsOnly = (event: React.ChangeEvent<HTMLInputElement>) => {
         setListingsOnly(event.target.checked);
         setArchiveExcelExecType(_archiveExcelExecType({
             dontGenerateCheck: dontGenerateCheck,
-            listingsOnly: event.target.checked
+            listingsOnly: event.target.checked,
+            ascOrder: inAscOrder
         }));
     };
 
-    const _archiveExcelExecType = (options: { dontGenerateCheck: boolean, listingsOnly: boolean }): number => {
-        let retType = ExecType.GenExcelOfArchiveLink;
-        if (options.listingsOnly === true) {
-            retType = (options.dontGenerateCheck ?
-                ExecType.GenExcelOfArchiveLinkLimitedFieldsWithListing : ExecType.GenExcelOfArchiveLinkListingOnly);
-        }
-        else if (options.dontGenerateCheck === true) {
-            retType = ExecType.GenExcelOfArchiveLinkLimitedFields
-        }
-        return retType;
+    const handleAscOrder = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setInAscOrder(event.target.checked);
+        setArchiveExcelExecType(_archiveExcelExecType({
+            dontGenerateCheck: dontGenerateCheck,
+            listingsOnly: listingsOnly,
+            ascOrder: event.target.checked
+        }));
+    };
+    const _archiveExcelExecType = (options: { dontGenerateCheck: boolean, listingsOnly: boolean, ascOrder: boolean }): number => {
+        let retType = "1";
+        retType += options.dontGenerateCheck === true ? "1" : "0";
+        retType += options.listingsOnly === true ? "1" : "0";
+        retType += options.ascOrder === true ? "1" : "0";
+        return parseInt(retType);
     }
     return (
         <Box display="flex" gap={4} mb={2} flexDirection="row">
@@ -55,6 +62,10 @@ const ExecLauncherTwoB: React.FC = () => {
                         <FormControlLabel
                             control={<Checkbox checked={listingsOnly} onChange={handleListingsOnly} />}
                             label="Listings Only"
+                        />
+                        <FormControlLabel
+                            control={<Checkbox checked={inAscOrder} onChange={handleAscOrder} />}
+                            label="In Asc Order"
                         />
                     </Box>}
                 />
@@ -98,14 +109,14 @@ const ExecLauncherTwoB: React.FC = () => {
                     execType={ExecType.IDENTIFY_FAILED_BY_UPLOAD_CYCLE_ID}
                     css={{ width: "350px" }}
                 />
-                
+
                 <ExecComponent
-                 buttonText="Compare UploadsViaExcel-V1 against Archive.org"
+                    buttonText="Compare UploadsViaExcel-V1 against Archive.org"
                     placeholder='Enter UploadCycleId'
                     execType={ExecType.COMPARE_UPLOADS_VIA_EXCEL_WITH_ARCHIVE_ORG}
                     css={{ width: "350px" }}
                 />
-                      <ExecComponent
+                <ExecComponent
                     buttonText="Compare UploadsViaExcel-V1 against Archive.org"
                     placeholder='Absolute Path to UploadsViaExcel-V1 Excel'
                     execType={ExecType.COMPARE_UPLOADS_VIA_EXCEL_WITH_ARCHIVE_ORG}
@@ -113,7 +124,7 @@ const ExecLauncherTwoB: React.FC = () => {
                     css={{ minWidth: "33vw" }}
                     css2={{ minWidth: "35vw" }}
                 //  css3={{marginTop: "30px", width: "100%"}}
-                /> 
+                />
             </Box>
         </Box>
     );

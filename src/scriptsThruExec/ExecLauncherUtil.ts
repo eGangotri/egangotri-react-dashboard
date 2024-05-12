@@ -33,10 +33,25 @@ export enum ExecType {
   DownloadGoogleDriveLink = 6,
   DownloadFilesFromExcel = 61,
   DirectoryCompare = 62,
-  GenExcelOfArchiveLink = 71,
-  GenExcelOfArchiveLinkLimitedFields = 72,
-  GenExcelOfArchiveLinkLimitedFieldsWithListing = 721,
-  GenExcelOfArchiveLinkListingOnly = 722,
+
+  GenExcelOfArchiveLinkCombo1 = 1000,
+  GenExcelOfArchiveLinkCombo2 = 1001,
+
+  GenExcelOfArchiveLinkCombo3 = 1010,
+  GenExcelOfArchiveLinkCombo4 = 1011,
+
+  GenExcelOfArchiveLinkCombo5 = 1100,
+  GenExcelOfArchiveLinkCombo6 = 1101,
+
+  GenExcelOfArchiveLinkCombo7 = 1110,
+  GenExcelOfArchiveLinkCombo8 = 1111,
+
+
+
+  GenExcelOfArchiveLinkLimitedFields = 10001,
+  GenExcelOfArchiveLinkLimitedFieldsWithListing = 10002,
+  GenExcelOfArchiveLinkListingOnly = 1003,
+
   GenExcelOfGoogleDriveLink = 81,
   GenExcelOfGoogleDriveLinkForReduced = 82,
   GenListingsofLocalFolderAsPdf = 91,
@@ -94,290 +109,285 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
   dataUserInput3 ${dataUserInput3}
   `);
 
-  switch (execType) {
-    case ExecType.UploadPdfs:
-      _resp = await launchUploader(dataUserInput);
+  if (execType >= 1000) {
+    const execAsString = execType.toString()
+    _resp = await launchArchiveExcelDownload(dataUserInput,
+      dataUserInput3, execAsString[1] === "1", execAsString[2] === "1", execAsString[2] === "1");
+  }
+  else {
+    switch (execType) {
+      case ExecType.UploadPdfs:
+        _resp = await launchUploader(dataUserInput);
 
-      // _resp = await _launchGradlev2({
-      //   profiles: dataUserInput
-      // }, "launchUploader");
-      break;
+        // _resp = await _launchGradlev2({
+        //   profiles: dataUserInput
+        // }, "launchUploader");
+        break;
 
-    case ExecType.UploadPdfsViaExcel:
-      _resp = await _launchGradlev2(
-        {
-          profile: dataUserInput,
-          excelPath: replaceQuotes(dataUserInput2),
-          uploadCycleId: dataUserInput3
-        }, "launchUploaderViaExcel");
-      console.log("UploadPdfsViaExcel", JSON.stringify(_resp))
-      break;
+      case ExecType.UploadPdfsViaExcel:
+        _resp = await _launchGradlev2(
+          {
+            profile: dataUserInput,
+            excelPath: replaceQuotes(dataUserInput2),
+            uploadCycleId: dataUserInput3
+          }, "launchUploaderViaExcel");
+        console.log("UploadPdfsViaExcel", JSON.stringify(_resp))
+        break;
 
-    case ExecType.REUPLOAD_USING_JSON:
-      _resp = await _launchGradlev2({
-        gradleArgs: `'${replaceQuotes(dataUserInput)}','${dataUserInput3}'`,
-      }, "launchUploaderViaJson");
-      break;
+      case ExecType.REUPLOAD_USING_JSON:
+        _resp = await _launchGradlev2({
+          gradleArgs: `'${replaceQuotes(dataUserInput)}','${dataUserInput3}'`,
+        }, "launchUploaderViaJson");
+        break;
 
-    case ExecType.REUPLOAD_FAILED_USING_UPLOAD_CYCLE_ID:
-      _resp = await _launchGradlev2({
-        uploadCycleId: replaceQuotes(dataUserInput),
-      }, "launchUploaderViaUploadCycleId");
-      break;
+      case ExecType.REUPLOAD_FAILED_USING_UPLOAD_CYCLE_ID:
+        _resp = await _launchGradlev2({
+          uploadCycleId: replaceQuotes(dataUserInput),
+        }, "launchUploaderViaUploadCycleId");
+        break;
 
-    case ExecType.REUPLOAD_MISSED_USING_UPLOAD_CYCLE_ID:
-      _resp = await _launchGradlev2({
-        uploadCycleId: replaceQuotes(dataUserInput),
-      }, "launchUploaderForMissedViaUploadCycleId");
-      break;
-
-
-    //launchUploaderViaAbsPath
-    case ExecType.UploadPdfsViaAbsPath:
-      _resp = await _launchGradlev2({
-        gradleArgs: `${dataUserInput} # '${dataUserInput2} '`,
-      }, "launchUploaderViaAbsPath");
-      break;
-
-    case ExecType.MoveFolderContents:
-      _resp = await launchYarnQaToDestFileMover({
-        qaPath: dataUserInput,
-        "dest": data.userInputSecond || "",
-        flatten: true
-      });
-      break;
-
-    case ExecType.ReverseMove:
-      _resp = await launchReverseMove(dataUserInput);
-      break;
-
-    case ExecType.LoginToArchive:
-      _resp = await loginToArchive(dataUserInput);
-      break;
-
-    case ExecType.UseBulkRenameConventions:
-      _resp = await launchBulkRename(dataUserInput);
-      break;
-    case ExecType.DownloadGoogleDriveLink:
-      _resp = await launchGoogleDriveDownload(dataUserInput, dataUserInput2);
-      break;
-
-    case ExecType.DownloadFilesFromExcel:
-      _resp = await downloadFromExcelUsingFrontEnd(dataUserInput, dataUserInput2);
-      break;
-    case ExecType.GenExcelOfArchiveLink:
-      _resp = await launchArchiveExcelDownload(dataUserInput, dataUserInput3, false, false);
-      break;
-    case ExecType.GenExcelOfArchiveLinkLimitedFields:
-      _resp = await launchArchiveExcelDownload(dataUserInput, dataUserInput3, true, false);
-      break;
-
-    case ExecType.GenExcelOfArchiveLinkLimitedFieldsWithListing:
-      _resp = await launchArchiveExcelDownload(dataUserInput, dataUserInput3, true, true);
-      break;
-    case ExecType.GenExcelOfArchiveLinkListingOnly:
-      _resp = await launchArchiveExcelDownload(dataUserInput, dataUserInput3, true, true);
-      break;
-
-    case ExecType.DirectoryCompare:
-      _resp = await makePostCallWithErrorHandling({
-        "srcDir": dataUserInput,
-        "destDir": data.userInputSecond,
-      }, `yarn/compareDirectories`);
-      break;
-
-    case ExecType.GenExcelOfGoogleDriveLink:
-      _resp = await makePostCallWithErrorHandling({
-        "googleDriveLink": dataUserInput,
-        "folderName": data.userInputSecond || "D:\\",
-        "reduced": false
-      }, `yarnListMaker/getGoogleDriveListing`);
-      break;
-
-    case ExecType.GenExcelOfGoogleDriveLinkForReduced:
-      _resp = await makePostCallWithErrorHandling({
-        "googleDriveLink": dataUserInput,
-        "folderName": data.userInputSecond || "D:\\",
-        "reduced": true
-      }, `yarnListMaker/getGoogleDriveListing`);
-      break;
+      case ExecType.REUPLOAD_MISSED_USING_UPLOAD_CYCLE_ID:
+        _resp = await _launchGradlev2({
+          uploadCycleId: replaceQuotes(dataUserInput),
+        }, "launchUploaderForMissedViaUploadCycleId");
+        break;
 
 
-    case ExecType.GenListingsofLocalFolderAsPdf:
-      _resp = await launchLocalFolderListingForPdf(dataUserInput);
-      break;
+      //launchUploaderViaAbsPath
+      case ExecType.UploadPdfsViaAbsPath:
+        _resp = await _launchGradlev2({
+          gradleArgs: `${dataUserInput} # '${dataUserInput2} '`,
+        }, "launchUploaderViaAbsPath");
+        break;
 
-    case ExecType.GenListingsofLocalFolderAsAll:
-      _resp = await launchLocalFolderListingForAll(dataUserInput);
-      break;
+      case ExecType.MoveFolderContents:
+        _resp = await launchYarnQaToDestFileMover({
+          qaPath: dataUserInput,
+          "dest": data.userInputSecond || "",
+          flatten: true
+        });
+        break;
 
-    case ExecType.GenListingsofLocalFolderAsPdfYarn:
-      console.log("GenListingsofLocalFolderAsPdfYarn", dataUserInput)
-      _resp = await makePostCallWithErrorHandling({
-        argFirst: dataUserInput,
-        pdfsOnly: true,
-        withStats: false,
-      },
-        `yarnListMaker/createListingsOfLocalFolder`);
-      break;
+      case ExecType.ReverseMove:
+        _resp = await launchReverseMove(dataUserInput);
+        break;
 
-    case ExecType.GenListingsofLocalFolderAsPdfWithStatsYarn:
-      console.log("GenListingsofLocalFolderAsPdfWithStatsYarn", dataUserInput)
-      _resp = await makePostCallWithErrorHandling({
-        argFirst: dataUserInput,
-        pdfsOnly: true,
-        withStats: true,
-      },
-        `yarnListMaker/createListingsOfLocalFolder`);
-      break;
+      case ExecType.LoginToArchive:
+        _resp = await loginToArchive(dataUserInput);
+        break;
 
-    case ExecType.GenListingsofLocalFolderAsAllYarn:
-      console.log("GenListingsofLocalFolderAsAllYarn", dataUserInput)
-      _resp = await makePostCallWithErrorHandling({
-        argFirst: dataUserInput,
-        pdfsOnly: false,
-        withStats: false,
-      },
-        `yarnListMaker/createListingsOfLocalFolder`);
-      break;
+      case ExecType.UseBulkRenameConventions:
+        _resp = await launchBulkRename(dataUserInput);
+        break;
+      case ExecType.DownloadGoogleDriveLink:
+        _resp = await launchGoogleDriveDownload(dataUserInput, dataUserInput2);
+        break;
 
-    case ExecType.GenListingsofLocalFolderAsAllWithStatsYarn:
-      console.log("GenListingsofLocalFolderAsAllWithStatsYarn", dataUserInput)
-      _resp = await makePostCallWithErrorHandling({
-        argFirst: dataUserInput,
-        pdfsOnly: false,
-        withStats: true,
-      },
-        `yarnListMaker/createListingsOfLocalFolder`);
-      break;
+      case ExecType.DownloadFilesFromExcel:
+        _resp = await downloadFromExcelUsingFrontEnd(dataUserInput, dataUserInput2);
+        break;
 
 
-    case ExecType.GenListingsofLocalPdfFolderAsLinksYarn:
-      console.log("GenListingsofLocalFolderAsLinksYarn", dataUserInput)
-      _resp = await makePostCallWithErrorHandling({
-        argFirst: dataUserInput,
-        withLinks: true,
-        withStats: false,
-        pdfsOnly: true,
-      },
-        `yarnListMaker/createListingsOfLocalFolder`);
-      break;
+      case ExecType.DirectoryCompare:
+        _resp = await makePostCallWithErrorHandling({
+          "srcDir": dataUserInput,
+          "destDir": data.userInputSecond,
+        }, `yarn/compareDirectories`);
+        break;
 
-    case ExecType.GenListingsWithStatsofPdfLocalFolderAsLinksYarn:
-      _resp = await makePostCallWithErrorHandling({
-        argFirst: dataUserInput,
-        withStats: true,
-        withLinks: true,
-        pdfsOnly: true,
-      },
-        `yarnListMaker/createListingsOfLocalFolder`);
-      break;
+      case ExecType.GenExcelOfGoogleDriveLink:
+        _resp = await makePostCallWithErrorHandling({
+          "googleDriveLink": dataUserInput,
+          "folderName": data.userInputSecond || "D:\\",
+          "reduced": false
+        }, `yarnListMaker/getGoogleDriveListing`);
+        break;
 
-    case ExecType.GenListingsofAllLocalFolderAsLinksYarn:
-      _resp = await makePostCallWithErrorHandling({
-        argFirst: dataUserInput,
-        withStats: false,
-        withLinks: true,
-        pdfsOnly: false,
-      },
-        `yarnListMaker/createListingsOfLocalFolder`);
-      break;
-
-    case ExecType.GenListingsWithStatsofAllLocalFolderAsLinksYarn:
-      _resp = await makePostCallWithErrorHandling({
-        argFirst: dataUserInput,
-        withStats: true,
-        withLinks: true,
-        pdfsOnly: false,
-      },
-        `yarnListMaker/createListingsOfLocalFolder`);
-      break;
-
-    case ExecType.SNAP_TO_HTML:
-      _resp = await _launchGradlev2({
-        rootFolder: `${dataUserInput}`,
-      }, "snap2html");
-      break;
-
-    case ExecType.AddHeaderFooter:
-      _resp = await addHeaderFooter(dataUserInput);
-      break;
-
-    case ExecType.MoveToFreeze:
-      _resp = await launchYarnMoveToFreeze({
-        profileAsCSV: dataUserInput,
-        flatten: true
-      });
-      break;
-
-    case ExecType.GET_FIRST_N_PAGES:
-      _resp = await makePostCallToPath(`yarnListMaker/getFirstAndLastNPages`, {
-        srcFolders: dataUserInput,
-        destRootFolder: dataUserInput2,
-        nPages: dataUserInput3,
-      });
-      break;
+      case ExecType.GenExcelOfGoogleDriveLinkForReduced:
+        _resp = await makePostCallWithErrorHandling({
+          "googleDriveLink": dataUserInput,
+          "folderName": data.userInputSecond || "D:\\",
+          "reduced": true
+        }, `yarnListMaker/getGoogleDriveListing`);
+        break;
 
 
-    case ExecType.COMBINE_GDRIVE_AND_REDUCED_PDF_DRIVE_EXCELS:
-      _resp = await makePostCallWithErrorHandling({
-        mainExcelPath: dataUserInput,
-        secondaryExcelPath: dataUserInput2,
-        destExcelPath: dataUserInput3,
-      },
-        `yarnListMaker/combineGDriveAndReducedPdfExcels`);
-      break;
+      case ExecType.GenListingsofLocalFolderAsPdf:
+        _resp = await launchLocalFolderListingForPdf(dataUserInput);
+        break;
 
-    case ExecType.DUMP_GDRIVE_COMBO_EXCEL_TO_MONGO:
-      _resp = await makePostCallWithErrorHandling({
-        comboExcelPath: dataUserInput,
-      }, `yarnListMaker/dumpGDriveExcelToMongo`);
-      break;
+      case ExecType.GenListingsofLocalFolderAsAll:
+        _resp = await launchLocalFolderListingForAll(dataUserInput);
+        break;
+
+      case ExecType.GenListingsofLocalFolderAsPdfYarn:
+        console.log("GenListingsofLocalFolderAsPdfYarn", dataUserInput)
+        _resp = await makePostCallWithErrorHandling({
+          argFirst: dataUserInput,
+          pdfsOnly: true,
+          withStats: false,
+        },
+          `yarnListMaker/createListingsOfLocalFolder`);
+        break;
+
+      case ExecType.GenListingsofLocalFolderAsPdfWithStatsYarn:
+        console.log("GenListingsofLocalFolderAsPdfWithStatsYarn", dataUserInput)
+        _resp = await makePostCallWithErrorHandling({
+          argFirst: dataUserInput,
+          pdfsOnly: true,
+          withStats: true,
+        },
+          `yarnListMaker/createListingsOfLocalFolder`);
+        break;
+
+      case ExecType.GenListingsofLocalFolderAsAllYarn:
+        console.log("GenListingsofLocalFolderAsAllYarn", dataUserInput)
+        _resp = await makePostCallWithErrorHandling({
+          argFirst: dataUserInput,
+          pdfsOnly: false,
+          withStats: false,
+        },
+          `yarnListMaker/createListingsOfLocalFolder`);
+        break;
+
+      case ExecType.GenListingsofLocalFolderAsAllWithStatsYarn:
+        console.log("GenListingsofLocalFolderAsAllWithStatsYarn", dataUserInput)
+        _resp = await makePostCallWithErrorHandling({
+          argFirst: dataUserInput,
+          pdfsOnly: false,
+          withStats: true,
+        },
+          `yarnListMaker/createListingsOfLocalFolder`);
+        break;
 
 
-    case ExecType.DUMP_ARCHIVE_EXCEL_TO_MONGO:
-      _resp = await makePostCallWithErrorHandling({
-        archiveExcelPath: dataUserInput,
-      }, `yarnArchive/dumpArchiveExcelToMongo`);
-      break;
+      case ExecType.GenListingsofLocalPdfFolderAsLinksYarn:
+        console.log("GenListingsofLocalFolderAsLinksYarn", dataUserInput)
+        _resp = await makePostCallWithErrorHandling({
+          argFirst: dataUserInput,
+          withLinks: true,
+          withStats: false,
+          pdfsOnly: true,
+        },
+          `yarnListMaker/createListingsOfLocalFolder`);
+        break;
 
-    case ExecType.IDENTIFY_UPLOAD_MISSED_BY_UPLOAD_CYCLE_ID:
-      _resp = await makePostCallWithErrorHandling({
-        uploadCycleIdForVerification: dataUserInput,
-      }, `yarnArchive/verifyUploadStatus`);
-      break;
+      case ExecType.GenListingsWithStatsofPdfLocalFolderAsLinksYarn:
+        _resp = await makePostCallWithErrorHandling({
+          argFirst: dataUserInput,
+          withStats: true,
+          withLinks: true,
+          pdfsOnly: true,
+        },
+          `yarnListMaker/createListingsOfLocalFolder`);
+        break;
 
-    case ExecType.IDENTIFY_FAILED_BY_UPLOAD_CYCLE_ID:
-      _resp = await makePostCallWithErrorHandling({
-        uploadCycleId: replaceQuotes(dataUserInput),
-      }, `uploadCycleRoute/getUploadQueueUploadUsheredMissed`);
-      break;
+      case ExecType.GenListingsofAllLocalFolderAsLinksYarn:
+        _resp = await makePostCallWithErrorHandling({
+          argFirst: dataUserInput,
+          withStats: false,
+          withLinks: true,
+          pdfsOnly: false,
+        },
+          `yarnListMaker/createListingsOfLocalFolder`);
+        break;
+
+      case ExecType.GenListingsWithStatsofAllLocalFolderAsLinksYarn:
+        _resp = await makePostCallWithErrorHandling({
+          argFirst: dataUserInput,
+          withStats: true,
+          withLinks: true,
+          pdfsOnly: false,
+        },
+          `yarnListMaker/createListingsOfLocalFolder`);
+        break;
+
+      case ExecType.SNAP_TO_HTML:
+        _resp = await _launchGradlev2({
+          rootFolder: `${dataUserInput}`,
+        }, "snap2html");
+        break;
+
+      case ExecType.AddHeaderFooter:
+        _resp = await addHeaderFooter(dataUserInput);
+        break;
+
+      case ExecType.MoveToFreeze:
+        _resp = await launchYarnMoveToFreeze({
+          profileAsCSV: dataUserInput,
+          flatten: true
+        });
+        break;
+
+      case ExecType.GET_FIRST_N_PAGES:
+        _resp = await makePostCallToPath(`yarnListMaker/getFirstAndLastNPages`, {
+          srcFolders: dataUserInput,
+          destRootFolder: dataUserInput2,
+          nPages: dataUserInput3,
+        });
+        break;
 
 
-    case ExecType.MARK_AS_UPLOADED_ENTRIES_IN_ARCHIVE_EXCEL:
-      _resp = await makePostCallWithErrorHandling({
-        pathOrUploadCycleId: replaceQuotes(dataUserInput),
-        archiveExcelPath: replaceQuotes(dataUserInput2),
-      }, `yarnArchive/markAsUploadedEntriesInArchiveExcel`);
-      break;
+      case ExecType.COMBINE_GDRIVE_AND_REDUCED_PDF_DRIVE_EXCELS:
+        _resp = await makePostCallWithErrorHandling({
+          mainExcelPath: dataUserInput,
+          secondaryExcelPath: dataUserInput2,
+          destExcelPath: dataUserInput3,
+        },
+          `yarnListMaker/combineGDriveAndReducedPdfExcels`);
+        break;
 
-    case ExecType.DownloadArchivePdfs:
-      _resp = await launchArchivePdfDownload(dataUserInput, dataUserInput2)
-      break;
-    case ExecType.VANITIZE:
-      _resp = await launchVanitizeModule(dataUserInput)
-      break;
-    case ExecType.COMPARE_UPLOADS_VIA_EXCEL_WITH_ARCHIVE_ORG:
-      _resp = await makePostCallWithErrorHandling({
-        mainExcelPath:  replaceQuotes(dataUserInput),
-        archiveExcelPath: replaceQuotes(dataUserInput2),
-      },
-        `yarnArchive/compareUploadsViaExcelWithArchiveOrg`);
-      break;
-    default:
-      _resp = {}
-      // Handle unknown execType value
-      break;
+      case ExecType.DUMP_GDRIVE_COMBO_EXCEL_TO_MONGO:
+        _resp = await makePostCallWithErrorHandling({
+          comboExcelPath: dataUserInput,
+        }, `yarnListMaker/dumpGDriveExcelToMongo`);
+        break;
+
+
+      case ExecType.DUMP_ARCHIVE_EXCEL_TO_MONGO:
+        _resp = await makePostCallWithErrorHandling({
+          archiveExcelPath: dataUserInput,
+        }, `yarnArchive/dumpArchiveExcelToMongo`);
+        break;
+
+      case ExecType.IDENTIFY_UPLOAD_MISSED_BY_UPLOAD_CYCLE_ID:
+        _resp = await makePostCallWithErrorHandling({
+          uploadCycleIdForVerification: dataUserInput,
+        }, `yarnArchive/verifyUploadStatus`);
+        break;
+
+      case ExecType.IDENTIFY_FAILED_BY_UPLOAD_CYCLE_ID:
+        _resp = await makePostCallWithErrorHandling({
+          uploadCycleId: replaceQuotes(dataUserInput),
+        }, `uploadCycleRoute/getUploadQueueUploadUsheredMissed`);
+        break;
+
+
+      case ExecType.MARK_AS_UPLOADED_ENTRIES_IN_ARCHIVE_EXCEL:
+        _resp = await makePostCallWithErrorHandling({
+          pathOrUploadCycleId: replaceQuotes(dataUserInput),
+          archiveExcelPath: replaceQuotes(dataUserInput2),
+        }, `yarnArchive/markAsUploadedEntriesInArchiveExcel`);
+        break;
+
+      case ExecType.DownloadArchivePdfs:
+        _resp = await launchArchivePdfDownload(dataUserInput, dataUserInput2)
+        break;
+      case ExecType.VANITIZE:
+        _resp = await launchVanitizeModule(dataUserInput)
+        break;
+      case ExecType.COMPARE_UPLOADS_VIA_EXCEL_WITH_ARCHIVE_ORG:
+        _resp = await makePostCallWithErrorHandling({
+          mainExcelPath: replaceQuotes(dataUserInput),
+          archiveExcelPath: replaceQuotes(dataUserInput2),
+        },
+          `yarnArchive/compareUploadsViaExcelWithArchiveOrg`);
+        break;
+      default:
+        _resp = {}
+        // Handle unknown execType value
+        break;
+    }
   }
   return _resp;
 }
