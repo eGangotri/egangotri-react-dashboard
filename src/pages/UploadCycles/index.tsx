@@ -146,14 +146,17 @@ const UploadCycles = () => {
         return missed?.response?.missedData
     }
 
-    const launchReuploadMissed = async (uploadCycleId:string) => {
-        setIsLoading(true); 
+    const launchReuploadMissed = async (uploadCycleId: string) => {
+        setIsLoading(true);
+        handleClose();
         const _res = await _launchGradlev2({
             uploadCycleId: uploadCycleId,
         }, "reuploadMissedViaUploadCycleId")
         console.log(`_res ${JSON.stringify(_res)}`)
         setIsLoading(false);
-      //  setTitlesForPopover(<>{_res}</>);
+        setTitlesForPopover(<>{_res}</>);
+       // console.log("handleTitleClick: " + event.currentTarget)
+        //setAnchorEl(event.currentTarget);
 
     }
     const findMissingAndSetInPopover = async (event: React.MouseEvent<HTMLButtonElement>, row: UploadCycleTableData) => {
