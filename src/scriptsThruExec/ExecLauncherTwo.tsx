@@ -8,12 +8,23 @@ const ExecLauncherTwo: React.FC = () => {
         <Box display="flex" gap={4} mb={2} flexDirection="row">
             <Box display="flex" alignItems="center" gap={4} mb={2} flexDirection="column">
 
-                <ExecComponent buttonText="Upload Pdfs to Archive for Profile via Excel"
+                <ExecComponent buttonText="Upload Pdfs to Archive for Profile via Excel V-1"
                     placeholder='Profile Name'
                     secondTextBoxPlaceHolder='Enter Excel Abs Path'
                     thirdTextBoxPlaceHolder='Range (eg. 1-00) (Optional).inclusive'
-                    execType={ExecType.UploadPdfsViaExcel}
+                    execType={ExecType.UploadPdfsViaExcelV1}
                     userInputOneInfo="Excel File Format: Col1. Abs Path. Col2. Suject. Col 3. Description Col 4. Creator"
+                    userInputThreeInfo="Range of Whole Numbers. Ex 1-10 (Optional).inclusive"
+                    css={{ width: "250px" }}
+                    css2={{ width: "450px" }}
+                />
+
+                <ExecComponent buttonText="Upload Pdfs to Archive for Profile via Excel V-3"
+                    placeholder='Profile Name'
+                    secondTextBoxPlaceHolder='Enter Excel Abs Path'
+                    thirdTextBoxPlaceHolder='Range (eg. 1-00) (Optional).inclusive'
+                    execType={ExecType.UploadPdfsViaExcelV3}
+                    userInputOneInfo="Excel File Format: Col1. Abs Path."
                     userInputThreeInfo="Range of Whole Numbers. Ex 1-10 (Optional).inclusive"
                     css={{ width: "250px" }}
                     css2={{ width: "450px" }}

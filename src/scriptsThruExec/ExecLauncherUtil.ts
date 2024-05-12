@@ -24,7 +24,8 @@ import { handleYarnListingGeneration } from "./Utils";
 
 export enum ExecType {
   UploadPdfs = 1,
-  UploadPdfsViaExcel = 111,
+  UploadPdfsViaExcelV1 = 111,
+  UploadPdfsViaExcelV3 = 112,
   UploadPdfsViaAbsPath = 113,
   MoveFolderContents = 2,
   ReverseMove = 31,
@@ -135,14 +136,22 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         // }, "launchUploader");
         break;
 
-      case ExecType.UploadPdfsViaExcel:
+      case ExecType.UploadPdfsViaExcelV1:
         _resp = await _launchGradlev2(
           {
             profile: dataUserInput,
             excelPath: replaceQuotes(dataUserInput2),
             uploadCycleId: dataUserInput3
           }, "launchUploaderViaExcel");
-        console.log("UploadPdfsViaExcel", JSON.stringify(_resp))
+        break;
+
+      case ExecType.UploadPdfsViaExcelV3:
+        _resp = await _launchGradlev2(
+          {
+            profile: dataUserInput,
+            excelPath: replaceQuotes(dataUserInput2),
+            range: dataUserInput3
+          }, "launchUploaderViaExcelV3");
         break;
 
       case ExecType.REUPLOAD_USING_JSON:
