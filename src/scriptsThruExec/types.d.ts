@@ -22,6 +22,7 @@ export type ExecComponentProps = {
     userInputOneInfo ?:string;
     userInputTwoInfo ?:string;
     userInputThreeInfo ?:string;
+    secondComponentRequired ?:boolean
 };
 
 export type ExecResponse = {

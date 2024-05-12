@@ -65,7 +65,7 @@ const ExecLauncherTwoB: React.FC = () => {
                     execType={ExecType.LoginToArchive} />
 
                 <ExecComponent buttonText="Create Uplodable-Excel"
-                    placeholder='Folder Abs Path or Profile Name'
+                    placeholder='Profile Name'
                     userInputOneInfo="It will take all Abs Paths of PDFs in the Folder or Profile and create Excel for Uploads"
                     execType={uploadableExcelType}
                     reactComponent={<Box>
@@ -81,12 +81,14 @@ const ExecLauncherTwoB: React.FC = () => {
             <Box display="flex" alignItems="center" gap={4} mb={2} flexDirection="column">
 
                 <ExecComponent
-                    buttonText="Create Archive Excel"
+                    buttonText="D/l archive.org Data As Excel"
                     placeholder='Space/Comma-Separated Archive Link(s) or Identifier(s)'
                     execType={archiveExcelExecType}
                     css={{ width: "450px" }}
                     userInputOneInfo="Enter Archive Link(s) or Identifier(s) as CSV or Space-Separated"
                     userInputThreeInfo="YYYY/MM/DD-YYYY/MM/DD (Optional). Example 2021/01/01-2021/01/31"
+                    secondTextBoxPlaceHolder='Number of Items (Optional)'
+                    secondComponentRequired={false}
                     thirdTextBoxPlaceHolder='Date Range (Optional)'
                     reactComponent={<Box>
                         <FormControlLabel

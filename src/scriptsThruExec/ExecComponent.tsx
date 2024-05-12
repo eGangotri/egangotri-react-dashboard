@@ -28,7 +28,8 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
   css3 = {},
   userInputOneInfo = "",
   userInputTwoInfo = "",
-  userInputThreeInfo = ""
+  userInputThreeInfo = "",
+  secondComponentRequired = true
 }) => {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const { register, handleSubmit, formState: { errors }, reset } = useForm<ExecComponentFormData>();
@@ -134,7 +135,7 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
             <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start' }}>
               <TextField variant="outlined"
                 placeholder={secondTextBoxPlaceHolder}
-                {...register('userInputSecond', { required: "This field is required" })}
+                {...register('userInputSecond', secondComponentRequired === true ? { required: "This field is required" } : {})}
                 error={Boolean(errors.userInputSecond)}
                 sx={{ marginRight: "30px", width: "250px", ...css2 }}
                 helperText={errors.userInputSecond?.message} />

@@ -81,6 +81,7 @@ export async function launchGoogleDriveExcelListing(googleDriveLink: string, fol
 }
 
 export async function launchArchiveExcelDownload(archiveLinks: string,
+    maxItems: string,
     dateRange: string,
     limitedFields = false,
     onlyLinks = false,
@@ -92,9 +93,10 @@ export async function launchArchiveExcelDownload(archiveLinks: string,
     }
     const result = await makePostCallWithErrorHandling({
         archiveLinks,
+        maxItems,
         limitedFields,
         dateRange,
-        onlyLinks,ascOrder
+        onlyLinks, ascOrder
     }, `yarnArchive/getArchiveListing`)
     return result;
 }
