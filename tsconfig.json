@@ -1,11 +1,15 @@
 {
   "compileOnSave": true,
   "compilerOptions": {
-    "target": "es5",
+    "target": "ESNext",
     "lib": [
       "dom",
       "dom.iterable",
       "esnext"
+    ],
+    "types": [
+      "vite/client",
+      "vite-plugin-svgr/client"
     ],
     "allowJs": true,
     "skipLibCheck": true,
@@ -14,13 +18,18 @@
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
-    "module": "esnext",
+    "module": "ESNext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "baseUrl": "src"
+    "baseUrl": "src",
+    "paths": {
+      "src/*": [
+        "./src/*"
+      ]
+    }
   },
   "include": [
     "src"

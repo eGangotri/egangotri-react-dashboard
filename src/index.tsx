@@ -1,7 +1,7 @@
 import React from 'react';
 
-import 'assets/css/index.css';
-import Dashboard from 'pages/Dashboard';
+import './assets/css/index.css';
+import Dashboard from './pages/Dashboard';
 import reportWebVitals from './reportWebVitals';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
@@ -9,7 +9,7 @@ import './assets/main.css';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
 const root = createRoot(document.getElementById('root') as Element);
-const googleClientID = process.env.REACT_APP_GOOGLE_CLIENT_ID || '';
+const googleClientID = import.meta.env.VITE_GOOGLE_CLIENT_ID || '';
 
 root.render(
   <GoogleOAuthProvider clientId={googleClientID}>
