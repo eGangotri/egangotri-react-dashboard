@@ -136,7 +136,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
             profile: dataUserInput,
             excelPath: replaceQuotes(dataUserInput2),
             uploadCycleId: dataUserInput3
-          }, "launchUploaderViaExcel");
+          }, "launchUploaderViaExcelV1");
         break;
 
       case ExecType.UploadPdfsViaExcelV3:
