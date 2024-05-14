@@ -79,7 +79,9 @@ export enum ExecType {
   REUPLOAD_USING_JSON = 207,
   REUPLOAD_FAILED_USING_UPLOAD_CYCLE_ID = 208,
   REUPLOAD_MISSED_USING_UPLOAD_CYCLE_ID = 209,
-  COMPARE_UPLOADS_VIA_EXCEL_WITH_ARCHIVE_ORG = 210,
+
+  COMPARE_UPLOADS_VIA_EXCEL_V1_WITH_ARCHIVE_ORG = 210,
+  COMPARE_UPLOADS_VIA_EXCEL_V3_WITH_ARCHIVE_ORG = 211,
 }
 
 export enum Tif2PdfExecType {
@@ -112,7 +114,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
 
   if (execType >= 1000 && execType < 2000) {
     const execAsString = execType.toString()
-    _resp = await launchArchiveExcelDownload(dataUserInput,dataUserInput2,
+    _resp = await launchArchiveExcelDownload(dataUserInput, dataUserInput2,
       dataUserInput3, execAsString[1] === "1", execAsString[2] === "1", execAsString[2] === "1");
   }
 
@@ -325,13 +327,24 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       case ExecType.VANITIZE:
         _resp = await launchVanitizeModule(dataUserInput)
         break;
-      case ExecType.COMPARE_UPLOADS_VIA_EXCEL_WITH_ARCHIVE_ORG:
+      case ExecType.COMPARE_UPLOADS_VIA_EXCEL_V1_WITH_ARCHIVE_ORG:
         _resp = await makePostCallWithErrorHandling({
-          mainExcelPath: replaceQuotes(dataUserInput),
-          archiveExcelPath: replaceQuotes(dataUserInput2),
+          profileName: replaceQuotes(dataUserInput).trim(),
+          mainExcelPath: replaceQuotes(dataUserInput2).trim(),
+          archiveExcelPath: replaceQuotes(dataUserInput3).trim(),
         },
-          `yarnArchive/compareUploadsViaExcelWithArchiveOrg`);
+          `yarnArchive/compareUploadsViaExcelV1WithArchiveOrg`);
         break;
+
+      case ExecType.COMPARE_UPLOADS_VIA_EXCEL_V3_WITH_ARCHIVE_ORG:
+        _resp = await makePostCallWithErrorHandling({
+          profileName: replaceQuotes(dataUserInput).trim(),
+          mainExcelPath: replaceQuotes(dataUserInput2).trim(),
+          archiveExcelPath: replaceQuotes(dataUserInput3).trim(),
+        },
+          `yarnArchive/compareUploadsViaExcelV3WithArchiveOrg`);
+        break;
+
       default:
         _resp = {}
         // Handle unknown execType value

@@ -64,7 +64,7 @@ const ExecLauncherTwoB: React.FC = () => {
                     placeholder='Profiles as CSV'
                     execType={ExecType.LoginToArchive} />
 
-                <ExecComponent buttonText="Create Uplodable-Excel"
+                <ExecComponent buttonText="Create Uploadable-Excel"
                     placeholder='Profile Name'
                     userInputOneInfo="It will take all Abs Paths of PDFs in the Folder or Profile and create Excel for Uploads"
                     execType={uploadableExcelType}

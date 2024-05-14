@@ -34,12 +34,22 @@ const ExecLauncherTwoC: React.FC = () => {
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
                 <ExecComponent
                     buttonText="Compare UploadsViaExcel-V1 against Archive.org"
-                    placeholder='Absolute Path to UploadsViaExcel-V1 Excel'
-                    execType={ExecType.COMPARE_UPLOADS_VIA_EXCEL_WITH_ARCHIVE_ORG}
-                    secondTextBoxPlaceHolder='Absolute Path to archive.org Excel(s) as CSV'
-                    css={{ minWidth: "33vw" }}
-                    css2={{ minWidth: "35vw" }}
-                //  css3={{marginTop: "30px", width: "100%"}}
+                    placeholder='Profile Name'
+                    execType={ExecType.COMPARE_UPLOADS_VIA_EXCEL_V1_WITH_ARCHIVE_ORG}
+                    secondTextBoxPlaceHolder='Absolute Path to UploadsViaExcel-V1 Excel'
+                    thirdTextBoxPlaceHolder='Absolute Path to archive.org Excel(s) as CSV'
+                    css2={{ minWidth: "33vw" }}
+                    css3={{ minWidth: "35vw" }}
+                />
+
+                <ExecComponent
+                    buttonText="Compare UploadsViaExcel-V3 against Archive.org"
+                    placeholder='Profile Name'
+                    execType={ExecType.COMPARE_UPLOADS_VIA_EXCEL_V3_WITH_ARCHIVE_ORG}
+                    secondTextBoxPlaceHolder='Absolute Path to UploadsViaExcel-V3 Excel'
+                    thirdTextBoxPlaceHolder='Absolute Path to archive.org Excel(s) as CSV'
+                    css2={{ minWidth: "33vw" }}
+                    css3={{ minWidth: "35vw" }}
                 />
             </Box>
         </Box>
