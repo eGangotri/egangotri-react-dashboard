@@ -54,6 +54,7 @@ const ExecLauncherTwoB: React.FC = () => {
         retType += options.dontGenerateCheck === true ? "1" : "0";
         retType += options.listingsOnly === true ? "1" : "0";
         retType += options.ascOrder === true ? "1" : "0";
+        console.log("retType: ", retType);
         return parseInt(retType);
     }
     return (

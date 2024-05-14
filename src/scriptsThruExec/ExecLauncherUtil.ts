@@ -115,7 +115,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
   if (execType >= 1000 && execType < 2000) {
     const execAsString = execType.toString()
     _resp = await launchArchiveExcelDownload(dataUserInput, dataUserInput2,
-      dataUserInput3, execAsString[1] === "1", execAsString[2] === "1", execAsString[2] === "1");
+      dataUserInput3, execAsString[1] === "1", execAsString[2] === "1", execAsString[3] === "1");
   }
 
   else if (execType >= 2000) {
