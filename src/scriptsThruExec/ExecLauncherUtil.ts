@@ -30,6 +30,7 @@ export enum ExecType {
   MoveFolderContents = 2,
   ReverseMove = 31,
   SNAP_TO_HTML = 32,
+  LONGER_THANKTHRESHOLD = 33,
   LoginToArchive = 4,
   UseBulkRenameConventions = 5,
   DownloadGoogleDriveLink = 6,
