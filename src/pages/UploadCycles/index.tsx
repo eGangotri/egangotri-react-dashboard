@@ -346,7 +346,7 @@ const UploadCycles = () => {
                             sx={{ width: "200px", marginTop: "10px" }}
                             disabled={isLoading}
                         >
-                            Yarn Move to Freeze
+                            Yarn Move to Freeze Uploaded
                         </Button>
                         <Popover
                             id={id4}
