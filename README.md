@@ -1,5 +1,5 @@
 # egangotri-react-dashboard
-React Based Dashboard for eGangotri Front End
+React Based Dashboard for eGangotri Front End using vite
 
 # First Time
 yarn install
@@ -40,35 +40,6 @@ if on higher versions of node you may have to modify start script as
     "start": "react-dotenv && yarn run lint_fix && react-scripts --openssl-legacy-provider start",
     
 Due to changes on Node.js v17, --openssl-legacy-provider was added for handling key size on OpenSSL v3. For now i do workaround with this options.
-
-## Microsoft Azure:
-## may not be relevant any more
-In App Service/Settings/Configuration/Application Settings, add
-WEBSITES_PORT=3000
-OR in Azure CLI
-az webapp config appsettings set --resource-group cp-bq-specialist-rq --name eg-react-fe --settings WEBSITES_PORT=3000
-
-#firebase login is in eg***trust@gmail.com
-### firebase Deployment
-First time
- npm install -g firebase-tools
- firebase init 
-afterwards
-firebase login
-firebase deploy
-
-Viewable at:
-https://egangotri-react-dashboard.firebaseapp.com
-https://egangotri-react-dashboard.web.app/
-
-###Environment File
-REACT_APP_DEV_ENV=prod
-REACT_APP_FAST_REFRESH=false
-REACT_APP_BACKEND_SERVER_PROD="https://hardy-ivy-388117.de.r.appspot.com/"
-REACT_APP_BACKEND_SERVER_DEV=http://localhost:8000/
-REACT_APP_LAST_DEPLOYMENT_ON="10-JUN-23"
-
-
 
 #### For Vite Configuration
 

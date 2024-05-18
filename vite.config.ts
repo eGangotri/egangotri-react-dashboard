@@ -18,5 +18,6 @@ export default defineConfig({
   },
   define: {
     'process.platform': JSON.stringify(process.platform),
+    'process.env': {}
   },
 });

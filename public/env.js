@@ -1,3 +1,3 @@
 window.env = {
-  "REACT_APP_DEV_ENV": "dev"
+  "REACT_APP_DEV_ENV": "prod"
 };
