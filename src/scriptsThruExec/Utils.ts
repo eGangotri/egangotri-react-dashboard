@@ -1,4 +1,4 @@
-import { makePostCallWithErrorHandling } from "service/BackendFetchService";
+import { makePostCallForGenExcelForLocal, makePostCallWithErrorHandling } from "service/BackendFetchService";
 import { ExecType } from "./ExecLauncherUtil";
 import { ExecResponseDetails } from "./types";
 
@@ -29,7 +29,8 @@ export const handleYarnListingGeneration = async (execType: ExecType, dataUserIn
 
         case ExecType.GenListingsofLocalFolderAsAllYarn:
             console.log("GenListingsofLocalFolderAsAllYarn", dataUserInput)
-            _resp = await makePostCallWithErrorHandling({
+            //need to save in local storage
+            _resp = await makePostCallForGenExcelForLocal({
                 argFirst: dataUserInput,
                 pdfsOnly: false,
                 withStats: false,

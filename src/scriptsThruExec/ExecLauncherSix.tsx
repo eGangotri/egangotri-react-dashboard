@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import ExecComponent from './ExecComponent';
 import Box from '@mui/material/Box';
 import { ExecType } from './ExecLauncherUtil';
@@ -7,7 +7,16 @@ import { FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material';
 
 const ExecLauncherSix: React.FC = () => {
     const [excelGDrive, setExcelGDrive] = React.useState<number>(ExecType.GenExcelOfGoogleDriveLink);
+    const [gDriveExcelName, setGDriveExcelName] = useState('');
 
+    useEffect(() => {
+      let storedValue = localStorage.getItem('gDriveExcelName');
+      console.log(`useEffect called ${storedValue}`)
+      if (storedValue) {
+        setGDriveExcelName(storedValue);
+      }
+    }, []);
+  
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
         const _val = event.target.value;
         console.log("_val", _val)
@@ -72,7 +81,7 @@ const ExecLauncherSix: React.FC = () => {
                     buttonText="Compare G-Drive and Local Excel"
                     placeholder='Absolute Path to G-Drive Excel Folder'
                     secondTextBoxPlaceHolder='Absolute Path to Local Excel Folder'
-                    execType={ExecType.COMBINE_GDRIVE_AND_REDUCED_PDF_DRIVE_EXCELS}
+                    execType={ExecType.COMPARE_G_DRIVE_AND_LOCAL_EXCEL}
                     css={{ minWidth: "33vw" }}
                     css2={{ minWidth: "35vw" }}
                     userInputOneInfo="It will pick the latest Excel from the Folders"

@@ -354,7 +354,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
           gDriveExcel: replaceQuotes(dataUserInput).trim(),
           localExcel: replaceQuotes(dataUserInput2).trim(),
         },
-          `yarnArchive/compareGDriveAndLocalExcel`);
+          `searchGDriveDB/compareGDriveAndLocalExcel`);
         break;
 
       default:

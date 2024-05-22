@@ -37,24 +37,27 @@ export const makePostCallWithErrorHandling = async (body: Record<string, unknown
 
 export const makePostCallForGenExcelForGDrive = async (body: Record<string, unknown>, resource: string) => {
   const result = await makePostCallWithErrorHandling(body, resource)
-  // Store value
-  localStorage.setItem('gDriveExcelName', result.excelName);
-
+  let excelName = result?.["0"]?.excelName;
+  console.log(`excelName ${excelName}`)
+  if (excelName !== undefined) {
+    // Store value
+    localStorage.setItem('gDriveExcelName', excelName);
+  }
   // Retrieve value
-  let value = localStorage.getItem('gDriveExcelName');
-
-  console.log(value); // Outputs: value
+  let gDriveExcelName = localStorage.getItem('gDriveExcelName');
+  console.log(gDriveExcelName); // Outputs: gDriveExcelName
   return result;
 }
 
-
 export const makePostCallForGenExcelForLocal = async (body: Record<string, unknown>, resource: string) => {
   const result = await makePostCallWithErrorHandling(body, resource)
+  let excelName = result?.["0"]?.excelName;
+  console.log(`excelName ${excelName}`)
   // Store value
-  localStorage.setItem('gDriveExcelName', result.excelName);
+  localStorage.setItem('localListingExcelName', excelName);
 
   // Retrieve value
-  let value = localStorage.getItem('gDriveExcelName');
+  let value = localStorage.getItem('localListingExcelName');
 
   console.log(value); // Outputs: value
   return result;
