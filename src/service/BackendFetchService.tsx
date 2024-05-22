@@ -35,7 +35,30 @@ export const makePostCallWithErrorHandling = async (body: Record<string, unknown
   } as ExecResponseDetails;
 }
 
+export const makePostCallForGenExcelForGDrive = async (body: Record<string, unknown>, resource: string) => {
+  const result = await makePostCallWithErrorHandling(body, resource)
+  // Store value
+  localStorage.setItem('gDriveExcelName', result.excelName);
 
+  // Retrieve value
+  let value = localStorage.getItem('gDriveExcelName');
+
+  console.log(value); // Outputs: value
+  return result;
+}
+
+
+export const makePostCallForGenExcelForLocal = async (body: Record<string, unknown>, resource: string) => {
+  const result = await makePostCallWithErrorHandling(body, resource)
+  // Store value
+  localStorage.setItem('gDriveExcelName', result.excelName);
+
+  // Retrieve value
+  let value = localStorage.getItem('gDriveExcelName');
+
+  console.log(value); // Outputs: value
+  return result;
+}
 
 export const getUploadStatusData = async (limit: number,
   forQueues = false,

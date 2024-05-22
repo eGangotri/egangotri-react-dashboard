@@ -96,7 +96,8 @@ export async function launchArchiveExcelDownload(archiveLinks: string,
         maxItems,
         limitedFields,
         dateRange,
-        onlyLinks, ascOrder
+        onlyLinks,
+        ascOrder
     }, `yarnArchive/getArchiveListing`)
     return result;
 }

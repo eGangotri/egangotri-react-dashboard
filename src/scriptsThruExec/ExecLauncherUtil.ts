@@ -17,7 +17,7 @@ import {
 } from "service/launchYarn";
 
 import { ExecComponentFormData, ExecResponseDetails } from "./types";
-import { makePostCallWithErrorHandling, verifyUploadStatusForUploadCycleId } from "service/BackendFetchService";
+import { makePostCallForGenExcelForGDrive, makePostCallWithErrorHandling, verifyUploadStatusForUploadCycleId } from "service/BackendFetchService";
 import { downloadFromExcelUsingFrontEnd } from "service/launchFrontEnd";
 import { replaceQuotes } from "mirror/utils";
 import { handleYarnListingGeneration } from "./Utils";
@@ -83,6 +83,9 @@ export enum ExecType {
 
   COMPARE_UPLOADS_VIA_EXCEL_V1_WITH_ARCHIVE_ORG = 210,
   COMPARE_UPLOADS_VIA_EXCEL_V3_WITH_ARCHIVE_ORG = 211,
+
+  COMPARE_G_DRIVE_AND_LOCAL_EXCEL = 212,
+
 }
 
 export enum Tif2PdfExecType {
@@ -213,7 +216,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         break;
 
       case ExecType.GenExcelOfGoogleDriveLink:
-        _resp = await makePostCallWithErrorHandling({
+        _resp = await makePostCallForGenExcelForGDrive({
           "googleDriveLink": dataUserInput,
           "folderName": data.userInputSecond || "D:\\",
           "reduced": false
@@ -344,6 +347,14 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
           archiveExcelPath: replaceQuotes(dataUserInput3).trim(),
         },
           `yarnArchive/compareUploadsViaExcelV3WithArchiveOrg`);
+        break;
+
+      case ExecType.COMPARE_G_DRIVE_AND_LOCAL_EXCEL:
+        _resp = await makePostCallWithErrorHandling({
+          gDriveExcel: replaceQuotes(dataUserInput).trim(),
+          localExcel: replaceQuotes(dataUserInput2).trim(),
+        },
+          `yarnArchive/compareGDriveAndLocalExcel`);
         break;
 
       default:
