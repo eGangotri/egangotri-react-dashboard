@@ -49,7 +49,8 @@ export enum ExecType {
   GenExcelOfArchiveLinkCombo7 = 1110,
   GenExcelOfArchiveLinkCombo8 = 1111,
 
-  GenExcelOfGoogleDriveLink = 81,
+  GenExcelOfGoogleDriveLinkPdfOnly = 811,
+  GenExcelOfGoogleDriveLinkForAll = 812,
   GenExcelOfGoogleDriveLinkForReduced = 82,
 
   GenListingsofLocalFolderAsPdf = 91,
@@ -215,11 +216,22 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         }, `yarn/compareDirectories`);
         break;
 
-      case ExecType.GenExcelOfGoogleDriveLink:
+      case ExecType.GenExcelOfGoogleDriveLinkPdfOnly:
         _resp = await makePostCallForGenExcelForGDrive({
           "googleDriveLink": dataUserInput,
           "folderName": data.userInputSecond || "D:\\",
-          "reduced": false
+          "reduced": false,
+          "allNotJustPdfs": false
+        }, `yarnListMaker/getGoogleDriveListing`);
+        break;
+
+      case ExecType.GenExcelOfGoogleDriveLinkForAll:
+        _resp = await makePostCallForGenExcelForGDrive({
+          "googleDriveLink": dataUserInput,
+          "folderName": data.userInputSecond || "D:\\",
+          "reduced": false,
+          "ignoreFolder": "",
+          "allNotJustPdfs": true,
         }, `yarnListMaker/getGoogleDriveListing`);
         break;
 
@@ -227,7 +239,8 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         _resp = await makePostCallWithErrorHandling({
           "googleDriveLink": dataUserInput,
           "folderName": data.userInputSecond || "D:\\",
-          "reduced": true
+          "reduced": true,
+          "allNotJustPdfs": false
         }, `yarnListMaker/getGoogleDriveListing`);
         break;
 

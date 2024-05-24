@@ -6,22 +6,22 @@ import { FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material';
 
 
 const ExecLauncherFive: React.FC = () => {
-    const [excelGDrive, setExcelGDrive] = React.useState<number>(ExecType.GenExcelOfGoogleDriveLink);
+    const [excelGDrive, setExcelGDrive] = React.useState<number>(ExecType.GenExcelOfGoogleDriveLinkPdfOnly);
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
         const _val = event.target.value;
         console.log("_val", _val)
         let _listingType;
         switch (Number(_val)) {
-            case ExecType.GenExcelOfGoogleDriveLink:
-                _listingType = ExecType.GenExcelOfGoogleDriveLink;
+            case ExecType.GenExcelOfGoogleDriveLinkPdfOnly:
+                _listingType = ExecType.GenExcelOfGoogleDriveLinkPdfOnly;
                 break;
             case ExecType.GenExcelOfGoogleDriveLinkForReduced:
                 _listingType = ExecType.GenExcelOfGoogleDriveLinkForReduced;
                 break;
         }
         console.log("_listingType", _listingType);
-        setExcelGDrive(_listingType || ExecType.GenExcelOfGoogleDriveLink);
+        setExcelGDrive(_listingType || ExecType.GenExcelOfGoogleDriveLinkPdfOnly);
     };
     return (
         <Box display="flex" gap={4} mb={2} flexDirection="row">
@@ -35,7 +35,7 @@ const ExecLauncherFive: React.FC = () => {
                     css={{ minWidth: "23vw" }}
                     reactComponent={<>
                         <RadioGroup aria-label="fileType" name="fileType" value={excelGDrive} onChange={handleChange} row>
-                            <FormControlLabel value={ExecType.GenExcelOfGoogleDriveLink} control={<Radio />} label="ALL" />
+                            <FormControlLabel value={ExecType.GenExcelOfGoogleDriveLinkPdfOnly} control={<Radio />} label="ALL" />
                             <FormControlLabel value={ExecType.GenExcelOfGoogleDriveLinkForReduced} control={<Radio />} label="REDUCED" />
                         </RadioGroup>
                     </>}

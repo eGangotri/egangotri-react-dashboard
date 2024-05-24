@@ -6,32 +6,16 @@ import { FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material';
 
 
 const ExecLauncherSix: React.FC = () => {
-    const [excelGDrive, setExcelGDrive] = React.useState<number>(ExecType.GenExcelOfGoogleDriveLink);
     const [gDriveExcelName, setGDriveExcelName] = useState('');
 
     useEffect(() => {
-      let storedValue = localStorage.getItem('gDriveExcelName');
-      console.log(`useEffect called ${storedValue}`)
-      if (storedValue) {
-        setGDriveExcelName(storedValue);
-      }
-    }, []);
-  
-    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-        const _val = event.target.value;
-        console.log("_val", _val)
-        let _listingType;
-        switch (Number(_val)) {
-            case ExecType.GenExcelOfGoogleDriveLink:
-                _listingType = ExecType.GenExcelOfGoogleDriveLink;
-                break;
-            case ExecType.GenExcelOfGoogleDriveLinkForReduced:
-                _listingType = ExecType.GenExcelOfGoogleDriveLinkForReduced;
-                break;
+        let storedValue = localStorage.getItem('gDriveExcelName');
+        console.log(`useEffect called ${storedValue}`)
+        if (storedValue) {
+            setGDriveExcelName(storedValue);
         }
-        console.log("_listingType", _listingType);
-        setExcelGDrive(_listingType || ExecType.GenExcelOfGoogleDriveLink);
-    };
+    }, []);
+
     return (
         <Box display="flex" gap={4} mb={2} flexDirection="row">
 
@@ -40,14 +24,8 @@ const ExecLauncherSix: React.FC = () => {
                     buttonText="Create G-Drive Excel"
                     placeholder='Enter Google Drive Link(s)/Identifiers as csv'
                     secondTextBoxPlaceHolder='Enter Folder Name (not path)'
-                    execType={excelGDrive}
+                    execType={ExecType.GenExcelOfGoogleDriveLinkForAll}
                     css={{ minWidth: "23vw" }}
-                    reactComponent={<>
-                        <RadioGroup aria-label="fileType" name="fileType" value={excelGDrive} onChange={handleChange} row>
-                            <FormControlLabel value={ExecType.GenExcelOfGoogleDriveLink} control={<Radio />} label="ALL" />
-                            <FormControlLabel value={ExecType.GenExcelOfGoogleDriveLinkForReduced} control={<Radio />} label="REDUCED" />
-                        </RadioGroup>
-                    </>}
                 />
 
                 <Box>
