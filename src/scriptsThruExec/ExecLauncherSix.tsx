@@ -26,6 +26,7 @@ const ExecLauncherSix: React.FC = () => {
                     secondTextBoxPlaceHolder='Enter Folder Name (not path)'
                     execType={ExecType.GenExcelOfGoogleDriveLinkForAll}
                     css={{ minWidth: "23vw" }}
+                    dafaultValueText1={gDriveExcelName}
                 />
 
                 <Box>

@@ -29,7 +29,8 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
   userInputOneInfo = "",
   userInputTwoInfo = "",
   userInputThreeInfo = "",
-  secondComponentRequired = true
+  secondComponentRequired = true,
+  dafaultValueText1: dafaultValeText1=""
 }) => {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const { register, handleSubmit, formState: { errors }, reset } = useForm<ExecComponentFormData>();
@@ -73,7 +74,8 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
                 {...register('userInput', { required: "This field is required" })}
                 error={Boolean(errors.userInput)}
                 sx={{ marginRight: "30px", marginBottom: "20px", ...css }}
-                helperText={errors.userInput?.message} />
+                helperText={errors.userInput?.message} 
+                defaultValue={dafaultValeText1} />
               {userInputOneInfo && <InfoIconWithTooltip input={userInputOneInfo} />
               }
             </Box>

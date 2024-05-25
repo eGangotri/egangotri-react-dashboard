@@ -23,6 +23,7 @@ export type ExecComponentProps = {
     userInputTwoInfo ?:string;
     userInputThreeInfo ?:string;
     secondComponentRequired ?:boolean
+    dafaultValueText1 ?:string
 };
 
 export type ExecResponse = {
