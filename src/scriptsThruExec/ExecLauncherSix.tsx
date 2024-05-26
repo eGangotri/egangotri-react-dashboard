@@ -67,7 +67,7 @@ const ExecLauncherSix: React.FC = () => {
 
                 <ExecComponent
                     buttonText="Upload to G-Drive based on Missed Files in Diff Excel"
-                    placeholder='NOT-FUNCTIONAL. Absolute Path to Diff Excel'
+                    placeholder='Absolute Path to Diff Excel'
                     secondTextBoxPlaceHolder='G-Drive Root Folder for Upload'
                     execType={ExecType.UPLOAD_MISSED_TO_GDRIVE}
                     css={{ minWidth: "33vw" }}
