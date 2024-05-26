@@ -86,6 +86,7 @@ export enum ExecType {
   COMPARE_UPLOADS_VIA_EXCEL_V3_WITH_ARCHIVE_ORG = 211,
 
   COMPARE_G_DRIVE_AND_LOCAL_EXCEL = 212,
+  UPLOAD_MISSED_TO_GDRIVE = 213,
 
 }
 
@@ -369,6 +370,14 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         },
           `searchGDriveDB/compareGDriveAndLocalExcel`);
         break;
+
+        case ExecType.UPLOAD_MISSED_TO_GDRIVE:
+          _resp = await makePostCallWithErrorHandling({
+            diffExcel: replaceQuotes(dataUserInput).trim(),
+            gDriveRoot: replaceQuotes(dataUserInput2).trim(),
+          },
+            `searchGDriveDB/uploadToGDriveBasedOnDiffExcel`);
+          break;
 
       default:
         _resp = {}

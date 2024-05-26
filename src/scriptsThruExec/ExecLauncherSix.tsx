@@ -58,12 +58,19 @@ const ExecLauncherSix: React.FC = () => {
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
                 <ExecComponent
                     buttonText="Compare G-Drive and Local Excel"
-                    placeholder='Absolute Path to G-Drive Excel Folder'
-                    secondTextBoxPlaceHolder='Absolute Path to Local Excel Folder'
+                    placeholder='Absolute Path to G-Drive Excel'
+                    secondTextBoxPlaceHolder='Absolute Path to Local Excel'
                     execType={ExecType.COMPARE_G_DRIVE_AND_LOCAL_EXCEL}
                     css={{ minWidth: "33vw" }}
                     css2={{ minWidth: "35vw" }}
-                    userInputOneInfo="It will pick the latest Excel from the Folders"
+                />
+
+                <ExecComponent
+                    buttonText="Upload to G-Drive based on Missed Files in Diff Excel"
+                    placeholder='NOT-FUNCTIONAL. Absolute Path to Diff Excel'
+                    secondTextBoxPlaceHolder='G-Drive Root Folder for Upload'
+                    execType={ExecType.UPLOAD_MISSED_TO_GDRIVE}
+                    css={{ minWidth: "33vw" }}
                 />
 
             </Box>
