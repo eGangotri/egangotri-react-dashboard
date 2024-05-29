@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
@@ -11,8 +11,6 @@ import ExecResponsePanel from './ExecResponsePanel';
 import { ExecComponentFormData, ExecComponentProps } from './types';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
-import { FaInfoCircle } from 'react-icons/fa';
-import ItemToolTip from 'widgets/ItemTooltip';
 import InfoIconWithTooltip from 'widgets/InfoIconWithTooltip';
 
 const ExecComponent: React.FC<ExecComponentProps> = ({
@@ -23,6 +21,7 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
   thirdTextBoxPlaceHolder = "",
   thirdTextBoxDefaultValue = "",
   reactComponent = <></>,
+  thirdButton = <></>,
   css = {},
   css2 = {},
   css3 = {},
@@ -30,10 +29,11 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
   userInputTwoInfo = "",
   userInputThreeInfo = "",
   secondComponentRequired = true,
-  dafaultValueText1: dafaultValeText1=""
+  textBoxOneValue = "",
+  textBoxTwoValue = ""
 }) => {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
-  const { register, handleSubmit, formState: { errors }, reset } = useForm<ExecComponentFormData>();
+  const { register, handleSubmit, setValue, formState: { errors }, reset } = useForm<ExecComponentFormData>();
   const [openDialog, setOpenDialog] = React.useState<boolean>(false);
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
   const open = Boolean(anchorEl);
@@ -58,6 +58,15 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
   }
   const id = open ? 'simple-popover' : undefined;
 
+  useEffect(() => {
+    setValue('userInput', textBoxOneValue);
+  }, [textBoxOneValue, setValue]);
+
+
+  useEffect(() => {
+    setValue('userInputSecond', textBoxTwoValue);
+  }, [textBoxTwoValue, setValue]);
+
   const onSubmit = async (data: ExecComponentFormData) => {
     setOpenDialog(true);
     setFormData(data)
@@ -74,8 +83,8 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
                 {...register('userInput', { required: "This field is required" })}
                 error={Boolean(errors.userInput)}
                 sx={{ marginRight: "30px", marginBottom: "20px", ...css }}
-                helperText={errors.userInput?.message} 
-                defaultValue={dafaultValeText1} />
+                helperText={errors.userInput?.message}
+              />
               {userInputOneInfo && <InfoIconWithTooltip input={userInputOneInfo} />
               }
             </Box>
@@ -170,6 +179,7 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
             <Button variant="contained" color="primary" type="reset" onClick={() => reset()} sx={{ marginRight: "10px", marginBottom: "10px" }}>
               Reset
             </Button>
+            {thirdButton}
           </Box>
         </form>
         <UploadDialog openDialog={openDialog}

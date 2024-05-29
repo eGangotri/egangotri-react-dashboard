@@ -23,7 +23,9 @@ export type ExecComponentProps = {
     userInputTwoInfo ?:string;
     userInputThreeInfo ?:string;
     secondComponentRequired ?:boolean
-    dafaultValueText1 ?:string
+    textBoxOneValue ?:string;
+    textBoxTwoValue ?:string;
+    thirdButton ?: JSX.Element;
 };
 
 export type ExecResponse = {

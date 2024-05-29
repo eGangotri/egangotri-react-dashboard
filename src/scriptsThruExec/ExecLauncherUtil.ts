@@ -17,7 +17,7 @@ import {
 } from "service/launchYarn";
 
 import { ExecComponentFormData, ExecResponseDetails } from "./types";
-import { makePostCallForGenExcelForGDrive, makePostCallWithErrorHandling, verifyUploadStatusForUploadCycleId } from "service/BackendFetchService";
+import { makePostCallForGDriveExcelTrack, makePostCallForGenExcelForGDrive, makePostCallWithErrorHandling, verifyUploadStatusForUploadCycleId } from "service/BackendFetchService";
 import { downloadFromExcelUsingFrontEnd } from "service/launchFrontEnd";
 import { replaceQuotes } from "mirror/utils";
 import { handleYarnListingGeneration } from "./Utils";
@@ -364,7 +364,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         break;
 
       case ExecType.COMPARE_G_DRIVE_AND_LOCAL_EXCEL:
-        _resp = await makePostCallWithErrorHandling({
+        _resp = await makePostCallForGDriveExcelTrack({
           gDriveExcel: replaceQuotes(dataUserInput).trim(),
           localExcel: replaceQuotes(dataUserInput2).trim(),
         },

@@ -63,6 +63,21 @@ export const makePostCallForGenExcelForLocal = async (body: Record<string, unkno
   return result;
 }
 
+export const makePostCallForGDriveExcelTrack = async (body: Record<string, unknown>, resource: string) => {
+  const result = await makePostCallWithErrorHandling(body, resource);
+
+  let excelName = result?.["0"]?.excelName;
+  console.log(`excelName ${excelName}`)
+  // Store value
+  if (excelName) {
+    localStorage.setItem('gDriveIntegrityCheckExcel', excelName);
+    // Retrieve value
+    let value = localStorage.getItem('gDriveIntegrityCheckExcel');
+    console.log(value); // Outputs: value
+  }
+  return result;
+}
+
 export const getUploadStatusData = async (limit: number,
   forQueues = false,
   uploadCycleId = "",

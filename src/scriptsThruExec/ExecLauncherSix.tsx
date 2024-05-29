@@ -2,19 +2,35 @@ import React, { ChangeEvent, useEffect, useState } from 'react';
 import ExecComponent from './ExecComponent';
 import Box from '@mui/material/Box';
 import { ExecType } from './ExecLauncherUtil';
-import { FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material';
+import { Button, FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material';
 
 
 const ExecLauncherSix: React.FC = () => {
     const [gDriveExcelName, setGDriveExcelName] = useState('');
+    const [localListingExcelName, setLocalListingExcelName] = useState('');
+    const [gDriveIntegrityCheckExcel, setGDriveIntegrityCheckExcel] = useState(''); 
 
-    useEffect(() => {
+    const loadFromLocalStorage = () => {
         let storedValue = localStorage.getItem('gDriveExcelName');
-        console.log(`useEffect called ${storedValue}`)
+        console.log(`loadFromLocalStorage called ${storedValue}`)
         if (storedValue) {
-            setGDriveExcelName(storedValue);
+            setGDriveExcelName(storedValue || "-");
         }
-    }, []);
+
+        let storedValue2 = localStorage.getItem('localListingExcelName');
+        console.log(`loadFromLocalStorage called ${storedValue2}`)
+        if (storedValue2) {
+            setLocalListingExcelName(storedValue2);
+        }
+    }
+
+    const loadFromLocalStorage2 = () => {
+        let storedValue = localStorage.getItem('gDriveIntegrityCheckExcel');
+        console.log(`gDriveIntegrityCheckExcel called ${storedValue}`)
+        if (storedValue) {
+            setGDriveIntegrityCheckExcel(storedValue || "-");
+        }
+    }
 
     return (
         <Box display="flex" gap={4} mb={2} flexDirection="row">
@@ -26,7 +42,6 @@ const ExecLauncherSix: React.FC = () => {
                     secondTextBoxPlaceHolder='Enter Folder Name (not path)'
                     execType={ExecType.GenExcelOfGoogleDriveLinkForAll}
                     css={{ minWidth: "23vw" }}
-                    dafaultValueText1={gDriveExcelName}
                 />
 
                 <Box>
@@ -52,7 +67,8 @@ const ExecLauncherSix: React.FC = () => {
                     userInputOneInfo="Make Sure Snap2HTML.exe is set in the Path"
                     secondTextBoxPlaceHolder='Enter Threshhold value'
                     css={{ width: "250px" }}
-                    execType={ExecType.SNAP_TO_HTML} />
+                    execType={ExecType.SNAP_TO_HTML}
+                />
             </Box>
 
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
@@ -63,6 +79,9 @@ const ExecLauncherSix: React.FC = () => {
                     execType={ExecType.COMPARE_G_DRIVE_AND_LOCAL_EXCEL}
                     css={{ minWidth: "33vw" }}
                     css2={{ minWidth: "35vw" }}
+                    textBoxOneValue={gDriveExcelName}
+                    textBoxTwoValue={localListingExcelName}
+                    thirdButton={<Button variant="contained" color="primary" onClick={loadFromLocalStorage} sx={{ marginRight: "10px", marginBottom: "10px" }}>Load From Local Storage</Button>}
                 />
 
                 <ExecComponent
@@ -71,6 +90,9 @@ const ExecLauncherSix: React.FC = () => {
                     secondTextBoxPlaceHolder='G-Drive Root Folder for Upload'
                     execType={ExecType.UPLOAD_MISSED_TO_GDRIVE}
                     css={{ minWidth: "33vw" }}
+                    textBoxOneValue={gDriveIntegrityCheckExcel}
+                    thirdButton={<Button variant="contained" color="primary" onClick={loadFromLocalStorage2} sx={{ marginRight: "10px", marginBottom: "10px" }}>Load From Local Storage</Button>}
+
                 />
 
             </Box>
