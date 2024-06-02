@@ -30,7 +30,8 @@ export enum ExecType {
   MoveFolderContents = 2,
   ReverseMove = 31,
   SNAP_TO_HTML = 32,
-  LONGER_THANKTHRESHOLD = 33,
+  FILE_NAME_LENGTH = 33,
+  FILE_NAME_LENGTH_INCLUDING_PATH = 34,
   LoginToArchive = 4,
   UseBulkRenameConventions = 5,
   DownloadGoogleDriveLink = 6,
@@ -296,6 +297,25 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         });
         break;
 
+      case ExecType.FILE_NAME_LENGTH:
+        _resp = await makePostCallWithErrorHandling({
+          folder: dataUserInput,
+          topN: dataUserInput2,
+          includePathInCalc: false
+        },
+          `fileUtil/topLongFileNames`,);
+        break;
+
+
+      case ExecType.FILE_NAME_LENGTH_INCLUDING_PATH:
+        _resp = await makePostCallWithErrorHandling({
+          folder: dataUserInput,
+          topN: dataUserInput2,
+          includePathInCalc: true
+        },
+          `fileUtil/topLongFileNames`,);
+        break;
+
 
       case ExecType.COMBINE_GDRIVE_AND_REDUCED_PDF_DRIVE_EXCELS:
         _resp = await makePostCallWithErrorHandling({
@@ -371,13 +391,13 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
           `searchGDriveDB/compareGDriveAndLocalExcel`);
         break;
 
-        case ExecType.UPLOAD_MISSED_TO_GDRIVE:
-          _resp = await makePostCallWithErrorHandling({
-            diffExcel: replaceQuotes(dataUserInput).trim(),
-            gDriveRoot: replaceQuotes(dataUserInput2).trim(),
-          },
-            `searchGDriveDB/uploadToGDriveBasedOnDiffExcel`);
-          break;
+      case ExecType.UPLOAD_MISSED_TO_GDRIVE:
+        _resp = await makePostCallWithErrorHandling({
+          diffExcel: replaceQuotes(dataUserInput).trim(),
+          gDriveRoot: replaceQuotes(dataUserInput2).trim(),
+        },
+          `searchGDriveDB/uploadToGDriveBasedOnDiffExcel`);
+        break;
 
       default:
         _resp = {}

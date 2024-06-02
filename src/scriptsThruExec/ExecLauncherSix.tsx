@@ -2,13 +2,22 @@ import React, { ChangeEvent, useEffect, useState } from 'react';
 import ExecComponent from './ExecComponent';
 import Box from '@mui/material/Box';
 import { ExecType } from './ExecLauncherUtil';
-import { Button, FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material';
+import { Button, Checkbox, FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material';
 
 
 const ExecLauncherSix: React.FC = () => {
     const [gDriveExcelName, setGDriveExcelName] = useState('');
     const [localListingExcelName, setLocalListingExcelName] = useState('');
     const [gDriveIntegrityCheckExcel, setGDriveIntegrityCheckExcel] = useState(''); 
+
+    const [includeFilePath, setIncludeFilePath] = useState(false);
+    const [fileNameLongerCheck, setFileNameLongerCheck] = useState(ExecType.FILE_NAME_LENGTH);
+
+    const handleIncludeFilePath = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setIncludeFilePath(event.target.checked);
+        setFileNameLongerCheck(event.target.checked === true ? ExecType.FILE_NAME_LENGTH_INCLUDING_PATH : ExecType.FILE_NAME_LENGTH);
+
+    };
 
     const loadFromLocalStorage = () => {
         let storedValue = localStorage.getItem('gDriveExcelName');
@@ -62,12 +71,18 @@ const ExecLauncherSix: React.FC = () => {
                 />
 
                 <ExecComponent
-                    buttonText="Find Files longer than Threshhold"
+                    buttonText="Find Top N longest File Names in Folder"
                     placeholder='Folder Abs Path? Not Tested. Not Functional Maybe?'
                     userInputOneInfo="Make Sure Snap2HTML.exe is set in the Path"
-                    secondTextBoxPlaceHolder='Enter Threshhold value'
+                    secondTextBoxPlaceHolder='TopN Files to Display'
                     css={{ width: "250px" }}
-                    execType={ExecType.SNAP_TO_HTML}
+                    execType={fileNameLongerCheck}
+                    reactComponent={<Box>
+                        <FormControlLabel
+                            control={<Checkbox checked={includeFilePath} onChange={handleIncludeFilePath} />}
+                            label="ALL- Not Just PDFs"
+                        />
+                    </Box>}
                 />
             </Box>
 
@@ -87,7 +102,7 @@ const ExecLauncherSix: React.FC = () => {
                 <ExecComponent
                     buttonText="Upload to G-Drive based on Missed Files in Diff Excel"
                     placeholder='Absolute Path to Diff Excel'
-                    secondTextBoxPlaceHolder='G-Drive Root Folder for Upload'
+                    secondTextBoxPlaceHolder='G-Drive Link for upload'
                     execType={ExecType.UPLOAD_MISSED_TO_GDRIVE}
                     css={{ minWidth: "33vw" }}
                     textBoxOneValue={gDriveIntegrityCheckExcel}
