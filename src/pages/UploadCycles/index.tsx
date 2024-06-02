@@ -51,7 +51,7 @@ const UploadCycles = () => {
     const [openDialog, setOpenDialog] = useState<boolean>(false);
     const [openDialogForReuploadMissed, setOpenDialogForReuploadMissed] = useState<boolean>(false);
     const [openDialogForReuploadFailed, setOpenDialogForReuploadFailed] = useState<boolean>(false);
-    const [chosenProfilesForMove, setChosenProfilesForMove] = useState<string[]>([]);
+    const [chosenProfilesForMove, setChosenProfilesForMove] = useState<[string, string[]]>(["", []]);
     const [reuploadables, setReuploadables] = useState<UploadCycleTableData>();
 
     const handleTitleClick = (event: React.MouseEvent<HTMLButtonElement>, absolutePaths: string[]) => {
@@ -103,9 +103,9 @@ const UploadCycles = () => {
         setAnchorEl3(currentTarget);
     };
 
-    const showDialog = (event: React.MouseEvent<HTMLButtonElement>, profiles: string[]) => {
+    const showDialog = (event: React.MouseEvent<HTMLButtonElement>, uploadCycleId: string, profiles: string[]) => {
         setOpenDialog(true);
-        setChosenProfilesForMove(profiles);
+        setChosenProfilesForMove([uploadCycleId, profiles]);
     }
 
     const showDialogReuploadMissed = (event: React.MouseEvent<HTMLButtonElement>, row: UploadCycleTableData) => {
@@ -123,12 +123,11 @@ const UploadCycles = () => {
         setOpenDialog(false)
         console.log(`_profiles ${chosenProfilesForMove} ${JSON.stringify(chosenProfilesForMove)}`)
         setIsLoading(true);
-        const _resp = await launchYarnMoveToFreeze(
-            {
-                profileAsCSV: chosenProfilesForMove.join(","),
-                flatten: "true"
-            }
-        )
+        const _resp = await launchYarnMoveToFreeze({
+            profileAsCSV: chosenProfilesForMove[1]?.join(","),
+            uploadCycleId: chosenProfilesForMove[0],
+            flatten: "true"
+        });
         setIsLoading(false);
         const moveToFreezeRespPanel = (
             <ExecResponsePanel response={_resp} />
@@ -155,7 +154,7 @@ const UploadCycles = () => {
         console.log(`_res ${JSON.stringify(_res)}`)
         setIsLoading(false);
         setTitlesForPopover(<>{_res}</>);
-       // console.log("handleTitleClick: " + event.currentTarget)
+        // console.log("handleTitleClick: " + event.currentTarget)
         //setAnchorEl(event.currentTarget);
 
     }
@@ -341,10 +340,10 @@ const UploadCycles = () => {
                     <Typography component="span">
                         <Button
                             variant="contained"
-                            onClick={(e) => showDialog(e, row.archiveProfileAndCount.map((arcProfAndCount: ArchiveProfileAndCount) => arcProfAndCount.archiveProfile))}
+                            onClick={(e) => showDialog(e,row.uploadCycleId, row.archiveProfileAndCount.map((arcProfAndCount: ArchiveProfileAndCount) => arcProfAndCount.archiveProfile))}
                             size="small"
                             sx={{ width: "200px", marginTop: "10px" }}
-                            disabled={isLoading}
+                            disabled={isLoading || (row?.moveToFreeze === true)}
                         >
                             Yarn Move to Freeze Uploaded
                         </Button>
