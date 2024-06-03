@@ -59,6 +59,9 @@ const ExecLauncherSix: React.FC = () => {
                             <li>1. Generate Excel of Google Drive Links</li>
                             <li>2. Generate Excel of Local</li>
                             <li>3. Compare Excel 1-2</li>
+                            <li>4. Under Construction. Ability to upload based on Excel in Step-3</li>
+                            <li>When uploading to G-Drive any filename longer than 255 will unindicated fail upload.</li>
+                            <li>Use "Find TopN Longest FileNames: utility to find the offending entries and reduce to less than 255</li>
                         </ol>
                     </Typography>
                 </Box>
