@@ -33,12 +33,11 @@ const ExecLauncherFour: React.FC = () => {
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
 
                 <ExecComponent
-                    buttonText="Find Files longer than Threshhold"  
+                    buttonText="Find Duplicates by File Size"  
                     placeholder='Folder Abs Path'
-                    userInputOneInfo="Make Sure Snap2HTML.exe is set in the Path"
-                    secondTextBoxPlaceHolder='Enter Threshhold value'
+                    secondTextBoxPlaceHolder='Folder Abs Path'
                     css={{ width: "250px" }}
-                    execType={ExecType.SNAP_TO_HTML} />
+                    execType={ExecType.DUPLICATES_BY_FILE_SIZE} />
 
               
             </Box>
