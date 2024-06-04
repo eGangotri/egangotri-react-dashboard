@@ -18,7 +18,8 @@ export async function launchGoogleDriveDownload(googleDriveLink: string,
     profile: string): Promise<ExecResponseDetails> {
     const result = await makePostCallWithErrorHandling({
         "googleDriveLink": googleDriveLink,
-        "profile": profile
+        "profile": profile,
+        ignoreFolder: "XQAZSWQ"
     }, `yarn/downloadFromGoogleDrive`)
     return result;
 }
