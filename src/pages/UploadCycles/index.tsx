@@ -298,7 +298,7 @@ const UploadCycles = () => {
                                 disabled={isLoading}
 
                             >
-                                Find Missing (Unqueued/Unushered)
+                                Find Missing (Unqueued/Unushered) Failure Type 1
                             </Button>
                             <Popover
                                 id={id2}
@@ -322,7 +322,7 @@ const UploadCycles = () => {
                                 sx={{ color: "#f38484", width: "200px", marginTop: "10px" }}
                                 disabled={isLoading}
                             >
-                                Reupload Failed (Queued/Ushered/But Didnt Make it)
+                                Reupload Failed (Queued/Ushered/But Didnt Make it). Failure Type 2
                             </Button>
                             <Popover
                                 id={idReuplodFailing}
