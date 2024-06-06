@@ -3,7 +3,7 @@ import ExecComponent from './ExecComponent';
 import Box from '@mui/material/Box';
 import { ExecType } from './ExecLauncherUtil';
 import { Button, Checkbox, FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material';
-import { ALL_NOT_JUST_PDF_SUFFIX, GDRIVE_EXCEL_NAME_LOCAL_STORAGE_KEY } from 'service/consts';
+import { ALL_NOT_JUST_PDF_SUFFIX, GDRIVE_EXCEL_NAME_LOCAL_STORAGE_KEY, LOCAL_LISTING_EXCEL_LOCAL_STORAGE_KEY } from 'service/consts';
 
 
 const ExecLauncherSix: React.FC = () => {
@@ -28,7 +28,7 @@ const ExecLauncherSix: React.FC = () => {
             setGDriveExcelName(storedValue || "-");
         }
 
-        let storedValue2 = localStorage.getItem('localListingExcelName');
+        let storedValue2 = localStorage.getItem(LOCAL_LISTING_EXCEL_LOCAL_STORAGE_KEY);
         console.log(`loadFromLocalStorage called ${storedValue2}`)
         if (storedValue2) {
             setLocalListingExcelName(storedValue2);

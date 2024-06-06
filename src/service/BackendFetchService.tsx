@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 import { SelectedUploadItem } from "mirror/types"
 import { ExecResponseDetails } from "scriptsThruExec/types";
 import { makePostCall } from "mirror/utils";
-import { ALL_NOT_JUST_PDF_SUFFIX, COMBINATION_EXCEL_PATH_LOCAL_STORAGE_KEY, GDRIVE_EXCEL_NAME_LOCAL_STORAGE_KEY, REDUCED_SUFFIX, TOP_N_FILE_LOCAL_STORAGE_KEY } from "./consts";
+import { ALL_NOT_JUST_PDF_SUFFIX, COMBINATION_EXCEL_PATH_LOCAL_STORAGE_KEY, GDRIVE_EXCEL_NAME_LOCAL_STORAGE_KEY, LOCAL_LISTING_EXCEL_LOCAL_STORAGE_KEY, REDUCED_SUFFIX, TOP_N_FILE_LOCAL_STORAGE_KEY } from "./consts";
 const QUEUE_API_PREFIX = "itemsQueued";
 const USHERED_API_PREFIX = "itemsushered";
 
@@ -29,8 +29,7 @@ export const makeGetCall = async (resource: string) => {
 
 export const makePostCallWithErrorHandling = async (body: Record<string, unknown>, resource: string) => {
   const result = await makePostCall(body, backendServer + resource)
-  const _result = result.response;
-  console.log(`_result ${JSON.stringify(_result)}`)
+  console.log(`result.response ${JSON.stringify(result.response)}`)
   return {
     ...result
   } as ExecResponseDetails;
@@ -38,10 +37,13 @@ export const makePostCallWithErrorHandling = async (body: Record<string, unknown
 
 export const makePostCallForGenExcelForGDrive = async (body: Record<string, unknown>, resource: string) => {
   const result = await makePostCallWithErrorHandling(body, resource)
+  const response = result?.response;
+  const _reduced = response?.reduced === "Yes";
+  const _allNotJustPdfs = response?.allNotJustPdfs === "Yes";
 
-  const _reduced = result?.reduced === "Yes";
-  const _allNotJustPdfs = result?.allNotJustPdfs === "YES";
-  let excelName = result?.["0"]?.excelName;
+  console.log(`makePostCallForGenExcelForGDrive: ${JSON.stringify(result)} 
+  _reduced ${_reduced} _allNotJustPdfs ${_allNotJustPdfs}`)
+  let excelName = response?.["0"]?.excelName;
 
   let localStorageKey = GDRIVE_EXCEL_NAME_LOCAL_STORAGE_KEY;
   if (_reduced) {
@@ -67,13 +69,13 @@ export const makePostCallForGenExcelForLocal = async (body: Record<string, unkno
   let excelName = result?.["0"]?.excelName;
   console.log(`excelName ${excelName}`)
   // Store value
-  localStorage.setItem('localListingExcelName', excelName);
+  localStorage.setItem(LOCAL_LISTING_EXCEL_LOCAL_STORAGE_KEY, excelName);
 
   // Retrieve value
-  let value = localStorage.getItem('localListingExcelName');
+  let value = localStorage.getItem(LOCAL_LISTING_EXCEL_LOCAL_STORAGE_KEY);
 
   console.log(value); // Outputs: value
-  console.log(`localListingExcelName: ${value}`);
+  console.log(`${LOCAL_LISTING_EXCEL_LOCAL_STORAGE_KEY}: ${value}`);
 
   return result;
 }
