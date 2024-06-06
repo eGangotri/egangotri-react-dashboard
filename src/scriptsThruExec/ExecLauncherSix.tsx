@@ -20,7 +20,8 @@ const ExecLauncherSix: React.FC = () => {
     };
 
     const loadFromLocalStorage = () => {
-        let storedValue = localStorage.getItem('gDriveExcelName');
+        let storedValue = localStorage.getItem(`${GDRIVE_EXCEL_NAME_LOCAL_STORAGE_KEY}${ALL_NOT_JUST_PDF_SUFFIX}`);
+
         console.log(`loadFromLocalStorage called ${storedValue}`)
         if (storedValue) {
             setGDriveExcelName(storedValue || "-");

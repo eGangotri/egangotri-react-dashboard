@@ -17,7 +17,7 @@ import {
 } from "service/launchYarn";
 
 import { ExecComponentFormData, ExecResponseDetails } from "./types";
-import { makePostCallForGDriveExcelTrack, makePostCallForGenExcelForGDrive, makePostCallWithErrorHandling, verifyUploadStatusForUploadCycleId } from "service/BackendFetchService";
+import { makePostCallForCombineGDriveAndReducedPdfExcels, makePostCallForGDriveExcelTrack, makePostCallForGenExcelForGDrive, makePostCallForTopN, makePostCallWithErrorHandling, verifyUploadStatusForUploadCycleId } from "service/BackendFetchService";
 import { downloadFromExcelUsingFrontEnd } from "service/launchFrontEnd";
 import { replaceQuotes } from "mirror/utils";
 import { handleYarnListingGeneration } from "./Utils";
@@ -32,7 +32,7 @@ export enum ExecType {
   SNAP_TO_HTML = 32,
   FILE_NAME_LENGTH = 33,
   FILE_NAME_LENGTH_INCLUDING_PATH = 34,
-  DUPLICATES_BY_FILE_SIZE=35,
+  DUPLICATES_BY_FILE_SIZE = 35,
   LoginToArchive = 4,
   UseBulkRenameConventions = 5,
   DownloadGoogleDriveLink = 6,
@@ -113,8 +113,8 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
   data: ExecComponentFormData): Promise<ExecResponseDetails> => {
   let _resp: ExecResponseDetails = {}
   const dataUserInput = replaceQuotes(data.userInput)?.trim();
-  const dataUserInput2 = replaceQuotes(data.userInputSecond|| "")?.trim() ;
-  const dataUserInput3 = replaceQuotes(data.userInputThird|| "")?.trim() ;
+  const dataUserInput2 = replaceQuotes(data.userInputSecond || "")?.trim();
+  const dataUserInput3 = replaceQuotes(data.userInputThird || "")?.trim();
   console.log(`data.userInput ${dataUserInput} 
   dataUserInput2 ${dataUserInput2}
   dataUserInput3 ${dataUserInput3}
@@ -239,7 +239,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         break;
 
       case ExecType.GenExcelOfGoogleDriveLinkForReduced:
-        _resp = await makePostCallWithErrorHandling({
+        _resp = await makePostCallForGenExcelForGDrive({
           "googleDriveLink": dataUserInput,
           "folderName": data.userInputSecond || "D:\\",
           "reduced": true,
@@ -291,11 +291,11 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         break;
 
       case ExecType.GET_FIRST_N_PAGES:
-        _resp = await makePostCallToPath(`yarnListMaker/getFirstAndLastNPages`, {
+        _resp = await makePostCallForTopN({
           srcFolders: dataUserInput,
           destRootFolder: dataUserInput2,
           nPages: dataUserInput3,
-        });
+        }, `yarnListMaker/getFirstAndLastNPages`);
         break;
 
       case ExecType.FILE_NAME_LENGTH:
@@ -318,21 +318,22 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         break;
 
 
-        case ExecType.DUPLICATES_BY_FILE_SIZE:
-          _resp = await makePostCallWithErrorHandling({
-            folder1: dataUserInput,
-            folder2: dataUserInput2,
-          },
-            `fileUtil/duplicatesByFileSize`,);
-          break;
-  
-        
-      case ExecType.COMBINE_GDRIVE_AND_REDUCED_PDF_DRIVE_EXCELS:
+      case ExecType.DUPLICATES_BY_FILE_SIZE:
         _resp = await makePostCallWithErrorHandling({
-          mainExcelPath: dataUserInput,
-          secondaryExcelPath: dataUserInput2,
-          destExcelPath: dataUserInput3,
+          folder1: dataUserInput,
+          folder2: dataUserInput2,
         },
+          `fileUtil/duplicatesByFileSize`,);
+        break;
+
+
+      case ExecType.COMBINE_GDRIVE_AND_REDUCED_PDF_DRIVE_EXCELS:
+        _resp = await makePostCallForCombineGDriveAndReducedPdfExcels(
+          {
+            mainExcelPath: dataUserInput,
+            secondaryExcelPath: dataUserInput2,
+            destExcelPath: dataUserInput3,
+          },
           `yarnListMaker/combineGDriveAndReducedPdfExcels`);
         break;
 

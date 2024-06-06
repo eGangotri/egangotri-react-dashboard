@@ -3,6 +3,7 @@ import * as _ from 'lodash';
 import { SelectedUploadItem } from "mirror/types"
 import { ExecResponseDetails } from "scriptsThruExec/types";
 import { makePostCall } from "mirror/utils";
+import { ALL_NOT_JUST_PDF_SUFFIX, COMBINATION_EXCEL_PATH_LOCAL_STORAGE_KEY, GDRIVE_EXCEL_NAME_LOCAL_STORAGE_KEY, REDUCED_SUFFIX, TOP_N_FILE_LOCAL_STORAGE_KEY } from "./consts";
 const QUEUE_API_PREFIX = "itemsQueued";
 const USHERED_API_PREFIX = "itemsushered";
 
@@ -37,14 +38,26 @@ export const makePostCallWithErrorHandling = async (body: Record<string, unknown
 
 export const makePostCallForGenExcelForGDrive = async (body: Record<string, unknown>, resource: string) => {
   const result = await makePostCallWithErrorHandling(body, resource)
+
+  const _reduced = result?.reduced === "Yes";
+  const _allNotJustPdfs = result?.allNotJustPdfs === "YES";
   let excelName = result?.["0"]?.excelName;
-  console.log(`excelName ${excelName}`)
+
+  let localStorageKey = GDRIVE_EXCEL_NAME_LOCAL_STORAGE_KEY;
+  if (_reduced) {
+    localStorageKey = localStorageKey + REDUCED_SUFFIX;
+  }
+  if (_allNotJustPdfs) {
+    localStorageKey = localStorageKey + ALL_NOT_JUST_PDF_SUFFIX;
+  }
+
+  console.log(`makePostCallForGenExcelForGDrive:excelName ${excelName} for storing in ${localStorageKey}`)
   if (excelName !== undefined) {
     // Store value
-    localStorage.setItem('gDriveExcelName', excelName);
+    localStorage.setItem(localStorageKey, excelName);
   }
   // Retrieve value
-  let gDriveExcelName = localStorage.getItem('gDriveExcelName');
+  let gDriveExcelName = localStorage.getItem(localStorageKey);
   console.log(`gDriveExcelName: ${gDriveExcelName}`);
   return result;
 }
@@ -64,6 +77,42 @@ export const makePostCallForGenExcelForLocal = async (body: Record<string, unkno
 
   return result;
 }
+
+export const makePostCallForTopN = async (body: Record<string, unknown>, resource: string) => {
+  const result = await makePostCallWithErrorHandling(body, resource)
+  let destRootFolder = result?.response?.destRootFolder;
+
+  console.log(`destRootFolder ${JSON.stringify(result)}}`)
+  console.log(`destRootFolder ${destRootFolder}`)
+  // Store value
+  localStorage.setItem(TOP_N_FILE_LOCAL_STORAGE_KEY, destRootFolder);
+
+  // Retrieve value
+  let value = localStorage.getItem(TOP_N_FILE_LOCAL_STORAGE_KEY);
+
+  console.log(value); // Outputs: value
+  console.log(`destRootFolder: ${value}`);
+
+  return result;
+}
+
+export const makePostCallForCombineGDriveAndReducedPdfExcels = async (body: Record<string, unknown>, resource: string) => {
+  const result = await makePostCallWithErrorHandling(body, resource)
+  let excelName = result?.response?._results?.xlsxFileNameWithPath;
+  console.log(`excelName ${excelName}`)
+  // Store value
+  localStorage.setItem(COMBINATION_EXCEL_PATH_LOCAL_STORAGE_KEY, excelName);
+
+  // Retrieve value
+  let value = localStorage.getItem(COMBINATION_EXCEL_PATH_LOCAL_STORAGE_KEY);
+
+  console.log(value); // Outputs: value
+  console.log(`${COMBINATION_EXCEL_PATH_LOCAL_STORAGE_KEY} ${value}`);
+
+  return result;
+}
+
+
 
 export const makePostCallForGDriveExcelTrack = async (body: Record<string, unknown>, resource: string) => {
   const result = await makePostCallWithErrorHandling(body, resource);
