@@ -112,9 +112,9 @@ export enum AITextIdentifierExecType {
 export const invokeFuncBasedOnExecType = async (execType: ExecType,
   data: ExecComponentFormData): Promise<ExecResponseDetails> => {
   let _resp: ExecResponseDetails = {}
-  const dataUserInput = data.userInput;
-  const dataUserInput2 = data.userInputSecond || "";
-  const dataUserInput3 = data.userInputThird || "";
+  const dataUserInput = replaceQuotes(data.userInput)?.trim();
+  const dataUserInput2 = replaceQuotes(data.userInputSecond|| "")?.trim() ;
+  const dataUserInput3 = replaceQuotes(data.userInputThird|| "")?.trim() ;
   console.log(`data.userInput ${dataUserInput} 
   dataUserInput2 ${dataUserInput2}
   dataUserInput3 ${dataUserInput3}
@@ -144,7 +144,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         _resp = await _launchGradlev2(
           {
             profile: dataUserInput,
-            excelPath: replaceQuotes(dataUserInput2),
+            excelPath: dataUserInput2,
             uploadCycleId: dataUserInput3
           }, "launchUploaderViaExcelV1");
         break;
@@ -153,26 +153,26 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         _resp = await _launchGradlev2(
           {
             profile: dataUserInput,
-            excelPath: replaceQuotes(dataUserInput2),
+            excelPath: dataUserInput2,
             range: dataUserInput3
           }, "launchUploaderViaExcelV3");
         break;
 
       case ExecType.REUPLOAD_USING_JSON:
         _resp = await _launchGradlev2({
-          gradleArgs: `'${replaceQuotes(dataUserInput)}','${dataUserInput3}'`,
+          gradleArgs: `'${dataUserInput}','${dataUserInput3}'`,
         }, "launchUploaderViaJson");
         break;
 
       case ExecType.REUPLOAD_FAILED_USING_UPLOAD_CYCLE_ID:
         _resp = await _launchGradlev2({
-          uploadCycleId: replaceQuotes(dataUserInput),
+          uploadCycleId: dataUserInput,
         }, "launchUploaderViaUploadCycleId");
         break;
 
       case ExecType.REUPLOAD_MISSED_USING_UPLOAD_CYCLE_ID:
         _resp = await _launchGradlev2({
-          uploadCycleId: replaceQuotes(dataUserInput),
+          uploadCycleId: dataUserInput,
         }, "launchUploaderForMissedViaUploadCycleId");
         break;
 
@@ -215,7 +215,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       case ExecType.DirectoryCompare:
         _resp = await makePostCallWithErrorHandling({
           "srcDir": dataUserInput,
-          "destDir": data.userInputSecond,
+          "destDir": dataUserInput2,
         }, `yarn/compareDirectories`);
         break;
 
@@ -310,8 +310,8 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
 
       case ExecType.FILE_NAME_LENGTH_INCLUDING_PATH:
         _resp = await makePostCallWithErrorHandling({
-          folder: replaceQuotes(dataUserInput),
-          topN: replaceQuotes(dataUserInput2),
+          folder: dataUserInput,
+          topN: dataUserInput2,
           includePathInCalc: true
         },
           `fileUtil/topLongFileNames`,);
@@ -320,8 +320,8 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
 
         case ExecType.DUPLICATES_BY_FILE_SIZE:
           _resp = await makePostCallWithErrorHandling({
-            folder1: replaceQuotes(dataUserInput),
-            folder2: replaceQuotes(dataUserInput2),
+            folder1: dataUserInput,
+            folder2: dataUserInput2,
           },
             `fileUtil/duplicatesByFileSize`,);
           break;
@@ -357,15 +357,15 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
 
       case ExecType.IDENTIFY_FAILED_BY_UPLOAD_CYCLE_ID:
         _resp = await makePostCallWithErrorHandling({
-          uploadCycleId: replaceQuotes(dataUserInput),
+          uploadCycleId: dataUserInput,
         }, `uploadCycleRoute/getUploadQueueUploadUsheredMissed`);
         break;
 
 
       case ExecType.MARK_AS_UPLOADED_ENTRIES_IN_ARCHIVE_EXCEL:
         _resp = await makePostCallWithErrorHandling({
-          pathOrUploadCycleId: replaceQuotes(dataUserInput),
-          archiveExcelPath: replaceQuotes(dataUserInput2),
+          pathOrUploadCycleId: dataUserInput,
+          archiveExcelPath: dataUserInput2,
         }, `yarnArchive/markAsUploadedEntriesInArchiveExcel`);
         break;
 
@@ -377,34 +377,34 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         break;
       case ExecType.COMPARE_UPLOADS_VIA_EXCEL_V1_WITH_ARCHIVE_ORG:
         _resp = await makePostCallWithErrorHandling({
-          profileName: replaceQuotes(dataUserInput).trim(),
-          mainExcelPath: replaceQuotes(dataUserInput2).trim(),
-          archiveExcelPath: replaceQuotes(dataUserInput3).trim(),
+          profileName: dataUserInput,
+          mainExcelPath: dataUserInput2,
+          archiveExcelPath: dataUserInput3,
         },
           `yarnArchive/compareUploadsViaExcelV1WithArchiveOrg`);
         break;
 
       case ExecType.COMPARE_UPLOADS_VIA_EXCEL_V3_WITH_ARCHIVE_ORG:
         _resp = await makePostCallWithErrorHandling({
-          profileName: replaceQuotes(dataUserInput).trim(),
-          mainExcelPath: replaceQuotes(dataUserInput2).trim(),
-          archiveExcelPath: replaceQuotes(dataUserInput3).trim(),
+          profileName: dataUserInput,
+          mainExcelPath: dataUserInput2,
+          archiveExcelPath: dataUserInput3,
         },
           `yarnArchive/compareUploadsViaExcelV3WithArchiveOrg`);
         break;
 
       case ExecType.COMPARE_G_DRIVE_AND_LOCAL_EXCEL:
         _resp = await makePostCallForGDriveExcelTrack({
-          gDriveExcel: replaceQuotes(dataUserInput).trim(),
-          localExcel: replaceQuotes(dataUserInput2).trim(),
+          gDriveExcel: dataUserInput,
+          localExcel: dataUserInput2,
         },
           `searchGDriveDB/compareGDriveAndLocalExcel`);
         break;
 
       case ExecType.UPLOAD_MISSED_TO_GDRIVE:
         _resp = await makePostCallWithErrorHandling({
-          diffExcel: replaceQuotes(dataUserInput).trim(),
-          gDriveRoot: replaceQuotes(dataUserInput2).trim(),
+          diffExcel: dataUserInput,
+          gDriveRoot: dataUserInput2,
         },
           `searchGDriveDB/uploadToGDriveBasedOnDiffExcel`);
         break;
