@@ -80,12 +80,11 @@ export const makePostCallForGenExcelForLocal = async (body: Record<string, unkno
 
 export const makePostCallForTopN = async (body: Record<string, unknown>, resource: string) => {
   const result = await makePostCallWithErrorHandling(body, resource)
-  let destRootFolder = result?.response?.destRootFolder;
+  let dumpFolder = result?.response?._results?.dumpFolder;
 
-  console.log(`destRootFolder ${JSON.stringify(result)}}`)
-  console.log(`destRootFolder ${destRootFolder}`)
+  console.log(`dumpFolder ${dumpFolder}`)
   // Store value
-  localStorage.setItem(TOP_N_FILE_LOCAL_STORAGE_KEY, destRootFolder);
+  localStorage.setItem(TOP_N_FILE_LOCAL_STORAGE_KEY, dumpFolder);
 
   // Retrieve value
   let value = localStorage.getItem(TOP_N_FILE_LOCAL_STORAGE_KEY);
