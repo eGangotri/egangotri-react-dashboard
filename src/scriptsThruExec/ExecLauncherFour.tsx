@@ -23,10 +23,14 @@ const ExecLauncherFour: React.FC = () => {
 
 
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
-                <ExecComponent buttonText="jpeg to pdf"
-                    execType={ExecType.UploadPdfs} />
+                <ExecComponent
+                    buttonText="Img Files(jpg/png/tiff) to pdf"
+                    placeholder='Folder Abs Path'
+                    execType={ExecType.IMG_FILES_TO_PDF} />
 
-                <ExecComponent buttonText="Add Header/Footer to PDFs"
+                <ExecComponent
+                    buttonText="Add Header/Footer to PDFs"
+                    placeholder='Folder Abs Path'
                     execType={ExecType.AddHeaderFooter} />
             </Box>
 

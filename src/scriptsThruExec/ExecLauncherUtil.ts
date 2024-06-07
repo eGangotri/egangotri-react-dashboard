@@ -34,6 +34,7 @@ export enum ExecType {
   FILE_NAME_LENGTH_INCLUDING_PATH = 34,
   DUPLICATES_BY_FILE_SIZE = 35,
   RENAME_NON_ASCII_FILE_NAMES_IN_FOLDER = 36,
+  IMG_FILES_TO_PDF = 36,
   LoginToArchive = 4,
   UseBulkRenameConventions = 5,
   DownloadGoogleDriveLink = 6,
@@ -334,6 +335,14 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
           `fileUtil/renameNonAsciiFiles`,);
         break;
 
+        case ExecType.IMG_FILES_TO_PDF:
+          _resp = await makePostCallWithErrorHandling({
+            folder: dataUserInput,
+            script: dataUserInput2,
+          },
+            `fileUtil/imgFilesToPdf`,);
+          break;
+          
       case ExecType.COMBINE_GDRIVE_AND_REDUCED_PDF_DRIVE_EXCELS:
         _resp = await makePostCallForCombineGDriveAndReducedPdfExcels(
           {
