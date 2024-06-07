@@ -7,6 +7,14 @@ import { ChangeEvent } from 'react';
 import { CheckBox } from '@mui/icons-material';
 
 const ExecLauncherFour: React.FC = () => {
+    const [imgType, setImgType] = useState(ExecType.JPG_TO_PDF);
+
+
+    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const _val = event.target.value;
+        console.log("ImgType: ", _val);
+        setImgType(Number(_val));
+    };
 
     return (
         <Box display="flex" gap={4} mb={2} flexDirection="row">
@@ -25,12 +33,19 @@ const ExecLauncherFour: React.FC = () => {
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
                 <ExecComponent
                     buttonText="Img Files(jpg/png/tiff) to pdf"
-                    placeholder='Folder Abs Path'
-                    execType={ExecType.IMG_FILES_TO_PDF} />
-
+                    placeholder='Folder Abs Path' 
+                    execType={imgType}
+                    reactComponent={<>
+                        <RadioGroup aria-label="fileType" name="fileType" value={imgType} onChange={handleChange} row>
+                            <FormControlLabel value={ExecType.JPG_TO_PDF} control={<Radio />} label="JPG" />
+                            <FormControlLabel value={ExecType.PNG_TO_PDF} control={<Radio />} label="PNG" />
+                            <FormControlLabel value={ExecType.TIFF_TO_PDF} control={<Radio />} label="TIFF" />
+                        </RadioGroup>
+                    </>} />
                 <ExecComponent
                     buttonText="Add Header/Footer to PDFs"
                     placeholder='Folder Abs Path'
+                    secondTextBoxPlaceHolder='Folder Abs Path'
                     execType={ExecType.AddHeaderFooter} />
             </Box>
 
