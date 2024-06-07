@@ -53,7 +53,7 @@ export const handleYarnListingGeneration = async (execType: ExecType, dataUserIn
             console.log("GenListingsofLocalFolderAsLinksYarn", dataUserInput)
             _resp = await makePostCallWithErrorHandling({
                 argFirst: dataUserInput,
-                withLinks: true,
+                onlyInfoNoExcel: true,
                 withStats: false,
                 pdfsOnly: true,
             },
@@ -64,7 +64,7 @@ export const handleYarnListingGeneration = async (execType: ExecType, dataUserIn
             _resp = await makePostCallWithErrorHandling({
                 argFirst: dataUserInput,
                 withStats: true,
-                withLinks: true,
+                onlyInfoNoExcel: true,
                 pdfsOnly: true,
             },
                 `yarnListMaker/createListingsOfLocalFolder`);
@@ -74,7 +74,7 @@ export const handleYarnListingGeneration = async (execType: ExecType, dataUserIn
             _resp = await makePostCallWithErrorHandling({
                 argFirst: dataUserInput,
                 withStats: false,
-                withLinks: true,
+                onlyInfoNoExcel: true,
                 pdfsOnly: false,
             },
                 `yarnListMaker/createListingsOfLocalFolder`);
@@ -84,7 +84,7 @@ export const handleYarnListingGeneration = async (execType: ExecType, dataUserIn
             _resp = await makePostCallWithErrorHandling({
                 argFirst: dataUserInput,
                 withStats: true,
-                withLinks: true,
+                onlyInfoNoExcel: true,
                 pdfsOnly: false,
             },
                 `yarnListMaker/createListingsOfLocalFolder`);
