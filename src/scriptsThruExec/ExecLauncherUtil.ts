@@ -33,7 +33,7 @@ export enum ExecType {
   FILE_NAME_LENGTH = 33,
   FILE_NAME_LENGTH_INCLUDING_PATH = 34,
   DUPLICATES_BY_FILE_SIZE = 35,
-  RENAME_NON_ASCII_FILE_NAMES_IN_FOLDER = 35,
+  RENAME_NON_ASCII_FILE_NAMES_IN_FOLDER = 36,
   LoginToArchive = 4,
   UseBulkRenameConventions = 5,
   DownloadGoogleDriveLink = 6,

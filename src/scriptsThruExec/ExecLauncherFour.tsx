@@ -42,7 +42,7 @@ const ExecLauncherFour: React.FC = () => {
                 <ExecComponent
                     buttonText="Rename Non-ASCII File Names in Folder"
                     placeholder='Folder Abs Path'
-                    secondTextBoxPlaceHolder='Script Tamile, Kannada etc'
+                    secondTextBoxPlaceHolder='Script Tamil, Kannada etc'
                     css={{ width: "250px" }}
                     execType={ExecType.RENAME_NON_ASCII_FILE_NAMES_IN_FOLDER} />
             </Box>
