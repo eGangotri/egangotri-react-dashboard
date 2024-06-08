@@ -6,7 +6,7 @@ import ExecLauncher from 'scriptsThruExec/ExecLauncherOne';
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import ExecLauncherTwo from 'scriptsThruExec/ExecLauncherTwo';
-import TallyUploadedData from 'scriptsThruExec/TallyUploadedData';
+import ExecLauncher4B from 'scriptsThruExec/ExecLauncher4B';
 import Tiff2Pdf from 'scriptsThruExec/Tiff2Pdf';
 import AITextIdentifier from 'scriptsThruExec/AITextIdentifier';
 import ExecLauncherThree from 'scriptsThruExec/ExecLauncherThree';
@@ -28,8 +28,8 @@ export const EXEC_LAUNCHER_TWO_PATH = "/execLauncher2";
 export const EXEC_LAUNCHER_TWO_B_PATH = "/execLauncher2b";
 export const EXEC_LAUNCHER_TWO_C_PATH = "/execLauncher2c";
 export const EXEC_LAUNCHER_THREE_PATH = "/execLauncher3";
-export const EXEC_LAUNCHER_FOUR_PATH = "/execLauncher4";
-export const TALLY_UPLOADED_DATA = "/tallyData";
+export const EXEC_LAUNCHER_FOUR_PATH = "/execLauncher4a";
+export const EXEC_LAUNCH_FOUR_B_PATH = "/execLauncher4b";
 export const FILE_MOVER_PATH = "/fileMover";
 export const SEARCH_ARCHIVE_DB_PATH = "/searchArchiveDB";
 export const SEARCH_G_DRIVE_DB_PATH = "/searchGDriveDB";
@@ -52,7 +52,7 @@ const DashboardRoutes: React.FC = () => (
             {<Route path={EXEC_LAUNCHER_TWO_C_PATH} element={<ExecLauncherTwoC />} />}
             {<Route path={EXEC_LAUNCHER_THREE_PATH} element={<ExecLauncherThree />} />}
             {<Route path={EXEC_LAUNCHER_FOUR_PATH} element={<ExecLauncherFour />} />}
-            {<Route path={TALLY_UPLOADED_DATA} element={<TallyUploadedData />} />}
+            {<Route path={EXEC_LAUNCH_FOUR_B_PATH} element={<ExecLauncher4B />} />}
             {<Route path={TIFF_2_PDF} element={<Tiff2Pdf />} />}
             {<Route path={AI_TEXT_IDENTIFIER} element={<AITextIdentifier />} />}
             {<Route path={FILE_MOVER_PATH} element={<FileMover />} />}
