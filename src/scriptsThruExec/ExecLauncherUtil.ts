@@ -17,7 +17,7 @@ import {
 } from "service/launchYarn";
 
 import { ExecComponentFormData, ExecResponseDetails } from "./types";
-import { makePostCallForCombineGDriveAndReducedPdfExcels, makePostCallForGDriveExcelTrack, makePostCallForGenExcelForGDrive, makePostCallForTopN, makePostCallWithErrorHandling, verifyUploadStatusForUploadCycleId } from "service/BackendFetchService";
+import { makePostCallForCombineGDriveAndReducedPdfExcels, makePostCallForCreateUploadableExcelV3, makePostCallForGDriveExcelTrack, makePostCallForGenExcelForGDrive, makePostCallForTopN, makePostCallWithErrorHandling, verifyUploadStatusForUploadCycleId } from "service/BackendFetchService";
 import { downloadFromExcelUsingFrontEnd } from "service/launchFrontEnd";
 import { replaceQuotes } from "mirror/utils";
 import { handleYarnListingGeneration } from "./Utils";
@@ -71,8 +71,8 @@ export enum ExecType {
   GenListingsofAllLocalFolderAsLinksYarn = 2006,
   GenListingsWithStatsofAllLocalFolderAsLinksYarn = 2007,
 
-  GenExcelofAbsPathsFromProfile = 963,
-  GenExcelofAbsPathsForAllFileTypesFromProfile = 964,
+  GenExcelV3ofAbsPathsFromProfile = 963,
+  GenExcelV3ofAbsPathsForAllFileTypesFromProfile = 964,
   AddHeaderFooter = 10,
   MoveToFreeze = 11,
   DownloadArchivePdfs = 12,
@@ -261,16 +261,16 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         break;
 
 
-      case ExecType.GenExcelofAbsPathsFromProfile:
-        _resp = await makePostCallWithErrorHandling({
+      case ExecType.GenExcelV3ofAbsPathsFromProfile:
+        _resp = await makePostCallForCreateUploadableExcelV3({
           profile: dataUserInput,
           allNotJustPdfs: false,
         },
           `yarnExcel/createExcelOfAbsPathFromProfile`);
         break;
 
-      case ExecType.GenExcelofAbsPathsForAllFileTypesFromProfile:
-        _resp = await makePostCallWithErrorHandling({
+      case ExecType.GenExcelV3ofAbsPathsForAllFileTypesFromProfile:
+        _resp = await makePostCallForCreateUploadableExcelV3({
           profile: dataUserInput,
           allNotJustPdfs: true,
         },

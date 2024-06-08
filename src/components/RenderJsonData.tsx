@@ -42,7 +42,6 @@ const RenderJsonData: React.FC<ApiResponse> = ({ response }) => {
       return <span>{json}</span>;
     }
   };
-
   return <div>{renderJson(response)}</div>;
 };
 

@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 import { SelectedUploadItem } from "mirror/types"
 import { ExecResponseDetails } from "scriptsThruExec/types";
 import { makePostCall } from "mirror/utils";
-import { ALL_NOT_JUST_PDF_SUFFIX, COMBINATION_EXCEL_PATH_LOCAL_STORAGE_KEY, GDRIVE_EXCEL_NAME_LOCAL_STORAGE_KEY, LOCAL_LISTING_EXCEL_LOCAL_STORAGE_KEY, REDUCED_SUFFIX, TOP_N_FILE_LOCAL_STORAGE_KEY } from "./consts";
+import { ALL_NOT_JUST_PDF_SUFFIX, COMBINATION_EXCEL_PATH_LOCAL_STORAGE_KEY, GDRIVE_EXCEL_NAME_LOCAL_STORAGE_KEY, LOCAL_LISTING_EXCEL_LOCAL_STORAGE_KEY, REDUCED_SUFFIX, TOP_N_FILE_LOCAL_STORAGE_KEY, UPLOADABLE_EXCEL_V3 } from "./consts";
 const QUEUE_API_PREFIX = "itemsQueued";
 const USHERED_API_PREFIX = "itemsushered";
 
@@ -93,6 +93,22 @@ export const makePostCallForTopN = async (body: Record<string, unknown>, resourc
 
   console.log(value); // Outputs: value
   console.log(`destRootFolder: ${value}`);
+
+  return result;
+}
+
+export const makePostCallForCreateUploadableExcelV3 = async (body: Record<string, unknown>, resource: string) => {
+  const result = await makePostCallWithErrorHandling(body, resource)
+  let excelName = result?.response?.excelFileName;
+  console.log(`excelName ${excelName}`)
+  // Store value
+  localStorage.setItem(UPLOADABLE_EXCEL_V3, excelName);
+
+  // Retrieve value
+  let value = localStorage.getItem(UPLOADABLE_EXCEL_V3);
+
+  console.log(value); // Outputs: value
+  console.log(`${UPLOADABLE_EXCEL_V3} ${value}`);
 
   return result;
 }

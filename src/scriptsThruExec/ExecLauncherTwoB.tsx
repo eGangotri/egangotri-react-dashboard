@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import ExecComponent from './ExecComponent';
 import Box from '@mui/material/Box';
 import { ExecType } from './ExecLauncherUtil';
-import { FormControlLabel, Checkbox } from '@mui/material';
+import { FormControlLabel, Checkbox, Button } from '@mui/material';
 
 const ExecLauncherTwoB: React.FC = () => {
     const [dontGenerateCheck, setDontGenerateCheck] = useState(false);
@@ -11,7 +11,7 @@ const ExecLauncherTwoB: React.FC = () => {
     const [archiveExcelExecType, setArchiveExcelExecType] = useState(ExecType.GenExcelOfArchiveLinkCombo1);
 
     const [allNotJustPdfs, setAllNotJustPdfs] = useState(false);
-    const [uploadableExcelType, setUplodableExcelType] = useState(ExecType.GenExcelofAbsPathsFromProfile);
+    const [uploadableExcelType, setUplodableExcelType] = useState(ExecType.GenExcelV3ofAbsPathsFromProfile);
 
     const handleAllNotJustPdfs = (event: React.ChangeEvent<HTMLInputElement>) => {
         setAllNotJustPdfs(event.target.checked);
@@ -46,8 +46,8 @@ const ExecLauncherTwoB: React.FC = () => {
         }));
     };
 
-    const _uploadableExcelCreateType = (all:boolean):number => {
-        return all === true ? ExecType.GenExcelofAbsPathsForAllFileTypesFromProfile : ExecType.GenExcelofAbsPathsFromProfile;
+    const _uploadableExcelCreateType = (all: boolean): number => {
+        return all === true ? ExecType.GenExcelV3ofAbsPathsForAllFileTypesFromProfile : ExecType.GenExcelV3ofAbsPathsFromProfile;
     }
     const _archiveExcelExecType = (options: { dontGenerateCheck: boolean, listingsOnly: boolean, ascOrder: boolean }): number => {
         let retType = "1";
@@ -65,7 +65,7 @@ const ExecLauncherTwoB: React.FC = () => {
                     placeholder='Profiles as CSV'
                     execType={ExecType.LoginToArchive} />
 
-                <ExecComponent buttonText="Create Uploadable-Excel"
+                <ExecComponent buttonText="Create Uploadable-Excel-V3"
                     placeholder='Profile Name'
                     userInputOneInfo="It will take all Abs Paths of PDFs in the Folder or Profile and create Excel for Uploads"
                     execType={uploadableExcelType}

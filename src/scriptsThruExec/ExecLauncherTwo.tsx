@@ -2,8 +2,19 @@ import React, { useState } from 'react';
 import ExecComponent from './ExecComponent';
 import Box from '@mui/material/Box';
 import { ExecType } from './ExecLauncherUtil';
+import { UPLOADABLE_EXCEL_V3 } from '../service/consts';
+import { Button } from '@mui/material';
 
 const ExecLauncherTwo: React.FC = () => {
+    const [uploadableExcelV3, setUploadableExcelV3] = useState('');
+    const loadFromLocalStorage = () => {
+        let storedValue = localStorage.getItem(`${UPLOADABLE_EXCEL_V3}`);
+        console.log(`loadFromLocalStorage called ${storedValue}`)
+        if (storedValue) {
+            setUploadableExcelV3(storedValue || "-");
+        }
+
+    }
     return (
         <Box display="flex" gap={4} mb={2} flexDirection="row">
             <Box display="flex" alignItems="center" gap={4} mb={2} flexDirection="column">
@@ -24,10 +35,12 @@ const ExecLauncherTwo: React.FC = () => {
                     secondTextBoxPlaceHolder='Enter Excel Abs Path'
                     thirdTextBoxPlaceHolder='Range (eg. 1-00) (Optional).inclusive'
                     execType={ExecType.UploadPdfsViaExcelV3}
-                    userInputOneInfo="Excel File Format: Col1. Abs Path."
+                    textBoxTwoValue={uploadableExcelV3}
+                    userInputOneInfo="Excel File Format: Col1. Abs Path.Use http://localhost:3000/execLauncher2b Archive Uploadable Excel V-3 to create"
                     userInputThreeInfo="Range of Whole Numbers. Ex 1-10 (Optional).inclusive"
                     css={{ width: "250px" }}
                     css2={{ width: "450px" }}
+                    thirdButton={<Button variant="contained" color="primary" onClick={loadFromLocalStorage} sx={{ marginRight: "10px", marginBottom: "10px" }}>Load From Local Storage</Button>}
                 />
             </Box>
 
