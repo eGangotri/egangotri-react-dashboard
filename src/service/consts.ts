@@ -4,6 +4,10 @@ export const LOCAL_LISTING_EXCEL_LOCAL_STORAGE_KEY = "localListingExcelName";
 export const UPLOADABLE_EXCELS_V3 = "uplodableExcelV3";
 export const UPLOADABLE_EXCELS_V3_PROFILES = "uplodableExcelV3Profiles";
 
+
+export const UPLOADABLE_EXCELS_V1 = "uplodableExcelV1";
+export const UPLOADABLE_EXCELS_V1_PROFILES = "uplodableExcelV1Profiles";
+
 export const REDUCED_SUFFIX = "_reduced";
 export const ALL_NOT_JUST_PDF_SUFFIX = "_allNotJustPdfs";
 

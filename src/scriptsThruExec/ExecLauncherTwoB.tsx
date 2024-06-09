@@ -10,14 +10,33 @@ const ExecLauncherTwoB: React.FC = () => {
     const [inAscOrder, setInAscOrder] = useState(false);
     const [archiveExcelExecType, setArchiveExcelExecType] = useState(ExecType.GenExcelOfArchiveLinkCombo1);
 
-    const [allNotJustPdfs, setAllNotJustPdfs] = useState(false);
-    const [uploadableExcelType, setUplodableExcelType] = useState(ExecType.GenExcelV3ofAbsPathsFromProfile);
+    const [allNotJustPdfsV1, setAllNotJustPdfsV1] = useState(false);
+    const [allNotJustPdfsV3, setAllNotJustPdfsV3] = useState(false);
+    const [useFolderNameAsDesc, setUseFolderNameAsDesc] = useState(false);
 
-    const handleAllNotJustPdfs = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setAllNotJustPdfs(event.target.checked);
-        setUplodableExcelType(_uploadableExcelCreateType(event.target.checked));
+    const [uploadableExcelTypeV1, setUploadableExcelTypeV1] = useState(ExecType.GenExcelV1ofAbsPathsFromProfile);
+    const [uploadableExcelTypeV3, setUploadableExcelTypeV3] = useState(ExecType.GenExcelV3ofAbsPathsFromProfile);
 
+    const handleAllNotJustPdfsV3 = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setAllNotJustPdfsV3(event.target.checked);
+        setUploadableExcelTypeV3(_uploadableExcelV3CreateType(event.target.checked));
     };
+
+    const handleAllNotJustPdfsV1 = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setAllNotJustPdfsV1(event.target.checked);
+        setUploadableExcelTypeV1(_uploadableExcelV1CreateType({
+            allNotJustPdfsV1: event.target.checked,
+            useFolderNameAsDesc: useFolderNameAsDesc
+        }));
+    };
+    const handleUseFolderNameAsDesc = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setUseFolderNameAsDesc(event.target.checked);
+        setUploadableExcelTypeV1(_uploadableExcelV1CreateType({
+            useFolderNameAsDesc: event.target.checked,
+            allNotJustPdfsV1: allNotJustPdfsV1
+        }));
+    };
+
 
     const handleDontGenerateCheck = (event: React.ChangeEvent<HTMLInputElement>) => {
         setDontGenerateCheck(event.target.checked);
@@ -46,9 +65,19 @@ const ExecLauncherTwoB: React.FC = () => {
         }));
     };
 
-    const _uploadableExcelCreateType = (all: boolean): number => {
+    const _uploadableExcelV3CreateType = (all: boolean): number => {
         return all === true ? ExecType.GenExcelV3ofAbsPathsForAllFileTypesFromProfile : ExecType.GenExcelV3ofAbsPathsFromProfile;
     }
+
+    const _uploadableExcelV1CreateType = (options: { allNotJustPdfsV1: boolean, useFolderNameAsDesc: boolean }): number => {
+        let retType = "9";
+        retType += options.allNotJustPdfsV1 === true ? "1" : "0";
+        retType += options.useFolderNameAsDesc === true ? "1" : "0";
+        retType += "0";
+        console.log("retType: ", retType);
+        return parseInt(retType);
+    }
+
     const _archiveExcelExecType = (options: { dontGenerateCheck: boolean, listingsOnly: boolean, ascOrder: boolean }): number => {
         let retType = "1";
         retType += options.dontGenerateCheck === true ? "1" : "0";
@@ -61,26 +90,38 @@ const ExecLauncherTwoB: React.FC = () => {
         <Box display="flex" gap={4} mb={2} flexDirection="row">
             <Box display="flex" alignItems="center" gap={4} mb={2} flexDirection="column">
 
-                <ExecComponent buttonText="Login to Archive"
-                    placeholder='Profiles as CSV'
-                    execType={ExecType.LoginToArchive} />
+                <ExecComponent buttonText="Create Uploadable-Excel-V1"
+                    placeholder='Profile Name'
+                    userInputOneInfo="It will take all Abs Paths of PDFs in the Folder or Profile and create Excel for Uploads"
+                    execType={uploadableExcelTypeV1}
+                    thirdTextBoxPlaceHolder='Enter Script (Optional)'
+                    userInputThreeInfo='For Conversting any scripts in FileName or FolderName to Roman-Colloquial (Optional)'
+                    reactComponent={<Box>
+                        <FormControlLabel
+                            control={<Checkbox checked={allNotJustPdfsV1} onChange={handleAllNotJustPdfsV1} />}
+                            label="ALL- Not Just PDFs"
+                        />
+                        <FormControlLabel
+                            control={<Checkbox checked={useFolderNameAsDesc} onChange={handleUseFolderNameAsDesc} />}
+                            label="Use Folder Name in Description"
+                        />
+                    </Box>}
+                />
 
                 <ExecComponent buttonText="Create Uploadable-Excel-V3"
                     placeholder='Profile Name'
                     userInputOneInfo="It will take all Abs Paths of PDFs in the Folder or Profile and create Excel for Uploads"
-                    execType={uploadableExcelType}
+                    execType={uploadableExcelTypeV3}
                     reactComponent={<Box>
                         <FormControlLabel
-                            control={<Checkbox checked={allNotJustPdfs} onChange={handleAllNotJustPdfs} />}
+                            control={<Checkbox checked={allNotJustPdfsV3} onChange={handleAllNotJustPdfsV3} />}
                             label="ALL- Not Just PDFs"
                         />
                     </Box>}
                 />
             </Box>
 
-
             <Box display="flex" alignItems="center" gap={4} mb={2} flexDirection="column">
-
                 <ExecComponent
                     buttonText="D/l archive.org Data As Excel"
                     placeholder='Space/Comma-Separated Archive Link(s) or Identifier(s)'
@@ -117,6 +158,10 @@ const ExecLauncherTwoB: React.FC = () => {
             </Box>
 
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
+                <ExecComponent buttonText="Login to Archive"
+                    placeholder='Profiles as CSV'
+                    execType={ExecType.LoginToArchive} />
+
                 <ExecComponent
                     buttonText="Dump Archive-DB Excel Entries to MongoDB"
                     placeholder='Absolute Path to Archive Excel Folder'

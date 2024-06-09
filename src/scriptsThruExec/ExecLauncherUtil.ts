@@ -17,7 +17,7 @@ import {
 } from "service/launchYarn";
 
 import { ExecComponentFormData, ExecResponseDetails } from "./types";
-import { makePostCallForCombineGDriveAndReducedPdfExcels, makePostCallForCreateUploadableExcelV3, makePostCallForGDriveExcelTrack, makePostCallForGenExcelForGDrive, makePostCallForTopN, makePostCallWithErrorHandling, verifyUploadStatusForUploadCycleId } from "service/BackendFetchService";
+import { makePostCallForCombineGDriveAndReducedPdfExcels, makePostCallForCreateUploadableExcelV1, makePostCallForCreateUploadableExcelV3, makePostCallForGDriveExcelTrack, makePostCallForGenExcelForGDrive, makePostCallForTopN, makePostCallWithErrorHandling, verifyUploadStatusForUploadCycleId } from "service/BackendFetchService";
 import { downloadFromExcelUsingFrontEnd } from "service/launchFrontEnd";
 import { replaceQuotes } from "mirror/utils";
 import { handleYarnListingGeneration } from "./Utils";
@@ -71,8 +71,14 @@ export enum ExecType {
   GenListingsofAllLocalFolderAsLinksYarn = 2006,
   GenListingsWithStatsofAllLocalFolderAsLinksYarn = 2007,
 
-  GenExcelV3ofAbsPathsFromProfile = 963,
-  GenExcelV3ofAbsPathsForAllFileTypesFromProfile = 964,
+
+  GenExcelV1ofAbsPathsFromProfile = 9000,
+  GenExcelV1ofAbsPathsForAllFileTypesFromProfile = 9001,
+
+
+  GenExcelV3ofAbsPathsFromProfile = 965,
+  GenExcelV3ofAbsPathsForAllFileTypesFromProfile = 966,
+
   AddHeaderFooter = 10,
   MoveToFreeze = 11,
   DownloadArchivePdfs = 12,
@@ -130,10 +136,27 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       dataUserInput3, execAsString[1] === "1", execAsString[2] === "1", execAsString[3] === "1");
   }
 
-  else if (execType >= 2000) {
+  else if (execType >= 2000 && execType <= 2111) {
     _resp = await handleYarnListingGeneration(execType, dataUserInput);
   }
 
+  else if (execType >= 9000 && execType <= 9110) {
+    const execAsString = execType.toString()
+
+    _resp = await makePostCallForCreateUploadableExcelV1({
+      profiles: dataUserInput,
+      script: dataUserInput3,
+      allNotJustPdfs: execAsString[1] === "1",
+      useFolderNameAsDesc: execAsString[2] === "1",
+    },
+      `yarnExcel/createExcelV1OfAbsPathFromProfile`);
+
+    // _resp = await makePostCallForCreateUploadableExcelV1({
+    //   profiles: dataUserInput,
+    //   allNotJustPdfs: true,
+    // },
+    //   `yarnExcel/createExcelV1OfAbsPathFromProfile`);
+  }
   else {
     switch (execType) {
       case ExecType.UploadPdfs:
@@ -260,13 +283,12 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         _resp = await launchLocalFolderListingForAll(dataUserInput);
         break;
 
-
       case ExecType.GenExcelV3ofAbsPathsFromProfile:
         _resp = await makePostCallForCreateUploadableExcelV3({
           profiles: dataUserInput,
           allNotJustPdfs: false,
         },
-          `yarnExcel/createExcelOfAbsPathFromProfile`);
+          `yarnExcel/createExcelV3OfAbsPathFromProfile`);
         break;
 
       case ExecType.GenExcelV3ofAbsPathsForAllFileTypesFromProfile:
@@ -274,7 +296,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
           profiles: dataUserInput,
           allNotJustPdfs: true,
         },
-          `yarnExcel/createExcelOfAbsPathFromProfile`);
+          `yarnExcel/createExcelV3OfAbsPathFromProfile`);
         break;
 
       case ExecType.SNAP_TO_HTML:

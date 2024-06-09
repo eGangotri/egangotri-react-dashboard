@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 import { SelectedUploadItem } from "mirror/types"
 import { ExecResponseDetails } from "scriptsThruExec/types";
 import { makePostCall } from "mirror/utils";
-import { ALL_NOT_JUST_PDF_SUFFIX, COMBINATION_EXCEL_PATH_LOCAL_STORAGE_KEY, GDRIVE_EXCEL_NAME_LOCAL_STORAGE_KEY, LOCAL_LISTING_EXCEL_LOCAL_STORAGE_KEY, REDUCED_SUFFIX, TOP_N_FILE_LOCAL_STORAGE_KEY, UPLOADABLE_EXCELS_V3, UPLOADABLE_EXCELS_V3_PROFILES } from "./consts";
+import { ALL_NOT_JUST_PDF_SUFFIX, COMBINATION_EXCEL_PATH_LOCAL_STORAGE_KEY, GDRIVE_EXCEL_NAME_LOCAL_STORAGE_KEY, LOCAL_LISTING_EXCEL_LOCAL_STORAGE_KEY, REDUCED_SUFFIX, TOP_N_FILE_LOCAL_STORAGE_KEY, UPLOADABLE_EXCELS_V1, UPLOADABLE_EXCELS_V1_PROFILES, UPLOADABLE_EXCELS_V3, UPLOADABLE_EXCELS_V3_PROFILES } from "./consts";
 const QUEUE_API_PREFIX = "itemsQueued";
 const USHERED_API_PREFIX = "itemsushered";
 
@@ -96,6 +96,24 @@ export const makePostCallForTopN = async (body: Record<string, unknown>, resourc
   return result;
 }
 
+export const makePostCallForCreateUploadableExcelV1 = async (body: Record<string, unknown>, resource: string) => {
+  const result = await makePostCallWithErrorHandling(body, resource)
+  let excels = result?.response?.excelFileNames;
+  let profiles = result?.response?.profiles;
+  console.log(`excelName ${excels}`);
+
+  // Store value
+  localStorage.setItem(UPLOADABLE_EXCELS_V1, excels);
+  localStorage.setItem(UPLOADABLE_EXCELS_V1_PROFILES, profiles);
+
+  // Retrieve value
+  let value = localStorage.getItem(UPLOADABLE_EXCELS_V1);
+  let value2 = localStorage.getItem(UPLOADABLE_EXCELS_V1_PROFILES);
+
+  console.log(`${UPLOADABLE_EXCELS_V1} ${value} ${UPLOADABLE_EXCELS_V1_PROFILES} ${value2}`);
+  return result;
+}
+
 export const makePostCallForCreateUploadableExcelV3 = async (body: Record<string, unknown>, resource: string) => {
   const result = await makePostCallWithErrorHandling(body, resource)
   let excels = result?.response?.excelFileNames;
@@ -113,6 +131,7 @@ export const makePostCallForCreateUploadableExcelV3 = async (body: Record<string
 
   return result;
 }
+
 
 export const makePostCallForCombineGDriveAndReducedPdfExcels = async (body: Record<string, unknown>, resource: string) => {
   const result = await makePostCallWithErrorHandling(body, resource)
