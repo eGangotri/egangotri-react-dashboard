@@ -2,16 +2,22 @@ import React, { useState } from 'react';
 import ExecComponent from './ExecComponent';
 import Box from '@mui/material/Box';
 import { ExecType } from './ExecLauncherUtil';
-import { UPLOADABLE_EXCEL_V3 } from '../service/consts';
+import { UPLOADABLE_EXCELS_V3, UPLOADABLE_EXCELS_V3_PROFILES } from '../service/consts';
 import { Button } from '@mui/material';
 
 const ExecLauncherTwo: React.FC = () => {
-    const [uploadableExcelV3, setUploadableExcelV3] = useState('');
+    const [uploadableExcelV3Profiles, setUploadableExcelV3Profiles] = useState('');
+    const [uploadablesExcelV3, setUploadablesExcelV3] = useState('');
+    
     const loadFromLocalStorage = () => {
-        let storedValue = localStorage.getItem(`${UPLOADABLE_EXCEL_V3}`);
+        let storedValue = localStorage.getItem(`${UPLOADABLE_EXCELS_V3_PROFILES}`);
+        let storedValue2 = localStorage.getItem(`${UPLOADABLE_EXCELS_V3}`);
         console.log(`loadFromLocalStorage called ${storedValue}`)
         if (storedValue) {
-            setUploadableExcelV3(storedValue || "-");
+            setUploadableExcelV3Profiles(storedValue || "-");
+        }
+        if (storedValue2) {
+            setUploadablesExcelV3(storedValue2 || "-");
         }
 
     }
@@ -35,7 +41,8 @@ const ExecLauncherTwo: React.FC = () => {
                     secondTextBoxPlaceHolder='Enter Excel Abs Path'
                     thirdTextBoxPlaceHolder='Range (eg. 1-00) (Optional).inclusive'
                     execType={ExecType.UploadPdfsViaExcelV3}
-                    textBoxTwoValue={uploadableExcelV3}
+                    textBoxOneValue={uploadableExcelV3Profiles}
+                    textBoxTwoValue={uploadablesExcelV3}
                     userInputOneInfo="Excel File Format: Col1. Abs Path.Use http://localhost:3000/execLauncher2b Archive Uploadable Excel V-3 to create"
                     userInputThreeInfo="Range of Whole Numbers. Ex 1-10 (Optional).inclusive"
                     css={{ width: "250px" }}

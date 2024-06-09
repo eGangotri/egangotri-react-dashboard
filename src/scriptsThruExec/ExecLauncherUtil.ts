@@ -156,8 +156,8 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       case ExecType.UploadPdfsViaExcelV3:
         _resp = await _launchGradlev2(
           {
-            profile: dataUserInput,
-            excelPath: dataUserInput2,
+            profiles: dataUserInput,
+            excelPaths: dataUserInput2,
             range: dataUserInput3
           }, "launchUploaderViaExcelV3");
         break;
@@ -263,7 +263,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
 
       case ExecType.GenExcelV3ofAbsPathsFromProfile:
         _resp = await makePostCallForCreateUploadableExcelV3({
-          profile: dataUserInput,
+          profiles: dataUserInput,
           allNotJustPdfs: false,
         },
           `yarnExcel/createExcelOfAbsPathFromProfile`);
@@ -271,7 +271,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
 
       case ExecType.GenExcelV3ofAbsPathsForAllFileTypesFromProfile:
         _resp = await makePostCallForCreateUploadableExcelV3({
-          profile: dataUserInput,
+          profiles: dataUserInput,
           allNotJustPdfs: true,
         },
           `yarnExcel/createExcelOfAbsPathFromProfile`);

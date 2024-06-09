@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 import { SelectedUploadItem } from "mirror/types"
 import { ExecResponseDetails } from "scriptsThruExec/types";
 import { makePostCall } from "mirror/utils";
-import { ALL_NOT_JUST_PDF_SUFFIX, COMBINATION_EXCEL_PATH_LOCAL_STORAGE_KEY, GDRIVE_EXCEL_NAME_LOCAL_STORAGE_KEY, LOCAL_LISTING_EXCEL_LOCAL_STORAGE_KEY, REDUCED_SUFFIX, TOP_N_FILE_LOCAL_STORAGE_KEY, UPLOADABLE_EXCEL_V3 } from "./consts";
+import { ALL_NOT_JUST_PDF_SUFFIX, COMBINATION_EXCEL_PATH_LOCAL_STORAGE_KEY, GDRIVE_EXCEL_NAME_LOCAL_STORAGE_KEY, LOCAL_LISTING_EXCEL_LOCAL_STORAGE_KEY, REDUCED_SUFFIX, TOP_N_FILE_LOCAL_STORAGE_KEY, UPLOADABLE_EXCELS_V3, UPLOADABLE_EXCELS_V3_PROFILES } from "./consts";
 const QUEUE_API_PREFIX = "itemsQueued";
 const USHERED_API_PREFIX = "itemsushered";
 
@@ -91,7 +91,6 @@ export const makePostCallForTopN = async (body: Record<string, unknown>, resourc
   // Retrieve value
   let value = localStorage.getItem(TOP_N_FILE_LOCAL_STORAGE_KEY);
 
-  console.log(value); // Outputs: value
   console.log(`destRootFolder: ${value}`);
 
   return result;
@@ -99,16 +98,18 @@ export const makePostCallForTopN = async (body: Record<string, unknown>, resourc
 
 export const makePostCallForCreateUploadableExcelV3 = async (body: Record<string, unknown>, resource: string) => {
   const result = await makePostCallWithErrorHandling(body, resource)
-  let excelName = result?.response?.excelFileName;
-  console.log(`excelName ${excelName}`)
+  let excels = result?.response?.excelFileNames;
+  let profiles = result?.response?.profiles;
+  console.log(`excelName ${excels}`)
   // Store value
-  localStorage.setItem(UPLOADABLE_EXCEL_V3, excelName);
+  localStorage.setItem(UPLOADABLE_EXCELS_V3, excels);
+  localStorage.setItem(UPLOADABLE_EXCELS_V3_PROFILES, profiles);
 
   // Retrieve value
-  let value = localStorage.getItem(UPLOADABLE_EXCEL_V3);
+  let value = localStorage.getItem(UPLOADABLE_EXCELS_V3);
+  let value2 = localStorage.getItem(UPLOADABLE_EXCELS_V3_PROFILES);
 
-  console.log(value); // Outputs: value
-  console.log(`${UPLOADABLE_EXCEL_V3} ${value}`);
+  console.log(`${UPLOADABLE_EXCELS_V3} ${value} ${UPLOADABLE_EXCELS_V3_PROFILES} ${value2}`);
 
   return result;
 }
@@ -123,7 +124,6 @@ export const makePostCallForCombineGDriveAndReducedPdfExcels = async (body: Reco
   // Retrieve value
   let value = localStorage.getItem(COMBINATION_EXCEL_PATH_LOCAL_STORAGE_KEY);
 
-  console.log(value); // Outputs: value
   console.log(`${COMBINATION_EXCEL_PATH_LOCAL_STORAGE_KEY} ${value}`);
 
   return result;

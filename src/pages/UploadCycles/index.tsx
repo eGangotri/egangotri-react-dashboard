@@ -154,9 +154,6 @@ const UploadCycles = () => {
         console.log(`_res ${JSON.stringify(_res)}`)
         setIsLoading(false);
         setTitlesForPopover(<>{_res}</>);
-        // console.log("handleTitleClick: " + event.currentTarget)
-        //setAnchorEl(event.currentTarget);
-
     }
     const findMissingAndSetInPopover = async (event: React.MouseEvent<HTMLButtonElement>, row: UploadCycleTableData) => {
         const currentTarget = event.currentTarget
