@@ -2,14 +2,17 @@ import React, { useState } from 'react';
 import ExecComponent from './ExecComponent';
 import Box from '@mui/material/Box';
 import { ExecType } from './ExecLauncherUtil';
-import { UPLOADABLE_EXCELS_V3, UPLOADABLE_EXCELS_V3_PROFILES } from '../service/consts';
+import { UPLOADABLE_EXCELS_V1, UPLOADABLE_EXCELS_V1_PROFILES, UPLOADABLE_EXCELS_V3, UPLOADABLE_EXCELS_V3_PROFILES } from '../service/consts';
 import { Button } from '@mui/material';
 
 const ExecLauncherTwo: React.FC = () => {
     const [uploadableExcelV3Profiles, setUploadableExcelV3Profiles] = useState('');
     const [uploadablesExcelV3, setUploadablesExcelV3] = useState('');
+    
+    const [uploadableExcelV1Profiles, setUploadableExcelV1Profiles] = useState('');
+    const [uploadablesExcelV1, setUploadablesExcelV1] = useState('');
 
-    const loadFromLocalStorage = () => {
+    const loadFromLocalStorageForV3 = () => {
         let storedValue = localStorage.getItem(`${UPLOADABLE_EXCELS_V3_PROFILES}`);
         let storedValue2 = localStorage.getItem(`${UPLOADABLE_EXCELS_V3}`);
         console.log(`loadFromLocalStorage called ${storedValue}`)
@@ -19,8 +22,19 @@ const ExecLauncherTwo: React.FC = () => {
         if (storedValue2) {
             setUploadablesExcelV3(storedValue2 || "-");
         }
-
     }
+    const loadFromLocalStorageForV1 = () => {
+        let storedValue = localStorage.getItem(`${UPLOADABLE_EXCELS_V1_PROFILES}`);
+        let storedValue2 = localStorage.getItem(`${UPLOADABLE_EXCELS_V1}`);
+        console.log(`loadFromLocalStorage called ${storedValue}`)
+        if (storedValue) {
+            setUploadableExcelV1Profiles(storedValue || "-");
+        }
+        if (storedValue2) {
+            setUploadablesExcelV1(storedValue2 || "-");
+        }
+    }
+    
     return (
         <Box display="flex" gap={4} mb={2} flexDirection="row">
             <Box display="flex" alignItems="center" gap={4} mb={2} flexDirection="column">
@@ -30,12 +44,13 @@ const ExecLauncherTwo: React.FC = () => {
                     secondTextBoxPlaceHolder='Enter Excel Abs Path'
                     thirdTextBoxPlaceHolder='Range (eg. 1-00) (Optional).inclusive'
                     execType={ExecType.UploadPdfsViaExcelV1}
+                    textBoxOneValue={uploadableExcelV1Profiles}
+                    textBoxTwoValue={uploadablesExcelV1}
                     userInputOneInfo="Excel File Format: Col1. Abs Path. Col2. Suject. Col 3. Description Col 4. Creator"
                     userInputThreeInfo="Range of Whole Numbers. Ex 1-10 (Optional).inclusive"
                     css={{ width: "250px" }}
                     css2={{ width: "450px" }}
-
-                    
+                    thirdButton={<Button variant="contained" color="primary" onClick={loadFromLocalStorageForV1} sx={{ marginRight: "10px", marginBottom: "10px" }}>Load From Local Storage</Button>}
                 />
 
                 <ExecComponent buttonText="Upload Pdfs to Archive for Profile via Excel V-3"
@@ -49,7 +64,7 @@ const ExecLauncherTwo: React.FC = () => {
                     userInputThreeInfo="Range of Whole Numbers. Ex 1-10 (Optional).inclusive"
                     css={{ width: "250px" }}
                     css2={{ width: "450px" }}
-                    thirdButton={<Button variant="contained" color="primary" onClick={loadFromLocalStorage} sx={{ marginRight: "10px", marginBottom: "10px" }}>Load From Local Storage</Button>}
+                    thirdButton={<Button variant="contained" color="primary" onClick={loadFromLocalStorageForV3} sx={{ marginRight: "10px", marginBottom: "10px" }}>Load From Local Storage</Button>}
                 />
             </Box>
 

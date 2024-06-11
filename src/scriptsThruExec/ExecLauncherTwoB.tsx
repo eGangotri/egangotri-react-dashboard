@@ -94,8 +94,8 @@ const ExecLauncherTwoB: React.FC = () => {
                     placeholder='Profile Name'
                     userInputOneInfo="It will take all Abs Paths of PDFs in the Folder or Profile and create Excel for Uploads"
                     execType={uploadableExcelTypeV1}
-                    thirdTextBoxPlaceHolder='Enter Script (Optional)'
-                    userInputThreeInfo='For Conversting any scripts in FileName or FolderName to Roman-Colloquial (Optional)'
+                    thirdTextBoxPlaceHolder='Enter Script for Folder/File-Name Converstions(Optional)'
+                    userInputThreeInfo='For Converting any scripts in FileName or FolderName to Roman-Colloquial (Optional)'
                     reactComponent={<Box>
                         <FormControlLabel
                             control={<Checkbox checked={allNotJustPdfsV1} onChange={handleAllNotJustPdfsV1} />}
