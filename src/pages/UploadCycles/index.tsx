@@ -376,9 +376,9 @@ const UploadCycles = () => {
                     {row.countIntended}
                     <Typography>{modePanel}</Typography>
                     {row?.archiveProfileAndCountIntended?.map((archiveProfileAndCount: UploadCycleArchiveProfile) => (
-                        <Box>
+                        <Box >
                             <Typography component="span">{archiveProfileAndCount.archiveProfile} </Typography>
-                            <Typography component="span">{archiveProfileAndCount.archiveProfilePath} </Typography>
+                            <Typography component="div">{archiveProfileAndCount.archiveProfilePath} </Typography>
                             <Typography component="span">{archiveProfileAndCount.count}</Typography>
                             <Typography component="div" sx={{ fontWeight: 600 }}>
                                 <Button
