@@ -8,7 +8,7 @@ import { Button } from '@mui/material';
 const ExecLauncherTwo: React.FC = () => {
     const [uploadableExcelV3Profiles, setUploadableExcelV3Profiles] = useState('');
     const [uploadablesExcelV3, setUploadablesExcelV3] = useState('');
-    
+
     const [uploadableExcelV1Profiles, setUploadableExcelV1Profiles] = useState('');
     const [uploadablesExcelV1, setUploadablesExcelV1] = useState('');
 
@@ -34,7 +34,7 @@ const ExecLauncherTwo: React.FC = () => {
             setUploadablesExcelV1(storedValue2 || "-");
         }
     }
-    
+
     return (
         <Box display="flex" gap={4} mb={2} flexDirection="row">
             <Box display="flex" alignItems="center" gap={4} mb={2} flexDirection="column">
@@ -70,6 +70,7 @@ const ExecLauncherTwo: React.FC = () => {
 
             <Box display="flex" gap={4} mb={2} flexDirection="column">
                 <ExecComponent buttonText="Upload Pdfs to Archive for Profile"
+                    secondTextBoxPlaceHolder='Extra Subject/Description'
                     placeholder='Profiles as CSV'
                     execType={ExecType.UploadPdfs}
                     css={{ backgroundColor: "turquoise", width: "250px" }}
