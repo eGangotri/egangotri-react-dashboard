@@ -6,7 +6,7 @@ import os from 'os';
 import path from 'path';
 import { makePostCall } from 'mirror/utils';
 
-export async function launchUploader(profiles: string, optionalParams: string = "") {
+export async function launchUploader(profiles: string, optionalParams: { [key: string]: any } = {}) {
     return launchGradle(profiles, 'launchUploader',optionalParams)
 }
 
@@ -49,8 +49,9 @@ export async function launchLocalFolderListingForPdf(params: string) {
     }, 'bookTitles')
 }
 
-export async function launchGradle(profiles: string, gradleTask: string, optionalParams: string="") {
-    const _url = `${backendServer}execLauncher/${gradleTask}?profiles=${profiles}&optionalParams=${optionalParams}`
+export async function launchGradle(profiles: string, gradleTask: string, optionalParams: { [key: string]: any } = {}) {
+    const params = new URLSearchParams(optionalParams).toString();
+    const _url = `${backendServer}execLauncher/${gradleTask}?profiles=${profiles}&${params}`
     console.log(`_url ${_url}`);
     const res = await fetch(_url);
     const jsonResp = res.json()

@@ -160,7 +160,10 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
   else {
     switch (execType) {
       case ExecType.UploadPdfs:
-        _resp = await launchUploader(dataUserInput, dataUserInput2);
+        _resp = await launchUploader(dataUserInput, {
+          subjectDesc:
+            dataUserInput2
+        });
 
         // _resp = await _launchGradlev2({
         //   profiles: dataUserInput
