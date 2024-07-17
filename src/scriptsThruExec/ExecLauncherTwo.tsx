@@ -47,7 +47,7 @@ const ExecLauncherTwo: React.FC = () => {
                     textBoxOneValue={uploadableExcelV1Profiles}
                     textBoxTwoValue={uploadablesExcelV1}
                     userInputOneInfo="Excel File Format: Col1. Abs Path. Col2. Suject. Col 3. Description Col 4. Creator"
-                    userInputThreeInfo="Range of Whole Numbers. Ex 1-10 (Optional).inclusive"
+                    userInputThreeInfoNonMandatory="Range of Whole Numbers. Ex 1-10 (Optional).inclusive"
                     css={{ width: "250px" }}
                     css2={{ width: "450px" }}
                     thirdButton={<Button variant="contained" color="primary" onClick={loadFromLocalStorageForV1} sx={{ marginRight: "10px", marginBottom: "10px" }}>Load From Local Storage</Button>}
@@ -61,7 +61,7 @@ const ExecLauncherTwo: React.FC = () => {
                     textBoxOneValue={uploadableExcelV3Profiles}
                     textBoxTwoValue={uploadablesExcelV3}
                     userInputOneInfo="Excel File Format: Col1. Abs Path.Use http://localhost:3000/execLauncher2b Archive Uploadable Excel V-3 to create"
-                    userInputThreeInfo="Range of Whole Numbers. Ex 1-10 (Optional).inclusive"
+                    userInputThreeInfoNonMandatory="Range of Whole Numbers. Ex 1-10 (Optional).inclusive"
                     css={{ width: "250px" }}
                     css2={{ width: "450px" }}
                     thirdButton={<Button variant="contained" color="primary" onClick={loadFromLocalStorageForV3} sx={{ marginRight: "10px", marginBottom: "10px" }}>Load From Local Storage</Button>}
@@ -70,7 +70,7 @@ const ExecLauncherTwo: React.FC = () => {
 
             <Box display="flex" gap={4} mb={2} flexDirection="column">
                 <ExecComponent buttonText="Upload Pdfs to Archive for Profile"
-                    secondTextBoxPlaceHolder='Extra Subject/Description'
+                    thirdTextBoxPlaceHolder='Optional Extra Subject/Description'
                     placeholder='Profiles as CSV'
                     execType={ExecType.UploadPdfs}
                     css={{ backgroundColor: "turquoise", width: "250px" }}
@@ -105,7 +105,7 @@ const ExecLauncherTwo: React.FC = () => {
                     userInputOneInfo="Run 'Verify Uploads'. Then From Mongo DB filter using UploadCycleId extract JSON "
                     thirdTextBoxPlaceHolder='Range (eg. 1-00) (Optional).inclusive'
                     css={{ width: "250px" }}
-                    userInputThreeInfo="Range of Whole Numbers. Ex 1-10 (Optional).inclusive"
+                    userInputThreeInfoNonMandatory="Range of Whole Numbers. Ex 1-10 (Optional).inclusive"
                 />
             </Box>
         </Box>

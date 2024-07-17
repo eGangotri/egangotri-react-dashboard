@@ -123,17 +123,17 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
   data: ExecComponentFormData): Promise<ExecResponseDetails> => {
   let _resp: ExecResponseDetails = {}
   const dataUserInput = replaceQuotes(data.userInput)?.trim();
-  const dataUserInput2 = replaceQuotes(data.userInputSecond || "")?.trim();
-  const dataUserInput3 = replaceQuotes(data.userInputThird || "")?.trim();
+  const dataUserInput2Mandatory = replaceQuotes(data.userInputSecond || "")?.trim();
+  const dataUserInput3NonMandatory = replaceQuotes(data.userInputThird || "")?.trim();
   console.log(`data.userInput ${dataUserInput} 
-  dataUserInput2 ${dataUserInput2}
-  dataUserInput3 ${dataUserInput3}
+  dataUserInput2 ${dataUserInput2Mandatory}
+  dataUserInput3 ${dataUserInput3NonMandatory}
   `);
 
   if (execType >= 1000 && execType < 2000) {
     const execAsString = execType.toString()
-    _resp = await launchArchiveExcelDownload(dataUserInput, dataUserInput2,
-      dataUserInput3, execAsString[1] === "1", execAsString[2] === "1", execAsString[3] === "1");
+    _resp = await launchArchiveExcelDownload(dataUserInput, dataUserInput2Mandatory,
+      dataUserInput3NonMandatory, execAsString[1] === "1", execAsString[2] === "1", execAsString[3] === "1");
   }
 
   else if (execType >= 2000 && execType <= 2111) {
@@ -145,7 +145,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
 
     _resp = await makePostCallForCreateUploadableExcelV1({
       profiles: dataUserInput,
-      script: dataUserInput3,
+      script: dataUserInput3NonMandatory,
       allNotJustPdfs: execAsString[1] === "1",
       useFolderNameAsDesc: execAsString[2] === "1",
     },
@@ -160,10 +160,12 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
   else {
     switch (execType) {
       case ExecType.UploadPdfs:
-        _resp = await launchUploader(dataUserInput, {
+        const optionalParams = dataUserInput3NonMandatory?.trim() === "" ? {}: {
           subjectDesc:
-            dataUserInput2
-        });
+            dataUserInput3NonMandatory
+        }
+        console.log(`optionalParams ${JSON.stringify(optionalParams)} dataUserInput3NonMandatory${dataUserInput3NonMandatory}`)
+        _resp = await launchUploader(dataUserInput, optionalParams);
 
         // _resp = await _launchGradlev2({
         //   profiles: dataUserInput
@@ -174,8 +176,8 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         _resp = await _launchGradlev2(
           {
             profile: dataUserInput,
-            excelPath: dataUserInput2,
-            uploadCycleId: dataUserInput3
+            excelPath: dataUserInput2Mandatory,
+            uploadCycleId: dataUserInput3NonMandatory
           }, "launchUploaderViaExcelV1");
         break;
 
@@ -183,14 +185,14 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         _resp = await _launchGradlev2(
           {
             profiles: dataUserInput,
-            excelPaths: dataUserInput2,
-            range: dataUserInput3
+            excelPaths: dataUserInput2Mandatory,
+            range: dataUserInput3NonMandatory
           }, "launchUploaderViaExcelV3");
         break;
 
       case ExecType.REUPLOAD_USING_JSON:
         _resp = await _launchGradlev2({
-          gradleArgs: `'${dataUserInput}','${dataUserInput3}'`,
+          gradleArgs: `'${dataUserInput}','${dataUserInput3NonMandatory}'`,
         }, "launchUploaderViaJson");
         break;
 
@@ -210,7 +212,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       //launchUploaderViaAbsPath
       case ExecType.UploadPdfsViaAbsPath:
         _resp = await _launchGradlev2({
-          gradleArgs: `${dataUserInput} # '${dataUserInput2} '`,
+          gradleArgs: `${dataUserInput} # '${dataUserInput2Mandatory} '`,
         }, "launchUploaderViaAbsPath");
         break;
 
@@ -234,18 +236,18 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         _resp = await launchBulkRename(dataUserInput);
         break;
       case ExecType.DownloadGoogleDriveLink:
-        _resp = await launchGoogleDriveDownload(dataUserInput, dataUserInput2);
+        _resp = await launchGoogleDriveDownload(dataUserInput, dataUserInput2Mandatory);
         break;
 
       case ExecType.DownloadFilesFromExcel:
-        _resp = await downloadFromExcelUsingFrontEnd(dataUserInput, dataUserInput2);
+        _resp = await downloadFromExcelUsingFrontEnd(dataUserInput, dataUserInput2Mandatory);
         break;
 
 
       case ExecType.DirectoryCompare:
         _resp = await makePostCallWithErrorHandling({
           "srcDir": dataUserInput,
-          "destDir": dataUserInput2,
+          "destDir": dataUserInput2Mandatory,
         }, `yarn/compareDirectories`);
         break;
 
@@ -322,15 +324,15 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       case ExecType.GET_FIRST_N_PAGES:
         _resp = await makePostCallForTopN({
           srcFolders: dataUserInput,
-          destRootFolder: dataUserInput2,
-          nPages: dataUserInput3,
+          destRootFolder: dataUserInput2Mandatory,
+          nPages: dataUserInput3NonMandatory,
         }, `yarnListMaker/getFirstAndLastNPages`);
         break;
 
       case ExecType.FILE_NAME_LENGTH:
         _resp = await makePostCallWithErrorHandling({
           folder: dataUserInput,
-          topN: dataUserInput2,
+          topN: dataUserInput2Mandatory,
           includePathInCalc: false
         },
           `fileUtil/topLongFileNames`,);
@@ -340,7 +342,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       case ExecType.FILE_NAME_LENGTH_INCLUDING_PATH:
         _resp = await makePostCallWithErrorHandling({
           folder: dataUserInput,
-          topN: dataUserInput2,
+          topN: dataUserInput2Mandatory,
           includePathInCalc: true
         },
           `fileUtil/topLongFileNames`,);
@@ -349,7 +351,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       case ExecType.DUPLICATES_BY_FILE_SIZE:
         _resp = await makePostCallWithErrorHandling({
           folder1: dataUserInput,
-          folder2: dataUserInput2,
+          folder2: dataUserInput2Mandatory,
         },
           `fileUtil/duplicatesByFileSize`,);
         break;
@@ -357,7 +359,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       case ExecType.RENAME_NON_ASCII_FILE_NAMES_IN_FOLDER:
         _resp = await makePostCallWithErrorHandling({
           folder: dataUserInput,
-          script: dataUserInput2,
+          script: dataUserInput2Mandatory,
         },
           `fileUtil/renameNonAsciiFiles`,);
         break;
@@ -390,8 +392,8 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         _resp = await makePostCallForCombineGDriveAndReducedPdfExcels(
           {
             mainExcelPath: dataUserInput,
-            secondaryExcelPath: dataUserInput2,
-            destExcelPath: dataUserInput3,
+            secondaryExcelPath: dataUserInput2Mandatory,
+            destExcelPath: dataUserInput3NonMandatory,
           },
           `yarnListMaker/combineGDriveAndReducedPdfExcels`);
         break;
@@ -425,12 +427,12 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       case ExecType.MARK_AS_UPLOADED_ENTRIES_IN_ARCHIVE_EXCEL:
         _resp = await makePostCallWithErrorHandling({
           pathOrUploadCycleId: dataUserInput,
-          archiveExcelPath: dataUserInput2,
+          archiveExcelPath: dataUserInput2Mandatory,
         }, `yarnArchive/markAsUploadedEntriesInArchiveExcel`);
         break;
 
       case ExecType.DownloadArchivePdfs:
-        _resp = await launchArchivePdfDownload(dataUserInput, dataUserInput2)
+        _resp = await launchArchivePdfDownload(dataUserInput, dataUserInput2Mandatory)
         break;
       case ExecType.VANITIZE:
         _resp = await launchVanitizeModule(dataUserInput)
@@ -438,8 +440,8 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       case ExecType.COMPARE_UPLOADS_VIA_EXCEL_V1_WITH_ARCHIVE_ORG:
         _resp = await makePostCallWithErrorHandling({
           profileName: dataUserInput,
-          mainExcelPath: dataUserInput2,
-          archiveExcelPath: dataUserInput3,
+          mainExcelPath: dataUserInput2Mandatory,
+          archiveExcelPath: dataUserInput3NonMandatory,
         },
           `yarnArchive/compareUploadsViaExcelV1WithArchiveOrg`);
         break;
@@ -447,8 +449,8 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       case ExecType.COMPARE_UPLOADS_VIA_EXCEL_V3_WITH_ARCHIVE_ORG:
         _resp = await makePostCallWithErrorHandling({
           profileName: dataUserInput,
-          mainExcelPath: dataUserInput2,
-          archiveExcelPath: dataUserInput3,
+          mainExcelPath: dataUserInput2Mandatory,
+          archiveExcelPath: dataUserInput3NonMandatory,
         },
           `yarnArchive/compareUploadsViaExcelV3WithArchiveOrg`);
         break;
@@ -456,7 +458,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       case ExecType.COMPARE_G_DRIVE_AND_LOCAL_EXCEL:
         _resp = await makePostCallForGDriveExcelTrack({
           gDriveExcel: dataUserInput,
-          localExcel: dataUserInput2,
+          localExcel: dataUserInput2Mandatory,
         },
           `searchGDriveDB/compareGDriveAndLocalExcel`);
         break;
@@ -464,7 +466,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       case ExecType.UPLOAD_MISSED_TO_GDRIVE:
         _resp = await makePostCallWithErrorHandling({
           diffExcel: dataUserInput,
-          gDriveRoot: dataUserInput2,
+          gDriveRoot: dataUserInput2Mandatory,
         },
           `searchGDriveDB/uploadToGDriveBasedOnDiffExcel`);
         break;

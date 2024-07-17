@@ -50,7 +50,9 @@ export async function launchLocalFolderListingForPdf(params: string) {
 }
 
 export async function launchGradle(profiles: string, gradleTask: string, optionalParams: { [key: string]: any } = {}) {
-    const params = new URLSearchParams(optionalParams).toString();
+    const params = Object.keys(optionalParams).length === 0 ? "" : new URLSearchParams(optionalParams).toString();
+    console.log(`optionalParams ${JSON.stringify(optionalParams)} params ${params}`);
+    
     const _url = `${backendServer}execLauncher/${gradleTask}?profiles=${profiles}&${params}`
     console.log(`_url ${_url}`);
     const res = await fetch(_url);
