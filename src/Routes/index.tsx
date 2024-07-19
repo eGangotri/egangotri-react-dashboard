@@ -18,6 +18,7 @@ import ExecLauncherTwoB from 'scriptsThruExec/ExecLauncherTwoB';
 import ExecLauncherTwoC from 'scriptsThruExec/ExecLauncherTwoC';
 import ExecLauncherSeven from 'scriptsThruExec/ExecLauncherSix';
 import ExecLauncherSix from 'scriptsThruExec/ExecLauncherSix';
+import Login from 'pages/GoogleLogin';
 
 export const LANDING_PAGE_PATH = "/"
 export const UPLOADS_USHERED_PATH = "/uploadsUshered";
@@ -42,11 +43,16 @@ export const AI_TEXT_IDENTIFIER = "/ai";
 const DashboardRoutes: React.FC = () => (
     <Routes>
         <Route path="/test" element={<>TestAreaWithoutLayout</>} />
+        <Route element={<Login />} >
+            {<Route path={EXEC_LAUNCHER_PATH} element={<ExecLauncher />} />}
+        </Route>
+        {/* <Route path="/login" element={<Login />} />  */}
+
         <Route element={<ProtectedRoute />}>
             {<Route path={LANDING_PAGE_PATH} element={<UploadCycles />} />}
             {<Route path={UPLOADS_USHERED_PATH} element={<Uploads forQueues={false} />} />}
             {<Route path={UPLOADS_QUEUED_PATH} element={<Uploads forQueues={true} />} />}
-            {<Route path={EXEC_LAUNCHER_PATH} element={<ExecLauncher />} />}
+            {/* {<Route path={EXEC_LAUNCHER_PATH} element={<ExecLauncher />} />} */}
             {<Route path={EXEC_LAUNCHER_TWO_PATH} element={<ExecLauncherTwo />} />}
             {<Route path={EXEC_LAUNCHER_TWO_B_PATH} element={<ExecLauncherTwoB />} />}
             {<Route path={EXEC_LAUNCHER_TWO_C_PATH} element={<ExecLauncherTwoC />} />}
@@ -60,7 +66,7 @@ const DashboardRoutes: React.FC = () => (
             {<Route path={SEARCH_G_DRIVE_DB_PATH} element={<SearchGDriveDB />} />}
             {<Route path={G_DRIVE_LISTING_MAKER_PATH} element={<ExecLauncherFive />} />}
             {<Route path={G_DRIVE_UPLOAD_INTEGRITY_CHECK_PATH} element={<ExecLauncherSix />} />}
-            
+
         </Route>
     </Routes>
 );

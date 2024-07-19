@@ -9,6 +9,12 @@ import './assets/main.css';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
 const root = createRoot(document.getElementById('root') as Element);
+/**
+ * in Google Cloud Console. enable 
+ * Identity Toolkit API	
+ * then create credentials.
+ * 
+ */
 const googleClientID = import.meta.env.VITE_GOOGLE_CLIENT_ID || '';
 
 root.render(
