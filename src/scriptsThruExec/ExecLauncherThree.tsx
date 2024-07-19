@@ -51,6 +51,7 @@ const ExecLauncherThree: React.FC = () => {
                 <ExecComponent buttonText="List Files in Folder as Excel - Yarn(Fast)"
                     placeholder='Folder Path or Freezed Profile'
                     execType={genListingOfLocalFolderYarn}
+                    css={{ width: "40vw" }}
                     reactComponent={<>
                         <RadioGroup aria-label="fileType" name="fileType" value={genListingOfLocalFolderYarn} onChange={handleChangeYarn} row>
                             <FormControlLabel value={ExecType.GenListingsofLocalFolderAsPdfYarn} control={<Radio />} label="PDF-ONLY" />
@@ -68,6 +69,7 @@ const ExecLauncherThree: React.FC = () => {
                 <ExecComponent buttonText="List Files in Folder-Gradle(Slow)"
                     placeholder='Folder Path or Freezed Profile'
                     execType={genListingOfLocalFolder}
+                    css={{ width: "40vw" }}
                     reactComponent={<>
                         <RadioGroup aria-label="fileType" name="fileType" value={genListingOfLocalFolder} onChange={handleChange} row>
                             <FormControlLabel value={ExecType.GenListingsofLocalFolderAsPdf} control={<Radio />} label="PDF-ONLY" />
