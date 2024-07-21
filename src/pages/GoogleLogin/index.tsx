@@ -3,7 +3,9 @@ import { GoogleLogin } from '@react-oauth/google';
 import { useRecoilState } from 'recoil';
 import { loggedInState, loggedUser, loggedUserRole, loginToken } from 'pages/Dashboard';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+
 import Layout from 'pages/Layout';
+import { jwtDecode } from "jwt-decode";
 
 const Login: React.FC<PropsWithChildren> = ({ children }) => {
     const [_isLoggedIn, setIsLoggedIn] = useRecoilState(loggedInState);
@@ -15,12 +17,18 @@ const Login: React.FC<PropsWithChildren> = ({ children }) => {
     const location = useLocation();
 
     const handleLoginSuccess = (response: any) => {
-        console.log(`Login Success:${JSON.stringify(response, null, 2)} , ${JSON.stringify(response.profileObj)}`);
+        console.log(`Login Success:${JSON.stringify(response, null, 2)}`);
         setIsLoggedIn(true);
+        const token = response.credential;
         // setLoggedUser(response.profileObj?.name);
         // setLoggedUserRole(response.profileObj?.role);
-        setLoginToken(response.credential);
+        setLoginToken(token);
         const from = location.state?.from?.pathname || '/';
+
+        const decoded = jwtDecode(token);
+        console.log('Login Success:', JSON.stringify(decoded, null, 2));
+        console.log('Email:', decoded?.name);
+
         navigate(from, { replace: true });
 
         // Handle login success (e.g., save token, redirect, etc.)
