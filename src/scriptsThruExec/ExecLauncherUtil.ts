@@ -317,7 +317,8 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       case ExecType.MoveToFreeze:
         _resp = await launchYarnMoveToFreeze({
           profileAsCSV: dataUserInput,
-          flatten: true
+          flatten: true,
+          ignorePaths: ["dont"]
         });
         break;
 

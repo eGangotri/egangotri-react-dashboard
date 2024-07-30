@@ -40,7 +40,7 @@ const ExecLauncherThree: React.FC = () => {
                 </Box>
 
                 <ExecComponent
-                    buttonText='Move to _freeze'
+                    buttonText='Move to freeze'
                     placeholder='profiles as csv'
                     execType={ExecType.MoveToFreeze} />
 
