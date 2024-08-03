@@ -39,9 +39,9 @@ const ExecLauncherTwo: React.FC = () => {
         <Box display="flex" gap={4} mb={2} flexDirection="row">
             <Box display="flex" alignItems="center" gap={4} mb={2} flexDirection="column">
 
-                <ExecComponent buttonText="Upload Pdfs to Archive for Profile via Excel V-1"
+                <ExecComponent buttonText="Upload Excel V-1-With-4-Col Pdfs to Archive"
                     placeholder='Profile Name'
-                    secondTextBoxPlaceHolder='Enter Excel Abs Path'
+                    secondTextBoxPlaceHolder='Enter Excel file name from Downloads folder'
                     thirdTextBoxPlaceHolder='Range (eg. 1-00) (Optional).inclusive'
                     execType={ExecType.UploadPdfsViaExcelV1}
                     textBoxOneValue={uploadableExcelV1Profiles}
@@ -53,7 +53,7 @@ const ExecLauncherTwo: React.FC = () => {
                     thirdButton={<Button variant="contained" color="primary" onClick={loadFromLocalStorageForV1} sx={{ marginRight: "10px", marginBottom: "10px" }}>Load From Local Storage</Button>}
                 />
 
-                <ExecComponent buttonText="Upload Pdfs to Archive for Profile via Excel V-3"
+                <ExecComponent buttonText="Upload Excel V-3-With-1-Col Pdfs to Archive"
                     placeholder='Profile Name'
                     secondTextBoxPlaceHolder='Enter Excel Abs Path'
                     thirdTextBoxPlaceHolder='Range (eg. 1-00) (Optional).inclusive'
