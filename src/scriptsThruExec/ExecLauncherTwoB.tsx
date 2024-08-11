@@ -168,6 +168,15 @@ const ExecLauncherTwoB: React.FC = () => {
                     execType={ExecType.DUMP_ARCHIVE_EXCEL_TO_MONGO}
                     userInputOneInfo="It will pick the latest Excel from the Folders"
                 />
+
+
+                <ExecComponent buttonText="British Lib Work"
+                    placeholder='Profile Name'
+                    thirdTextBoxPlaceHolder='Excel Name only. No Path(Optional)'
+                    execType={ExecType.BL_EAP_WORK}
+                    css={{ width: "250px" }}
+                    css3={{ width: "450px" }}
+                />
             </Box>
         </Box>
     );

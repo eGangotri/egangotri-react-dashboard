@@ -99,6 +99,7 @@ export enum ExecType {
 
   COMPARE_G_DRIVE_AND_LOCAL_EXCEL = 212,
   UPLOAD_MISSED_TO_GDRIVE = 213,
+  BL_EAP_WORK = 214,
 
 }
 
@@ -160,7 +161,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
   else {
     switch (execType) {
       case ExecType.UploadPdfs:
-        const optionalParams = dataUserInput3NonMandatory?.trim() === "" ? {}: {
+        const optionalParams = dataUserInput3NonMandatory?.trim() === "" ? {} : {
           subjectDesc:
             dataUserInput3NonMandatory
         }
@@ -472,6 +473,13 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
           `searchGDriveDB/uploadToGDriveBasedOnDiffExcel`);
         break;
 
+        case ExecType.BL_EAP_WORK:
+          _resp = await makePostCallWithErrorHandling({
+            profileName: dataUserInput,
+            excelOutputName: dataUserInput3NonMandatory,
+          },
+            `yarnArchive/generateEapExcelV1`);
+          break;
       default:
         _resp = {}
         // Handle unknown execType value
