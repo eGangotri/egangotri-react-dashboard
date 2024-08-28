@@ -17,7 +17,7 @@ import {
 } from "service/launchYarn";
 
 import { ExecComponentFormData, ExecResponseDetails } from "./types";
-import { makePostCallForCombineGDriveAndReducedPdfExcels, makePostCallForCreateUploadableExcelV1, makePostCallForCreateUploadableExcelV3, makePostCallForGDriveExcelTrack, makePostCallForGenExcelForGDrive, makePostCallForTopN, makePostCallWithErrorHandling, verifyUploadStatusForUploadCycleId } from "service/BackendFetchService";
+import { makePostCallForAIWithErrorHandling, makePostCallForCombineGDriveAndReducedPdfExcels, makePostCallForCreateUploadableExcelV1, makePostCallForCreateUploadableExcelV3, makePostCallForGDriveExcelTrack, makePostCallForGenExcelForGDrive, makePostCallForTopN, makePostCallWithErrorHandling, verifyUploadStatusForUploadCycleId } from "service/BackendFetchService";
 import { downloadFromExcelUsingFrontEnd } from "service/launchFrontEnd";
 import { replaceQuotes } from "mirror/utils";
 import { handleYarnListingGeneration } from "./Utils";
@@ -101,6 +101,7 @@ export enum ExecType {
   UPLOAD_MISSED_TO_GDRIVE = 213,
   BL_EAP_WORK = 214,
 
+  AI_TEXT_IDENTIFIER=215
 }
 
 export enum Tif2PdfExecType {
@@ -112,14 +113,7 @@ export enum Tif2PdfExecType {
   STEP6 = 6,
 }
 
-export enum AITextIdentifierExecType {
-  STEP1 = 1,
-  STEP2 = 2,
-  STEP3 = 3,
-  STEP4 = 4,
-  STEP5 = 5,
-  STEP6 = 6,
-}
+
 export const invokeFuncBasedOnExecType = async (execType: ExecType,
   data: ExecComponentFormData): Promise<ExecResponseDetails> => {
   let _resp: ExecResponseDetails = {}
@@ -479,6 +473,14 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
             excelOutputName: dataUserInput3NonMandatory,
           },
             `yarnArchive/generateEapExcelV1`);
+          break;
+
+        case ExecType.AI_TEXT_IDENTIFIER:
+          _resp = await makePostCallWithErrorHandling({
+            profileName: dataUserInput,
+            folderPath: dataUserInput2Mandatory,
+          },
+            `ai/renamePdfsWithAI`);
           break;
       default:
         _resp = {}
