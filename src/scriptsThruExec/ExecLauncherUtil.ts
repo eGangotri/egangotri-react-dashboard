@@ -17,7 +17,7 @@ import {
 } from "service/launchYarn";
 
 import { ExecComponentFormData, ExecResponseDetails } from "./types";
-import { makePostCallForAIWithErrorHandling, makePostCallForCombineGDriveAndReducedPdfExcels, makePostCallForCreateUploadableExcelV1, makePostCallForCreateUploadableExcelV3, makePostCallForGDriveExcelTrack, makePostCallForGenExcelForGDrive, makePostCallForTopN, makePostCallWithErrorHandling, verifyUploadStatusForUploadCycleId } from "service/BackendFetchService";
+import { makePostCallForCombineGDriveAndReducedPdfExcels, makePostCallForCreateUploadableExcelV1, makePostCallForCreateUploadableExcelV3, makePostCallForGDriveExcelTrack, makePostCallForGenExcelForGDrive, makePostCallForTopN, makePostCallWithErrorHandling, verifyUploadStatusForUploadCycleId } from "service/BackendFetchService";
 import { downloadFromExcelUsingFrontEnd } from "service/launchFrontEnd";
 import { replaceQuotes } from "mirror/utils";
 import { handleYarnListingGeneration } from "./Utils";
@@ -101,7 +101,10 @@ export enum ExecType {
   UPLOAD_MISSED_TO_GDRIVE = 213,
   BL_EAP_WORK = 214,
 
-  AI_TEXT_IDENTIFIER=215
+  AI_TEXT_IDENTIFIER=215,
+
+  CONVERT_MULTIPLE_TXT_FILE_SCRIPTS=216,
+  CONVERT_TEXT_SCRIPT=217
 }
 
 export enum Tif2PdfExecType {
@@ -482,6 +485,26 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
           },
             `ai/renamePdfsWithAI`);
           break;
+
+          case ExecType.CONVERT_MULTIPLE_TXT_FILE_SCRIPTS:
+            _resp = await makePostCallWithErrorHandling({
+              folderPath: dataUserInput,
+              scriptFrom: dataUserInput2Mandatory,
+              scriptTo: dataUserInput3NonMandatory,
+            },
+            `fileUtil/convertMultipleTxtFileEncodings`);
+            break;
+            
+
+          case ExecType.CONVERT_TEXT_SCRIPT:
+            _resp = await makePostCallWithErrorHandling({
+              text: dataUserInput,
+              scriptFrom: dataUserInput2Mandatory,
+              scriptTo: dataUserInput3NonMandatory,
+            },
+            `fileUtil/convertScript`);
+            break;
+            
       default:
         _resp = {}
         // Handle unknown execType value
