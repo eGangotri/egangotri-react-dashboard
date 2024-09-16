@@ -10,6 +10,7 @@ import {
   launchArchiveExcelDownload,
   launchArchivePdfDownload,
   launchGoogleDriveDownload,
+  launchGoogleDriveZipDownload,
   launchVanitizeModule,
   launchYarnMoveToFreeze,
   launchYarnQaToDestFileMover,
@@ -39,7 +40,8 @@ export enum ExecType {
   TIFF_TO_PDF = 39,
   LoginToArchive = 4,
   UseBulkRenameConventions = 5,
-  DownloadGoogleDriveLink = 6,
+  DownloadGoogleDriveLinkPdfs = 6,
+  DownloadGoogleDriveLinkAsZip = 662,
   DownloadFilesFromExcel = 61,
   DirectoryCompare = 62,
 
@@ -233,10 +235,14 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       case ExecType.UseBulkRenameConventions:
         _resp = await launchBulkRename(dataUserInput);
         break;
-      case ExecType.DownloadGoogleDriveLink:
+      case ExecType.DownloadGoogleDriveLinkPdfs:
         _resp = await launchGoogleDriveDownload(dataUserInput, dataUserInput2Mandatory);
         break;
-
+        
+      case ExecType.DownloadGoogleDriveLinkAsZip:
+        _resp = await launchGoogleDriveZipDownload(dataUserInput, dataUserInput2Mandatory);
+        break;
+        
       case ExecType.DownloadFilesFromExcel:
         _resp = await downloadFromExcelUsingFrontEnd(dataUserInput, dataUserInput2Mandatory);
         break;

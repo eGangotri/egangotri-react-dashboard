@@ -52,6 +52,7 @@ const ExecLauncherSix: React.FC = () => {
                     placeholder='Enter Google Drive Link(s)/Identifiers as csv'
                     secondTextBoxPlaceHolder='Enter Folder Name (not path)'
                     execType={ExecType.GenExcelOfGoogleDriveLinkForAll}
+                    userInputOneInfo='All Mime Types in G-Drive for All Mime Types'
                     css={{ minWidth: "23vw" }}
                 />
 

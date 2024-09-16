@@ -85,10 +85,17 @@ const ExecLauncherOne: React.FC = () => {
                     buttonText="Download Pdfs from GDrive"
                     placeholder='Enter Google Drive Link(s)/Identifiers as csv'
                     secondTextBoxPlaceHolder='Enter Profile or File Abs Path'
-                    execType={ExecType.DownloadGoogleDriveLink}
+                    execType={ExecType.DownloadGoogleDriveLinkPdfs}
                     css={{ backgroundColor: "lightgreen", width: "450px" }}
                     css2={{ backgroundColor: "lightgreen" }} />
 
+                <ExecComponent
+                    buttonText="D/l Zips from GDrive -> Unzip"
+                    placeholder='Enter Google Drive Link(s)/Identifiers as csv'
+                    secondTextBoxPlaceHolder='Enter Profile or File Abs Path'
+                    execType={ExecType.DownloadGoogleDriveLinkAsZip}
+                    css={{ backgroundColor: "lightgreen", width: "450px" }}
+                    css2={{ backgroundColor: "lightgreen" }} />
             </Box>
 
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">

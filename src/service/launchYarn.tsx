@@ -24,6 +24,16 @@ export async function launchGoogleDriveDownload(googleDriveLink: string,
     return result;
 }
 
+export async function launchGoogleDriveZipDownload(googleDriveLink: string,
+    profile: string): Promise<ExecResponseDetails> {
+    const result = await makePostCallWithErrorHandling({
+        "googleDriveLink": googleDriveLink,
+        "profile": profile,
+        ignoreFolder: "proc"
+    }, `yarn/downloadZipFromGoogleDrive`)
+    return result;
+}
+
 export async function launchYarnQaToDestFileMover(
     postParams: Record<string, unknown>): Promise<ExecResponseDetails> {
     const resource =
