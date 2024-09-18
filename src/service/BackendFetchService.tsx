@@ -30,10 +30,14 @@ export const makeGetCall = async (resource: string) => {
 export const makePostCallWithErrorHandling = async (body: Record<string, unknown>, resource: string) => {
   const result = await makePostCall(body, backendServer + resource)
   console.log(`result.response ${JSON.stringify(result.response)}`)
+  
   return {
     ...result
   } as ExecResponseDetails;
 }
+
+
+
 
 
 export const makePostCallForGenExcelForGDrive = async (body: Record<string, unknown>, resource: string) => {

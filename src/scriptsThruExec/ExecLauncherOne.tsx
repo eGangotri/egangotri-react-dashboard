@@ -3,10 +3,13 @@ import ExecComponent from './ExecComponent';
 import Box from '@mui/material/Box';
 import { ExecType } from './ExecLauncherUtil';
 import * as XLSX from 'xlsx';
+import { FOLDER_TO_UNZIP } from 'service/consts';
+import { Button } from '@mui/material';
 
 
 const ExecLauncherOne: React.FC = () => {
     const [flatten, setFlatten] = useState<boolean>(true);
+    const [folderToUnzip, setFolderToUnzip] = useState<string>("");
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
         setFlatten(event.target.checked);
@@ -54,6 +57,14 @@ const ExecLauncherOne: React.FC = () => {
         });
     };
 
+    const loadFolderToUnzipFromLocalStorage = () => {
+        let storedValue = localStorage.getItem(FOLDER_TO_UNZIP);
+        console.log(`loadFromLocalStorage called ${storedValue}`)
+        if (storedValue) {
+            setFolderToUnzip(storedValue);
+        }
+    }
+
     const readExcel = async (file: File | null) => {
         if (!file) return;
         try {
@@ -82,7 +93,7 @@ const ExecLauncherOne: React.FC = () => {
 
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
                 <ExecComponent
-                    buttonText="Download Pdfs from GDrive"
+                    buttonText="D/l Pdfs from GDrive"
                     placeholder='Enter Google Drive Link(s)/Identifiers as csv'
                     secondTextBoxPlaceHolder='Enter Profile or File Abs Path'
                     execType={ExecType.DownloadGoogleDriveLinkPdfs}
@@ -98,6 +109,18 @@ const ExecLauncherOne: React.FC = () => {
                     css2={{ backgroundColor: "lightgreen" }} />
             </Box>
 
+            <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
+                <ExecComponent
+                    buttonText="Unzip all Zip Files"
+                    placeholder='Folder Abs Path'
+                    thirdButton={<Button 
+                        variant="contained" 
+                        color="primary" 
+                        onClick={loadFolderToUnzipFromLocalStorage} 
+                        sx={{ marginRight: "10px", marginBottom: "10px" }}>Load From Local Storage</Button>}
+                    execType={ExecType.UnzipAllFiles} />
+            </Box>
+            
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
                 <ExecComponent
                     buttonText="Create G-Drive Excel"

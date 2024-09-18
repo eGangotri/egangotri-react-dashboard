@@ -2,6 +2,7 @@ import { backendServer } from 'utils/constants';
 import { makePostCallWithErrorHandling } from './BackendFetchService';
 import { ExecResponseDetails } from 'scriptsThruExec/types';
 import { makePostCall } from 'mirror/utils';
+import { FOLDER_TO_UNZIP } from './consts';
 
 export async function launchVanitizeModule(
     profile: string): Promise<ExecResponseDetails> {
@@ -31,6 +32,27 @@ export async function launchGoogleDriveZipDownload(googleDriveLink: string,
         "profile": profile,
         ignoreFolder: "proc"
     }, `yarn/downloadZipFromGoogleDrive`)
+
+
+    let unzipFolder = result?.response?._results?.unzipFolder;
+
+    console.log(`unzipFolder ${unzipFolder}`)
+    // Store value
+    localStorage.setItem(FOLDER_TO_UNZIP, unzipFolder);
+
+    // Retrieve value
+    let value = localStorage.getItem(FOLDER_TO_UNZIP);
+
+    console.log(`FOLDER_TO_UNZIP: ${value}`);
+    return result;
+}
+
+export async function unzipFolders(folder: string): Promise<ExecResponseDetails> {
+    const result = await makePostCallWithErrorHandling({
+        "folder": folder,
+        ignoreFolder: "proc"
+    }, `yarn/unzipAllFolders`)
+
     return result;
 }
 

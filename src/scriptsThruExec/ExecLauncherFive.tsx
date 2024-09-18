@@ -104,7 +104,11 @@ const ExecLauncherFive: React.FC = () => {
                     css={{ minWidth: "23vw" }}
                     css2={{ minWidth: "23vw" }}
                     css3={{ marginTop: "30px", minWidth: "23vw" }}
-                    thirdButton={<Button variant="contained" color="primary" onClick={loadTopNPathFromLocalStorage} sx={{ marginRight: "10px", marginBottom: "10px" }}>Load From Local Storage</Button>}
+                    thirdButton={<Button 
+                        variant="contained" 
+                        color="primary" 
+                        onClick={loadTopNPathFromLocalStorage} 
+                        sx={{ marginRight: "10px", marginBottom: "10px" }}>Load From Local Storage</Button>}
                 />
                 <Box>
                     {topNFileDumpPath && <Typography variant="h6" component="div" gutterBottom>Path to Reduced PDFs {topNFileDumpPath} for dumping to G-Drive</Typography>}

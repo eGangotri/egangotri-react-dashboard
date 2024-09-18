@@ -14,7 +14,8 @@ import {
   launchVanitizeModule,
   launchYarnMoveToFreeze,
   launchYarnQaToDestFileMover,
-  makePostCallToPath
+  makePostCallToPath,
+  unzipFolders
 } from "service/launchYarn";
 
 import { ExecComponentFormData, ExecResponseDetails } from "./types";
@@ -42,6 +43,7 @@ export enum ExecType {
   UseBulkRenameConventions = 5,
   DownloadGoogleDriveLinkPdfs = 6,
   DownloadGoogleDriveLinkAsZip = 662,
+  UnzipAllFiles = 663,
   DownloadFilesFromExcel = 61,
   DirectoryCompare = 62,
 
@@ -242,6 +244,11 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       case ExecType.DownloadGoogleDriveLinkAsZip:
         _resp = await launchGoogleDriveZipDownload(dataUserInput, dataUserInput2Mandatory);
         break;
+       
+      case ExecType.UnzipAllFiles:
+        _resp = await unzipFolders(dataUserInput);
+        break;
+         
         
       case ExecType.DownloadFilesFromExcel:
         _resp = await downloadFromExcelUsingFrontEnd(dataUserInput, dataUserInput2Mandatory);
