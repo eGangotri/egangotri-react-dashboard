@@ -176,3 +176,25 @@ export async function launchArchivePdfDownload(archiveLink: string, profileOrFil
         ..._result
     } as ExecResponseDetails;
 }
+
+export async function launchAllArchiveItemsDownloadViaExcel(archiveLink: string, profileOrFilePath: string): Promise<ExecResponseDetails> {
+    const resource =
+        backendServer +
+        `yarnArchive/downloadArchiveItemsViaExcel`;
+
+    if (!archiveLink.trim().includes(',') && /\s/.test(archiveLink.trim())) {
+        archiveLink = archiveLink.split(' ').join(',');
+        console.log(`archiveLink ${JSON.stringify(archiveLink)}`)
+    }
+
+    const result = await makePostCall({
+        "excelPath": archiveLink,
+        "profileOrPath": profileOrFilePath
+    }, resource);
+
+    const _result = result.response;
+    console.log(`_result ${JSON.stringify(_result)}`)
+    return {
+        ..._result
+    } as ExecResponseDetails;
+}

@@ -7,6 +7,7 @@ import {
 
 import {
   addHeaderFooter,
+  launchAllArchiveItemsDownloadViaExcel,
   launchArchiveExcelDownload,
   launchArchivePdfDownload,
   launchGoogleDriveDownload,
@@ -86,6 +87,7 @@ export enum ExecType {
   AddHeaderFooter = 10,
   MoveToFreeze = 11,
   DownloadArchivePdfs = 12,
+  DownloadAllArchiveItemsViaExcel = 121,
   VANITIZE = 100,
   GET_FIRST_N_PAGES = 200,
   COMBINE_GDRIVE_AND_REDUCED_PDF_DRIVE_EXCELS = 201,
@@ -105,10 +107,10 @@ export enum ExecType {
   UPLOAD_MISSED_TO_GDRIVE = 213,
   BL_EAP_WORK = 214,
 
-  AI_TEXT_IDENTIFIER=215,
+  AI_TEXT_IDENTIFIER = 215,
 
-  CONVERT_MULTIPLE_TXT_FILE_SCRIPTS=216,
-  CONVERT_TEXT_SCRIPT=217
+  CONVERT_MULTIPLE_TXT_FILE_SCRIPTS = 216,
+  CONVERT_TEXT_SCRIPT = 217
 }
 
 export enum Tif2PdfExecType {
@@ -240,16 +242,16 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       case ExecType.DownloadGoogleDriveLinkPdfs:
         _resp = await launchGoogleDriveDownload(dataUserInput, dataUserInput2Mandatory);
         break;
-        
+
       case ExecType.DownloadGoogleDriveLinkAsZip:
         _resp = await launchGoogleDriveZipDownload(dataUserInput, dataUserInput2Mandatory);
         break;
-       
+
       case ExecType.UnzipAllFiles:
         _resp = await unzipFolders(dataUserInput);
         break;
-         
-        
+
+
       case ExecType.DownloadFilesFromExcel:
         _resp = await downloadFromExcelUsingFrontEnd(dataUserInput, dataUserInput2Mandatory);
         break;
@@ -446,6 +448,11 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       case ExecType.DownloadArchivePdfs:
         _resp = await launchArchivePdfDownload(dataUserInput, dataUserInput2Mandatory)
         break;
+
+      case ExecType.DownloadAllArchiveItemsViaExcel:
+        _resp = await launchAllArchiveItemsDownloadViaExcel(dataUserInput, dataUserInput2Mandatory)
+        break;
+
       case ExecType.VANITIZE:
         _resp = await launchVanitizeModule(dataUserInput)
         break;
@@ -483,41 +490,41 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
           `searchGDriveDB/uploadToGDriveBasedOnDiffExcel`);
         break;
 
-        case ExecType.BL_EAP_WORK:
-          _resp = await makePostCallWithErrorHandling({
-            profileName: dataUserInput,
-            excelOutputName: dataUserInput3NonMandatory,
-          },
-            `yarnArchive/generateEapExcelV1`);
-          break;
+      case ExecType.BL_EAP_WORK:
+        _resp = await makePostCallWithErrorHandling({
+          profileName: dataUserInput,
+          excelOutputName: dataUserInput3NonMandatory,
+        },
+          `yarnArchive/generateEapExcelV1`);
+        break;
 
-        case ExecType.AI_TEXT_IDENTIFIER:
-          _resp = await makePostCallWithErrorHandling({
-            profileName: dataUserInput,
-            folderPath: dataUserInput2Mandatory,
-          },
-            `ai/renamePdfsWithAI`);
-          break;
+      case ExecType.AI_TEXT_IDENTIFIER:
+        _resp = await makePostCallWithErrorHandling({
+          profileName: dataUserInput,
+          folderPath: dataUserInput2Mandatory,
+        },
+          `ai/renamePdfsWithAI`);
+        break;
 
-          case ExecType.CONVERT_MULTIPLE_TXT_FILE_SCRIPTS:
-            _resp = await makePostCallWithErrorHandling({
-              folderPath: dataUserInput,
-              scriptFrom: dataUserInput2Mandatory,
-              scriptTo: dataUserInput3NonMandatory,
-            },
-            `fileUtil/convertMultipleTxtFileEncodings`);
-            break;
-            
+      case ExecType.CONVERT_MULTIPLE_TXT_FILE_SCRIPTS:
+        _resp = await makePostCallWithErrorHandling({
+          folderPath: dataUserInput,
+          scriptFrom: dataUserInput2Mandatory,
+          scriptTo: dataUserInput3NonMandatory,
+        },
+          `fileUtil/convertMultipleTxtFileEncodings`);
+        break;
 
-          case ExecType.CONVERT_TEXT_SCRIPT:
-            _resp = await makePostCallWithErrorHandling({
-              text: dataUserInput,
-              scriptFrom: dataUserInput2Mandatory,
-              scriptTo: dataUserInput3NonMandatory,
-            },
-            `fileUtil/convertScript`);
-            break;
-            
+
+      case ExecType.CONVERT_TEXT_SCRIPT:
+        _resp = await makePostCallWithErrorHandling({
+          text: dataUserInput,
+          scriptFrom: dataUserInput2Mandatory,
+          scriptTo: dataUserInput3NonMandatory,
+        },
+          `fileUtil/convertScript`);
+        break;
+
       default:
         _resp = {}
         // Handle unknown execType value

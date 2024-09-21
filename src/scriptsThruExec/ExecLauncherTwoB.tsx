@@ -149,7 +149,15 @@ const ExecLauncherTwoB: React.FC = () => {
                 />
 
                 <ExecComponent
-                    buttonText="Download All Pdfs from Archive"
+                    buttonText="Download All Archive Items (including non-pdf)"
+                    placeholder='Path to Excel'
+                    secondTextBoxPlaceHolder='Enter Profile or File Abs Path for Dumping Item(s)'
+                    execType={ExecType.DownloadAllArchiveItemsViaExcel}
+                    css={{ width: "450px" }}
+                />
+
+                <ExecComponent
+                    buttonText="Download All Pdfs from Archive (only pdfs)"
                     placeholder='Space/Comma-Separated Archive Link(s) or Identifier(s)'
                     secondTextBoxPlaceHolder='Enter Profile or File Abs Path for Dumping PDFs'
                     execType={ExecType.DownloadArchivePdfs}
