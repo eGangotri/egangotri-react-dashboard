@@ -19,6 +19,7 @@ import ExecLauncherTwoC from 'scriptsThruExec/ExecLauncherTwoC';
 import ExecLauncherSeven from 'scriptsThruExec/ExecLauncherSix';
 import ExecLauncherSix from 'scriptsThruExec/ExecLauncherSix';
 import Login from 'pages/GoogleLogin';
+import RenamePdfs from 'scriptsThruExec/RenamePdfs';
 
 export const LANDING_PAGE_PATH = "/"
 export const UPLOADS_USHERED_PATH = "/uploadsUshered";
@@ -36,6 +37,7 @@ export const SEARCH_ARCHIVE_DB_PATH = "/searchArchiveDB";
 export const SEARCH_G_DRIVE_DB_PATH = "/searchGDriveDB";
 export const G_DRIVE_LISTING_MAKER_PATH = "/GDriveListingMaker";
 export const G_DRIVE_UPLOAD_INTEGRITY_CHECK_PATH = "/GDriveUploadIntegrityCheck";
+export const RENAME_PDFS = "/renamePdfs";
 
 export const TIFF_2_PDF = "/tiff2pdf";
 export const AI_TEXT_IDENTIFIER = "/ai";
@@ -66,7 +68,8 @@ const DashboardRoutes: React.FC = () => (
             {<Route path={SEARCH_G_DRIVE_DB_PATH} element={<SearchGDriveDB />} />}
             {<Route path={G_DRIVE_LISTING_MAKER_PATH} element={<ExecLauncherFive />} />}
             {<Route path={G_DRIVE_UPLOAD_INTEGRITY_CHECK_PATH} element={<ExecLauncherSix />} />}
-
+            {<Route path={RENAME_PDFS} element={<RenamePdfs />} />}
+            
         </Route>
     </Routes>
 );
