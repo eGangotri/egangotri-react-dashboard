@@ -21,7 +21,7 @@ import { ERROR_RED, SUCCESS_GREEN } from 'constants/colors';
 import Spinner from 'widgets/Spinner';
 import { _launchGradlev2, launchGradleReuploadFailed } from 'service/launchGradle';
 import UploadDialog from './UploadDialog';
-import { launchYarnMoveToFreeze } from 'service/launchYarn';
+import { launchYarnMoveToFreeze, launchYarnMoveToFreezeByUploadId } from 'service/launchYarn';
 import ExecResponsePanel from 'scriptsThruExec/ExecResponsePanel';
 import { ExecResponse } from 'scriptsThruExec/types';
 import { checkCountEquality, createBackgroundForRow } from './utils';
@@ -123,7 +123,7 @@ const UploadCycles = () => {
         setOpenDialog(false)
         console.log(`_profiles ${chosenProfilesForMove} ${JSON.stringify(chosenProfilesForMove)}`)
         setIsLoading(true);
-        const _resp = await launchYarnMoveToFreeze({
+        const _resp = await launchYarnMoveToFreezeByUploadId({
             profileAsCSV: chosenProfilesForMove[1]?.join(","),
             uploadCycleId: chosenProfilesForMove[0],
             flatten: "true"

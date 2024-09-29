@@ -14,6 +14,7 @@ import {
   launchGoogleDriveZipDownload,
   launchVanitizeModule,
   launchYarnMoveToFreeze,
+  launchYarnMoveToFreezeByUploadId,
   launchYarnQaToDestFileMover,
   makePostCallToPath,
   unzipFolders
@@ -86,6 +87,7 @@ export enum ExecType {
 
   AddHeaderFooter = 10,
   MoveToFreeze = 11,
+  MoveToFreeze_FOR_UPLOAD_ID = 110,
   DownloadArchivePdfs = 12,
   DownloadAllArchiveItemsViaExcel = 121,
   VANITIZE = 100,
@@ -329,6 +331,14 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
 
       case ExecType.MoveToFreeze:
         _resp = await launchYarnMoveToFreeze({
+          profileAsCSV: dataUserInput,
+          flatten: true,
+          ignorePaths: ["dont"]
+        });
+        break;
+
+      case ExecType.MoveToFreeze_FOR_UPLOAD_ID:
+        _resp = await launchYarnMoveToFreezeByUploadId({
           profileAsCSV: dataUserInput,
           flatten: true,
           ignorePaths: ["dont"]
