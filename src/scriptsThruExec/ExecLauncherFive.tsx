@@ -15,7 +15,7 @@ const ExecLauncherFive: React.FC = () => {
     const [topNFileDumpPath, setTopNFileDumpPath] = useState('');
     const [combinationExcelPath, setCombinationExcelPath] = useState('');
 
-    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const chooseGDriveExcelType = (event: ChangeEvent<HTMLInputElement>) => {
         const _val = event.target.value;
         console.log("_val", _val)
         let _listingType;
@@ -73,7 +73,7 @@ const ExecLauncherFive: React.FC = () => {
                     execType={excelGDrive}
                     css={{ minWidth: "23vw" }}
                     reactComponent={<>
-                        <RadioGroup aria-label="fileType" name="fileType" value={excelGDrive} onChange={handleChange} row>
+                        <RadioGroup aria-label="fileType" name="fileType" value={excelGDrive} onChange={chooseGDriveExcelType} row>
                             <FormControlLabel value={ExecType.GenExcelOfGoogleDriveLinkPdfOnly} control={<Radio />} label="ALL" />
                             <FormControlLabel value={ExecType.GenExcelOfGoogleDriveLinkForReduced} control={<Radio />} label="REDUCED" />
                         </RadioGroup>

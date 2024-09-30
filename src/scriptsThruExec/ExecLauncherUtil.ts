@@ -64,7 +64,7 @@ export enum ExecType {
   GenExcelOfGoogleDriveLinkPdfOnly = 811,
   GenExcelOfGoogleDriveLinkForAll = 812,
   GenExcelOfGoogleDriveLinkForReduced = 82,
-
+  GenExcelOfGoogleDriveLinkForRenameFilesExcel = 83,
   GenListingsofLocalFolderAsPdf = 91,
   GenListingsofLocalFolderAsAll = 92,
 
@@ -296,6 +296,15 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         }, `yarnListMaker/getGoogleDriveListing`);
         break;
 
+        case ExecType.GenExcelOfGoogleDriveLinkForRenameFilesExcel:
+          _resp = await makePostCallForGenExcelForGDrive({
+            "googleDriveLink": dataUserInput,
+            "folderName": data.userInputSecond || "D:\\",
+            "reduced": false,
+            "pdfRenamerXlV2": true,
+            "allNotJustPdfs": false
+          }, `yarnListMaker/getGoogleDriveListing`);
+          break;
 
       case ExecType.GenListingsofLocalFolderAsPdf:
         _resp = await launchLocalFolderListingForPdf(dataUserInput);
