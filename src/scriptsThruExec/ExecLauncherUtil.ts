@@ -91,6 +91,8 @@ export enum ExecType {
   DownloadArchivePdfs = 12,
   DownloadAllArchiveItemsViaExcel = 121,
   VANITIZE = 100,
+  RENAME_FIES_VIA_EXCEL = 101,
+
   GET_FIRST_N_PAGES = 200,
   COMBINE_GDRIVE_AND_REDUCED_PDF_DRIVE_EXCELS = 201,
   DUMP_GDRIVE_COMBO_EXCEL_TO_MONGO = 202,
@@ -466,6 +468,14 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       case ExecType.VANITIZE:
         _resp = await launchVanitizeModule(dataUserInput)
         break;
+
+      case ExecType.RENAME_FIES_VIA_EXCEL:
+        _resp = await makePostCallWithErrorHandling({
+          excelPath: dataUserInput,
+          folderOrProfile: dataUserInput2Mandatory,
+        }, `fileUtil/renameFilesViaExcel`);
+        break;
+
       case ExecType.COMPARE_UPLOADS_VIA_EXCEL_V1_WITH_ARCHIVE_ORG:
         _resp = await makePostCallWithErrorHandling({
           profileName: dataUserInput,

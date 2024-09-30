@@ -11,9 +11,13 @@ const ExecLauncherFourB: React.FC = () => {
         <Box display="flex" gap={4} mb={2} flexDirection="row">
             <Box display="flex" alignItems="center" gap={4} mb={2} flexDirection="column">
 
-                <ExecComponent buttonText="Vanitize Folder or Profile"
-                    placeholder='Vanitize'
-                    execType={ExecType.VANITIZE} />
+                <ExecComponent buttonText="Rename Files via Excel"
+                    placeholder='Excel File Path'
+                    secondTextBoxPlaceHolder='Profile or Abs Path'
+                    execType={ExecType.RENAME_FIES_VIA_EXCEL} 
+                    css={{ width: "350px" }}
+                    css2={{ width: "350px" }}
+                    />
 
                 <ExecComponent buttonText="Use Bulk Rename Conventions"
                     placeholder='Use Bulk Rename Conventions'
