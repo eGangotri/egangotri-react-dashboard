@@ -2,7 +2,7 @@ import React, { ChangeEvent, useState } from 'react';
 import ExecComponent from './ExecComponent';
 import Box from '@mui/material/Box';
 import { ExecType } from './ExecLauncherUtil';
-import { Button, FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material';
+import { Button, FormControlLabel, Link, Radio, RadioGroup, Typography } from '@mui/material';
 import { COMBINATION_EXCEL_PATH_LOCAL_STORAGE_KEY, 
     GDRIVE_EXCEL_NAME_LOCAL_STORAGE_KEY,
      REDUCED_SUFFIX, TOP_N_FILE_LOCAL_STORAGE_KEY } from 'service/consts';
@@ -83,11 +83,18 @@ const ExecLauncherFive: React.FC = () => {
                 <Box>
                     <Typography variant="h6" component="div" gutterBottom>
                         <ol>
-                            <li>1. Generate Excel of Google Drive Links</li>
+                            <li>1a. (Manual) snap2html</li>
+                            <li>1b. (Manual) Txt/Excel/CSV Via http://localhost:3000/execLauncher3 List FIles in Folders(Gradle)</li>
+                            <li>1c. (Manual) dump 1a/1b to the correspodning Treasure in local. Dump Local to G-Drive 
+                                <Link href="https://drive.google.com/drive/folders/1F7j5eP-sMGav_D4amCbWiqWjpe2Zz4x1">here</Link>
+                            </li>
+                            <li>1d. (Manual) Take Success Upload of 1c as screenshot and put in Local and G-Driv</li>
+                            <li>1a. Generate Excel of Google Drive Links</li>
                             <li>2. Create Reduced PDFs with First and Last 10 Pages</li>
                             <li>Manual Task. Dump Reduced PDFs to Google Drive</li>
                             <li>3. Generate Excel of Reduced PDFs</li>
                             <li>4. Combine Excel in Step 5 with 1</li>
+                            <li>5 Upload to Mongo</li>
                         </ol>
                     </Typography>
                 </Box>
