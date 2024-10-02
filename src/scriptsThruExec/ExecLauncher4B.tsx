@@ -9,15 +9,6 @@ import {
 } from 'service/consts';
 
 const ExecLauncher4B: React.FC = () => {
-    const [topNFileDumpPath, setTopNFileDumpPath] = useState('');
-
-    const loadTopNPathFromLocalStorage = () => {
-        let storedValue = localStorage.getItem(TOP_N_FILE_LOCAL_STORAGE_KEY);
-        console.log(`loadFromLocalStorage called ${storedValue}`)
-        if (storedValue) {
-            setTopNFileDumpPath(storedValue);
-        }
-    }
 
     return (
         <Box display="flex" gap={4} mb={2} flexDirection="row">
@@ -34,10 +25,6 @@ const ExecLauncher4B: React.FC = () => {
                     css3={{ marginTop: "30px", minWidth: "23vw" }}
 
                 />
-
-                <Box>
-                    {topNFileDumpPath && <Typography variant="h6" component="div" gutterBottom>Path to Top-N PDFs {topNFileDumpPath} for dumping to G-Drive</Typography>}
-                </Box>
 
                 <Box>
                     <Typography variant="h6" component="div" gutterBottom>
@@ -60,11 +47,6 @@ const ExecLauncher4B: React.FC = () => {
                     secondTextBoxPlaceHolder='Enter Folder Name (not path)'
                     execType={ExecType.GenExcelOfGoogleDriveLinkForRenameFilesExcel}
                     css={{ minWidth: "23vw" }}
-                    thirdButton={<Button
-                        variant="contained"
-                        color="primary"
-                        onClick={loadTopNPathFromLocalStorage}
-                        sx={{ marginRight: "15px", marginBottom: "15px" }}>Load From Local Storage</Button>}
                 />
 
                 <ExecComponent buttonText="Rename Files via Excel"
