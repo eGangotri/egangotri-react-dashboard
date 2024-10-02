@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import ExecComponent from './ExecComponent';
 import Box from '@mui/material/Box';
 import { ExecType } from './ExecLauncherUtil';
-import { Button, Typography } from '@mui/material';
+import { Button, Link, Typography } from '@mui/material';
 
 import {
     TOP_N_FILE_LOCAL_STORAGE_KEY
@@ -27,10 +27,10 @@ const ExecLauncher4B: React.FC = () => {
                     placeholder='Absolute Path to PDFs Folder(s) as CSV'
                     secondTextBoxPlaceHolder='Absolute Path to Destination Folder'
                     thirdTextBoxPlaceHolder='N Pages to Extract from Start and End'
-                    thirdTextBoxDefaultValue={"10"}
+                    thirdTextBoxDefaultValue={"15"}
                     execType={ExecType.GET_FIRST_N_PAGES}
-                    css={{ minWidth: "23vw" }}
-                    css2={{ minWidth: "23vw" }}
+                    css={{ minWidth: "35vw" }}
+                    css2={{ minWidth: "35vw" }}
                     css3={{ marginTop: "30px", minWidth: "23vw" }}
 
                 />
@@ -44,6 +44,7 @@ const ExecLauncher4B: React.FC = () => {
                         <ol>
                             <li>1. Create Reduced PDFs with First and Last n Pages</li>
                             <li>2. Manual Task. Dump Reduced PDFs to Google Drive</li>
+                            <li>Ex. this: <Link href='https://drive.google.com/drive/folders/1Z2l9PNGz4G5eJo37HmQssrVR0szQ6FVN'>Persian Renaming</Link></li>
                             <li>3. Generate Excel of Google Drive Links of Reduced PDF</li>
                             <li>4. Manual Task. Upload Pdf to Google Drive for Renamer</li>
                             <li>5. Download Excel and rename local files</li>
@@ -63,7 +64,7 @@ const ExecLauncher4B: React.FC = () => {
                         variant="contained"
                         color="primary"
                         onClick={loadTopNPathFromLocalStorage}
-                        sx={{ marginRight: "10px", marginBottom: "10px" }}>Load From Local Storage</Button>}
+                        sx={{ marginRight: "15px", marginBottom: "15px" }}>Load From Local Storage</Button>}
                 />
 
                 <ExecComponent buttonText="Rename Files via Excel"
