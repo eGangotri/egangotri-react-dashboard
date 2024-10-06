@@ -34,6 +34,7 @@ const ExecLauncher4B: React.FC = () => {
                             <li>Ex. this: <Link href='https://drive.google.com/drive/folders/1Z2l9PNGz4G5eJo37HmQssrVR0szQ6FVN'>Persian Renaming</Link></li>
                             <li>3. Generate Excel of Google Drive Links of Reduced PDF</li>
                             <li>4. Manual Task. Upload Pdf to Google Drive for Renamer</li>
+                            <li>Explorable: Reading directly from G-Drive</li>
                             <li>5. Download Excel and rename local files</li>
                         </ol>
                     </Typography>
