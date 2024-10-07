@@ -123,7 +123,7 @@ const ExecLauncherTwoB: React.FC = () => {
 
             <Box display="flex" alignItems="center" gap={4} mb={2} flexDirection="column">
                 <ExecComponent
-                    buttonText="D/l archive.org Data As Excel"
+                    buttonText="D/l archive.org MetaData As Excel"
                     placeholder='Space/Comma-Separated Archive Link(s) or Identifier(s)'
                     execType={archiveExcelExecType}
                     css={{ width: "450px" }}
