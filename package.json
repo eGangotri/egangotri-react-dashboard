@@ -32,7 +32,6 @@
     "react-router-dom": "^6.15.0",
     "react-scripts": "4.0.3",
     "recoil": "^0.7.7",
-    "tailwindcss": "^3.4.3",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
@@ -44,9 +43,6 @@
     "@typescript-eslint/eslint-plugin": "^7.8.0",
     "@typescript-eslint/parser": "^7.8.0",
     "@vitejs/plugin-react": "^4.2.1",
-    "autoprefixer": "^10.4.16",
-    "postcss": "^8.4.31",
-    "postcss-cli": "^10.1.0",
     "prettier": "^3.2.5",
     "serve": "^14.2.3",
     "typescript": "^5.2.2",
@@ -66,9 +62,7 @@
     "build2": "yarn build:css && set NODE_OPTIONS=--openssl-legacy-provider && react-dotenv && react-scripts build",
     "test": "react-dotenv && react-scripts test",
     "lint": "npx eslint . --ext .js,.jsx,.ts,.tsx",
-    "lint_fix": "npx eslint --fix . --ext .js,.jsx,.ts,.tsx",
-    "build:css": "postcss src/assets/tailwind.css -o src/assets/main.css",
-    "watch:css": "postcss src/assets/tailwind.css -o src/assets/main.css"
+    "lint_fix": "npx eslint --fix . --ext .js,.jsx,.ts,.tsx"
   },
   "eslintConfig": {
     "extends": [
