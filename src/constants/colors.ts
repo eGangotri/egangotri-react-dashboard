@@ -7,13 +7,21 @@ export const FADED_WHITE = '#F9F9F9';
 export const GRAY34 = '#575757';
 export const WHITE_SMOKE = '#F8F8F8';
 export const SUCCESS_GREEN = '#5BAB62';
+
+
 export const FADED_BLACK = 'rgba(0, 0, 0, 0.6)';
 export const LIGHT_PRIMARY_BLUE = 'rgba(36, 171, 224, 0.08)';
 export const AZUREISH_WHITE = '#D7EBF4';
 export const ERROR_RED = '#CF1E1E';
 export const DARK_RED = '#5d2a2a';
 export const BURGUNDY_RED = '#800020';
+
+export const BURGUNDY_RED_TW = 'bg-red-800';
+export const SUCCESS_GREEN_TW = "bg-green-600";
+export const LIGHT_RED_TW = 'bg-red-300';
+
 export const LIGHT_RED = '#ffd4d5';
+
 export const LIGHT_GREEN = '#90ee90';
 export const LIGHT_YELLOW = '#FFFFB2';
 export const WARNING_YELLOW = '#F8E224';

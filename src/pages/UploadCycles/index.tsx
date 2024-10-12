@@ -9,7 +9,6 @@ import {
 import "pages/UploadCycles/UploadCycles.css"
 import * as _ from 'lodash';
 import moment from 'moment';
-
 import { makePostCallWithErrorHandling, verifyUploadStatusForUploadCycleId } from "service/BackendFetchService";
 
 import { DD_MM_YYYY_WITH_TIME_FORMAT } from 'utils/utils';
@@ -30,6 +29,7 @@ import { TableHeaderCellForEqualityCount } from './TableHeaderCellForEqualityCou
 import { TableHeaderCellForUploadCycleStats } from './TableHeaderCellForUploadCycleStats';
 import { ColorCodeInformationPanel } from './ColorCodedInformationPanel';
 import path from 'path';
+import InfoIconWithTooltip from 'widgets/InfoIconWithTooltip';
 
 
 const UploadCycles = () => {
@@ -293,10 +293,11 @@ const UploadCycles = () => {
                                 size="small"
                                 sx={{ color: "#f38484", width: "200px", marginTop: "10px" }}
                                 disabled={isLoading}
-
                             >
-                                Find Missing (Unqueued/Unushered) Failure Type 1
+                                Find Missing&nbsp;
+                                <InfoIconWithTooltip input="Find Missing (Unqueued/Unushered) Failure Type 1" />
                             </Button>
+
                             <Popover
                                 id={id2}
                                 open={open2}
@@ -319,7 +320,8 @@ const UploadCycles = () => {
                                 sx={{ color: "#f38484", width: "200px", marginTop: "10px" }}
                                 disabled={isLoading}
                             >
-                                Reupload Failed (Queued/Ushered/But Didnt Make it). Failure Type 2
+                                Reupload Failed&nbsp;
+                                <InfoIconWithTooltip input="Reupload Failed (Queued/Ushered/But Didnt Make it). Failure Type 2" />
                             </Button>
                             <Popover
                                 id={idReuplodFailing}
@@ -342,7 +344,8 @@ const UploadCycles = () => {
                             sx={{ width: "200px", marginTop: "10px" }}
                             disabled={isLoading || (row?.moveToFreeze === true)}
                         >
-                            Yarn Move to Freeze Uploaded
+                            Yarn Move-To-Freeze&nbsp;
+                            <InfoIconWithTooltip input="Yarn move Uploaded items to Freeze folder and disable this button" />
                         </Button>
                         <Popover
                             id={id4}
@@ -460,14 +463,14 @@ const UploadCycles = () => {
                                 ? sortedData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 : sortedData
                             ).map((row: UploadCycleTableData) => (
-                                <TableRow key={row.uploadCycleId} sx={createBackgroundForRow(row)}>
+                                <TableRow key={row.uploadCycleId} className={createBackgroundForRow(row)}>
                                     <TableCell sx={{ verticalAlign: "top" }}>
                                         <Link href={`${UPLOADS_USHERED_PATH}?uploadCycleId=${row.uploadCycleId}`}>{row.uploadCycleId}</Link>
                                     </TableCell>
                                     <TableRowCellForUploadCycleGlobalStats row={row} />
                                     <TableCell sx={{ verticalAlign: "top" }}>
                                         <Table>
-                                            <TableBody>
+                                            <TableBody className="text-sm">
                                                 <ProfileAndCount row={row} forQueue={true} />
                                             </TableBody>
                                         </Table>

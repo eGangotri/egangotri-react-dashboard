@@ -1,22 +1,16 @@
-import { BURGUNDY_RED, LIGHT_RED, SUCCESS_GREEN } from "constants/colors"
+import { BURGUNDY_RED_TW, LIGHT_RED_TW, SUCCESS_GREEN_TW } from "constants/colors"
 import { UploadCycleTableData } from "mirror/types"
 
 export const createBackgroundForRow = (row: UploadCycleTableData) => {
     if (row?.countIntended !== row?.totalCount) {
-        return {
-            backgroundColor: `${LIGHT_RED}`
-        }
+        return LIGHT_RED_TW
     }
 
     if (row?.allUploadVerified === true) {
-        return {
-            backgroundColor: `${SUCCESS_GREEN}`
-        }
+        return SUCCESS_GREEN_TW
     }
     if (row?.allUploadVerified === false) {
-        return {
-            backgroundColor: `${BURGUNDY_RED}`
-        }
+        return BURGUNDY_RED_TW
     }
 }
 
