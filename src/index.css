@@ -1,33 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* Set your default so that the sizing and placement is predictable */
 * {
-    box-sizing: border-box;
-    padding: 0;
-    margin: 0;
-  }
-  
-  /* Everything is a child of this node, so set its height to take up the full page or more, then set some padding at the bottom so your footer can slip into the gap. */
-  #root {
-    position: relative;
-    min-height: 100vh;
-    padding-bottom: 20px;
-  }
-  
-  .Header {
-   position: relative;
-   height: 25px;
-   width: 100%;
-  }
-  
-  .Main {
-    text-align: left;
-    position: relative;
-  }
-  
-  /* Now set the height of your Footer equal to the padding that you left for it in your #root. 
-   To make it stay at the bottom, you will set it to be absolutely positioned.  If Main grows larger, your Footer will move down to remain at the bottom of the page. */ 
-  .Footer {
-    height: 20px;
-    width: 100%;
-    position: absolute;
-    bottom: 0;
-  }
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  @apply bg-turquoise-50;
+  /* Example: Apply a background color to the entire page */
+}
+
+/* Everything is a child of this node, so set its height to take up the full page or more, then set some padding at the bottom so your footer can slip into the gap. */
+#root {
+  position: relative;
+  min-height: 100vh;
+  padding-bottom: 20px;
+}
+
+.Header {
+  position: relative;
+  height: 25px;
+  width: 100%;
+}
+
+.Main {
+  text-align: left;
+  position: relative;
+}
+
+/* Now set the height of your Footer equal to the padding that you left for it in your #root. 
+   To make it stay at the bottom, you will set it to be absolutely positioned.  If Main grows larger, your Footer will move down to remain at the bottom of the page. */
+.Footer {
+  height: 20px;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+}

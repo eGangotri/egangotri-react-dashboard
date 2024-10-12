@@ -431,7 +431,7 @@ const UploadCycles = () => {
         <Stack spacing="2">
             {isLoading && <Spinner />}
             <ColorCodeInformationPanel />
-            <div>
+            <div className='bg-black'>
                 <TableContainer component={Paper}>
                     <Table>
                         <TableHead>
