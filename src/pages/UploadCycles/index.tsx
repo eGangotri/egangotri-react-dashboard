@@ -34,7 +34,7 @@ import path from 'path';
 
 const UploadCycles = () => {
     const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
     const [sortedData, setSortedData] = useState<UploadCycleTableData[]>([]);
     const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
     const [anchorEl2, setAnchorEl2] = React.useState<HTMLButtonElement | null>(null);
@@ -337,7 +337,7 @@ const UploadCycles = () => {
                     <Typography component="span">
                         <Button
                             variant="contained"
-                            onClick={(e) => showDialog(e,row.uploadCycleId, row.archiveProfileAndCount.map((arcProfAndCount: ArchiveProfileAndCount) => arcProfAndCount.archiveProfile))}
+                            onClick={(e) => showDialog(e, row.uploadCycleId, row.archiveProfileAndCount.map((arcProfAndCount: ArchiveProfileAndCount) => arcProfAndCount.archiveProfile))}
                             size="small"
                             sx={{ width: "200px", marginTop: "10px" }}
                             disabled={isLoading || (row?.moveToFreeze === true)}
@@ -433,9 +433,19 @@ const UploadCycles = () => {
             <ColorCodeInformationPanel />
             <div className='bg-black'>
                 <TableContainer component={Paper}>
+                    <TablePagination
+                        rowsPerPageOptions={[10, 20, 50]}
+                        component="div"
+                        count={sortedData.length}
+                        rowsPerPage={rowsPerPage}
+                        page={page}
+                        onPageChange={handleChangePage}
+                        onRowsPerPageChange={handleChangeRowsPerPage}
+                        className="bg-turquoise-50 text-turquoise-900"
+                    />
                     <Table>
                         <TableHead>
-                            <TableRow>
+                            <TableRow className="bg-slate-200">
                                 <TableCell onClick={() => handleSort('uploadCycleId')}><Link>Upload Cycle Id</Link></TableCell>
                                 <TableHeaderCellForUploadCycleStats />
                                 <TableCell>( Queued ) Stats </TableCell>
@@ -482,15 +492,6 @@ const UploadCycles = () => {
                         </TableBody>
                     </Table>
                 </TableContainer>
-                <TablePagination
-                    rowsPerPageOptions={[5, 10, 25]}
-                    component="div"
-                    count={sortedData.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
-                />
             </div>
             <UploadDialog openDialog={openDialog}
                 handleClose={handleClose}
