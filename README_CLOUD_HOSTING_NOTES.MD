@@ -1,8 +1,7 @@
 ### 
 
 in .env use
-VITE_BACKEND_SERVER_PROD=https://egangotri-node-backend-latest.onrender.com/
-
+VITE_BACKEND_SERVER_PROD=https://egangotri-node-backend-dashboard.onrender.com/
 Make following as:
 VITE_DEV_ENV="prod"
 
@@ -17,7 +16,5 @@ firebase login
 yarn build
 firebase deploy
 
-Viewable at:
-https://egangotri-react-dashboard.firebaseapp.com
-https://egangotri-react-dashboard.web.app/
-
+Project Console: https://console.firebase.google.com/project/egangotri-dashboard/overview
+Hosting URL: https://egangotri-dashboard.web.app
