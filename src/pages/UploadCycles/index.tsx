@@ -30,6 +30,7 @@ import { TableHeaderCellForUploadCycleStats } from './TableHeaderCellForUploadCy
 import { ColorCodeInformationPanel } from './ColorCodedInformationPanel';
 import path from 'path';
 import InfoIconWithTooltip from 'widgets/InfoIconWithTooltip';
+import ItemToolTip, { ellipsis } from 'widgets/ItemTooltip';
 
 
 const UploadCycles = () => {
@@ -381,7 +382,8 @@ const UploadCycles = () => {
                     {row?.archiveProfileAndCountIntended?.map((archiveProfileAndCount: UploadCycleArchiveProfile) => (
                         <Box >
                             <Typography component="span">{archiveProfileAndCount.archiveProfile} </Typography>
-                            <Typography component="div">{archiveProfileAndCount.archiveProfilePath} </Typography>
+                            <Typography component="div">
+                                <ItemToolTip input={archiveProfileAndCount?.archiveProfilePath||""} /></Typography>
                             <Typography component="span">{archiveProfileAndCount.count}</Typography>
                             <Typography component="div" sx={{ fontWeight: 600 }}>
                                 <Button

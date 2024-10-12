@@ -6,7 +6,7 @@ import Link from "@mui/material/Link";
 import { Box, IconButton } from "@mui/material";
 import { FaCopy } from "react-icons/fa";
 import { blueGrey } from "@mui/material/colors";
-import { ItemToolTipPropsType } from "./types";
+import { ItemToolTipLabelPropsType, ItemToolTipPropsType } from "./types";
 
 const DEFAULT_COUNT_FOR_ELLIPSIS = 20;
 
@@ -29,6 +29,18 @@ export const reverseEllipsis = (
     : input;
 };
 
+const ItemToolTipLabel: React.FC<ItemToolTipLabelPropsType> = ({ url, input, noEllipsis, withEllipsis
+}) => {
+  return (
+    url ? (
+      <Link href={input} target="_blank">
+        {noEllipsis ? input : withEllipsis}
+      </Link>
+    ) : (
+      <Typography>{noEllipsis ? input : withEllipsis}</Typography>
+    )
+  );
+}
 
 const ItemToolTip: React.FC<ItemToolTipPropsType> = ({
   input,
@@ -43,29 +55,21 @@ const ItemToolTip: React.FC<ItemToolTipPropsType> = ({
     : ellipsis(input, alphabetCount);
   return (
     <Tooltip title={input} arrow placement="right">
-      <Box>
-        {url ? (
-          <Link href={input} target="_blank">
-            {noEllipsis ? input : withEllipsis}
-          </Link>
-        ) : (
-          <Typography>{noEllipsis ? input : withEllipsis}</Typography>
-        )}
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <IconButton
-            aria-label="copy"
-            color="inherit"
-            size="small"
-            onClick={async () => {
-              await navigator.clipboard.writeText(input);
-            }}
-          >
-            <FaCopy fontSize="inherit" />
-          </IconButton>
-          {
-            reactComponent && <Box component="span" sx={{ paddingLeft: "5px", backgroundColor: blueGrey }}>{reactComponent}</Box>
-          }
-        </Box>
+      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <ItemToolTipLabel url={url} input={input} noEllipsis={noEllipsis} withEllipsis={withEllipsis} />
+        <IconButton
+          aria-label="copy"
+          color="inherit"
+          size="small"
+          onClick={async () => {
+            await navigator.clipboard.writeText(input);
+          }}
+        >
+          <FaCopy fontSize="inherit" />
+        </IconButton>
+        {
+          reactComponent && <Box component="span" sx={{ paddingLeft: "5px", backgroundColor: blueGrey }}>{reactComponent}</Box>
+        }
       </Box>
     </Tooltip>
   );

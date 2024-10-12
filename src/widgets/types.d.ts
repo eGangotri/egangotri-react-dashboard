@@ -8,3 +8,9 @@ export type ItemToolTipPropsType = {
     noEllipsis?:boolean
   };
   
+  export type ItemToolTipLabelPropsType = {
+    input: string;
+    url?: boolean;
+    withEllipsis?:string | number,
+    noEllipsis?:boolean
+  };

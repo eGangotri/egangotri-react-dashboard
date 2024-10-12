@@ -8,27 +8,6 @@ import { FaCopy, FaInfoCircle } from "react-icons/fa";
 import { blueGrey } from "@mui/material/colors";
 import { ItemToolTipPropsType } from "./types";
 
-const DEFAULT_COUNT_FOR_ELLIPSIS = 20;
-
-export const ellipsis = (
-  input: string | number,
-  alphabetCount = DEFAULT_COUNT_FOR_ELLIPSIS
-) => {
-  const inputAsString = input?.toString();
-  return inputAsString?.length > alphabetCount
-    ? `${inputAsString?.substring(0, alphabetCount)}...`
-    : input;
-};
-
-export const reverseEllipsis = (
-  input: string,
-  alphabetCount = DEFAULT_COUNT_FOR_ELLIPSIS
-) => {
-  return input.length > alphabetCount
-    ? `...${input?.substring(input.length - alphabetCount)}`
-    : input;
-};
-
 const InfoIconWithTooltip: React.FC<ItemToolTipPropsType> = ({
   input,
 }) => {
