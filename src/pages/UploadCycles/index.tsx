@@ -491,6 +491,16 @@ const UploadCycles = () => {
                             )}
                         </TableBody>
                     </Table>
+                    <TablePagination
+                        rowsPerPageOptions={[10, 20, 50]}
+                        component="div"
+                        count={sortedData.length}
+                        rowsPerPage={rowsPerPage}
+                        page={page}
+                        onPageChange={handleChangePage}
+                        onRowsPerPageChange={handleChangeRowsPerPage}
+                        className="bg-turquoise-50 text-turquoise-900"
+                    />
                 </TableContainer>
             </div>
             <UploadDialog openDialog={openDialog}
