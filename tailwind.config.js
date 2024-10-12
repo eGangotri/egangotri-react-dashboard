@@ -6,6 +6,11 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        serif: ['Merriweather', 'serif'],
+        // slab: ['Roboto Slab', 'serif'],
+        // sans: ['Bebas Neue', 'sans-serif'],
+      },
       colors: {
         turquoise: {
           50: '#E0F7F7',
