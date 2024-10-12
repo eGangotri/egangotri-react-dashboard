@@ -9,7 +9,7 @@ const Footer = () => {
             justifyContent: "center",
             height: "100%"
         }}>
-            <Typography variant="h5">eGangotri Digital Preservation Trust</Typography>
+            <Typography variant="h5" className="text-turquoise-900">eGangotri Digital Preservation Trust</Typography>
         </Box>
     )
 }
