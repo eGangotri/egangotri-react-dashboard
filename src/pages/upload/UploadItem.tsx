@@ -54,30 +54,19 @@ const UploadItem: React.FC<UploadPropsType> = ({
   };
 
   const highlightRow = (item: Item) => {
-    // console.log(`item.hasOwnProperty("uploadFlag") ${"uploadFlag" in item}`)
-    // console.log(`item.hasOwnProperty("uploadFlag") ${item.uploadFlag}`)
     if ("uploadFlag" in item && item?.uploadFlag === false) {
-      return {
-        backgroundColor: LIGHT_RED,
-        color: "black"
-      }
+      return "bg-red-600 text-black"
     }
     else if (item?.uploadFlag === null) {
-      return {
-        backgroundColor: LIGHT_YELLOW,
-        color: "black"
-      }
+      return "bg-yellow-600 text-black"
     }
     else {
-      return {
-        backgroundColor: LIGHT_GREEN,
-        color: "black"
-      }
+      return "bg-green-600 text-black"
     }
 
   }
   return (
-    <tr key={item._id} style={highlightRow(item)}>
+    <tr key={item._id} className={highlightRow(item)}>
       <td>
         <Checkbox
           checked={isSelected(item._id)}

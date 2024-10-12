@@ -97,12 +97,13 @@ const UploadsPanel: React.FC<UploadType> = ({ items, forQueues = false, selected
             size="large">Verify Upload Status</Button>
           <InfoIconWithTooltip input="It will mark uploadFlag in DB permanently" />
         </Box>
-        <Typography><span style={{ color: WARNING_YELLOW, }}>Yellow implies never checked.</span>
-          <span style={{ color: LIGHT_GREEN }}>Green implies Verfied-Uploaded.</span>
-          <span style={{ color: LIGHT_RED }}>Red implies Not Uploaded</span> </Typography>
+        <Typography><span className="text-yellow-500">Yellow implies never checked.</span>
+          <span className="text-green-600">Green implies Verfied-Uploaded.</span>
+          <span className="text-red-600">Red implies Not Uploaded</span>
+        </Typography>
         <Box sx={{ display: `${failCount === -1 ? 'none' : 'inline'}` }}>
           <IconButton>
-            {failCount > 0 ? <FaCheck color={ERROR_RED} /> : <FaTimes color={SUCCESS_GREEN} />}
+            {failCount > 0 ? <FaCheck className="text-red-600" /> : <FaTimes className="text-green-600" />}
           </IconButton>
           <Typography component="span" color={failCount > 0 ? ERROR_RED : SUCCESS_GREEN}>{failCount > 0 ? `(${failCount} item(s) failed verification)` : "All Checked Uploads were valid"}</Typography>
         </Box>
