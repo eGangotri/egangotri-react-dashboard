@@ -450,7 +450,7 @@ const UploadCycles = () => {
                     />
                     <Table>
                         <TableHead>
-                            <TableRow className="bg-slate-200">
+                            <TableRow className="bg-gradient-to-r from-cyan-200 to-blue-300">
                                 <TableCell onClick={() => handleSort('uploadCycleId')}><Link>Upload Cycle Id</Link></TableCell>
                                 <TableHeaderCellForUploadCycleStats />
                                 <TableCell>( Queued ) Stats </TableCell>
