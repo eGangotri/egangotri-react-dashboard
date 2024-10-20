@@ -14,18 +14,21 @@ export type ExecComponentProps = {
     secondTextBoxPlaceHolder?: string;
     thirdTextBoxPlaceHolder?: string;
     secondTextBoxDefaultValue?: string;
-    thirdTextBoxDefaultValue?:string;
+    thirdTextBoxDefaultValue?: string;
     reactComponent?: JSX.Element;
     css?: SxProps<Theme>;
     css2?: SxProps<Theme>;
     css3?: SxProps<Theme>;
-    userInputOneInfo ?:string;
-    userInputTwoInfoNonMandatory ?:string;
-    userInputThreeInfoNonMandatory ?:string;
-    secondComponentRequired ?:boolean
-    textBoxOneValue ?:string;
-    textBoxTwoValue ?:string;
-    thirdButton ?: JSX.Element;
+    userInputOneInfo?: string;
+    userInputTwoInfoNonMandatory?: string;
+    userInputThreeInfoNonMandatory?: string;
+    secondComponentRequired?: boolean
+    textBoxOneValue?: string;
+    textBoxTwoValue?: string;
+    thirdButton?: JSX.Element;
+    multiline?: boolean;
+    fullWidth?: boolean;
+    rows?: number;
 };
 
 export type ExecResponse = {

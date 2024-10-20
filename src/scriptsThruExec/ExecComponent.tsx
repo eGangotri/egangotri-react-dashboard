@@ -30,7 +30,10 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
   userInputThreeInfoNonMandatory: userInputThreeInfo = "",
   secondComponentRequired = true,
   textBoxOneValue = "",
-  textBoxTwoValue = ""
+  textBoxTwoValue = "",
+  multiline = false,
+  fullWidth = false,
+  rows = 1,
 }) => {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const { register, handleSubmit, setValue, formState: { errors }, reset } = useForm<ExecComponentFormData>();
@@ -42,6 +45,7 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
     setAnchorEl(null);
   };
   const [execLogsForPopover, setExecLogsForPopover] = React.useState(<></>);
+
   const [backendResp, setBackendResp] = React.useState({});
 
   const funcToInvoke = async (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -149,7 +153,12 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
                 {...register('userInputSecond', secondComponentRequired === true ? { required: "This field is required" } : {})}
                 error={Boolean(errors.userInputSecond)}
                 sx={{ marginRight: "30px", width: "250px", ...css2 }}
-                helperText={errors.userInputSecond?.message} />
+                helperText={errors.userInputSecond?.message} 
+                multiline
+                fullWidth
+                rows={rows}
+                />
+             
               {userInputTwoInfo && <InfoIconWithTooltip input={userInputTwoInfo} />}
             </Box>
             : null

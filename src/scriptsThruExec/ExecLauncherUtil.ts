@@ -32,11 +32,13 @@ export enum ExecType {
   UploadPdfsViaExcelV3 = 112,
   UploadPdfsViaAbsPath = 113,
   MoveFolderContents = 2,
+  MoveMultipleFilesAsCSVtoFolderOrProfile = 21,
   ReverseMove = 31,
   SNAP_TO_HTML = 32,
   FILE_NAME_LENGTH = 33,
   FILE_NAME_LENGTH_INCLUDING_PATH = 34,
   DUPLICATES_BY_FILE_SIZE = 35,
+  DISJOINT_SET_BY_FILE_SIZE = 351,
   RENAME_NON_ASCII_FILE_NAMES_IN_FOLDER = 36,
   JPG_TO_PDF = 37,
   PNG_TO_PDF = 38,
@@ -232,6 +234,16 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         });
         break;
 
+      case ExecType.MoveMultipleFilesAsCSVtoFolderOrProfile:
+        console.log(`dataUserInput ${dataUserInput} 
+          dataUserInput2Mandatory ${dataUserInput2Mandatory}`)
+        _resp = await makePostCallWithErrorHandling({
+          profileOrFolder: dataUserInput,
+          absPathsAsCSV: dataUserInput2Mandatory,
+        },
+          `fileUtil/moveFilesAsCSVOfAbsPaths`,);
+        break;
+
       case ExecType.ReverseMove:
         _resp = await launchReverseMove(dataUserInput);
         break;
@@ -296,15 +308,15 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         }, `yarnListMaker/getGoogleDriveListing`);
         break;
 
-        case ExecType.GenExcelOfGoogleDriveLinkForRenameFilesExcel:
-          _resp = await makePostCallForGenExcelForGDrive({
-            "googleDriveLink": dataUserInput,
-            "folderName": data.userInputSecond || "D:\\",
-            "reduced": false,
-            "pdfRenamerXlV2": true,
-            "allNotJustPdfs": false
-          }, `yarnListMaker/getGoogleDriveListing`);
-          break;
+      case ExecType.GenExcelOfGoogleDriveLinkForRenameFilesExcel:
+        _resp = await makePostCallForGenExcelForGDrive({
+          "googleDriveLink": dataUserInput,
+          "folderName": data.userInputSecond || "D:\\",
+          "reduced": false,
+          "pdfRenamerXlV2": true,
+          "allNotJustPdfs": false
+        }, `yarnListMaker/getGoogleDriveListing`);
+        break;
 
       case ExecType.GenListingsofLocalFolderAsPdf:
         _resp = await launchLocalFolderListingForPdf(dataUserInput);
@@ -387,8 +399,18 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         _resp = await makePostCallWithErrorHandling({
           folder1: dataUserInput,
           folder2: dataUserInput2Mandatory,
+          findDisjoint: false
         },
-          `fileUtil/duplicatesByFileSize`,);
+          `fileUtil/findByFileSize`,);
+        break;
+
+      case ExecType.DISJOINT_SET_BY_FILE_SIZE:
+        _resp = await makePostCallWithErrorHandling({
+          folder1: dataUserInput,
+          folder2: dataUserInput2Mandatory,
+          findDisjoint: true
+        },
+          `fileUtil/findByFileSize`,);
         break;
 
       case ExecType.RENAME_NON_ASCII_FILE_NAMES_IN_FOLDER:

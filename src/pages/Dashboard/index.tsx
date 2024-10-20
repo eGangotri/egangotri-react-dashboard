@@ -1,5 +1,5 @@
 import React from 'react';
-import 'index.css';
+import '../../index.css';
 import { ThemeProvider } from '@mui/material/styles';
 import DashboardRoutes from 'Routes';
 import AppError from 'components/Error/AppError';

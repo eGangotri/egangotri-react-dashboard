@@ -1,5 +1,5 @@
 import React from 'react';
-
+import './index.css';
 import './assets/css/index.css';
 import Dashboard from './pages/Dashboard';
 import reportWebVitals from './reportWebVitals';

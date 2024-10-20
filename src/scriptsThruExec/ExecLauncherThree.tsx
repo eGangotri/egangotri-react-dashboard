@@ -47,7 +47,6 @@ const ExecLauncherThree: React.FC = () => {
             </Box>
 
             <Box display="flex" gap={4} mb={2} flexDirection="column">
-
                 <ExecComponent buttonText="List Files in Folder as Excel - Yarn(Fast)"
                     placeholder='Folder Path or Freezed Profile'
                     execType={genListingOfLocalFolderYarn}
