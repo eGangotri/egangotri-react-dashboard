@@ -42,19 +42,14 @@ export const RENAME_PDFS = "/renamePdfs";
 export const TIFF_2_PDF = "/tiff2pdf";
 export const AI_TEXT_IDENTIFIER = "/ai";
 
-const DashboardRoutes: React.FC = () => (
-    <Routes>
-        <Route path="/test" element={<>TestAreaWithoutLayout</>} />
-        <Route element={<Login />} >
-            {<Route path={EXEC_LAUNCHER_PATH} element={<ExecLauncher />} />}
-        </Route>
-        {/* <Route path="/login" element={<Login />} />  */}
-
-        <Route element={<ProtectedRoute />}>
+const DashboardRoutes: React.FC = () => {
+    const isLocalhost = window.location.hostname === 'localhost';
+    const allFrags = (
+        <>
             {<Route path={LANDING_PAGE_PATH} element={<UploadCycles />} />}
             {<Route path={UPLOADS_USHERED_PATH} element={<Uploads forQueues={false} />} />}
             {<Route path={UPLOADS_QUEUED_PATH} element={<Uploads forQueues={true} />} />}
-            {/* {<Route path={EXEC_LAUNCHER_PATH} element={<ExecLauncher />} />} */}
+            {<Route path={EXEC_LAUNCHER_PATH} element={<ExecLauncher />} />}
             {<Route path={EXEC_LAUNCHER_TWO_PATH} element={<ExecLauncherTwo />} />}
             {<Route path={EXEC_LAUNCHER_TWO_B_PATH} element={<ExecLauncherTwoB />} />}
             {<Route path={EXEC_LAUNCHER_TWO_C_PATH} element={<ExecLauncherTwoC />} />}
@@ -64,14 +59,31 @@ const DashboardRoutes: React.FC = () => (
             {<Route path={TIFF_2_PDF} element={<Tiff2Pdf />} />}
             {<Route path={AI_TEXT_IDENTIFIER} element={<AITextIdentifier />} />}
             {<Route path={FILE_MOVER_PATH} element={<FileMover />} />}
+            {<Route path={TIFF_2_PDF} element={<Tiff2Pdf />} />}
             {<Route path={SEARCH_ARCHIVE_DB_PATH} element={<SearchArchiveDB />} />}
             {<Route path={SEARCH_G_DRIVE_DB_PATH} element={<SearchGDriveDB />} />}
             {<Route path={G_DRIVE_LISTING_MAKER_PATH} element={<ExecLauncherFive />} />}
             {<Route path={G_DRIVE_UPLOAD_INTEGRITY_CHECK_PATH} element={<ExecLauncherSix />} />}
             {<Route path={RENAME_PDFS} element={<RenamePdfs />} />}
-            
-        </Route>
-    </Routes>
-);
+        </>
+    );
+
+    return (
+        <Routes>
+            <Route path="/test" element={<>TestAreaWithoutLayout</>} />
+            {isLocalhost ? (
+                <Route element={<ProtectedRoute />}>
+                    {allFrags}
+                </Route>
+            ) : (
+                <Route element={<Login />}>
+                    {/* <Route element={<ProtectedRoute />}> */}
+                        {allFrags}
+                    {/* </Route> */}
+                </Route>
+            )}
+        </Routes>
+    );
+}
 
 export default DashboardRoutes;

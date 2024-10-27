@@ -6,17 +6,8 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 import Layout from 'pages/Layout';
 import { jwtDecode } from "jwt-decode";
+import { DecodedJWT } from 'components/common/types';
 
-interface DecodedJWT {
-    iss?: string;
-    sub?: string;
-    aud?: string;
-    exp?: number;
-    nbf?: number;
-    iat?: number;
-    jti?: string;
-    [key: string]: any; // This allows for additional custom claims
-  }
 
 const Login: React.FC<PropsWithChildren> = ({ children }) => {
     const [_isLoggedIn, setIsLoggedIn] = useRecoilState(loggedInState);
@@ -34,9 +25,10 @@ const Login: React.FC<PropsWithChildren> = ({ children }) => {
         // setLoggedUser(response.profileObj?.name);
         // setLoggedUserRole(response.profileObj?.role);
         setLoginToken(token);
-        const from = location.state?.from?.pathname || '/';
-
-        const decoded:DecodedJWT = jwtDecode(token);
+        const pathname = location.pathname;
+        const from = pathname.substring(1)
+        console.log(`from: ${from} ${JSON.stringify(location.pathname)}`);
+        const decoded: DecodedJWT = jwtDecode(token);
         console.log('Login Success:', JSON.stringify(decoded, null, 2));
         console.log('Email:', decoded?.name);
 
