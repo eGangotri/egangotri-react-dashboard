@@ -2,11 +2,11 @@
 React Based Dashboard for eGangotri Front End using vite
 
 # First Time
-yarn install
+pnpm install
 
 # To Start
-yarn run start
-nodemon --exec yarn run start
+pnpm run start
+nodemon --exec pnpm run start
 View at http://localhost:3000/
 
 @Error: Digital envelope routines
@@ -37,7 +37,7 @@ http://localhost:5000/
 
 ##Debugging
 if on higher versions of node you may have to modify start script as 
-    "start": "react-dotenv && yarn run lint_fix && react-scripts --openssl-legacy-provider start",
+    "start": "react-dotenv && pnpm run lint_fix && react-scripts --openssl-legacy-provider start",
     
 Due to changes on Node.js v17, --openssl-legacy-provider was added for handling key size on OpenSSL v3. For now i do workaround with this options.
 

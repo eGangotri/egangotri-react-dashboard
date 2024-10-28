@@ -9,10 +9,10 @@ const Tiff2Pdf: React.FC = () => {
         <Box display="flex" gap={4} mb={2} flexDirection="row">
             <Box display="flex" alignItems="center" gap={4} mb={2} flexDirection="row">
                 <Box display="flex" alignItems="center" gap={4} mb={2} flexDirection="column">
-                    <ExecComponent buttonText="1. yarn run convert"
+                    <ExecComponent buttonText="1. pnpm run convert"
                         execType={Tif2PdfExecType.STEP1} />
 
-                    <ExecComponent buttonText="2. yarn run tally-post-conversion ( with TALLY_FOR_FOLDERS)"
+                    <ExecComponent buttonText="2. pnpm run tally-post-conversion ( with TALLY_FOR_FOLDERS)"
                         execType={Tif2PdfExecType.STEP2} />
 
                     <ExecComponent buttonText="3. gradle merge(mega)"
@@ -21,10 +21,10 @@ const Tiff2Pdf: React.FC = () => {
                 </Box>
 
                 <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
-                    <ExecComponent buttonText="4. yarn run move-merged-pdfs"
+                    <ExecComponent buttonText="4. pnpm run move-merged-pdfs"
                         execType={Tif2PdfExecType.STEP4} />
 
-                    <ExecComponent buttonText="5. yarn run tally-post-conversion ( with TALLY_FOR_PDFS )Checks Numbers of Items in Sync Only"
+                    <ExecComponent buttonText="5. pnpm run tally-post-conversion ( with TALLY_FOR_PDFS )Checks Numbers of Items in Sync Only"
                         execType={Tif2PdfExecType.STEP5} />
 
                     <ExecComponent buttonText="6. gradle tally(mega) ( checks pageCount corresponds to image count)"

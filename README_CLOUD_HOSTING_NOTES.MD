@@ -13,7 +13,7 @@ First time
  firebase init 
 afterwards
 firebase login
-yarn build
+pnpm build
 firebase deploy
 
 Project Console: https://console.firebase.google.com/project/egangotri-dashboard/overview
