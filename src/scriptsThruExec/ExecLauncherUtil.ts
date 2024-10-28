@@ -12,6 +12,7 @@ import {
   launchArchivePdfDownload,
   launchGoogleDriveDownload,
   launchGoogleDriveZipDownload,
+  launchImgFilesToPdf,
   launchVanitizeModule,
   launchYarnMoveToFreeze,
   launchYarnMoveToFreezeByUploadId,
@@ -422,28 +423,16 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         break;
 
       case ExecType.JPG_TO_PDF:
-        _resp = await makePostCallWithErrorHandling({
-          folder: dataUserInput,
-          imgType: "JPG",
-        },
-          `fileUtil/imgFilesToPdf`);
+        _resp = await launchImgFilesToPdf(dataUserInput, "JPG");
         break;
 
       case ExecType.PNG_TO_PDF:
-        _resp = await makePostCallWithErrorHandling({
-          folder: dataUserInput,
-          imgType: "PNG",
-        },
-          `fileUtil/imgFilesToPdf`);
+        _resp = await launchImgFilesToPdf(dataUserInput, "PNG");
         break;
 
       case ExecType.TIFF_TO_PDF:
-        _resp = await makePostCallWithErrorHandling({
-          folder: dataUserInput,
-          imgType: "TIFF",
-        },
-          `fileUtil/imgFilesToPdf`);
-        break;
+        _resp = await launchImgFilesToPdf(dataUserInput, "TIFF");
+        break;;
 
       case ExecType.COMBINE_GDRIVE_AND_REDUCED_PDF_DRIVE_EXCELS:
         _resp = await makePostCallForCombineGDriveAndReducedPdfExcels(

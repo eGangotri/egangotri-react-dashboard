@@ -2,7 +2,7 @@ import { backendServer } from 'utils/constants';
 import { makePostCallWithErrorHandling } from './BackendFetchService';
 import { ExecResponseDetails } from 'scriptsThruExec/types';
 import { makePostCall } from 'mirror/utils';
-import { FOLDER_TO_UNZIP } from './consts';
+import { FOLDER_OF_UNZIPPED_IMGS, FOLDER_TO_UNZIP } from './consts';
 
 export async function launchVanitizeModule(
     profile: string): Promise<ExecResponseDetails> {
@@ -27,15 +27,20 @@ export async function launchGoogleDriveDownload(googleDriveLink: string,
 
 export async function launchGoogleDriveZipDownload(googleDriveLink: string,
     profile: string): Promise<ExecResponseDetails> {
-    const result = await makePostCallWithErrorHandling({
+    const jsonData = await makePostCallWithErrorHandling({
         "googleDriveLink": googleDriveLink,
         "profile": profile,
         ignoreFolder: "proc"
     }, `yarn/downloadZipFromGoogleDrive`)
 
+    console.log(`result ${JSON.stringify(jsonData)}`)
 
-    let unzipFolder = result?.response?._results?.unzipFolder;
-
+    const destPaths = new Set(
+        jsonData?.response?.flatMap((response: { results: { destPath: string }[] }) =>
+            response?.results?.map((result: { destPath: string }) => result?.destPath) ?? []
+        ) ?? []
+    );
+    const unzipFolder = [...destPaths].join(', ');
     console.log(`unzipFolder ${unzipFolder}`)
     // Store value
     localStorage.setItem(FOLDER_TO_UNZIP, unzipFolder);
@@ -44,16 +49,47 @@ export async function launchGoogleDriveZipDownload(googleDriveLink: string,
     let value = localStorage.getItem(FOLDER_TO_UNZIP);
 
     console.log(`FOLDER_TO_UNZIP: ${value}`);
-    return result;
+
+    return jsonData;
 }
 
+export async function launchImgFilesToPdf(folder: string,
+    imgType: string = "JPG"): Promise<ExecResponseDetails> {
+    const jsonData = await makePostCallWithErrorHandling({
+        folder: folder,
+        imgType: imgType,
+    }, `fileUtil/imgFilesToPdf`)
+
+    console.log(`result ${JSON.stringify(jsonData)}`)
+
+
+    return jsonData;
+}
+
+
 export async function unzipFolders(folder: string): Promise<ExecResponseDetails> {
-    const result = await makePostCallWithErrorHandling({
+    const jsonData = await makePostCallWithErrorHandling({
         "folder": folder,
         ignoreFolder: "proc"
     }, `yarn/unzipAllFolders`)
 
-    return result;
+    console.log(`result ${JSON.stringify(jsonData)}`)
+
+    const unzippedImgFiles: Set<string> = new Set(
+        jsonData.response
+            .map((item: { unzipFolder: string }) => item.unzipFolder)
+    );
+
+    const unzipFolder = [...unzippedImgFiles].join(', ');
+    console.log(`unzippedImgFiles ${unzipFolder}`)
+    // Store value
+    localStorage.setItem(FOLDER_OF_UNZIPPED_IMGS, unzipFolder);
+
+    // Retrieve value
+    let value = localStorage.getItem(FOLDER_OF_UNZIPPED_IMGS);
+
+    console.log(`FOLDER_OF_UNZIPPED_IMGS: ${value}`);
+    return jsonData;
 }
 
 export async function launchYarnQaToDestFileMover(
@@ -79,7 +115,7 @@ export async function launchYarnMoveToFreeze(
 
 export async function launchYarnMoveToFreezeByUploadId(
     postParams: Record<string, unknown>): Promise<ExecResponseDetails> {
-   
+
     const resource =
         backendServer +
         `yarn/yarnMoveFilesInListToFreeze`;
