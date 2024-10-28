@@ -20,7 +20,7 @@ import { ERROR_RED, SUCCESS_GREEN } from 'constants/colors';
 import Spinner from 'widgets/Spinner';
 import { _launchGradlev2, launchGradleReuploadFailed } from 'service/launchGradle';
 import UploadDialog from './UploadDialog';
-import { launchYarnMoveToFreeze, launchYarnMoveToFreezeByUploadId } from 'service/launchYarn';
+import { launchYarnMoveToFreezeByUploadId } from 'service/launchYarn';
 import ExecResponsePanel from 'scriptsThruExec/ExecResponsePanel';
 import { ExecResponse } from 'scriptsThruExec/types';
 import { checkCountEquality, createBackgroundForRow } from './utils';
@@ -345,8 +345,8 @@ const UploadCycles = () => {
                             sx={{ width: "200px", marginTop: "10px" }}
                             disabled={isLoading || (row?.moveToFreeze === true)}
                         >
-                            Yarn Move-To-Freeze&nbsp;
-                            <InfoIconWithTooltip input="Yarn move Uploaded items to Freeze folder and disable this button" />
+                            pnpm Move-To-Freeze&nbsp;
+                            <InfoIconWithTooltip input="pnpm move Uploaded items to Freeze folder and disable this button" />
                         </Button>
                         <Popover
                             id={id4}

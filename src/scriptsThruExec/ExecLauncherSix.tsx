@@ -71,7 +71,7 @@ const ExecLauncherSix: React.FC = () => {
             </Box>
 
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
-                <ExecComponent buttonText="List all Files in Local Folder as Excel - Yarn"
+                <ExecComponent buttonText="List all Files in Local Folder as Excel - PNPM"
                     placeholder='Folder Path or Freezed Profile'
                     execType={ExecType.GenListingsofLocalFolderAsAllYarn}
                 />
