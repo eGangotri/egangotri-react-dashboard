@@ -144,8 +144,10 @@ const ExecLauncherOne: React.FC = () => {
                     css={{ backgroundColor: "lightgreen", width: "450px" }}
                     css2={{ backgroundColor: "lightgreen" }} />
                     <Typography variant="body1" gutterBottom>
-                        <p>Warning. Some G-drive-dwnl-ed folders dont delete.</p>
-                        <p>Use To delete them from cmd prompt:  rmdir /s /q "D:\_playground\FILE_PATH"</p>
+                        <p>Warning. Some G-drive-dwnld-ed folders dont delete.</p>
+                        <p>Use below to delete them from cmd prompt from:</p>
+                        <p>File:  del "C:\path\to\your\file.txt"</p>
+                        <p>Folder: rmdir /s /q "D:\_playground\FILE_PATH"</p>
                     </Typography>
 
             </Box>
