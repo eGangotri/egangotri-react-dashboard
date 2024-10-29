@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import { ExecType } from './ExecLauncherUtil';
 import * as XLSX from 'xlsx';
 import { FOLDER_OF_UNZIPPED_IMGS, FOLDER_TO_UNZIP } from 'service/consts';
-import { Button, FormControlLabel, Radio, RadioGroup } from '@mui/material';
+import { Button, FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material';
 import { unzipFolders } from 'service/launchYarn';
 
 
@@ -143,6 +143,10 @@ const ExecLauncherOne: React.FC = () => {
                     execType={ExecType.DownloadGoogleDriveLinkPdfs}
                     css={{ backgroundColor: "lightgreen", width: "450px" }}
                     css2={{ backgroundColor: "lightgreen" }} />
+                    <Typography variant="body1" gutterBottom>
+                        <p>Warning. Some G-drive-dwnl-ed folders dont delete.</p>
+                        <p>Use To delete them from cmd prompt:  rmdir /s /q "D:\_playground\FILE_PATH"</p>
+                    </Typography>
 
             </Box>
 
