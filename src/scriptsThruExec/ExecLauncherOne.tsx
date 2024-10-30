@@ -142,13 +142,13 @@ const ExecLauncherOne: React.FC = () => {
                     secondTextBoxPlaceHolder='Enter Profile or File Abs Path'
                     execType={ExecType.DownloadGoogleDriveLinkPdfs}
                     css={{ backgroundColor: "lightgreen", width: "450px" }}
-                    css2={{ backgroundColor: "lightgreen" }} />
-                    <Typography variant="body1" gutterBottom>
-                        <p>Warning. Some G-drive-dwnld-ed folders dont delete.</p>
-                        <p>Use below to delete them from cmd prompt from:</p>
-                        <p>File:  del "C:\path\to\your\file.txt"</p>
-                        <p>Folder: rmdir /s /q "D:\_playground\FILE_PATH"</p>
-                    </Typography>
+                    css2={{ backgroundColor: "lightgreen", width: "450px" }} />
+                <Typography variant="body1" gutterBottom>
+                    <p>Warning. Some G-drive-dwnld-ed folders dont delete.</p>
+                    <p>Use below to delete them from cmd prompt from:</p>
+                    <p>File:  del "C:\path\to\your\file.txt"</p>
+                    <p>Folder: rmdir /s /q "D:\_playground\FILE_PATH"</p>
+                </Typography>
 
             </Box>
 
@@ -159,8 +159,8 @@ const ExecLauncherOne: React.FC = () => {
                     secondTextBoxPlaceHolder='Enter Profile or File Abs Path'
                     execType={ExecType.DownloadGoogleDriveLinkAsZip}
                     css={{ backgroundColor: "lightgreen", width: "450px" }}
-                    css2={{ backgroundColor: "lightgreen" }} />
-
+                    css2={{ backgroundColor: "lightgreen", width: "450px" }}
+                />
                 <ExecComponent
                     buttonText="Unzip all Zip Files"
                     placeholder='Folder Abs Path'
@@ -170,7 +170,7 @@ const ExecLauncherOne: React.FC = () => {
                         onClick={loadFolderToUnzipFromLocalStorage}
                         sx={{ marginRight: "10px", marginBottom: "10px" }}>Load From Local Storage</Button>}
                     textBoxOneValue={folderToUnzip}
-
+                    css={{ width: "450px" }}
                     execType={ExecType.UnzipAllFiles} />
 
                 <ExecComponent
@@ -190,17 +190,18 @@ const ExecLauncherOne: React.FC = () => {
                         onClick={loadFolderOfUnzippedImgFilesFromLocalStorage}
                         sx={{ marginRight: "10px", marginBottom: "10px" }}>Load From Local Storage</Button>}
                     textBoxOneValue={folderOfUnzippedImgs}
+                    css={{ width: "450px" }}
                 />
             </Box>
 
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
-
                 <ExecComponent
                     buttonText="Create G-Drive Excel"
                     placeholder='Enter Google Drive Link(s)/Identifiers as csv'
                     secondTextBoxPlaceHolder='Enter Folder Name (not path)'
                     execType={excelGDrive}
-                    css={{ minWidth: "23vw" }}
+                    css={{ minWidth: "23vw", width: "450px" }}
+                    css2={{ backgroundColor: "lightgreen", width: "450px"  }} 
                     reactComponent={<>
                         <RadioGroup aria-label="fileType" name="fileType" value={excelGDrive} onChange={chooseGDriveExcelType} row>
                             <FormControlLabel value={ExecType.GenExcelOfGoogleDriveLinkPdfOnly} control={<Radio />} label="PDF-Only" />
@@ -220,7 +221,10 @@ const ExecLauncherOne: React.FC = () => {
                     reactComponent={<>
                         <input type="file" onChange={handleFileChange} />
                     </>}
+                    css={{ width: "450px" }}
+                    css2={{ backgroundColor: "lightgreen", width: "450px"  }} 
                 />
+
             </Box>
         </Box>
 
