@@ -44,6 +44,7 @@ export enum ExecType {
   JPG_TO_PDF = 37,
   PNG_TO_PDF = 38,
   TIFF_TO_PDF = 39,
+  ANY_IMG_TYPE_TO_PDF = 40,
   LoginToArchive = 4,
   UseBulkRenameConventions = 5,
   DownloadGoogleDriveLinkPdfs = 6,
@@ -431,9 +432,12 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         break;
 
       case ExecType.TIFF_TO_PDF:
-        _resp = await launchImgFilesToPdf(dataUserInput, "TIFF");
-        break;;
-
+        _resp = await launchImgFilesToPdf(dataUserInput, "TIF");
+        break;
+        case ExecType.ANY_IMG_TYPE_TO_PDF:
+          _resp = await launchImgFilesToPdf(dataUserInput, "ANY");
+          break;
+        
       case ExecType.COMBINE_GDRIVE_AND_REDUCED_PDF_DRIVE_EXCELS:
         _resp = await makePostCallForCombineGDriveAndReducedPdfExcels(
           {

@@ -13,7 +13,7 @@ const ExecLauncherOne: React.FC = () => {
     const [folderToUnzip, setFolderToUnzip] = useState<string>("");
     const [folderOfUnzippedImgs, setFolderOfUnzippedImgs] = useState<string>("");
 
-    const [imgType, setImgType] = useState(ExecType.JPG_TO_PDF);
+    const [imgType, setImgType] = useState(ExecType.ANY_IMG_TYPE_TO_PDF);
     const [excelGDrive, setExcelGDrive] = React.useState<number>(ExecType.GenExcelOfGoogleDriveLinkPdfOnly);
 
     const chooseGDriveExcelType = (event: ChangeEvent<HTMLInputElement>) => {
@@ -174,11 +174,12 @@ const ExecLauncherOne: React.FC = () => {
                     execType={ExecType.UnzipAllFiles} />
 
                 <ExecComponent
-                    buttonText="Img Files(jpg/png/tiff) to pdf"
+                    buttonText="Img Files(any/jpg/png/tiff) to pdf"
                     placeholder='Folder Abs Path'
                     execType={imgType}
                     reactComponent={<>
                         <RadioGroup aria-label="fileType" name="fileType" value={imgType} onChange={handleChangeImgFilesToPdf} row>
+                            <FormControlLabel value={ExecType.ANY_IMG_TYPE_TO_PDF} control={<Radio />} label="ANY" />                       
                             <FormControlLabel value={ExecType.JPG_TO_PDF} control={<Radio />} label="JPG" />
                             <FormControlLabel value={ExecType.PNG_TO_PDF} control={<Radio />} label="PNG" />
                             <FormControlLabel value={ExecType.TIFF_TO_PDF} control={<Radio />} label="TIFF" />

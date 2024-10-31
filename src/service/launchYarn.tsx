@@ -58,8 +58,9 @@ export async function launchImgFilesToPdf(folder: string,
     const jsonData = await makePostCallWithErrorHandling({
         folder: folder,
         imgType: imgType,
-    }, `fileUtil/imgFilesToPdf`)
-
+    }, `execLauncher/imgFilesToPdfGradleVersion`)
+//}, `fileUtil/imgFilesToPdf`)
+//
     console.log(`result ${JSON.stringify(jsonData)}`)
 
 
