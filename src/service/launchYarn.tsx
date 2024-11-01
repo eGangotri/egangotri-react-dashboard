@@ -59,7 +59,6 @@ export async function launchImgFilesToPdf(folder: string,
         folder: folder,
         imgType: imgType,
     }, `execLauncher/imgFilesToPdfGradleVersion`)
-//}, `fileUtil/imgFilesToPdf`)
 //
     console.log(`result ${JSON.stringify(jsonData)}`)
 
