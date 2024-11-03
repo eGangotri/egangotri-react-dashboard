@@ -15,6 +15,7 @@ const ExecLauncherOne: React.FC = () => {
 
     const [imgType, setImgType] = useState(ExecType.ANY_IMG_TYPE_TO_PDF);
     const [excelGDrive, setExcelGDrive] = React.useState<number>(ExecType.GenExcelOfGoogleDriveLinkPdfOnly);
+    const [mergeType, setMergeType] = React.useState<number>(ExecType.MERGE_PDFS_MERGE_ALL);
 
     const chooseGDriveExcelType = (event: ChangeEvent<HTMLInputElement>) => {
         const _val = event.target.value;
@@ -36,6 +37,22 @@ const ExecLauncherOne: React.FC = () => {
         }
         console.log("_listingType", _listingType);
         setExcelGDrive(_listingType || ExecType.GenExcelOfGoogleDriveLinkPdfOnly);
+    };
+
+    const chooseMergeType = (event: ChangeEvent<HTMLInputElement>) => {
+        const _val = event.target.value;
+        console.log("_val", _val)
+        let _listingType;
+        switch (Number(_val)) {
+            case ExecType.MERGE_PDFS_MERGE_ALL:
+                _listingType = ExecType.MERGE_PDFS_MERGE_ALL;
+                break;
+            case ExecType.MERGE_PDFS_MERGE_PER_FOLDER:
+                _listingType = ExecType.MERGE_PDFS_MERGE_PER_FOLDER;
+                break;
+        }
+        console.log("_listingType", _listingType);
+        setMergeType(_listingType || ExecType.MERGE_PDFS_MERGE_ALL);
     };
 
     const handleChangeImgFilesToPdf = (event: ChangeEvent<HTMLInputElement>) => {
@@ -179,7 +196,7 @@ const ExecLauncherOne: React.FC = () => {
                     execType={imgType}
                     reactComponent={<>
                         <RadioGroup aria-label="fileType" name="fileType" value={imgType} onChange={handleChangeImgFilesToPdf} row>
-                            <FormControlLabel value={ExecType.ANY_IMG_TYPE_TO_PDF} control={<Radio />} label="ANY" />                       
+                            <FormControlLabel value={ExecType.ANY_IMG_TYPE_TO_PDF} control={<Radio />} label="ANY" />
                             <FormControlLabel value={ExecType.JPG_TO_PDF} control={<Radio />} label="JPG" />
                             <FormControlLabel value={ExecType.PNG_TO_PDF} control={<Radio />} label="PNG" />
                             <FormControlLabel value={ExecType.TIFF_TO_PDF} control={<Radio />} label="TIFF" />
@@ -193,16 +210,32 @@ const ExecLauncherOne: React.FC = () => {
                     textBoxOneValue={folderOfUnzippedImgs}
                     css={{ width: "450px" }}
                 />
+
             </Box>
 
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
+
+
+                <ExecComponent
+                    buttonText="Merge Pdfs in Folder"
+                    placeholder='Folder Abs Path'
+                    execType={mergeType} 
+                    textBoxOneValue={folderToUnzip}
+                    css={{ width: "450px" }}
+                    reactComponent={<>
+                        <RadioGroup aria-label="mergeType" name="mergeType" value={mergeType} onChange={chooseMergeType} row>
+                            <FormControlLabel value={ExecType.MERGE_PDFS_MERGE_ALL} control={<Radio />} label="Merge All" />
+                            <FormControlLabel value={ExecType.MERGE_PDFS_MERGE_PER_FOLDER} control={<Radio />} label="Merge Per Folder" />
+                        </RadioGroup>
+                    </>}/>
+
                 <ExecComponent
                     buttonText="Create G-Drive Excel"
                     placeholder='Enter Google Drive Link(s)/Identifiers as csv'
                     secondTextBoxPlaceHolder='Enter Folder Name (not path)'
                     execType={excelGDrive}
                     css={{ minWidth: "23vw", width: "450px" }}
-                    css2={{ backgroundColor: "lightgreen", width: "450px"  }} 
+                    css2={{ backgroundColor: "lightgreen", width: "450px" }}
                     reactComponent={<>
                         <RadioGroup aria-label="fileType" name="fileType" value={excelGDrive} onChange={chooseGDriveExcelType} row>
                             <FormControlLabel value={ExecType.GenExcelOfGoogleDriveLinkPdfOnly} control={<Radio />} label="PDF-Only" />
@@ -223,7 +256,7 @@ const ExecLauncherOne: React.FC = () => {
                         <input type="file" onChange={handleFileChange} />
                     </>}
                     css={{ width: "450px" }}
-                    css2={{ backgroundColor: "lightgreen", width: "450px"  }} 
+                    css2={{ backgroundColor: "lightgreen", width: "450px" }}
                 />
 
             </Box>

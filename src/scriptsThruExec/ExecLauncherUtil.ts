@@ -50,6 +50,8 @@ export enum ExecType {
   DownloadGoogleDriveLinkPdfs = 6,
   DownloadGoogleDriveLinkAsZip = 662,
   UnzipAllFiles = 663,
+  MERGE_PDFS_MERGE_ALL = 664,
+  MERGE_PDFS_MERGE_PER_FOLDER = 665,
   DownloadFilesFromExcel = 61,
   DirectoryCompare = 62,
 
@@ -269,6 +271,19 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         _resp = await unzipFolders(dataUserInput);
         break;
 
+      case ExecType.MERGE_PDFS_MERGE_ALL:
+        _resp = await makePostCallWithErrorHandling({
+          folder: dataUserInput,
+          mergeType: "MERGE_ALL",
+      }, `execLauncher/mergePdfsGradleVersion`)
+        break;
+
+        case ExecType.MERGE_PDFS_MERGE_PER_FOLDER:
+          _resp = await makePostCallWithErrorHandling({
+            folder: dataUserInput,
+            mergeType: "MERGE_PER_FOLDER",
+        }, `execLauncher/mergePdfsGradleVersion`)
+          break;
 
       case ExecType.DownloadFilesFromExcel:
         _resp = await downloadFromExcelUsingFrontEnd(dataUserInput, dataUserInput2Mandatory);
@@ -434,10 +449,10 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       case ExecType.TIFF_TO_PDF:
         _resp = await launchImgFilesToPdf(dataUserInput, "TIF");
         break;
-        case ExecType.ANY_IMG_TYPE_TO_PDF:
-          _resp = await launchImgFilesToPdf(dataUserInput, "ANY");
-          break;
-        
+      case ExecType.ANY_IMG_TYPE_TO_PDF:
+        _resp = await launchImgFilesToPdf(dataUserInput, "ANY");
+        break;
+
       case ExecType.COMBINE_GDRIVE_AND_REDUCED_PDF_DRIVE_EXCELS:
         _resp = await makePostCallForCombineGDriveAndReducedPdfExcels(
           {
