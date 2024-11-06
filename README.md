@@ -25,7 +25,7 @@ $env:NODE_OPTIONS = "--openssl-legacy-provider
 Source: https://stackoverflow.com/questions/69692842/error-message-error0308010cdigital-envelope-routinesunsupported
 
 #### for login use eg***trust@gmail.com
-## Docker
+## Docker. Instructions below not needed for Actual hosting. only for a curiosity value of how to get this running on Docker
 docker build . -t egangotri/egangotri-react-dashboard
 docker run -d -p 5000:3000  egangotri/egangotri-react-dashboard:latest
 ## 3000 refers to the port react launches in
