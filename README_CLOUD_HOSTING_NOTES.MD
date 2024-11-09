@@ -6,13 +6,14 @@ Make following as:
 VITE_DEV_ENV="prod"
 
 
-#firebase login is in eg***trust@gmail.com
+# firebase login is in eg***trust@gmail.com
 ### firebase Deployment
-First time
+### First time only
  npm install -g firebase-tools
  firebase init 
 afterwards
-firebase login
+firebase login 
+### Deployment
 pnpm build
 firebase deploy
 
