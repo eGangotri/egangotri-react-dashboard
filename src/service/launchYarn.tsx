@@ -3,6 +3,7 @@ import { makePostCallWithErrorHandling } from './BackendFetchService';
 import { ExecResponseDetails } from 'scriptsThruExec/types';
 import { makePostCall } from 'mirror/utils';
 import { FOLDER_OF_UNZIPPED_IMGS, FOLDER_TO_UNZIP } from './consts';
+import { IMG_TYPE_JPG } from 'scriptsThruExec/constants';
 
 export async function launchVanitizeModule(
     profile: string): Promise<ExecResponseDetails> {
@@ -54,7 +55,7 @@ export async function launchGoogleDriveZipDownload(googleDriveLink: string,
 }
 
 export async function launchImgFilesToPdf(folder: string,
-    imgType: string = "JPG"): Promise<ExecResponseDetails> {
+    imgType: string = IMG_TYPE_JPG): Promise<ExecResponseDetails> {
     const jsonData = await makePostCallWithErrorHandling({
         folder: folder,
         imgType: imgType,
@@ -64,7 +65,7 @@ export async function launchImgFilesToPdf(folder: string,
 }
 
 export async function verifyImgToPdfSuccess(folder: string,
-    imgType: string = "JPG"): Promise<ExecResponseDetails> {
+    imgType: string = IMG_TYPE_JPG): Promise<ExecResponseDetails> {
     const jsonData = await makePostCallWithErrorHandling({
         folder: folder,
         imgType: imgType,

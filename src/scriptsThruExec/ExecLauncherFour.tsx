@@ -6,6 +6,7 @@ import { Radio, RadioGroup, FormControlLabel, TextField } from '@mui/material';
 import { ChangeEvent } from 'react';
 import { ExecComponentFormData } from './types';
 import { useForm } from 'react-hook-form';
+import { IMG_TYPE_ANY, IMG_TYPE_JPG, IMG_TYPE_PNG, IMG_TYPE_TIF } from './constants';
 
 const ExecLauncherFour: React.FC = () => {
     const [imgType, setImgType] = useState(ExecType.JPG_TO_PDF);
@@ -45,9 +46,10 @@ const ExecLauncherFour: React.FC = () => {
                     execType={imgType}
                     reactComponent={<>
                         <RadioGroup aria-label="fileType" name="fileType" value={imgType} onChange={handleChange} row>
-                            <FormControlLabel value={ExecType.JPG_TO_PDF} control={<Radio />} label="JPG" />
-                            <FormControlLabel value={ExecType.PNG_TO_PDF} control={<Radio />} label="PNG" />
-                            <FormControlLabel value={ExecType.TIFF_TO_PDF} control={<Radio />} label="TIFF" />
+                            <FormControlLabel value={ExecType.ANY_IMG_TYPE_TO_PDF} control={<Radio />} label={IMG_TYPE_ANY} />
+                            <FormControlLabel value={ExecType.JPG_TO_PDF} control={<Radio />} label={IMG_TYPE_JPG} />
+                            <FormControlLabel value={ExecType.PNG_TO_PDF} control={<Radio />} label={IMG_TYPE_PNG} />
+                            <FormControlLabel value={ExecType.TIFF_TO_PDF} control={<Radio />} label={IMG_TYPE_TIF} />
                         </RadioGroup>
                     </>} />
                 <ExecComponent

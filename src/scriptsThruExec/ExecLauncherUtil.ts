@@ -27,6 +27,7 @@ import { makePostCallForCombineGDriveAndReducedPdfExcels, makePostCallForCreateU
 import { downloadFromExcelUsingFrontEnd } from "service/launchFrontEnd";
 import { replaceQuotes } from "mirror/utils";
 import { handleYarnListingGeneration } from "./Utils";
+import { IMG_TYPE_ANY, IMG_TYPE_JPG, IMG_TYPE_PNG, IMG_TYPE_TIF } from "./constants";
 
 export enum ExecType {
   UploadPdfs = 1,
@@ -53,7 +54,10 @@ export enum ExecType {
   UnzipAllFiles = 663,
   MERGE_PDFS_MERGE_ALL = 664,
   MERGE_PDFS_MERGE_PER_FOLDER = 665,
-  VERIFY_IMG_TO_PDF_SUCCESS = 667,
+  VERIFY_IMG_TO_PDF_SUCCESS_ANY = 667,
+  VERIFY_IMG_TO_PDF_SUCCESS_JPG = 668,
+  VERIFY_IMG_TO_PDF_SUCCESS_PNG = 669,
+  VERIFY_IMG_TO_PDF_SUCCESS_TIF = 700,
   DownloadFilesFromExcel = 61,
   DirectoryCompare = 62,
 
@@ -287,8 +291,20 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         }, `execLauncher/mergePdfsGradleVersion`)
         break;
 
-      case ExecType.VERIFY_IMG_TO_PDF_SUCCESS:
-        _resp = await verifyImgToPdfSuccess(dataUserInput, "JPG")
+      case ExecType.VERIFY_IMG_TO_PDF_SUCCESS_ANY:
+        _resp = await verifyImgToPdfSuccess(dataUserInput, IMG_TYPE_ANY)
+        break;
+
+      case ExecType.VERIFY_IMG_TO_PDF_SUCCESS_JPG:
+        _resp = await verifyImgToPdfSuccess(dataUserInput, IMG_TYPE_JPG)
+        break;
+
+      case ExecType.VERIFY_IMG_TO_PDF_SUCCESS_PNG:
+        _resp = await verifyImgToPdfSuccess(dataUserInput, IMG_TYPE_PNG)
+        break;
+
+      case ExecType.VERIFY_IMG_TO_PDF_SUCCESS_TIF:
+        _resp = await verifyImgToPdfSuccess(dataUserInput, IMG_TYPE_TIF)
         break;
 
       case ExecType.DownloadFilesFromExcel:

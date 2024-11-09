@@ -6,6 +6,7 @@ import * as XLSX from 'xlsx';
 import { FOLDER_OF_UNZIPPED_IMGS, FOLDER_TO_UNZIP } from 'service/consts';
 import { Button, FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material';
 import { unzipFolders } from 'service/launchYarn';
+import { IMG_TYPE_ANY, IMG_TYPE_JPG, IMG_TYPE_PNG, IMG_TYPE_TIF } from './constants';
 
 
 const ExecLauncherOne: React.FC = () => {
@@ -14,6 +15,7 @@ const ExecLauncherOne: React.FC = () => {
     const [folderOfUnzippedImgs, setFolderOfUnzippedImgs] = useState<string>("");
 
     const [imgType, setImgType] = useState(ExecType.ANY_IMG_TYPE_TO_PDF);
+    const [imgTypeForVerification, setImgTypeForVerification] = useState(ExecType.ANY_IMG_TYPE_TO_PDF);
     const [excelGDrive, setExcelGDrive] = React.useState<number>(ExecType.GenExcelOfGoogleDriveLinkPdfOnly);
     const [mergeType, setMergeType] = React.useState<number>(ExecType.MERGE_PDFS_MERGE_ALL);
 
@@ -174,7 +176,21 @@ const ExecLauncherOne: React.FC = () => {
                     execType={ExecType.DownloadGoogleDriveLinkPdfs}
                     textBoxOneValue={folderOfUnzippedImgs}
                     css={{ backgroundColor: "violet", width: "450px" }}
-                    css2={{ backgroundColor: "violet", width: "450px" }} 
+                    css2={{ backgroundColor: "violet", width: "450px" }}
+                    reactComponent={<>
+                        <RadioGroup aria-label="fileType" name="fileType" value={imgType} onChange={handleChangeImgFilesToPdf} row>
+                            <FormControlLabel value={ExecType.ANY_IMG_TYPE_TO_PDF} control={<Radio />} label={IMG_TYPE_ANY} />
+                            <FormControlLabel value={ExecType.JPG_TO_PDF} control={<Radio />} label={IMG_TYPE_JPG} />
+                            <FormControlLabel value={ExecType.PNG_TO_PDF} control={<Radio />} label={IMG_TYPE_PNG} />
+                            <FormControlLabel value={ExecType.TIFF_TO_PDF} control={<Radio />} label={IMG_TYPE_TIF} />
+                        </RadioGroup>
+                        thirdButton={<Button
+                            variant="contained"
+                            color="primary"
+                            onClick={loadFolderOfUnzippedImgFilesFromLocalStorage}
+                            sx={{ marginRight: "10px", marginBottom: "10px" }}>Load From Local Storage</Button>}
+
+                    </>}
                 />
             </Box>
 
@@ -182,10 +198,10 @@ const ExecLauncherOne: React.FC = () => {
                 <ExecComponent
                     buttonText="D/l Zips from GDrive"
                     placeholder='Enter Google Drive Link(s)/Identifiers as csv'
-                secondTextBoxPlaceHolder='Enter Profile or File Abs Path'
-                execType={ExecType.DownloadGoogleDriveLinkAsZip}
-                css={{ backgroundColor: "violet", width: "450px" }}
-                css2={{ backgroundColor: "violet", width: "450px" }} 
+                    secondTextBoxPlaceHolder='Enter Profile or File Abs Path'
+                    execType={ExecType.DownloadGoogleDriveLinkAsZip}
+                    css={{ backgroundColor: "violet", width: "450px" }}
+                    css2={{ backgroundColor: "violet", width: "450px" }}
                 />
                 <ExecComponent
                     buttonText="Unzip all Zip Files"
@@ -197,7 +213,7 @@ const ExecLauncherOne: React.FC = () => {
                         sx={{ marginRight: "10px", marginBottom: "10px" }}>Load From Local Storage</Button>}
                     textBoxOneValue={folderToUnzip}
                     css={{ backgroundColor: "violet", width: "450px" }}
-                    css2={{ backgroundColor: "violet", width: "450px" }} 
+                    css2={{ backgroundColor: "violet", width: "450px" }}
                     execType={ExecType.UnzipAllFiles} />
 
                 <ExecComponent
@@ -207,7 +223,7 @@ const ExecLauncherOne: React.FC = () => {
                     reactComponent={<>
                         <RadioGroup aria-label="fileType" name="fileType" value={imgType} onChange={handleChangeImgFilesToPdf} row>
                             <FormControlLabel value={ExecType.ANY_IMG_TYPE_TO_PDF} control={<Radio />} label="ANY" />
-                            <FormControlLabel value={ExecType.JPG_TO_PDF} control={<Radio />} label="JPG" />
+                            <FormControlLabel value={ExecType.JPG_TO_PDF} control={<Radio />} label={IMG_TYPE_JPG} />
                             <FormControlLabel value={ExecType.PNG_TO_PDF} control={<Radio />} label="PNG" />
                             <FormControlLabel value={ExecType.TIFF_TO_PDF} control={<Radio />} label="TIFF" />
                         </RadioGroup>
@@ -219,7 +235,7 @@ const ExecLauncherOne: React.FC = () => {
                         sx={{ marginRight: "10px", marginBottom: "10px" }}>Load From Local Storage</Button>}
                     textBoxOneValue={folderOfUnzippedImgs}
                     css={{ backgroundColor: "violet", width: "450px" }}
-                    css2={{ backgroundColor: "violet", width: "450px" }} 
+                    css2={{ backgroundColor: "violet", width: "450px" }}
                 />
 
             </Box>
