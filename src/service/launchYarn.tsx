@@ -59,13 +59,19 @@ export async function launchImgFilesToPdf(folder: string,
         folder: folder,
         imgType: imgType,
     }, `execLauncher/imgFilesToPdfGradleVersion`)
-//
     console.log(`result ${JSON.stringify(jsonData)}`)
-
-
     return jsonData;
 }
 
+export async function verifyImgToPdfSuccess(folder: string,
+    imgType: string = "JPG"): Promise<ExecResponseDetails> {
+    const jsonData = await makePostCallWithErrorHandling({
+        folder: folder,
+        imgType: imgType,
+    }, `execLauncher/verifyImgToPdfSuccessGradle`)
+    console.log(`result ${JSON.stringify(jsonData)}`)
+    return jsonData;
+}
 
 export async function unzipFolders(folder: string): Promise<ExecResponseDetails> {
     const jsonData = await makePostCallWithErrorHandling({

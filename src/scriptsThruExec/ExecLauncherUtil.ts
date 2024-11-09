@@ -18,7 +18,8 @@ import {
   launchYarnMoveToFreezeByUploadId,
   launchYarnQaToDestFileMover,
   makePostCallToPath,
-  unzipFolders
+  unzipFolders,
+  verifyImgToPdfSuccess
 } from "service/launchYarn";
 
 import { ExecComponentFormData, ExecResponseDetails } from "./types";
@@ -52,6 +53,7 @@ export enum ExecType {
   UnzipAllFiles = 663,
   MERGE_PDFS_MERGE_ALL = 664,
   MERGE_PDFS_MERGE_PER_FOLDER = 665,
+  VERIFY_IMG_TO_PDF_SUCCESS = 667,
   DownloadFilesFromExcel = 61,
   DirectoryCompare = 62,
 
@@ -275,15 +277,19 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         _resp = await makePostCallWithErrorHandling({
           folder: dataUserInput,
           mergeType: "MERGE_ALL",
-      }, `execLauncher/mergePdfsGradleVersion`)
+        }, `execLauncher/mergePdfsGradleVersion`)
         break;
 
-        case ExecType.MERGE_PDFS_MERGE_PER_FOLDER:
-          _resp = await makePostCallWithErrorHandling({
-            folder: dataUserInput,
-            mergeType: "MERGE_PER_FOLDER",
+      case ExecType.MERGE_PDFS_MERGE_PER_FOLDER:
+        _resp = await makePostCallWithErrorHandling({
+          folder: dataUserInput,
+          mergeType: "MERGE_PER_FOLDER",
         }, `execLauncher/mergePdfsGradleVersion`)
-          break;
+        break;
+
+      case ExecType.VERIFY_IMG_TO_PDF_SUCCESS:
+        _resp = await verifyImgToPdfSuccess(dataUserInput, "JPG")
+        break;
 
       case ExecType.DownloadFilesFromExcel:
         _resp = await downloadFromExcelUsingFrontEnd(dataUserInput, dataUserInput2Mandatory);

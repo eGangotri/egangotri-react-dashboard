@@ -43,7 +43,7 @@ export const TIFF_2_PDF = "/tiff2pdf";
 export const AI_TEXT_IDENTIFIER = "/ai";
 
 const DashboardRoutes: React.FC = () => {
-    const isLocalhost = window.location.hostname === 'localhost';
+    const isLocalhost = true; //window.location.hostname === 'localhost';
     const allFrags = (
         <>
             {<Route path={LANDING_PAGE_PATH} element={<UploadCycles />} />}
