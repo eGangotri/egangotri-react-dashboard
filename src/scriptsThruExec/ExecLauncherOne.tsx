@@ -15,7 +15,7 @@ const ExecLauncherOne: React.FC = () => {
     const [folderOfUnzippedImgs, setFolderOfUnzippedImgs] = useState<string>("");
 
     const [imgType, setImgType] = useState(ExecType.ANY_IMG_TYPE_TO_PDF);
-    const [imgTypeForVerification, setImgTypeForVerification] = useState(ExecType.ANY_IMG_TYPE_TO_PDF);
+    const [imgTypeForVerification, setImgTypeForVerification] = useState(ExecType.VERIFY_IMG_TO_PDF_SUCCESS_ANY);
     const [excelGDrive, setExcelGDrive] = React.useState<number>(ExecType.GenExcelOfGoogleDriveLinkPdfOnly);
     const [mergeType, setMergeType] = React.useState<number>(ExecType.MERGE_PDFS_MERGE_ALL);
 
@@ -62,7 +62,12 @@ const ExecLauncherOne: React.FC = () => {
         console.log("ImgType: ", _val);
         setImgType(Number(_val));
     };
-
+    const handleChangeImgFilesForVerificationToPdf = (event: ChangeEvent<HTMLInputElement>) => {
+        const _val = event.target.value;
+        console.log("ImgType: ", _val);
+        setImgTypeForVerification(Number(_val));
+    };
+    
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
         setFlatten(event.target.checked);
@@ -172,25 +177,23 @@ const ExecLauncherOne: React.FC = () => {
                 <ExecComponent
                     buttonText="Verify Unzipped Files->Pdf successful"
                     placeholder='Folder Abs Path'
-                    secondTextBoxPlaceHolder='Enter Profile or File Abs Path'
-                    execType={ExecType.DownloadGoogleDriveLinkPdfs}
+                    execType={imgTypeForVerification}
                     textBoxOneValue={folderOfUnzippedImgs}
                     css={{ backgroundColor: "violet", width: "450px" }}
-                    css2={{ backgroundColor: "violet", width: "450px" }}
                     reactComponent={<>
-                        <RadioGroup aria-label="fileType" name="fileType" value={imgType} onChange={handleChangeImgFilesToPdf} row>
-                            <FormControlLabel value={ExecType.ANY_IMG_TYPE_TO_PDF} control={<Radio />} label={IMG_TYPE_ANY} />
-                            <FormControlLabel value={ExecType.JPG_TO_PDF} control={<Radio />} label={IMG_TYPE_JPG} />
-                            <FormControlLabel value={ExecType.PNG_TO_PDF} control={<Radio />} label={IMG_TYPE_PNG} />
-                            <FormControlLabel value={ExecType.TIFF_TO_PDF} control={<Radio />} label={IMG_TYPE_TIF} />
+                        <RadioGroup aria-label="imgTypeForVerification" name="imgTypeForVerification" value={imgTypeForVerification} onChange={handleChangeImgFilesForVerificationToPdf} row>
+                            <FormControlLabel value={ExecType.VERIFY_IMG_TO_PDF_SUCCESS_ANY} control={<Radio />} label={IMG_TYPE_ANY} />
+                            <FormControlLabel value={ExecType.VERIFY_IMG_TO_PDF_SUCCESS_JPG} control={<Radio />} label={IMG_TYPE_JPG} />
+                            <FormControlLabel value={ExecType.VERIFY_IMG_TO_PDF_SUCCESS_PNG} control={<Radio />} label={IMG_TYPE_PNG} />
+                            <FormControlLabel value={ExecType.VERIFY_IMG_TO_PDF_SUCCESS_TIF} control={<Radio />} label={IMG_TYPE_TIF} />
                         </RadioGroup>
-                        thirdButton={<Button
-                            variant="contained"
-                            color="primary"
-                            onClick={loadFolderOfUnzippedImgFilesFromLocalStorage}
-                            sx={{ marginRight: "10px", marginBottom: "10px" }}>Load From Local Storage</Button>}
-
                     </>}
+                    thirdButton={<Button
+                        variant="contained"
+                        color="primary"
+                        onClick={loadFolderToUnzipFromLocalStorage}
+                        sx={{ marginRight: "10px", marginBottom: "10px" }}>Load From Local Storage</Button>}
+                 
                 />
             </Box>
 
