@@ -20,12 +20,15 @@ import ExecLauncherSeven from 'scriptsThruExec/ExecLauncherSix';
 import ExecLauncherSix from 'scriptsThruExec/ExecLauncherSix';
 import Login from 'pages/GoogleLogin';
 import RenamePdfs from 'scriptsThruExec/RenamePdfs';
+import ExecLauncherZip from 'scriptsThruExec/ExecLauncherZip';
 
 export const LANDING_PAGE_PATH = "/"
 export const UPLOADS_USHERED_PATH = "/uploadsUshered";
 export const UPLOADS_QUEUED_PATH = "/uploadsQueued";
 export const UPLOAD_CYCLES_PATH = "/uploadCycles";
 export const EXEC_LAUNCHER_PATH = "/execLauncher";
+export const EXEC_LAUNCHER_ZIP_PATH = "/execLauncherZip";
+
 export const EXEC_LAUNCHER_TWO_PATH = "/execLauncher2";
 export const EXEC_LAUNCHER_TWO_B_PATH = "/execLauncher2b";
 export const EXEC_LAUNCHER_TWO_C_PATH = "/execLauncher2c";
@@ -50,6 +53,7 @@ const DashboardRoutes: React.FC = () => {
             {<Route path={UPLOADS_USHERED_PATH} element={<Uploads forQueues={false} />} />}
             {<Route path={UPLOADS_QUEUED_PATH} element={<Uploads forQueues={true} />} />}
             {<Route path={EXEC_LAUNCHER_PATH} element={<ExecLauncher />} />}
+            {<Route path={EXEC_LAUNCHER_ZIP_PATH} element={<ExecLauncherZip />} />}
             {<Route path={EXEC_LAUNCHER_TWO_PATH} element={<ExecLauncherTwo />} />}
             {<Route path={EXEC_LAUNCHER_TWO_B_PATH} element={<ExecLauncherTwoB />} />}
             {<Route path={EXEC_LAUNCHER_TWO_C_PATH} element={<ExecLauncherTwoC />} />}

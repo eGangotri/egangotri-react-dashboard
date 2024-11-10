@@ -4,20 +4,13 @@ import Box from '@mui/material/Box';
 import { ExecType } from './ExecLauncherUtil';
 import * as XLSX from 'xlsx';
 import { FOLDER_OF_UNZIPPED_IMGS, FOLDER_TO_UNZIP } from 'service/consts';
-import { Button, FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material';
-import { unzipFolders } from 'service/launchYarn';
-import { IMG_TYPE_ANY, IMG_TYPE_JPG, IMG_TYPE_PNG, IMG_TYPE_TIF } from './constants';
+import { FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material';
 
 
 const ExecLauncherOne: React.FC = () => {
-    const [flatten, setFlatten] = useState<boolean>(true);
-    const [folderToUnzip, setFolderToUnzip] = useState<string>("");
-    const [folderOfUnzippedImgs, setFolderOfUnzippedImgs] = useState<string>("");
-
-    const [imgType, setImgType] = useState(ExecType.ANY_IMG_TYPE_TO_PDF);
-    const [imgTypeForVerification, setImgTypeForVerification] = useState(ExecType.VERIFY_IMG_TO_PDF_SUCCESS_ANY);
-    const [excelGDrive, setExcelGDrive] = React.useState<number>(ExecType.GenExcelOfGoogleDriveLinkPdfOnly);
     const [mergeType, setMergeType] = React.useState<number>(ExecType.MERGE_PDFS_MERGE_ALL);
+    const [folderToUnzip, setFolderToUnzip] = useState<string>("");
+    const [excelGDrive, setExcelGDrive] = React.useState<number>(ExecType.GenExcelOfGoogleDriveLinkPdfOnly);
 
     const chooseGDriveExcelType = (event: ChangeEvent<HTMLInputElement>) => {
         const _val = event.target.value;
@@ -57,81 +50,11 @@ const ExecLauncherOne: React.FC = () => {
         setMergeType(_listingType || ExecType.MERGE_PDFS_MERGE_ALL);
     };
 
-    const handleChangeImgFilesToPdf = (event: ChangeEvent<HTMLInputElement>) => {
-        const _val = event.target.value;
-        console.log("ImgType: ", _val);
-        setImgType(Number(_val));
-    };
-    const handleChangeImgFilesForVerificationToPdf = (event: ChangeEvent<HTMLInputElement>) => {
-        const _val = event.target.value;
-        console.log("ImgType: ", _val);
-        setImgTypeForVerification(Number(_val));
-    };
-    
-
-    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setFlatten(event.target.checked);
-    };
-
-
-    // ...
-
-    const [items, setItems] = useState([]);
-
     const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event?.target?.files || []
         const file0 = (file?.length || 0) > 0 ? file[0] : null;
         await readExcel(file0);
-        console.log("items", JSON.stringify(items))
     };
-
-    const readExcelXX = (file: File | null) => {
-        if (!file) return;
-        const promise = new Promise((resolve, reject) => {
-            const fileReader = new FileReader();
-            fileReader.readAsArrayBuffer(file);
-
-            fileReader.onload = (e) => {
-                const bufferArray = e.target?.result;
-
-                const wb = XLSX.read(bufferArray, { type: 'buffer' });
-
-                const wsname = wb.SheetNames[0];
-
-                const ws = wb.Sheets[wsname];
-
-                const data = XLSX.utils.sheet_to_json(ws);
-
-                resolve(data);
-            };
-
-            fileReader.onerror = (error) => {
-                reject(error);
-            };
-        });
-        /* eslint-disable  @typescript-eslint/no-explicit-any */
-        promise.then((d: any) => {
-            setItems(d);
-        });
-    };
-
-    const loadFolderToUnzipFromLocalStorage = () => {
-        let storedValue = localStorage.getItem(FOLDER_TO_UNZIP);
-
-        console.log(`loadFromLocalStorage called ${storedValue}`)
-        if (storedValue) {
-            setFolderToUnzip(storedValue);
-        }
-    }
-
-    const loadFolderOfUnzippedImgFilesFromLocalStorage = () => {
-        let storedValue = localStorage.getItem(FOLDER_OF_UNZIPPED_IMGS);
-
-        console.log(`loadFromLocalStorage called ${storedValue}`)
-        if (storedValue) {
-            setFolderOfUnzippedImgs(storedValue);
-        }
-    }
 
     const readExcel = async (file: File | null) => {
         if (!file) return;
@@ -174,73 +97,7 @@ const ExecLauncherOne: React.FC = () => {
                     <p>Folder: rmdir /s /q "D:\_playground\FILE_PATH"</p>
                 </Typography>
 
-                <ExecComponent
-                    buttonText="Verify Unzipped Files->Pdf successful"
-                    placeholder='Folder Abs Path'
-                    execType={imgTypeForVerification}
-                    textBoxOneValue={folderOfUnzippedImgs}
-                    css={{ backgroundColor: "violet", width: "450px" }}
-                    reactComponent={<>
-                        <RadioGroup aria-label="imgTypeForVerification" name="imgTypeForVerification" value={imgTypeForVerification} onChange={handleChangeImgFilesForVerificationToPdf} row>
-                            <FormControlLabel value={ExecType.VERIFY_IMG_TO_PDF_SUCCESS_ANY} control={<Radio />} label={IMG_TYPE_ANY} />
-                            <FormControlLabel value={ExecType.VERIFY_IMG_TO_PDF_SUCCESS_JPG} control={<Radio />} label={IMG_TYPE_JPG} />
-                            <FormControlLabel value={ExecType.VERIFY_IMG_TO_PDF_SUCCESS_PNG} control={<Radio />} label={IMG_TYPE_PNG} />
-                            <FormControlLabel value={ExecType.VERIFY_IMG_TO_PDF_SUCCESS_TIF} control={<Radio />} label={IMG_TYPE_TIF} />
-                        </RadioGroup>
-                    </>}
-                    thirdButton={<Button
-                        variant="contained"
-                        color="primary"
-                        onClick={loadFolderToUnzipFromLocalStorage}
-                        sx={{ marginRight: "10px", marginBottom: "10px" }}>Load From Local Storage</Button>}
-                 
-                />
-            </Box>
-
-            <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
-                <ExecComponent
-                    buttonText="D/l Zips from GDrive"
-                    placeholder='Enter Google Drive Link(s)/Identifiers as csv'
-                    secondTextBoxPlaceHolder='Enter Profile or File Abs Path'
-                    execType={ExecType.DownloadGoogleDriveLinkAsZip}
-                    css={{ backgroundColor: "violet", width: "450px" }}
-                    css2={{ backgroundColor: "violet", width: "450px" }}
-                />
-                <ExecComponent
-                    buttonText="Unzip all Zip Files"
-                    placeholder='Folder Abs Path'
-                    thirdButton={<Button
-                        variant="contained"
-                        color="primary"
-                        onClick={loadFolderToUnzipFromLocalStorage}
-                        sx={{ marginRight: "10px", marginBottom: "10px" }}>Load From Local Storage</Button>}
-                    textBoxOneValue={folderToUnzip}
-                    css={{ backgroundColor: "violet", width: "450px" }}
-                    css2={{ backgroundColor: "violet", width: "450px" }}
-                    execType={ExecType.UnzipAllFiles} />
-
-                <ExecComponent
-                    buttonText="Img Files(any/jpg/png/tiff) to pdf"
-                    placeholder='Folder Abs Path'
-                    execType={imgType}
-                    reactComponent={<>
-                        <RadioGroup aria-label="fileType" name="fileType" value={imgType} onChange={handleChangeImgFilesToPdf} row>
-                            <FormControlLabel value={ExecType.ANY_IMG_TYPE_TO_PDF} control={<Radio />} label="ANY" />
-                            <FormControlLabel value={ExecType.JPG_TO_PDF} control={<Radio />} label={IMG_TYPE_JPG} />
-                            <FormControlLabel value={ExecType.PNG_TO_PDF} control={<Radio />} label="PNG" />
-                            <FormControlLabel value={ExecType.TIFF_TO_PDF} control={<Radio />} label="TIFF" />
-                        </RadioGroup>
-                    </>}
-                    thirdButton={<Button
-                        variant="contained"
-                        color="primary"
-                        onClick={loadFolderOfUnzippedImgFilesFromLocalStorage}
-                        sx={{ marginRight: "10px", marginBottom: "10px" }}>Load From Local Storage</Button>}
-                    textBoxOneValue={folderOfUnzippedImgs}
-                    css={{ backgroundColor: "violet", width: "450px" }}
-                    css2={{ backgroundColor: "violet", width: "450px" }}
-                />
-
+          
             </Box>
 
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">

@@ -17,7 +17,8 @@ import {
   G_DRIVE_UPLOAD_INTEGRITY_CHECK_PATH,
   EXEC_LAUNCHER_TWO_B_PATH,
   EXEC_LAUNCHER_TWO_C_PATH,
-  RENAME_PDFS
+  RENAME_PDFS,
+  EXEC_LAUNCHER_ZIP_PATH
 } from 'Routes';
 import { useLocation } from "react-router-dom";
 import './topPanel.css';
@@ -38,6 +39,7 @@ const TopPanel: React.FC = () => {
       <Grid item xs={1} sm={1} md={2}><NavLink to={UPLOADS_USHERED_PATH} className={activeClass(UPLOADS_USHERED_PATH)} ><Box className="menuItem">Uploads Ushered</Box></NavLink></Grid>
       <Grid item xs={1} sm={1} md={2}><NavLink to={UPLOADS_QUEUED_PATH} className={activeClass(UPLOADS_QUEUED_PATH)}><Box className="menuItem">Uploads Queued</Box></NavLink></Grid>
       <Grid item xs={1} sm={1} md={2}><NavLink to={EXEC_LAUNCHER_PATH} className={activeClass(EXEC_LAUNCHER_PATH)}><Box className="menuItem menuItem_special">Script Launcher(G-Drive)</Box></NavLink></Grid>
+      <Grid item xs={1} sm={1} md={2}><NavLink to={EXEC_LAUNCHER_ZIP_PATH} className={activeClass(EXEC_LAUNCHER_ZIP_PATH)}><Box className="menuItem menuItem_special">Zip-to-Pdf</Box></NavLink></Grid>
       <Grid item xs={1} sm={1} md={2}><NavLink to={EXEC_LAUNCHER_TWO_PATH} className={activeClass(EXEC_LAUNCHER_TWO_PATH)}><Box className="menuItem menuItem_special2"> archive.org Uploads</Box></NavLink></Grid>
       <Grid item xs={1} sm={1} md={2}><NavLink to={EXEC_LAUNCHER_TWO_B_PATH} className={activeClass(EXEC_LAUNCHER_TWO_B_PATH)}><Box className="menuItem">archive.org Non-Upload Work</Box></NavLink></Grid>
       <Grid item xs={1} sm={1} md={2}><NavLink to={EXEC_LAUNCHER_TWO_C_PATH} className={activeClass(EXEC_LAUNCHER_TWO_C_PATH)}><Box className="menuItem">archive.org Data & Data Integrity</Box></NavLink></Grid>
