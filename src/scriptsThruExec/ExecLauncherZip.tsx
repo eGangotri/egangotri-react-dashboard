@@ -197,7 +197,7 @@ const ExecLauncherZip: React.FC = () => {
                     textBoxOneValue={folderToUnzip}
                     css={{ backgroundColor: "violet", width: "450px" }}
                     css2={{ backgroundColor: "violet", width: "450px" }}
-                    execType={ExecType.UnzipAllFiles} />
+                    execType={ExecType.UNZIP_ALL_FILES} />
 
                 <ExecComponent
                     buttonText="Verify Unzip all Zip Files"
@@ -210,7 +210,7 @@ const ExecLauncherZip: React.FC = () => {
                     textBoxOneValue={folderToUnzip}
                     css={{ backgroundColor: "violet", width: "450px" }}
                     css2={{ backgroundColor: "violet", width: "450px" }}
-                    execType={ExecType.UnzipAllFiles} />
+                    execType={ExecType.VERIFY_UNZIP_ALL_FILES} />
             </Box>
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
                 <ExecComponent

@@ -19,7 +19,8 @@ import {
   launchYarnQaToDestFileMover,
   makePostCallToPath,
   unzipFolders,
-  verifyImgToPdfSuccess
+  verifyImgToPdfSuccess,
+  verifyUnzipFolders
 } from "service/launchYarn";
 
 import { ExecComponentFormData, ExecResponseDetails } from "./types";
@@ -51,7 +52,8 @@ export enum ExecType {
   UseBulkRenameConventions = 5,
   DownloadGoogleDriveLinkPdfs = 6,
   DownloadGoogleDriveLinkAsZip = 662,
-  UnzipAllFiles = 663,
+  UNZIP_ALL_FILES = 6630,
+  VERIFY_UNZIP_ALL_FILES = 6631,
   MERGE_PDFS_MERGE_ALL = 664,
   MERGE_PDFS_MERGE_PER_FOLDER = 665,
   VERIFY_IMG_TO_PDF_SUCCESS_ANY = 667,
@@ -273,10 +275,14 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         _resp = await launchGoogleDriveZipDownload(dataUserInput, dataUserInput2Mandatory);
         break;
 
-      case ExecType.UnzipAllFiles:
+      case ExecType.UNZIP_ALL_FILES:
         _resp = await unzipFolders(dataUserInput);
         break;
 
+        case ExecType.VERIFY_UNZIP_ALL_FILES:
+          _resp = await verifyUnzipFolders(dataUserInput);
+          break;
+        
       case ExecType.MERGE_PDFS_MERGE_ALL:
         _resp = await makePostCallWithErrorHandling({
           folder: dataUserInput,

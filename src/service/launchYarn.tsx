@@ -73,7 +73,6 @@ export async function verifyImgToPdfSuccess(folder: string,
     console.log(`result ${JSON.stringify(jsonData)}`)
     return jsonData;
 }
-
 export async function unzipFolders(folder: string): Promise<ExecResponseDetails> {
     const jsonData = await makePostCallWithErrorHandling({
         "folder": folder,
@@ -96,6 +95,16 @@ export async function unzipFolders(folder: string): Promise<ExecResponseDetails>
     let value = localStorage.getItem(FOLDER_OF_UNZIPPED_IMGS);
 
     console.log(`FOLDER_OF_UNZIPPED_IMGS: ${value}`);
+    return jsonData;
+}
+
+export async function verifyUnzipFolders(folder: string): Promise<ExecResponseDetails> {
+    const jsonData = await makePostCallWithErrorHandling({
+        "folder": folder,
+        ignoreFolder: "proc"
+    }, `yarn/verifyUnzipAllFolders`)
+
+    console.log(`result ${JSON.stringify(jsonData)}`)
     return jsonData;
 }
 
