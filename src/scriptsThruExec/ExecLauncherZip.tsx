@@ -67,7 +67,7 @@ const ExecLauncherZip: React.FC = () => {
         console.log("ImgType: ", _val);
         setImgTypeForVerification(Number(_val));
     };
-    
+
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
         setFlatten(event.target.checked);
@@ -159,45 +159,9 @@ const ExecLauncherZip: React.FC = () => {
     return (
         <Box display="flex" gap={4} mb={2} flexDirection="row">
 
-            <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
-                <ExecComponent
-                    buttonText="D/l Pdfs from GDrive"
-                    placeholder='Enter Google Drive Link(s)/Identifiers as csv'
-                    secondTextBoxPlaceHolder='Enter Profile or File Abs Path'
-                    execType={ExecType.DownloadGoogleDriveLinkPdfs}
-                    css={{ backgroundColor: "lightgreen", width: "450px" }}
-                    css2={{ backgroundColor: "lightgreen", width: "450px" }} />
-                <Typography variant="body1" gutterBottom>
-                    <p>Warning. Some G-drive-dwnld-ed folders dont delete.</p>
-                    <p>Use 7Zip Del to delete or from cmd prompt from:</p>
-                    <p>File:  del "C:\path\to\your\file.txt"</p>
-                    <p>Folder: rmdir /s /q "D:\_playground\FILE_PATH"</p>
-                </Typography>
-
-                <ExecComponent
-                    buttonText="Verify Unzipped Files->Pdf successful"
-                    placeholder='Folder Abs Path'
-                    execType={imgTypeForVerification}
-                    textBoxOneValue={folderOfUnzippedImgs}
-                    css={{ backgroundColor: "violet", width: "450px" }}
-                    reactComponent={<>
-                        <RadioGroup aria-label="imgTypeForVerification" name="imgTypeForVerification" value={imgTypeForVerification} onChange={handleChangeImgFilesForVerificationToPdf} row>
-                            <FormControlLabel value={ExecType.VERIFY_IMG_TO_PDF_SUCCESS_ANY} control={<Radio />} label={IMG_TYPE_ANY} />
-                            <FormControlLabel value={ExecType.VERIFY_IMG_TO_PDF_SUCCESS_JPG} control={<Radio />} label={IMG_TYPE_JPG} />
-                            <FormControlLabel value={ExecType.VERIFY_IMG_TO_PDF_SUCCESS_PNG} control={<Radio />} label={IMG_TYPE_PNG} />
-                            <FormControlLabel value={ExecType.VERIFY_IMG_TO_PDF_SUCCESS_TIF} control={<Radio />} label={IMG_TYPE_TIF} />
-                        </RadioGroup>
-                    </>}
-                    thirdButton={<Button
-                        variant="contained"
-                        color="primary"
-                        onClick={loadFolderToUnzipFromLocalStorage}
-                        sx={{ marginRight: "10px", marginBottom: "10px" }}>Load From Local Storage</Button>}
-                 
-                />
-            </Box>
 
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
+
                 <ExecComponent
                     buttonText="D/l Zips from GDrive"
                     placeholder='Enter Google Drive Link(s)/Identifiers as csv'
@@ -206,6 +170,22 @@ const ExecLauncherZip: React.FC = () => {
                     css={{ backgroundColor: "violet", width: "450px" }}
                     css2={{ backgroundColor: "violet", width: "450px" }}
                 />
+                <ExecComponent
+                    buttonText="Merge Pdfs in Folder"
+                    placeholder='Folder Abs Path'
+                    execType={mergeType}
+                    textBoxOneValue={folderToUnzip}
+                    css={{ width: "450px" }}
+                    reactComponent={<>
+                        <RadioGroup aria-label="mergeType" name="mergeType" value={mergeType} onChange={chooseMergeType} row>
+                            <FormControlLabel value={ExecType.MERGE_PDFS_MERGE_ALL} control={<Radio />} label="Merge All" />
+                            <FormControlLabel value={ExecType.MERGE_PDFS_MERGE_PER_FOLDER} control={<Radio />} label="Merge Per Folder" />
+                        </RadioGroup>
+                    </>} />
+
+            </Box>
+            <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
+
                 <ExecComponent
                     buttonText="Unzip all Zip Files"
                     placeholder='Folder Abs Path'
@@ -219,6 +199,20 @@ const ExecLauncherZip: React.FC = () => {
                     css2={{ backgroundColor: "violet", width: "450px" }}
                     execType={ExecType.UnzipAllFiles} />
 
+                <ExecComponent
+                    buttonText="Verify Unzip all Zip Files"
+                    placeholder='Folder Abs Path'
+                    thirdButton={<Button
+                        variant="contained"
+                        color="primary"
+                        onClick={loadFolderToUnzipFromLocalStorage}
+                        sx={{ marginRight: "10px", marginBottom: "10px" }}>Load From Local Storage</Button>}
+                    textBoxOneValue={folderToUnzip}
+                    css={{ backgroundColor: "violet", width: "450px" }}
+                    css2={{ backgroundColor: "violet", width: "450px" }}
+                    execType={ExecType.UnzipAllFiles} />
+            </Box>
+            <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
                 <ExecComponent
                     buttonText="Img Files(any/jpg/png/tiff) to pdf"
                     placeholder='Folder Abs Path'
@@ -240,54 +234,30 @@ const ExecLauncherZip: React.FC = () => {
                     css={{ backgroundColor: "violet", width: "450px" }}
                     css2={{ backgroundColor: "violet", width: "450px" }}
                 />
-
-            </Box>
-
-            <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
                 <ExecComponent
-                    buttonText="Merge Pdfs in Folder"
+                    buttonText="Verify Img Files(any/jpg/png/tiff) to pdf"
                     placeholder='Folder Abs Path'
-                    execType={mergeType}
-                    textBoxOneValue={folderToUnzip}
-                    css={{ width: "450px" }}
+                    execType={imgTypeForVerification}
+                    textBoxOneValue={folderOfUnzippedImgs}
+                    css={{ backgroundColor: "violet", width: "450px" }}
                     reactComponent={<>
-                        <RadioGroup aria-label="mergeType" name="mergeType" value={mergeType} onChange={chooseMergeType} row>
-                            <FormControlLabel value={ExecType.MERGE_PDFS_MERGE_ALL} control={<Radio />} label="Merge All" />
-                            <FormControlLabel value={ExecType.MERGE_PDFS_MERGE_PER_FOLDER} control={<Radio />} label="Merge Per Folder" />
-                        </RadioGroup>
-                    </>} />
-
-                <ExecComponent
-                    buttonText="Create G-Drive Excel"
-                    placeholder='Enter Google Drive Link(s)/Identifiers as csv'
-                    secondTextBoxPlaceHolder='Enter Folder Name (not path)'
-                    execType={excelGDrive}
-                    css={{ minWidth: "23vw", width: "450px" }}
-                    css2={{ backgroundColor: "lightgreen", width: "450px" }}
-                    reactComponent={<>
-                        <RadioGroup aria-label="fileType" name="fileType" value={excelGDrive} onChange={chooseGDriveExcelType} row>
-                            <FormControlLabel value={ExecType.GenExcelOfGoogleDriveLinkPdfOnly} control={<Radio />} label="PDF-Only" />
-                            <FormControlLabel value={ExecType.GenExcelOfGoogleDriveLinkForAll} control={<Radio />} label="ALL" />
-                            <FormControlLabel value={ExecType.GenExcelOfGoogleDriveLinkForRenameFilesExcel} control={<Radio />} label="Renamer" />
-                            <FormControlLabel value={ExecType.GenExcelOfGoogleDriveLinkForReduced} control={<Radio />} label="REDUCED" />
+                        <RadioGroup aria-label="imgTypeForVerification" name="imgTypeForVerification" value={imgTypeForVerification} onChange={handleChangeImgFilesForVerificationToPdf} row>
+                            <FormControlLabel value={ExecType.VERIFY_IMG_TO_PDF_SUCCESS_ANY} control={<Radio />} label={IMG_TYPE_ANY} />
+                            <FormControlLabel value={ExecType.VERIFY_IMG_TO_PDF_SUCCESS_JPG} control={<Radio />} label={IMG_TYPE_JPG} />
+                            <FormControlLabel value={ExecType.VERIFY_IMG_TO_PDF_SUCCESS_PNG} control={<Radio />} label={IMG_TYPE_PNG} />
+                            <FormControlLabel value={ExecType.VERIFY_IMG_TO_PDF_SUCCESS_TIF} control={<Radio />} label={IMG_TYPE_TIF} />
                         </RadioGroup>
                     </>}
-                />
+                    thirdButton={<Button
+                        variant="contained"
+                        color="primary"
+                        onClick={loadFolderToUnzipFromLocalStorage}
+                        sx={{ marginRight: "10px", marginBottom: "10px" }}>Load From Local Storage</Button>}
 
-                <ExecComponent
-                    buttonText="Download from GDrive Excel-
-                    Not Ready"
-                    placeholder='Enter Google Drive Link(s)/Identifiers as csv'
-                    secondTextBoxPlaceHolder='Enter Folder Name (not path)'
-                    execType={ExecType.GenExcelOfGoogleDriveLinkPdfOnly}
-                    reactComponent={<>
-                        <input type="file" onChange={handleFileChange} />
-                    </>}
-                    css={{ width: "450px" }}
-                    css2={{ backgroundColor: "lightgreen", width: "450px" }}
                 />
-
             </Box>
+
+
         </Box>
 
     );

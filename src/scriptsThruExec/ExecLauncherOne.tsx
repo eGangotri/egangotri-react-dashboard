@@ -34,21 +34,7 @@ const ExecLauncherOne: React.FC = () => {
         setExcelGDrive(_listingType || ExecType.GenExcelOfGoogleDriveLinkPdfOnly);
     };
 
-    const chooseMergeType = (event: ChangeEvent<HTMLInputElement>) => {
-        const _val = event.target.value;
-        console.log("_val", _val)
-        let _listingType;
-        switch (Number(_val)) {
-            case ExecType.MERGE_PDFS_MERGE_ALL:
-                _listingType = ExecType.MERGE_PDFS_MERGE_ALL;
-                break;
-            case ExecType.MERGE_PDFS_MERGE_PER_FOLDER:
-                _listingType = ExecType.MERGE_PDFS_MERGE_PER_FOLDER;
-                break;
-        }
-        console.log("_listingType", _listingType);
-        setMergeType(_listingType || ExecType.MERGE_PDFS_MERGE_ALL);
-    };
+
 
     const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event?.target?.files || []
@@ -96,24 +82,9 @@ const ExecLauncherOne: React.FC = () => {
                     <p>File:  del "C:\path\to\your\file.txt"</p>
                     <p>Folder: rmdir /s /q "D:\_playground\FILE_PATH"</p>
                 </Typography>
-
-          
             </Box>
 
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
-                <ExecComponent
-                    buttonText="Merge Pdfs in Folder"
-                    placeholder='Folder Abs Path'
-                    execType={mergeType}
-                    textBoxOneValue={folderToUnzip}
-                    css={{ width: "450px" }}
-                    reactComponent={<>
-                        <RadioGroup aria-label="mergeType" name="mergeType" value={mergeType} onChange={chooseMergeType} row>
-                            <FormControlLabel value={ExecType.MERGE_PDFS_MERGE_ALL} control={<Radio />} label="Merge All" />
-                            <FormControlLabel value={ExecType.MERGE_PDFS_MERGE_PER_FOLDER} control={<Radio />} label="Merge Per Folder" />
-                        </RadioGroup>
-                    </>} />
-
                 <ExecComponent
                     buttonText="Create G-Drive Excel"
                     placeholder='Enter Google Drive Link(s)/Identifiers as csv'
