@@ -19,9 +19,7 @@ export const BURGUNDY_RED = '#800020';
 export const BURGUNDY_RED_TW = 'bg-red-800';
 export const SUCCESS_GREEN_TW = "bg-green-600";
 export const LIGHT_YELLOW_TW = 'bg-yellow-300';
-export const PARTIAL_SUCCESS_AMBER_TW = "bg-amber-700";
-
-export const LIGHT_RED = '#ffd4d5';
+export const RED_TO_YELLOW = 'bg-red-yellow-gradient';
 
 export const LIGHT_GREEN = '#90ee90';
 export const LIGHT_YELLOW = '#FFFFB2';
