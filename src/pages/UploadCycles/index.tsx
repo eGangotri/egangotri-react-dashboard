@@ -427,8 +427,10 @@ const UploadCycles = () => {
 
     useEffect(() => {
         (async () => {
+            setIsLoading(true)
             const _data = await fetchUploadCycles();
             setSortedData(_data.map(x => x.uploadCycle));
+            setIsLoading(false)
         })();
     }, []);
 
