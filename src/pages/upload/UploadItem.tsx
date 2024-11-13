@@ -50,7 +50,7 @@ const UploadItem: React.FC<UploadPropsType> = ({
 
   const isSelected = (id: number) => {
     //console.log(`id ${id}`)
-    return selectedRows.map(x => x.id).includes(id);
+    return selectedRows?.map(x => x.id).includes(id);
   };
 
   const highlightRow = (item: Item) => {
