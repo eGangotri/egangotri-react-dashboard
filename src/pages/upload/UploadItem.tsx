@@ -1,13 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 import { DAY_MONTH_YEAR_HOUR_MIN_FORMAT } from "utils/date-constants";
 import format from "date-fns/format";
-import ItemToolTip, { ellipsis } from "../../widgets/ItemTooltip";
-import { Box, Button, Checkbox } from "@mui/material";
+import ItemToolTip from "../../widgets/ItemTooltip";
+import { Checkbox } from "@mui/material";
 import * as _ from "lodash";
 import { createArchiveLink } from "mirror";
 import { SelectedUploadItem } from "mirror/types"
-import { hi } from "date-fns/locale";
-import { LIGHT_GREEN, LIGHT_RED, LIGHT_YELLOW } from "constants/colors";
 
 type UploadPropsType = {
   item: Item;
@@ -24,7 +22,7 @@ const UploadItem: React.FC<UploadPropsType> = ({
   item,
   forQueues = false,
   selectedRows = [],
-  setSelectedRows = null,
+  setSelectedRows,
 }) => {
   //console.log(`item ${JSON.stringify(props)} ${item}`);
   //direction: "rtl",
@@ -49,8 +47,8 @@ const UploadItem: React.FC<UploadPropsType> = ({
   };
 
   const isSelected = (id: number) => {
-    //console.log(`id ${id}`)
-    return selectedRows?.map(x => x.id).includes(id);
+    console.log(`id ${id} selectedRows ${selectedRows} ${selectedRows.length} ${typeof selectedRows}`)
+    return selectedRows?.length > 0 ? selectedRows?.map(x => x.id).includes(id) : false;
   };
 
   const highlightRow = (item: Item) => {
