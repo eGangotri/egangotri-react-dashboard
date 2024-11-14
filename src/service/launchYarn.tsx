@@ -260,3 +260,25 @@ export async function launchAllArchiveItemsDownloadViaExcel(archiveLink: string,
         ..._result
     } as ExecResponseDetails;
 }
+
+export async function downloadGDriveItemsViaExcel(gDriveLink: string, profileOrFilePath: string): Promise<ExecResponseDetails> {
+    const resource =
+        backendServer +
+        `yarnArchive/downloadGDriveItemsViaExcel`;
+
+    if (!gDriveLink.trim().includes(',') && /\s/.test(gDriveLink.trim())) {
+        gDriveLink = gDriveLink.split(' ').join(',');
+        console.log(`gDriveLink ${JSON.stringify(gDriveLink)}`)
+    }
+
+    const result = await makePostCall({
+        "excelPath": gDriveLink,
+        "profileOrPath": profileOrFilePath
+    }, resource);
+
+    const _result = result.response;
+    console.log(`_result ${JSON.stringify(_result)}`)
+    return {
+        ..._result
+    } as ExecResponseDetails;
+}

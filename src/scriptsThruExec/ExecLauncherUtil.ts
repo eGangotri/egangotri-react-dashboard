@@ -7,6 +7,7 @@ import {
 
 import {
   addHeaderFooter,
+  downloadGDriveItemsViaExcel,
   launchAllArchiveItemsDownloadViaExcel,
   launchArchiveExcelDownload,
   launchArchivePdfDownload,
@@ -104,6 +105,7 @@ export enum ExecType {
   MoveToFreeze_FOR_UPLOAD_ID = 110,
   DownloadArchivePdfs = 12,
   DownloadAllArchiveItemsViaExcel = 121,
+  DownloadAllGDriveItemsViaExcel = 122,
   VANITIZE = 100,
   RENAME_FIES_VIA_EXCEL = 101,
 
@@ -267,6 +269,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       case ExecType.UseBulkRenameConventions:
         _resp = await launchBulkRename(dataUserInput);
         break;
+        
       case ExecType.DownloadGoogleDriveLinkPdfs:
         _resp = await launchGoogleDriveDownload(dataUserInput, dataUserInput2Mandatory);
         break;
@@ -532,6 +535,10 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         _resp = await launchAllArchiveItemsDownloadViaExcel(dataUserInput, dataUserInput2Mandatory)
         break;
 
+        case ExecType.DownloadAllGDriveItemsViaExcel:
+          _resp = await downloadGDriveItemsViaExcel(dataUserInput, dataUserInput2Mandatory)
+          break;
+        
       case ExecType.VANITIZE:
         _resp = await launchVanitizeModule(dataUserInput)
         break;

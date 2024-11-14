@@ -103,14 +103,10 @@ const ExecLauncherOne: React.FC = () => {
                 />
 
                 <ExecComponent
-                    buttonText="Download from GDrive Excel-
-                    Not Ready"
-                    placeholder='Enter Google Drive Link(s)/Identifiers as csv'
+                    buttonText="Download from GDrive Excel"
+                    placeholder='Enter Excel Path'
                     secondTextBoxPlaceHolder='Enter Folder Name (not path)'
-                    execType={ExecType.GenExcelOfGoogleDriveLinkPdfOnly}
-                    reactComponent={<>
-                        <input type="file" onChange={handleFileChange} />
-                    </>}
+                    execType={ExecType.DownloadAllGDriveItemsViaExcel}
                     css={{ width: "450px" }}
                     css2={{ backgroundColor: "lightgreen", width: "450px" }}
                 />
