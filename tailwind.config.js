@@ -7,7 +7,7 @@ module.exports = {
   theme: {
     extend: {
       backgroundImage: {
-        'red-yellow-gradient': 'linear-gradient(to right, red, yellow)',
+        'yellow-red-gradient': 'linear-gradient(to right, yellow, red)',
       },
       fontFamily: {
         serif: ['Merriweather', 'serif'],
@@ -15,7 +15,7 @@ module.exports = {
         // sans: ['Bebas Neue', 'sans-serif'],
       },
       colors: {
-        'red-yellow-gradient-color': 'linear-gradient(to right, red, yellow)',
+        'yellow-red-gradient-color': 'linear-gradient(to right, yellow, red)',
         turquoise: {
           50: '#E0F7F7',
           100: '#B3EBEB',
