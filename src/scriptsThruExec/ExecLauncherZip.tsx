@@ -166,7 +166,17 @@ const ExecLauncherZip: React.FC = () => {
                     buttonText="D/l Zips from GDrive"
                     placeholder='Enter Google Drive Link(s)/Identifiers as csv'
                     secondTextBoxPlaceHolder='Enter Profile or File Abs Path'
-                    execType={ExecType.DownloadGoogleDriveLinkAsZip}
+                    execType={ExecType.DWNLD_ZIPS_ONLY_FROM_GOOGLE_DRIVE}
+                    css={{ backgroundColor: "violet", width: "450px" }}
+                    css2={{ backgroundColor: "violet", width: "450px" }}
+                />
+
+
+                <ExecComponent
+                    buttonText="Verify Task:D/l Zips from GDrive"
+                    placeholder='Enter Google Drive Link(s)/Identifiers as csv'
+                    secondTextBoxPlaceHolder='Enter Profile or File Abs Path'
+                    execType={ExecType.DWNLD_ZIPS_ONLY_FROM_GOOGLE_DRIVE}
                     css={{ backgroundColor: "violet", width: "450px" }}
                     css2={{ backgroundColor: "violet", width: "450px" }}
                 />

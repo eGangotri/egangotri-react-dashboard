@@ -73,7 +73,7 @@ const ExecLauncherOne: React.FC = () => {
                     buttonText="D/l Pdfs from GDrive"
                     placeholder='Enter Google Drive Link(s)/Identifiers as csv'
                     secondTextBoxPlaceHolder='Enter Profile or File Abs Path'
-                    execType={ExecType.DownloadGoogleDriveLinkPdfs}
+                    execType={ExecType.DWNLD_PDFS_ONLY_FROM_GOOGLE_DRIVE}
                     css={{ backgroundColor: "lightgreen", width: "450px" }}
                     css2={{ backgroundColor: "lightgreen", width: "450px" }} />
                 <Typography variant="body1" gutterBottom>

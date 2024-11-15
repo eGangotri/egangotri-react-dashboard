@@ -91,7 +91,7 @@ const ExecLauncherThree: React.FC = () => {
                 <ExecComponent buttonText="Download (IN PROGRESS ONLY)"
                     placeholder='Download Files from Excel - Using Frond End'
                     secondTextBoxPlaceHolder="Excel Column Corresponding to Downloadable"
-                    execType={ExecType.DownloadFilesFromExcel}
+                    execType={ExecType.DownloadFilesFromExcel_Via_Front_End}
                     css={{ width: "25vw" }}
                     css2={{ width: "25vw" }}
                 />

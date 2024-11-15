@@ -4,6 +4,7 @@ import { ExecResponseDetails } from 'scriptsThruExec/types';
 import { makePostCall } from 'mirror/utils';
 import { FOLDER_OF_UNZIPPED_IMGS, FOLDER_TO_UNZIP } from './consts';
 import { IMG_TYPE_JPG } from 'scriptsThruExec/constants';
+import { ALL_TYPE, ZIP_TYPE } from 'mirror/CommonConstants';
 
 export async function launchVanitizeModule(
     profile: string): Promise<ExecResponseDetails> {
@@ -26,13 +27,25 @@ export async function launchGoogleDriveDownload(googleDriveLink: string,
     return result;
 }
 
+
+export async function launchAllFromGoogleDriveDownload(googleDriveLink: string,
+    profile: string): Promise<ExecResponseDetails> {
+    const result = await makePostCallWithErrorHandling({
+        "googleDriveLink": googleDriveLink,
+        "profile": profile,
+        ignoreFolder: "proc",
+        fileType: ALL_TYPE
+    }, `gDrive/downloadFromGoogleDrive`)
+    return result;
+}
 export async function launchGoogleDriveZipDownload(googleDriveLink: string,
     profile: string): Promise<ExecResponseDetails> {
     const jsonData = await makePostCallWithErrorHandling({
         "googleDriveLink": googleDriveLink,
         "profile": profile,
-        ignoreFolder: "proc"
-    }, `gDrive/downloadZipFromGoogleDrive`)
+        ignoreFolder: "proc",
+        fileType: ZIP_TYPE
+    }, `gDrive/downloadFromGoogleDrive`)
 
     console.log(`result ${JSON.stringify(jsonData)}`)
 

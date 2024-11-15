@@ -9,6 +9,7 @@ import {
   addHeaderFooter,
   downloadGDriveItemsViaExcel,
   launchAllArchiveItemsDownloadViaExcel,
+  launchAllFromGoogleDriveDownload,
   launchArchiveExcelDownload,
   launchArchivePdfDownload,
   launchGoogleDriveDownload,
@@ -51,8 +52,9 @@ export enum ExecType {
   ANY_IMG_TYPE_TO_PDF = 40,
   LoginToArchive = 4,
   UseBulkRenameConventions = 5,
-  DownloadGoogleDriveLinkPdfs = 6,
-  DownloadGoogleDriveLinkAsZip = 662,
+  DWNLD_PDFS_ONLY_FROM_GOOGLE_DRIVE = 6,
+  DWNLD_ZIPS_ONLY_FROM_GOOGLE_DRIVE = 662,
+  DOWNLOAD_ALL_FROM_GOOGLE_DRIVE = 663,
   UNZIP_ALL_FILES = 6630,
   VERIFY_UNZIP_ALL_FILES = 6631,
   MERGE_PDFS_MERGE_ALL = 664,
@@ -61,7 +63,9 @@ export enum ExecType {
   VERIFY_IMG_TO_PDF_SUCCESS_JPG = 668,
   VERIFY_IMG_TO_PDF_SUCCESS_PNG = 669,
   VERIFY_IMG_TO_PDF_SUCCESS_TIF = 700,
-  DownloadFilesFromExcel = 61,
+  VERIFY_G_DRIVE_ZIP_DOWNLOAD = 701,
+
+  DownloadFilesFromExcel_Via_Front_End = 61,
   DirectoryCompare = 62,
 
   GenExcelOfArchiveLinkCombo1 = 1000,
@@ -269,23 +273,27 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       case ExecType.UseBulkRenameConventions:
         _resp = await launchBulkRename(dataUserInput);
         break;
-        
-      case ExecType.DownloadGoogleDriveLinkPdfs:
+
+      case ExecType.DWNLD_PDFS_ONLY_FROM_GOOGLE_DRIVE:
         _resp = await launchGoogleDriveDownload(dataUserInput, dataUserInput2Mandatory);
         break;
 
-      case ExecType.DownloadGoogleDriveLinkAsZip:
+      case ExecType.DWNLD_ZIPS_ONLY_FROM_GOOGLE_DRIVE:
         _resp = await launchGoogleDriveZipDownload(dataUserInput, dataUserInput2Mandatory);
         break;
-
+        
+      case ExecType.DOWNLOAD_ALL_FROM_GOOGLE_DRIVE:
+        _resp = await launchAllFromGoogleDriveDownload(dataUserInput, dataUserInput2Mandatory);
+        break;
+        
       case ExecType.UNZIP_ALL_FILES:
         _resp = await unzipFolders(dataUserInput);
         break;
 
-        case ExecType.VERIFY_UNZIP_ALL_FILES:
-          _resp = await verifyUnzipFolders(dataUserInput);
-          break;
-        
+      case ExecType.VERIFY_UNZIP_ALL_FILES:
+        _resp = await verifyUnzipFolders(dataUserInput);
+        break;
+
       case ExecType.MERGE_PDFS_MERGE_ALL:
         _resp = await makePostCallWithErrorHandling({
           folder: dataUserInput,
@@ -316,7 +324,8 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         _resp = await verifyImgToPdfSuccess(dataUserInput, IMG_TYPE_TIF)
         break;
 
-      case ExecType.DownloadFilesFromExcel:
+      //unimplemented  
+      case ExecType.DownloadFilesFromExcel_Via_Front_End:
         _resp = await downloadFromExcelUsingFrontEnd(dataUserInput, dataUserInput2Mandatory);
         break;
 
@@ -535,10 +544,10 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         _resp = await launchAllArchiveItemsDownloadViaExcel(dataUserInput, dataUserInput2Mandatory)
         break;
 
-        case ExecType.DownloadAllGDriveItemsViaExcel:
-          _resp = await downloadGDriveItemsViaExcel(dataUserInput, dataUserInput2Mandatory)
-          break;
-        
+      case ExecType.DownloadAllGDriveItemsViaExcel:
+        _resp = await downloadGDriveItemsViaExcel(dataUserInput, dataUserInput2Mandatory)
+        break;
+
       case ExecType.VANITIZE:
         _resp = await launchVanitizeModule(dataUserInput)
         break;
