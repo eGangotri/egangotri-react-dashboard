@@ -22,7 +22,7 @@ export async function launchGoogleDriveDownload(googleDriveLink: string,
         "googleDriveLink": googleDriveLink,
         "profile": profile,
         ignoreFolder: "proc"
-    }, `yarn/downloadFromGoogleDrive`)
+    }, `gDrive/downloadFromGoogleDrive`)
     return result;
 }
 
@@ -32,7 +32,7 @@ export async function launchGoogleDriveZipDownload(googleDriveLink: string,
         "googleDriveLink": googleDriveLink,
         "profile": profile,
         ignoreFolder: "proc"
-    }, `yarn/downloadZipFromGoogleDrive`)
+    }, `gDrive/downloadZipFromGoogleDrive`)
 
     console.log(`result ${JSON.stringify(jsonData)}`)
 
@@ -166,15 +166,6 @@ export async function addHeaderFooter(
     return result.response as ExecResponseDetails
 }
 
-export async function launchGoogleDriveExcelListing(googleDriveLink: string, folderName: string): Promise<ExecResponseDetails> {
-
-    const result = await makePostCallWithErrorHandling({
-        "googleDriveLink": googleDriveLink,
-        "folderName": folderName
-    }, `yarnListMaker/getGoogleDriveListing`);
-    return result;
-}
-
 export async function launchArchiveExcelDownload(archiveLinks: string,
     maxItems: string,
     dateRange: string,
@@ -264,7 +255,7 @@ export async function launchAllArchiveItemsDownloadViaExcel(archiveLink: string,
 export async function downloadGDriveItemsViaExcel(gDriveLink: string, profileOrFilePath: string): Promise<ExecResponseDetails> {
     const resource =
         backendServer +
-        `yarnArchive/downloadGDriveItemsViaExcel`;
+        `gDrive/downloadGDriveItemsViaExcel`;
 
     if (!gDriveLink.trim().includes(',') && /\s/.test(gDriveLink.trim())) {
         gDriveLink = gDriveLink.split(' ').join(',');

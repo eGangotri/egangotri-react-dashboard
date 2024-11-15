@@ -334,7 +334,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
           "folderName": data.userInputSecond || "D:\\",
           "reduced": false,
           "allNotJustPdfs": false
-        }, `yarnListMaker/getGoogleDriveListing`);
+        }, `gDrive/getGoogleDriveListingAsExcel`);
         break;
 
       case ExecType.GenExcelOfGoogleDriveLinkForAll:
@@ -344,7 +344,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
           "reduced": false,
           "ignoreFolder": "",
           "allNotJustPdfs": true,
-        }, `yarnListMaker/getGoogleDriveListing`);
+        }, `gDrive/getGoogleDriveListingAsExcel`);
         break;
 
       case ExecType.GenExcelOfGoogleDriveLinkForReduced:
@@ -353,7 +353,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
           "folderName": data.userInputSecond || "D:\\",
           "reduced": true,
           "allNotJustPdfs": false
-        }, `yarnListMaker/getGoogleDriveListing`);
+        }, `gDrive/getGoogleDriveListingAsExcel`);
         break;
 
       case ExecType.GenExcelOfGoogleDriveLinkForRenameFilesExcel:
@@ -363,7 +363,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
           "reduced": false,
           "pdfRenamerXlV2": true,
           "allNotJustPdfs": false
-        }, `yarnListMaker/getGoogleDriveListing`);
+        }, `gDrive/getGoogleDriveListingAsExcel`);
         break;
 
       case ExecType.GenListingsofLocalFolderAsPdf:
