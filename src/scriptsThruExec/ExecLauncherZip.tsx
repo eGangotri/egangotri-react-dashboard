@@ -16,30 +16,7 @@ const ExecLauncherZip: React.FC = () => {
 
     const [imgType, setImgType] = useState(ExecType.ANY_IMG_TYPE_TO_PDF);
     const [imgTypeForVerification, setImgTypeForVerification] = useState(ExecType.VERIFY_IMG_TO_PDF_SUCCESS_ANY);
-    const [excelGDrive, setExcelGDrive] = React.useState<number>(ExecType.GenExcelOfGoogleDriveLinkPdfOnly);
     const [mergeType, setMergeType] = React.useState<number>(ExecType.MERGE_PDFS_MERGE_ALL);
-
-    const chooseGDriveExcelType = (event: ChangeEvent<HTMLInputElement>) => {
-        const _val = event.target.value;
-        console.log("_val", _val)
-        let _listingType;
-        switch (Number(_val)) {
-            case ExecType.GenExcelOfGoogleDriveLinkPdfOnly:
-                _listingType = ExecType.GenExcelOfGoogleDriveLinkPdfOnly;
-                break;
-            case ExecType.GenExcelOfGoogleDriveLinkForAll:
-                _listingType = ExecType.GenExcelOfGoogleDriveLinkForAll;
-                break;
-            case ExecType.GenExcelOfGoogleDriveLinkForRenameFilesExcel:
-                _listingType = ExecType.GenExcelOfGoogleDriveLinkForRenameFilesExcel;
-                break;
-            case ExecType.GenExcelOfGoogleDriveLinkForReduced:
-                _listingType = ExecType.GenExcelOfGoogleDriveLinkForReduced;
-                break;
-        }
-        console.log("_listingType", _listingType);
-        setExcelGDrive(_listingType || ExecType.GenExcelOfGoogleDriveLinkPdfOnly);
-    };
 
     const chooseMergeType = (event: ChangeEvent<HTMLInputElement>) => {
         const _val = event.target.value;

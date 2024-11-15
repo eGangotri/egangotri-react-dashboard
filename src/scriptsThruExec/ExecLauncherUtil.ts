@@ -54,7 +54,7 @@ export enum ExecType {
   UseBulkRenameConventions = 5,
   DWNLD_PDFS_ONLY_FROM_GOOGLE_DRIVE = 6,
   DWNLD_ZIPS_ONLY_FROM_GOOGLE_DRIVE = 662,
-  DOWNLOAD_ALL_FROM_GOOGLE_DRIVE = 663,
+  DWNLD_ALL_FROM_GOOGLE_DRIVE = 663,
   UNZIP_ALL_FILES = 6630,
   VERIFY_UNZIP_ALL_FILES = 6631,
   MERGE_PDFS_MERGE_ALL = 664,
@@ -282,7 +282,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         _resp = await launchGoogleDriveZipDownload(dataUserInput, dataUserInput2Mandatory);
         break;
         
-      case ExecType.DOWNLOAD_ALL_FROM_GOOGLE_DRIVE:
+      case ExecType.DWNLD_ALL_FROM_GOOGLE_DRIVE:
         _resp = await launchAllFromGoogleDriveDownload(dataUserInput, dataUserInput2Mandatory);
         break;
         

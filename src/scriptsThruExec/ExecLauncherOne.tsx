@@ -3,15 +3,13 @@ import ExecComponent from './ExecComponent';
 import Box from '@mui/material/Box';
 import { ExecType } from './ExecLauncherUtil';
 import * as XLSX from 'xlsx';
-import { FOLDER_OF_UNZIPPED_IMGS, FOLDER_TO_UNZIP } from 'service/consts';
 import { FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material';
 
 
 const ExecLauncherOne: React.FC = () => {
-    const [mergeType, setMergeType] = React.useState<number>(ExecType.MERGE_PDFS_MERGE_ALL);
-    const [folderToUnzip, setFolderToUnzip] = useState<string>("");
     const [excelGDrive, setExcelGDrive] = React.useState<number>(ExecType.GenExcelOfGoogleDriveLinkPdfOnly);
-
+    const [gDriveFileType, setGDriveFileType] = React.useState<number>(ExecType.DWNLD_PDFS_ONLY_FROM_GOOGLE_DRIVE);
+    const [label, setLabel] = React.useState<string>("");
     const chooseGDriveExcelType = (event: ChangeEvent<HTMLInputElement>) => {
         const _val = event.target.value;
         console.log("_val", _val)
@@ -34,6 +32,32 @@ const ExecLauncherOne: React.FC = () => {
         setExcelGDrive(_listingType || ExecType.GenExcelOfGoogleDriveLinkPdfOnly);
     };
 
+
+    const chooseGDriveFileType = (event: ChangeEvent<HTMLInputElement>) => {
+        const _val = event.target.value;
+        console.log("_val", _val)
+        let _dwnldFileType;
+        switch (Number(_val)) {
+            case ExecType.DWNLD_PDFS_ONLY_FROM_GOOGLE_DRIVE:
+                _dwnldFileType = ExecType.DWNLD_PDFS_ONLY_FROM_GOOGLE_DRIVE;
+                break;
+            case ExecType.DWNLD_ZIPS_ONLY_FROM_GOOGLE_DRIVE:
+                _dwnldFileType = ExecType.DWNLD_ZIPS_ONLY_FROM_GOOGLE_DRIVE;
+                break;
+            case ExecType.DWNLD_ALL_FROM_GOOGLE_DRIVE:
+                _dwnldFileType = ExecType.DWNLD_ALL_FROM_GOOGLE_DRIVE;
+                break;
+        }
+        console.log("_dwnldFileType", _dwnldFileType);
+        setGDriveFileType(_dwnldFileType || ExecType.DWNLD_PDFS_ONLY_FROM_GOOGLE_DRIVE);
+        if (_dwnldFileType === ExecType.DWNLD_PDFS_ONLY_FROM_GOOGLE_DRIVE) {
+            setLabel("PDFs");
+        } else if (_dwnldFileType === ExecType.DWNLD_ZIPS_ONLY_FROM_GOOGLE_DRIVE) {
+            setLabel("Zips");
+        } else if (_dwnldFileType === ExecType.DWNLD_ALL_FROM_GOOGLE_DRIVE) {
+            setLabel("All");
+        }
+    };
 
 
     const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -67,21 +91,29 @@ const ExecLauncherOne: React.FC = () => {
     };
     return (
         <Box display="flex" gap={4} mb={2} flexDirection="row">
-
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
                 <ExecComponent
-                    buttonText="D/l Pdfs from GDrive"
+                    buttonText={`D/l ${label} from GDrive`}
                     placeholder='Enter Google Drive Link(s)/Identifiers as csv'
                     secondTextBoxPlaceHolder='Enter Profile or File Abs Path'
-                    execType={ExecType.DWNLD_PDFS_ONLY_FROM_GOOGLE_DRIVE}
+                    execType={gDriveFileType}
                     css={{ backgroundColor: "lightgreen", width: "450px" }}
-                    css2={{ backgroundColor: "lightgreen", width: "450px" }} />
+                    css2={{ backgroundColor: "lightgreen", width: "450px" }}
+                    reactComponent={<>
+                        <RadioGroup aria-label="gDriveFileType" name="gDriveFileType" value={gDriveFileType} onChange={chooseGDriveFileType} row>
+                            <FormControlLabel value={ExecType.DWNLD_PDFS_ONLY_FROM_GOOGLE_DRIVE} control={<Radio />} label="PDF-Only" />
+                            <FormControlLabel value={ExecType.DWNLD_ZIPS_ONLY_FROM_GOOGLE_DRIVE} control={<Radio />} label="ZIP-ONLY" />
+                            <FormControlLabel value={ExecType.DWNLD_ALL_FROM_GOOGLE_DRIVE} control={<Radio />} label="ALL" />
+                        </RadioGroup>
+                    </>}
+                />
                 <Typography variant="body1" gutterBottom>
                     <p>Warning. Some G-drive-dwnld-ed folders dont delete.</p>
                     <p>Use 7Zip Del to delete or from cmd prompt from:</p>
                     <p>File:  del "C:\path\to\your\file.txt"</p>
                     <p>Folder: rmdir /s /q "D:\_playground\FILE_PATH"</p>
                 </Typography>
+
             </Box>
 
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
@@ -93,7 +125,7 @@ const ExecLauncherOne: React.FC = () => {
                     css={{ minWidth: "23vw", width: "450px" }}
                     css2={{ backgroundColor: "lightgreen", width: "450px" }}
                     reactComponent={<>
-                        <RadioGroup aria-label="fileType" name="fileType" value={excelGDrive} onChange={chooseGDriveExcelType} row>
+                        <RadioGroup aria-label="excelGDrive" name="excelGDrive" value={excelGDrive} onChange={chooseGDriveExcelType} row>
                             <FormControlLabel value={ExecType.GenExcelOfGoogleDriveLinkPdfOnly} control={<Radio />} label="PDF-Only" />
                             <FormControlLabel value={ExecType.GenExcelOfGoogleDriveLinkForAll} control={<Radio />} label="ALL" />
                             <FormControlLabel value={ExecType.GenExcelOfGoogleDriveLinkForRenameFilesExcel} control={<Radio />} label="Renamer" />
