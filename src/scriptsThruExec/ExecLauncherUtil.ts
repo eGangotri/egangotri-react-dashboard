@@ -32,6 +32,7 @@ import { downloadFromExcelUsingFrontEnd } from "service/launchFrontEnd";
 import { replaceQuotes } from "mirror/utils";
 import { handleYarnListingGeneration } from "./Utils";
 import { IMG_TYPE_ANY, IMG_TYPE_JPG, IMG_TYPE_PNG, IMG_TYPE_TIF } from "./constants";
+import { ALL_TYPE, PDF_TYPE, ZIP_TYPE } from "mirror/CommonConstants";
 
 export enum ExecType {
   UploadPdfs = 1,
@@ -65,7 +66,9 @@ export enum ExecType {
   VERIFY_IMG_TO_PDF_SUCCESS_PNG = 669,
   VERIFY_IMG_TO_PDF_SUCCESS_TIF = 700,
 
-  VERIFY_G_DRIVE_ZIP_DOWNLOAD = 701,
+  VERIFY_G_DRIVE_PDF_DOWNLOAD = 701,
+  VERIFY_G_DRIVE_ZIP_DOWNLOAD = 702,
+  VERIFY_G_DRIVE_ALL_DOWNLOAD = 703,
 
   DownloadFilesFromExcel_Via_Front_End = 61,
   DirectoryCompare = 62,
@@ -288,10 +291,18 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         _resp = await launchAllFromGoogleDriveDownload(dataUserInput, dataUserInput2Mandatory);
         break;
 
+      case ExecType.VERIFY_G_DRIVE_PDF_DOWNLOAD:
+        _resp = await verifyGDriveDwnldSuccessFolders(dataUserInput, PDF_TYPE);
+        break;
+
         case ExecType.VERIFY_G_DRIVE_ZIP_DOWNLOAD:
-          _resp = await verifyGDriveDwnldSuccessFolders(dataUserInput);
+          _resp = await verifyGDriveDwnldSuccessFolders(dataUserInput, ZIP_TYPE);
           break;
-        
+
+          case ExecType.VERIFY_G_DRIVE_ALL_DOWNLOAD:
+            _resp = await verifyGDriveDwnldSuccessFolders(dataUserInput, ALL_TYPE);
+            break;
+      
       case ExecType.UNZIP_ALL_FILES:
         _resp = await unzipFolders(dataUserInput);
         break;

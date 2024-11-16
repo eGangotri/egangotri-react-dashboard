@@ -4,7 +4,7 @@ import { ExecResponseDetails } from 'scriptsThruExec/types';
 import { makePostCall } from 'mirror/utils';
 import { FOLDER_OF_UNZIPPED_IMGS, FOLDER_TO_UNZIP } from './consts';
 import { IMG_TYPE_JPG } from 'scriptsThruExec/constants';
-import { ALL_TYPE, ZIP_TYPE } from 'mirror/CommonConstants';
+import { ALL_TYPE, PDF_TYPE, ZIP_TYPE } from 'mirror/CommonConstants';
 
 export async function launchVanitizeModule(
     profile: string): Promise<ExecResponseDetails> {
@@ -121,10 +121,11 @@ export async function verifyUnzipFolders(folder: string): Promise<ExecResponseDe
     return jsonData;
 }
 
-export async function verifyGDriveDwnldSuccessFolders(folder: string): Promise<ExecResponseDetails> {
+export async function verifyGDriveDwnldSuccessFolders(folder: string, fileType = PDF_TYPE): Promise<ExecResponseDetails> {
     const jsonData = await makePostCallWithErrorHandling({
         "folder": folder,
-        ignoreFolder: "proc"
+        ignoreFolder: "proc",
+        fileType
     }, `gDrive/verifyLocalDownloadSameAsGDrive`)
 
     console.log(`result ${JSON.stringify(jsonData)}`)
