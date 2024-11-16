@@ -44,8 +44,8 @@ const TopPanel: React.FC = () => {
   );
 
   return (
-    <span className='py-4'>
-      <AppBar position="static" className='mt-4 mb-4'>
+    <span>
+      <AppBar position="static" className='mt-4 mb-4 mr-4'>
         <Toolbar>
           <Box sx={{ display: 'flex', gap: 2 }} >
             {/* Uploads Menu */}
@@ -116,7 +116,37 @@ const TopPanel: React.FC = () => {
               {createNavLink(TIFF_2_PDF, 'Tiff 2 Pdf')}
             </Menu>
 
-            {/* Misc Menu */}
+            <Button
+              onClick={(event) => handleOpenMenu(event, 'DB')}
+              color="inherit"
+            >
+              DB
+            </Button>
+            <Menu
+              anchorEl={anchorEl}
+              open={menuName === 'DB'}
+              onClose={handleCloseMenu}
+            >
+              {createNavLink(SEARCH_ARCHIVE_DB_PATH, 'Search Archive DB')}
+              {createNavLink(SEARCH_G_DRIVE_DB_PATH, 'Search G-Drive DB')}
+            </Menu>
+
+            <Button
+              onClick={(event) => handleOpenMenu(event, 'G-Drive-Listing-Upload')}
+              color="inherit"
+            >
+              G-Drive-Listing-Upload
+            </Button>
+            <Menu
+              anchorEl={anchorEl}
+              open={menuName === 'G-Drive-Listing-Upload'}
+              onClose={handleCloseMenu}
+            >
+              {createNavLink(G_DRIVE_LISTING_MAKER_PATH, 'G-Drive Listing Maker')}
+              {createNavLink(G_DRIVE_UPLOAD_INTEGRITY_CHECK_PATH, 'G-Drive Upload Integrity Check')}
+              {createNavLink(RENAME_PDFS, 'Rename Pdfs')}
+            </Menu>
+
             <Button
               onClick={(event) => handleOpenMenu(event, 'Misc')}
               color="inherit"
@@ -129,10 +159,6 @@ const TopPanel: React.FC = () => {
               onClose={handleCloseMenu}
             >
               {createNavLink(AI_TEXT_IDENTIFIER, 'AI-Text-Identify')}
-              {createNavLink(SEARCH_ARCHIVE_DB_PATH, 'Search Archive DB')}
-              {createNavLink(SEARCH_G_DRIVE_DB_PATH, 'Search G-Drive DB')}
-              {createNavLink(G_DRIVE_LISTING_MAKER_PATH, 'G-Drive Listing Maker')}
-              {createNavLink(G_DRIVE_UPLOAD_INTEGRITY_CHECK_PATH, 'G-Drive Upload Integrity Check')}
               {createNavLink(RENAME_PDFS, 'Rename Pdfs')}
             </Menu>
           </Box>

@@ -12,7 +12,7 @@ import { loginToken } from "pages/Dashboard";
 const Layout: React.FC<PropsWithChildren> = ({ children }) => {
 
     return (
-        <Box sx={{paddingLeft:"40px"}}>
+        <Box className="px-4 flex flex-col">
         <Header title="eGangotri Dashboard"/>
         <TopPanel />
             {children}
