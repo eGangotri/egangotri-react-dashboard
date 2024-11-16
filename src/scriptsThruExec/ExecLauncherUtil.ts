@@ -599,7 +599,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
           gDriveExcel: dataUserInput,
           localExcel: dataUserInput2Mandatory,
         },
-          `searchGDriveDB/compareGDriveAndLocalExcel`);
+          `googleDriveDB/compareGDriveAndLocalExcel`);
         break;
 
       case ExecType.UPLOAD_MISSED_TO_GDRIVE:
@@ -607,7 +607,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
           diffExcel: dataUserInput,
           gDriveRoot: dataUserInput2Mandatory,
         },
-          `searchGDriveDB/uploadToGDriveBasedOnDiffExcel`);
+          `googleDriveDB/uploadToGDriveBasedOnDiffExcel`);
         break;
 
       case ExecType.BL_EAP_WORK:

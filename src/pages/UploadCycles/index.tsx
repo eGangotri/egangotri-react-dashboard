@@ -14,7 +14,7 @@ import { makePostCallWithErrorHandling, verifyUploadStatusForUploadCycleId } fro
 import { DD_MM_YYYY_WITH_TIME_FORMAT } from 'utils/utils';
 import { getDataForUploadCycle } from 'service/BackendFetchService';
 import { ArchiveProfileAndCount, UploadCycleArchiveProfile, UploadCycleTableData, UploadCycleTableDataDictionary } from 'mirror/types';
-import { UPLOADS_USHERED_PATH } from 'Routes';
+import { UPLOADS_USHERED_PATH } from 'Routes/constants';
 import { MAX_ITEMS_LISTABLE } from 'utils/constants';
 import { ERROR_RED, SUCCESS_GREEN } from 'constants/colors';
 import Spinner from 'widgets/Spinner';

@@ -14,12 +14,12 @@ console.log(`Deployment on ${import.meta.env.VITE_LAST_DEPLOYMENT_ON}
 ${reactDevEnv}
     getServer:${BACKEND_SERVER}`)
     
-export function getServer(): string {
+export function getBackendServer(): string {
   return BACKEND_SERVER;
 }
 
 export const MAX_ITEMS_LISTABLE = 2500;
 
-export const backendServer = getServer();
+export const backendServer = getBackendServer();
 
 export const WIDTH_OF_WIDGETS = 250;

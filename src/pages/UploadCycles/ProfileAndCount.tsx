@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, TableCell, TableRow } from "@mui/material";
-import { UPLOADS_QUEUED_PATH, UPLOADS_USHERED_PATH } from "Routes";
+import { UPLOADS_QUEUED_PATH, UPLOADS_USHERED_PATH } from "Routes/constants";
 import { ArchiveProfileAndCount, UploadCycleTableData } from "mirror/types";
 
 type UploadCycleDataProp = {

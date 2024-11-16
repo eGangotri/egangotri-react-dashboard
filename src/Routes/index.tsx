@@ -20,30 +20,29 @@ import ExecLauncherSix from 'scriptsThruExec/ExecLauncherSix';
 import Login from 'pages/GoogleLogin';
 import RenamePdfs from 'scriptsThruExec/RenamePdfs';
 import ExecLauncherZip from 'scriptsThruExec/ExecLauncherZip';
-
-export const LANDING_PAGE_PATH = "/"
-export const UPLOADS_USHERED_PATH = "/uploadsUshered";
-export const UPLOADS_QUEUED_PATH = "/uploadsQueued";
-export const UPLOAD_CYCLES_PATH = "/uploadCycles";
-export const EXEC_LAUNCHER_PATH = "/execLauncher";
-export const EXEC_LAUNCHER_ZIP_PATH = "/execLauncherZip";
-
-export const EXEC_LAUNCHER_TWO_PATH = "/execLauncher2";
-export const EXEC_LAUNCHER_TWO_B_PATH = "/execLauncher2b";
-export const EXEC_LAUNCHER_TWO_C_PATH = "/execLauncher2c";
-export const EXEC_LAUNCHER_THREE_PATH = "/execLauncher3";
-export const EXEC_LAUNCHER_FOUR_PATH = "/execLauncher4a";
-export const EXEC_LAUNCH_FOUR_B_PATH = "/execLauncher4b";
-export const FILE_MOVER_PATH = "/fileMover";
-export const SEARCH_ARCHIVE_DB_PATH = "/searchArchiveDB";
-export const SEARCH_G_DRIVE_DB_PATH = "/searchGDriveDB";
-export const G_DRIVE_LISTING_MAKER_PATH = "/GDriveListingMaker";
-export const G_DRIVE_UPLOAD_INTEGRITY_CHECK_PATH = "/GDriveUploadIntegrityCheck";
-export const RENAME_PDFS = "/renamePdfs";
-
-export const TIFF_2_PDF = "/tiff2pdf";
-export const AI_TEXT_IDENTIFIER = "/ai";
-
+import GDriveItemList from 'components/gDriveCrud';
+import {
+    FILE_MOVER_PATH,
+    EXEC_LAUNCHER_PATH,
+    UPLOADS_QUEUED_PATH,
+    UPLOADS_USHERED_PATH,
+    LANDING_PAGE_PATH,
+    EXEC_LAUNCHER_TWO_PATH,
+    EXEC_LAUNCH_FOUR_B_PATH,
+    TIFF_2_PDF,
+    AI_TEXT_IDENTIFIER,
+    EXEC_LAUNCHER_THREE_PATH,
+    EXEC_LAUNCHER_FOUR_PATH,
+    SEARCH_ARCHIVE_DB_PATH,
+    SEARCH_G_DRIVE_DB_PATH,
+    G_DRIVE_LISTING_MAKER_PATH,
+    G_DRIVE_UPLOAD_INTEGRITY_CHECK_PATH,
+    EXEC_LAUNCHER_TWO_B_PATH,
+    EXEC_LAUNCHER_TWO_C_PATH,
+    RENAME_PDFS,
+    EXEC_LAUNCHER_ZIP_PATH,
+    G_DRIVE_CRUD_PATH
+  } from './constants';
 const DashboardRoutes: React.FC = () => {
     const isLocalhost = true; //window.location.hostname === 'localhost';
     const allFrags = (
@@ -67,6 +66,7 @@ const DashboardRoutes: React.FC = () => {
             {<Route path={SEARCH_G_DRIVE_DB_PATH} element={<SearchGDriveDB />} />}
             {<Route path={G_DRIVE_LISTING_MAKER_PATH} element={<ExecLauncherFive />} />}
             {<Route path={G_DRIVE_UPLOAD_INTEGRITY_CHECK_PATH} element={<ExecLauncherSix />} />}
+            {<Route path={G_DRIVE_CRUD_PATH} element={<GDriveItemList />} />}
             {<Route path={RENAME_PDFS} element={<RenamePdfs />} />}
         </>
     );

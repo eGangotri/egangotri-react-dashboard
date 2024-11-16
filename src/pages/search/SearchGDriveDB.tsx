@@ -85,7 +85,7 @@ const SearchGDriveDB = () => {
     async function fetchData(searchTerm: string) {
         const resource =
             backendServer +
-            `searchGDriveDB/search`;
+            `googleDriveDB/search`;
 
         const data = await makePostCall({ searchTerm },
             resource);

@@ -1,2 +1,2 @@
-import { getServer } from 'utils/constants';
-console.log(`Services Backend Server is ${getServer()}`)
+import { getBackendServer } from 'utils/constants';
+console.log(`Services Backend Server is ${getBackendServer()}`)
