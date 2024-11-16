@@ -121,9 +121,12 @@ export async function verifyUnzipFolders(folder: string): Promise<ExecResponseDe
     return jsonData;
 }
 
-export async function verifyGDriveDwnldSuccessFolders(folder: string, fileType = PDF_TYPE): Promise<ExecResponseDetails> {
+export async function verifyGDriveDwnldSuccessFolders(googleDriveLink: string,
+    folderOrProfile: string,
+    fileType = PDF_TYPE): Promise<ExecResponseDetails> {
     const jsonData = await makePostCallWithErrorHandling({
-        "folder": folder,
+        googleDriveLink,
+        folderOrProfile,
         ignoreFolder: "proc",
         fileType
     }, `gDrive/verifyLocalDownloadSameAsGDrive`)
