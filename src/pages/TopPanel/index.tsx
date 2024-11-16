@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { Box, Grid } from '@mui/material';
+import { AppBar, Toolbar, Menu, MenuItem, Typography, Box, Button } from '@mui/material';
 import {
-  FILE_MOVER_PATH, EXEC_LAUNCHER_PATH, UPLOADS_QUEUED_PATH,
+  FILE_MOVER_PATH,
+  EXEC_LAUNCHER_PATH,
+  UPLOADS_QUEUED_PATH,
   UPLOADS_USHERED_PATH,
   LANDING_PAGE_PATH,
   EXEC_LAUNCHER_TWO_PATH,
@@ -20,43 +22,124 @@ import {
   RENAME_PDFS,
   EXEC_LAUNCHER_ZIP_PATH
 } from 'Routes';
-import { useLocation } from "react-router-dom";
-import './topPanel.css';
-import Tiff2Pdf from 'scriptsThruExec/Tiff2Pdf';
 
 const TopPanel: React.FC = () => {
-  const border = "1px solid black";
-  const location = useLocation();
-  const { pathname } = location;
-  const splitLocation = pathname.split("/");
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [menuName, setMenuName] = useState<string | null>(null);
 
-  const activeClass = (_route: string) => {
-    return splitLocation[1] === _route ? "active" : "";
-  }
+  const handleOpenMenu = (event: React.MouseEvent<HTMLElement>, menu: string) => {
+    setAnchorEl(event.currentTarget);
+    setMenuName(menu);
+  };
+
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
+    setMenuName(null);
+  };
+
+  const createNavLink = (path: string, label: string) => (
+    <NavLink to={path} style={{ textDecoration: 'none', color: 'inherit' }}>
+      <MenuItem onClick={handleCloseMenu}>{label}</MenuItem>
+    </NavLink>
+  );
+
   return (
-    <Grid container spacing={1} columns={{ sm: 6, md: 18 }} direction="row" sx={{ margin: "20px 0" }}>
-      <Grid item xs={1} sm={1} md={2}><NavLink to={LANDING_PAGE_PATH} className={activeClass(LANDING_PAGE_PATH)}><Box className="menuItem">Uploads Cycles</Box></NavLink></Grid>
-      <Grid item xs={1} sm={1} md={2}><NavLink to={UPLOADS_USHERED_PATH} className={activeClass(UPLOADS_USHERED_PATH)} ><Box className="menuItem">Uploads Ushered</Box></NavLink></Grid>
-      <Grid item xs={1} sm={1} md={2}><NavLink to={UPLOADS_QUEUED_PATH} className={activeClass(UPLOADS_QUEUED_PATH)}><Box className="menuItem">Uploads Queued</Box></NavLink></Grid>
-      <Grid item xs={1} sm={1} md={2}><NavLink to={EXEC_LAUNCHER_PATH} className={activeClass(EXEC_LAUNCHER_PATH)}><Box className="menuItem menuItem_special">G-Drive Util</Box></NavLink></Grid>
-      <Grid item xs={1} sm={1} md={2}><NavLink to={EXEC_LAUNCHER_ZIP_PATH} className={activeClass(EXEC_LAUNCHER_ZIP_PATH)}><Box className="menuItem menuItem_special">Zip-to-Pdf</Box></NavLink></Grid>
-      <Grid item xs={1} sm={1} md={2}><NavLink to={EXEC_LAUNCHER_TWO_PATH} className={activeClass(EXEC_LAUNCHER_TWO_PATH)}><Box className="menuItem menuItem_special2"> archive.org Uploads</Box></NavLink></Grid>
-      <Grid item xs={1} sm={1} md={2}><NavLink to={EXEC_LAUNCHER_TWO_B_PATH} className={activeClass(EXEC_LAUNCHER_TWO_B_PATH)}><Box className="menuItem">archive.org Non-Upload Work</Box></NavLink></Grid>
-      <Grid item xs={1} sm={1} md={2}><NavLink to={EXEC_LAUNCHER_TWO_C_PATH} className={activeClass(EXEC_LAUNCHER_TWO_C_PATH)}><Box className="menuItem">archive.org Data & Data Integrity</Box></NavLink></Grid>
-      <Grid item xs={1} sm={1} md={2}><NavLink to={EXEC_LAUNCHER_THREE_PATH} className={activeClass(EXEC_LAUNCHER_THREE_PATH)}><Box className="menuItem">Files-Util</Box></NavLink></Grid>
-      <Grid item xs={1} sm={1} md={2}><NavLink to={EXEC_LAUNCHER_FOUR_PATH} className={activeClass(EXEC_LAUNCHER_FOUR_PATH)}><Box className="menuItem">Refine File Data-1</Box></NavLink></Grid>
-      <Grid item xs={1} sm={1} md={2}><NavLink to={EXEC_LAUNCH_FOUR_B_PATH} className={activeClass(EXEC_LAUNCH_FOUR_B_PATH)}><Box className="menuItem">File-Renaming via Excel</Box></NavLink></Grid>
-      <Grid item xs={1} sm={1} md={2}><NavLink to={TIFF_2_PDF} className={activeClass(TIFF_2_PDF)}><Box className="menuItem">Tiff 2 Pdf</Box></NavLink></Grid>
-      <Grid item xs={1} sm={1} md={2}><NavLink to={AI_TEXT_IDENTIFIER} className={activeClass(AI_TEXT_IDENTIFIER)}><Box className="menuItem">AI-Text-Identify</Box></NavLink></Grid>
-      <Grid item xs={1} sm={1} md={2}><NavLink to={SEARCH_ARCHIVE_DB_PATH} className={activeClass(SEARCH_ARCHIVE_DB_PATH)}><Box className="menuItem">Search Archive DB</Box></NavLink></Grid>
-      <Grid item xs={1} sm={1} md={2}><NavLink to={SEARCH_G_DRIVE_DB_PATH} className={activeClass(SEARCH_ARCHIVE_DB_PATH)}><Box className="menuItem">Search G-Drive DB</Box></NavLink></Grid>
-      <Grid item xs={1} sm={1} md={2}><NavLink to={G_DRIVE_LISTING_MAKER_PATH} className={activeClass(G_DRIVE_LISTING_MAKER_PATH)}><Box className="menuItem">G-Drive Listing Maker</Box></NavLink></Grid>
-      <Grid item xs={1} sm={1} md={2}><NavLink to={G_DRIVE_UPLOAD_INTEGRITY_CHECK_PATH} className={activeClass(G_DRIVE_UPLOAD_INTEGRITY_CHECK_PATH)}><Box className="menuItem">G-Drive Upload Integrity Check</Box></NavLink></Grid>
-      <Grid item xs={1} sm={1} md={2}><NavLink to={RENAME_PDFS} className={activeClass(RENAME_PDFS)}><Box className="menuItem">Rename Pdfs</Box></NavLink></Grid>
-    
-    </Grid>
+    <span className='py-4'>
+      <AppBar position="static" className='mt-4 mb-4'>
+        <Toolbar>
+          <Box sx={{ display: 'flex', gap: 2 }} >
+            {/* Uploads Menu */}
+            <Button
+              onClick={(event) => handleOpenMenu(event, 'Uploads')}
+              color="inherit"
+            >
+              Uploads
+            </Button>
+            <Menu
+              anchorEl={anchorEl}
+              open={menuName === 'Uploads'}
+              onClose={handleCloseMenu}
+            >
+              {createNavLink(LANDING_PAGE_PATH, 'Uploads Cycles')}
+              {createNavLink(UPLOADS_USHERED_PATH, 'Uploads Ushered')}
+              {createNavLink(UPLOADS_QUEUED_PATH, 'Uploads Queued')}
+            </Menu>
+
+            {/* GDrive Menu */}
+            <Button
+              onClick={(event) => handleOpenMenu(event, 'GDrive')}
+              color="inherit"
+            >
+              GDrive
+            </Button>
+            <Menu
+              anchorEl={anchorEl}
+              open={menuName === 'GDrive'}
+              onClose={handleCloseMenu}
+            >
+              {createNavLink(EXEC_LAUNCHER_PATH, 'G-Drive Util')}
+              {createNavLink(EXEC_LAUNCHER_ZIP_PATH, 'Zip-to-Pdf')}
+            </Menu>
+
+            {/* Archive Menu */}
+            <Button
+              onClick={(event) => handleOpenMenu(event, 'Archive')}
+              color="inherit"
+            >
+              Archive
+            </Button>
+            <Menu
+              anchorEl={anchorEl}
+              open={menuName === 'Archive'}
+              onClose={handleCloseMenu}
+            >
+              {createNavLink(EXEC_LAUNCHER_TWO_PATH, 'archive.org Uploads')}
+              {createNavLink(EXEC_LAUNCHER_TWO_B_PATH, 'archive.org Non-Upload Work')}
+              {createNavLink(EXEC_LAUNCHER_TWO_C_PATH, 'archive.org Data & Data Integrity')}
+            </Menu>
+
+            {/* FileUtils Menu */}
+            <Button
+              onClick={(event) => handleOpenMenu(event, 'FileUtils')}
+              color="inherit"
+            >
+              FileUtils
+            </Button>
+            <Menu
+              anchorEl={anchorEl}
+              open={menuName === 'FileUtils'}
+              onClose={handleCloseMenu}
+            >
+              {createNavLink(EXEC_LAUNCHER_THREE_PATH, 'Files-Util')}
+              {createNavLink(EXEC_LAUNCHER_FOUR_PATH, 'Refine File Data-1')}
+              {createNavLink(EXEC_LAUNCH_FOUR_B_PATH, 'File-Renaming via Excel')}
+              {createNavLink(TIFF_2_PDF, 'Tiff 2 Pdf')}
+            </Menu>
+
+            {/* Misc Menu */}
+            <Button
+              onClick={(event) => handleOpenMenu(event, 'Misc')}
+              color="inherit"
+            >
+              Misc
+            </Button>
+            <Menu
+              anchorEl={anchorEl}
+              open={menuName === 'Misc'}
+              onClose={handleCloseMenu}
+            >
+              {createNavLink(AI_TEXT_IDENTIFIER, 'AI-Text-Identify')}
+              {createNavLink(SEARCH_ARCHIVE_DB_PATH, 'Search Archive DB')}
+              {createNavLink(SEARCH_G_DRIVE_DB_PATH, 'Search G-Drive DB')}
+              {createNavLink(G_DRIVE_LISTING_MAKER_PATH, 'G-Drive Listing Maker')}
+              {createNavLink(G_DRIVE_UPLOAD_INTEGRITY_CHECK_PATH, 'G-Drive Upload Integrity Check')}
+              {createNavLink(RENAME_PDFS, 'Rename Pdfs')}
+            </Menu>
+          </Box>
+        </Toolbar>
+      </AppBar>
+    </span>
   );
 };
 
 export default TopPanel;
-
