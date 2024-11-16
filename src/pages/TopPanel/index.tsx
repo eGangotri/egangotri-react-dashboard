@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
-import { AppBar, Toolbar, Menu, MenuItem, Typography, Box, Button } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { NavLink, useLocation } from 'react-router-dom';
+import { AppBar, Toolbar, Menu, MenuItem, Typography, Box, Button, Breadcrumbs, Link } from '@mui/material';
 import {
   FILE_MOVER_PATH,
   EXEC_LAUNCHER_PATH,
@@ -22,150 +22,184 @@ import {
   RENAME_PDFS,
   EXEC_LAUNCHER_ZIP_PATH
 } from 'Routes';
+import { getMenuLabels, Submenu, TopPanelMenu } from './constants';
 
 const TopPanel: React.FC = () => {
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [menuName, setMenuName] = useState<string | null>(null);
+  const TOP_PANEL_MENU: TopPanelMenu[] = [{
+    menuLabel: "Uploads",
+    submenu: [
+      {
+        path: LANDING_PAGE_PATH,
+        label: "Uploads Cycles",
+      },
+      {
+        path: UPLOADS_USHERED_PATH,
+        label: "Uploads Ushered",
+      },
+      {
+        path: UPLOADS_QUEUED_PATH,
+        label: "Uploads Queued",
+      }
+    ]
+  },
+  {
+    menuLabel: "GDrive",
+    submenu: [
+      {
+        path: EXEC_LAUNCHER_PATH,
+        label: 'G-Drive Util',
+      },
+      {
+        path: EXEC_LAUNCHER_ZIP_PATH,
+        label: 'Zip-to-Pdf',
+      }],
+  },
+  {
+    menuLabel: "Archive",
+    submenu: [
+      {
+        path: EXEC_LAUNCHER_TWO_PATH,
+        label: 'archive.org Uploads',
+      },
+      {
+        path: EXEC_LAUNCHER_TWO_B_PATH,
+        label: 'archive.org Non-Upload Work',
+      },
+      {
+        path: EXEC_LAUNCHER_TWO_C_PATH,
+        label: 'archive.org Data & Data Integrity',
+      }
+    ]
+  },
+  {
+    menuLabel: "FileUtils",
+    submenu: [
+      {
+        path: EXEC_LAUNCHER_THREE_PATH,
+        label: 'Files-Util',
+      },
+      {
+        path: EXEC_LAUNCHER_FOUR_PATH,
+        label: 'Refine File Data-1',
+      },
+      {
+        path: EXEC_LAUNCH_FOUR_B_PATH,
+        label: 'File-Renaming via Excel',
+      },
+      {
+        path: TIFF_2_PDF,
+        label: 'Tiff 2 Pdf',
+      }
+    ]},
+    {
+    menuLabel: "DB",
+    submenu: [
+      {
+        path: SEARCH_ARCHIVE_DB_PATH,
+        label: 'Search Archive DB',
+      },
+      {
+        path: SEARCH_G_DRIVE_DB_PATH,
+        label: 'Search G-Drive DB',
+      }
+    ],
+  },
+    {
+    menuLabel: "G-Drive-Listing-Upload",
+    submenu: [
+      {
+        path: G_DRIVE_LISTING_MAKER_PATH,
+        label: 'G-Drive Listing Maker',
+      },
+      {
+        path: G_DRIVE_UPLOAD_INTEGRITY_CHECK_PATH,
+        label: 'G-Drive Upload Integrity Check',
+      }
+    ],
+  },
+  {
+  menuLabel: "Misc",
+  submenu: [
+    {
+      path: AI_TEXT_IDENTIFIER,
+      label: 'AI-Text-Identify',
+    },
+    {
+      path: RENAME_PDFS,
+      label: 'Rename Pdfs',
+    }
+  ],
+},
+  ];
+const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+const [menuName, setMenuName] = useState<string | null>(null);
+const [breadcrumbs, setBreadcrumbs] = useState<string[]>([]);
+const location = useLocation();
 
-  const handleOpenMenu = (event: React.MouseEvent<HTMLElement>, menu: string) => {
-    setAnchorEl(event.currentTarget);
-    setMenuName(menu);
-  };
+useEffect(() => {
+  const path = location.pathname.split('/').filter(x => x);
+  const _breadcrumbs = getMenuLabels(TOP_PANEL_MENU, path[0]);
+  setBreadcrumbs(_breadcrumbs);
+  console.log(`breadcrumbs: ${breadcrumbs} path: ${path}`);
+}, [location]);
 
-  const handleCloseMenu = () => {
-    setAnchorEl(null);
-    setMenuName(null);
-  };
+const handleOpenMenu = (event: React.MouseEvent<HTMLElement>, menu: string) => {
+  setAnchorEl(event.currentTarget);
+  setMenuName(menu);
+};
 
-  const createNavLink = (path: string, label: string) => (
-    <NavLink to={path} style={{ textDecoration: 'none', color: 'inherit' }}>
-      <MenuItem onClick={handleCloseMenu}>{label}</MenuItem>
-    </NavLink>
-  );
+const handleCloseMenu = () => {
+  setAnchorEl(null);
+  setMenuName(null);
+};
 
-  return (
-    <span>
-      <AppBar position="static" className='mt-4 mb-4 mr-4'>
-        <Toolbar>
-          <Box sx={{ display: 'flex', gap: 2 }} >
-            {/* Uploads Menu */}
-            <Button
-              onClick={(event) => handleOpenMenu(event, 'Uploads')}
-              color="inherit"
-            >
-              Uploads
-            </Button>
-            <Menu
-              anchorEl={anchorEl}
-              open={menuName === 'Uploads'}
-              onClose={handleCloseMenu}
-            >
-              {createNavLink(LANDING_PAGE_PATH, 'Uploads Cycles')}
-              {createNavLink(UPLOADS_USHERED_PATH, 'Uploads Ushered')}
-              {createNavLink(UPLOADS_QUEUED_PATH, 'Uploads Queued')}
-            </Menu>
+const createNavLink = (path: string, label: string) => (
+  <NavLink to={path} style={{ textDecoration: 'none', color: 'inherit' }}>
+    <MenuItem onClick={handleCloseMenu}>{label}</MenuItem>
+  </NavLink>
+);
 
-            {/* GDrive Menu */}
-            <Button
-              onClick={(event) => handleOpenMenu(event, 'GDrive')}
-              color="inherit"
-            >
-              GDrive
-            </Button>
-            <Menu
-              anchorEl={anchorEl}
-              open={menuName === 'GDrive'}
-              onClose={handleCloseMenu}
-            >
-              {createNavLink(EXEC_LAUNCHER_PATH, 'G-Drive Util')}
-              {createNavLink(EXEC_LAUNCHER_ZIP_PATH, 'Zip-to-Pdf')}
-            </Menu>
+return (
+  <span>
+    <AppBar position="static" className='mt-4 mb-4 mr-4'>
+      <Toolbar>
+        <Box sx={{ display: 'flex', gap: 2 }} >
+          {TOP_PANEL_MENU.map((_panelMenu: TopPanelMenu) => (
+            <>
+              <Button
+                key={_panelMenu.menuLabel}
+                onClick={(event) => handleOpenMenu(event, _panelMenu.menuLabel)}
+                color="inherit"
+              >
+                {_panelMenu.menuLabel}
+              </Button>
+              <Menu
+                anchorEl={anchorEl}
+                open={menuName === _panelMenu.menuLabel}
+                onClose={handleCloseMenu}
+              >
+                {
+                  _panelMenu.submenu.map((item: Submenu) => {
+                    return (createNavLink(item.path, item.label)
+                    )
+                  }
+                  )}
+              </Menu>
+            </>
+          ))}
 
-            {/* Archive Menu */}
-            <Button
-              onClick={(event) => handleOpenMenu(event, 'Archive')}
-              color="inherit"
-            >
-              Archive
-            </Button>
-            <Menu
-              anchorEl={anchorEl}
-              open={menuName === 'Archive'}
-              onClose={handleCloseMenu}
-            >
-              {createNavLink(EXEC_LAUNCHER_TWO_PATH, 'archive.org Uploads')}
-              {createNavLink(EXEC_LAUNCHER_TWO_B_PATH, 'archive.org Non-Upload Work')}
-              {createNavLink(EXEC_LAUNCHER_TWO_C_PATH, 'archive.org Data & Data Integrity')}
-            </Menu>
-
-            {/* FileUtils Menu */}
-            <Button
-              onClick={(event) => handleOpenMenu(event, 'FileUtils')}
-              color="inherit"
-            >
-              FileUtils
-            </Button>
-            <Menu
-              anchorEl={anchorEl}
-              open={menuName === 'FileUtils'}
-              onClose={handleCloseMenu}
-            >
-              {createNavLink(EXEC_LAUNCHER_THREE_PATH, 'Files-Util')}
-              {createNavLink(EXEC_LAUNCHER_FOUR_PATH, 'Refine File Data-1')}
-              {createNavLink(EXEC_LAUNCH_FOUR_B_PATH, 'File-Renaming via Excel')}
-              {createNavLink(TIFF_2_PDF, 'Tiff 2 Pdf')}
-            </Menu>
-
-            <Button
-              onClick={(event) => handleOpenMenu(event, 'DB')}
-              color="inherit"
-            >
-              DB
-            </Button>
-            <Menu
-              anchorEl={anchorEl}
-              open={menuName === 'DB'}
-              onClose={handleCloseMenu}
-            >
-              {createNavLink(SEARCH_ARCHIVE_DB_PATH, 'Search Archive DB')}
-              {createNavLink(SEARCH_G_DRIVE_DB_PATH, 'Search G-Drive DB')}
-            </Menu>
-
-            <Button
-              onClick={(event) => handleOpenMenu(event, 'G-Drive-Listing-Upload')}
-              color="inherit"
-            >
-              G-Drive-Listing-Upload
-            </Button>
-            <Menu
-              anchorEl={anchorEl}
-              open={menuName === 'G-Drive-Listing-Upload'}
-              onClose={handleCloseMenu}
-            >
-              {createNavLink(G_DRIVE_LISTING_MAKER_PATH, 'G-Drive Listing Maker')}
-              {createNavLink(G_DRIVE_UPLOAD_INTEGRITY_CHECK_PATH, 'G-Drive Upload Integrity Check')}
-              {createNavLink(RENAME_PDFS, 'Rename Pdfs')}
-            </Menu>
-
-            <Button
-              onClick={(event) => handleOpenMenu(event, 'Misc')}
-              color="inherit"
-            >
-              Misc
-            </Button>
-            <Menu
-              anchorEl={anchorEl}
-              open={menuName === 'Misc'}
-              onClose={handleCloseMenu}
-            >
-              {createNavLink(AI_TEXT_IDENTIFIER, 'AI-Text-Identify')}
-              {createNavLink(RENAME_PDFS, 'Rename Pdfs')}
-            </Menu>
-          </Box>
-        </Toolbar>
-      </AppBar>
-    </span>
-  );
+        </Box>
+      </Toolbar>
+    </AppBar>
+    <Breadcrumbs aria-label="breadcrumb" className="py-4 my-4">
+      {breadcrumbs.map((crumb, index) => (
+        <Link key={index} color="inherit" href="#">
+          {crumb}
+        </Link>
+      ))}
+    </Breadcrumbs>
+  </span>
+);
 };
 
 export default TopPanel;

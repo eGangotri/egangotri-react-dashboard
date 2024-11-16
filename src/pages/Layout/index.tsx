@@ -5,7 +5,7 @@ import Footer from "./Footer";
 import {
     Box,
 } from "@mui/material";
-import TopPanel from "pages/TopPanel";
+import TopPanel from "../../pages/TopPanel";
 
 const Layout: React.FC<PropsWithChildren> = ({ children }) => {
 
