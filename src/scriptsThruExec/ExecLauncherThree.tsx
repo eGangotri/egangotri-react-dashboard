@@ -53,14 +53,16 @@ const ExecLauncherThree: React.FC = () => {
                     css={{ width: "40vw" }}
                     reactComponent={<>
                         <RadioGroup aria-label="fileType" name="fileType" value={genListingOfLocalFolderYarn} onChange={handleChangeYarn} row>
-                            <FormControlLabel value={ExecType.GenListingsofLocalFolderAsPdfYarn} control={<Radio />} label="PDF-ONLY" />
-                            <FormControlLabel value={ExecType.GenListingsofLocalFolderAsPdfWithStatsYarn} control={<Radio />} label="PDF-ONLY-WITH-STATS" />
-                            <FormControlLabel value={ExecType.GenListingsofLocalFolderAsAllYarn} control={<Radio />} label="ALL" />
-                            <FormControlLabel value={ExecType.GenListingsofLocalFolderAsAllWithStatsYarn} control={<Radio />} label="ALL-WITH-STATS" />
-                            <FormControlLabel value={ExecType.GenListingsofLocalPdfFolderAsLinksYarn} control={<Radio />} label="PDF-LISTING ONLY" />
-                            <FormControlLabel value={ExecType.GenListingsWithStatsofPdfLocalFolderAsLinksYarn} control={<Radio />} label="PDF-LISTING-ONLY WITH STATS" />
-                            <FormControlLabel value={ExecType.GenListingsofAllLocalFolderAsLinksYarn} control={<Radio />} label="ALL-LISTING ONLY" />
-                            <FormControlLabel value={ExecType.GenListingsWithStatsofAllLocalFolderAsLinksYarn} control={<Radio />} label="ALL-LISTING ONLY WITH STATS" />
+                            <div className="grid grid-cols-2">
+                                <FormControlLabel value={ExecType.GenListingsofLocalFolderAsPdfYarn} control={<Radio />} label="PDF-ONLY WITH EXCEL" />
+                                <FormControlLabel value={ExecType.GenListingsofLocalFolderAsAllYarn} control={<Radio />} label="ALL WITH EXCEL" />
+                                <FormControlLabel value={ExecType.GenListingsofLocalFolderAsPdfWithStatsYarn} control={<Radio />} label="PDF-ONLY-WITH EXCEL & STATS" />
+                                <FormControlLabel value={ExecType.GenListingsofLocalFolderAsAllWithStatsYarn} control={<Radio />} label="ALL WITH EXCEL & STATS" />
+                                <FormControlLabel value={ExecType.GenListingsofLocalPdfFolderAsLinksYarn} control={<Radio />} label="PDF-ONLY-WITH-LISTING ONLY" />
+                                <FormControlLabel value={ExecType.GenListingsofAllLocalFolderAsLinksYarn} control={<Radio />} label="ALL-LISTING ONLY" />
+                                <FormControlLabel value={ExecType.GenListingsWithStatsofPdfLocalFolderAsLinksYarn} control={<Radio />} label="PDF-ONLY-LISTING & STATS" />
+                                <FormControlLabel value={ExecType.GenListingsWithStatsofAllLocalFolderAsLinksYarn} control={<Radio />} label="ALL-LISTING & STATS" />
+                            </div>
                         </RadioGroup>
                     </>}
                 />
