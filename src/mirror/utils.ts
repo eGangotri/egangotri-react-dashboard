@@ -1,3 +1,5 @@
+import { getBackendServer } from "utils/constants";
+
 export const makePostCall = async (body: Record<string, unknown>, resource: string) => {
   const requestOptions: RequestInit = {
     method: "POST",
@@ -7,7 +9,7 @@ export const makePostCall = async (body: Record<string, unknown>, resource: stri
 
   try {
     console.log(`going to fetch ${JSON.stringify(body)}`)
-    const response = await fetch(resource, requestOptions);
+    const response = await fetch(getBackendServer() + resource, requestOptions);
     console.log(`response ${JSON.stringify(response)}`)
     if (response.ok) {
       const data = await response.json();

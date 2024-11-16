@@ -4,7 +4,6 @@ import ItemToolTip from 'widgets/ItemTooltip';
 import React, { useEffect } from 'react'
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { backendServer } from 'utils/constants';
 import { DD_MM_YYYY_WITH_TIME_FORMAT } from 'utils/utils';
 import Spinner from 'widgets/Spinner';
 import ArchiveProfileSelector from './ArchiveProfileSelector';
@@ -87,7 +86,6 @@ const SearchArchiveDB = () => {
 
     async function fetchData(searchTerm: string) {
         const resource =
-            backendServer +
             `searchArchivesDB/search`;
 
         const data = await makePostCall({ searchTerm },

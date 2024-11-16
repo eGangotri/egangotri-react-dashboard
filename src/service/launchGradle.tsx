@@ -1,4 +1,3 @@
-import { backendServer } from 'utils/constants';
 import { ArchiveProfileAndAbsPath } from 'mirror/types';
 
 import { utils, writeFile } from 'xlsx';
@@ -53,7 +52,7 @@ export async function launchGradle(profiles: string, gradleTask: string, optiona
     const params = Object.keys(optionalParams).length === 0 ? "" : new URLSearchParams(optionalParams).toString();
     console.log(`optionalParams ${JSON.stringify(optionalParams)} params ${params}`);
     
-    const _url = `${backendServer}execLauncher/${gradleTask}?profiles=${profiles}&${params}`
+    const _url = `execLauncher/${gradleTask}?profiles=${profiles}&${params}`
     console.log(`_url ${_url}`);
     const res = await fetch(_url);
     const jsonResp = res.json()
@@ -62,7 +61,7 @@ export async function launchGradle(profiles: string, gradleTask: string, optiona
 }
 
 export async function _launchGradle(argFirst: string, gradleTask: string) {
-    const _url = `${backendServer}execLauncher/${gradleTask}?argFirst=${argFirst}`
+    const _url = `execLauncher/${gradleTask}?argFirst=${argFirst}`
     console.log(`_url ${_url}`);
     const res = await fetch(_url);
     const jsonResp = res.json()
@@ -73,7 +72,7 @@ export async function _launchGradle(argFirst: string, gradleTask: string) {
 
 export async function _launchGradlev2(args: { [key: string]: string }, gradleTask: string) {
     const params = new URLSearchParams(args).toString();
-    const _url = `${backendServer}execLauncher/${gradleTask}?${params}`
+    const _url = `execLauncher/${gradleTask}?${params}`
     console.log(`_url ${_url}`);
     try {
         const response = await fetch(_url);
@@ -104,7 +103,7 @@ export async function launchGradleWithPostData(
     data: ArchiveProfileAndAbsPath[],
     gradleTask: string) {
 
-    const _url = `${backendServer}execLauncher/${gradleTask}`;
+    const _url = `execLauncher/${gradleTask}`;
     const result = await makePostCall({
         itemsForReupload: data
     }, _url);

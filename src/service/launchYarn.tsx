@@ -1,4 +1,3 @@
-import { backendServer } from 'utils/constants';
 import { makePostCallWithErrorHandling } from './BackendFetchService';
 import { ExecResponseDetails } from 'scriptsThruExec/types';
 import { makePostCall } from 'mirror/utils';
@@ -8,9 +7,7 @@ import { ALL_TYPE, PDF_TYPE, ZIP_TYPE } from 'mirror/CommonConstants';
 
 export async function launchVanitizeModule(
     profile: string): Promise<ExecResponseDetails> {
-    const resource =
-        backendServer +
-        `yarn/vanitizePdfs`;
+    const resource = `yarn/vanitizePdfs`;
 
     const result = await makePostCall({ profile },
         resource);
@@ -137,9 +134,7 @@ export async function verifyGDriveDwnldSuccessFolders(googleDriveLink: string,
 
 export async function launchYarnQaToDestFileMover(
     postParams: Record<string, unknown>): Promise<ExecResponseDetails> {
-    const resource =
-        backendServer +
-        `yarn/qaToDestFileMover`;
+    const resource = `yarn/qaToDestFileMover`;
 
     const result = await makePostCall(postParams,
         resource);
@@ -148,9 +143,7 @@ export async function launchYarnQaToDestFileMover(
 
 export async function launchYarnMoveToFreeze(
     postParams: Record<string, unknown>): Promise<ExecResponseDetails> {
-    const resource =
-        backendServer +
-        `yarn/yarnMoveProfilesToFreeze`;
+    const resource = `yarn/yarnMoveProfilesToFreeze`;
     const result = await makePostCall(postParams,
         resource);
     return result.response as ExecResponseDetails
@@ -159,9 +152,7 @@ export async function launchYarnMoveToFreeze(
 export async function launchYarnMoveToFreezeByUploadId(
     postParams: Record<string, unknown>): Promise<ExecResponseDetails> {
 
-    const resource =
-        backendServer +
-        `yarn/yarnMoveFilesInListToFreeze`;
+    const resource = `yarn/yarnMoveFilesInListToFreeze`;
     const result = await makePostCall(postParams,
         resource);
     return result.response as ExecResponseDetails
@@ -170,9 +161,7 @@ export async function launchYarnMoveToFreezeByUploadId(
 export async function launchLocalFolderListingYarn(
     postParams: Record<string, string>): Promise<ExecResponseDetails> {
     console.log(`postParams ${JSON.stringify(postParams)}`)
-    const resource =
-        backendServer +
-        `yarnListMaker/createListingsOfLocalFolder`;
+    const resource = `yarnListMaker/createListingsOfLocalFolder`;
 
     const result = await makePostCall(postParams,
         resource);
@@ -182,9 +171,7 @@ export async function launchLocalFolderListingYarn(
 
 export async function addHeaderFooter(
     profile: string): Promise<ExecResponseDetails> {
-    const resource =
-        backendServer +
-        `yarn/addHeaderFooter`;
+    const resource = `yarn/addHeaderFooter`;
 
     const result = await makePostCall({
         "profile": profile
@@ -217,9 +204,7 @@ export async function launchArchiveExcelDownload(archiveLinks: string,
 
 
 export async function launchGetFirstAndLastNPages(postParams: Record<string, string>): Promise<ExecResponseDetails> {
-    const resource =
-        backendServer +
-        `yarnListMaker/getFirstAndLastNPages`;
+    const resource = `yarnListMaker/getFirstAndLastNPages`;
 
     const result = await makePostCall(postParams,
         resource);
@@ -228,17 +213,14 @@ export async function launchGetFirstAndLastNPages(postParams: Record<string, str
 
 
 export async function makePostCallToPath(path: string, postParams: Record<string, string>): Promise<ExecResponseDetails> {
-    const resource =
-        backendServer + path;
+    const resource = path;
     const result = await makePostCall(postParams,
         resource);
     return result.response as ExecResponseDetails
 }
 
 export async function launchArchivePdfDownload(archiveLink: string, profileOrFilePath: string): Promise<ExecResponseDetails> {
-    const resource =
-        backendServer +
-        `yarnArchive/downloadArchivePdfs`;
+    const resource = `yarnArchive/downloadArchivePdfs`;
 
     if (!archiveLink.trim().includes(',') && /\s/.test(archiveLink.trim())) {
         archiveLink = archiveLink.split(' ').join(',');
@@ -258,9 +240,7 @@ export async function launchArchivePdfDownload(archiveLink: string, profileOrFil
 }
 
 export async function launchAllArchiveItemsDownloadViaExcel(archiveLink: string, profileOrFilePath: string): Promise<ExecResponseDetails> {
-    const resource =
-        backendServer +
-        `yarnArchive/downloadArchiveItemsViaExcel`;
+    const resource = `yarnArchive/downloadArchiveItemsViaExcel`;
 
     if (!archiveLink.trim().includes(',') && /\s/.test(archiveLink.trim())) {
         archiveLink = archiveLink.split(' ').join(',');
@@ -280,9 +260,7 @@ export async function launchAllArchiveItemsDownloadViaExcel(archiveLink: string,
 }
 
 export async function downloadGDriveItemsViaExcel(gDriveLink: string, profileOrFilePath: string): Promise<ExecResponseDetails> {
-    const resource =
-        backendServer +
-        `gDrive/downloadGDriveItemsViaExcel`;
+    const resource = `gDrive/downloadGDriveItemsViaExcel`;
 
     if (!gDriveLink.trim().includes(',') && /\s/.test(gDriveLink.trim())) {
         gDriveLink = gDriveLink.split(' ').join(',');

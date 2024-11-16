@@ -4,7 +4,6 @@ import moment from 'moment';
 import ItemToolTip, { ellipsis } from 'widgets/ItemTooltip';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { backendServer } from 'utils/constants';
 import { DD_MM_YYYY_WITH_TIME_FORMAT } from 'utils/utils';
 import Spinner from 'widgets/Spinner';
 import { GDriveData } from './types';
@@ -84,7 +83,6 @@ const SearchGDriveDB = () => {
 
     async function fetchData(searchTerm: string) {
         const resource =
-            backendServer +
             `googleDriveDB/search`;
 
         const data = await makePostCall({ searchTerm },

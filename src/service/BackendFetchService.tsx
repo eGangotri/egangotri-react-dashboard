@@ -1,4 +1,4 @@
-import { AI_SERVER, MAX_ITEMS_LISTABLE, backendServer } from "utils/constants";
+import { AI_SERVER, MAX_ITEMS_LISTABLE } from "utils/constants";
 import * as _ from 'lodash';
 import { SelectedUploadItem } from "mirror/types"
 import { ExecResponseDetails } from "scriptsThruExec/types";
@@ -28,7 +28,7 @@ export const makeGetCall = async (resource: string) => {
 
 
 export const makePostCallWithErrorHandling = async (body: Record<string, unknown>, resource: string) => {
-  const result = await makePostCall(body, backendServer + resource)
+  const result = await makePostCall(body, resource)
   console.log(`result.response ${JSON.stringify(result.response)}`)
   
   return {
@@ -177,7 +177,7 @@ export const getUploadStatusData = async (limit: number,
   const uploadCycleIdFilter = _.isEmpty(uploadCycleId) ? "" : `&uploadCycleId=${uploadCycleId}`
   const filteredProfilesFilter = _.isEmpty(filteredProfiles) ? "" : `&archiveProfile=${filteredProfiles.join(",")}`
   const resource =
-    backendServer + `${chooseApiPrefix(forQueues)}/list?limit=${limit}${uploadCycleIdFilter}${filteredProfilesFilter}`
+    `${chooseApiPrefix(forQueues)}/list?limit=${limit}${uploadCycleIdFilter}${filteredProfilesFilter}`
   const result = await makeGetCall(resource);
   return result;
 };
@@ -199,7 +199,6 @@ export const getUploadStatusDataByProfile = async (
   forQueues = false
 ) => {
   const resource =
-    backendServer +
     `${chooseApiPrefix(forQueues)}/listByProfile?limit=${limit}`;
   const result = await makeGetCall(resource);
   return result;
@@ -211,7 +210,6 @@ export const getDataForUploadCycle = async (
   forQueues = false
 ) => {
   const resource =
-    backendServer +
     `${chooseApiPrefix(forQueues)}/listForUploadCycle?limit=${limit}`;
   const result = await makeGetCall(resource);
   return result?.response || [];
@@ -222,7 +220,6 @@ export const verifyUploadStatus = async (
   forQueues = false
 ) => {
   const resource =
-    backendServer +
     `${chooseApiPrefix(forQueues)}/verifyUploadStatus?limit=${MAX_ITEMS_LISTABLE}`;
   const result = await makePostCall({ uploadsForVerification: [...selectedUploadItems] },
     resource);
@@ -234,7 +231,6 @@ export const verifyUploadStatusForUploadCycleId = async (
   forQueues = false
 ) => {
   const resource =
-    backendServer +
     `${chooseApiPrefix(forQueues)}/verifyUploadStatus?limit=${MAX_ITEMS_LISTABLE}`;
   const result = await makePostCall({ uploadCycleIdForVerification: uploadCycleId },
     resource);
