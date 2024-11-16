@@ -21,6 +21,7 @@ import {
   launchYarnQaToDestFileMover,
   makePostCallToPath,
   unzipFolders,
+  verifyGDriveDwnldSuccessFolders,
   verifyImgToPdfSuccess,
   verifyUnzipFolders
 } from "service/launchYarn";
@@ -63,6 +64,7 @@ export enum ExecType {
   VERIFY_IMG_TO_PDF_SUCCESS_JPG = 668,
   VERIFY_IMG_TO_PDF_SUCCESS_PNG = 669,
   VERIFY_IMG_TO_PDF_SUCCESS_TIF = 700,
+
   VERIFY_G_DRIVE_ZIP_DOWNLOAD = 701,
 
   DownloadFilesFromExcel_Via_Front_End = 61,
@@ -281,10 +283,14 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       case ExecType.DWNLD_ZIPS_ONLY_FROM_GOOGLE_DRIVE:
         _resp = await launchGoogleDriveZipDownload(dataUserInput, dataUserInput2Mandatory);
         break;
-        
+
       case ExecType.DWNLD_ALL_FROM_GOOGLE_DRIVE:
         _resp = await launchAllFromGoogleDriveDownload(dataUserInput, dataUserInput2Mandatory);
         break;
+
+        case ExecType.VERIFY_G_DRIVE_ZIP_DOWNLOAD:
+          _resp = await verifyGDriveDwnldSuccessFolders(dataUserInput);
+          break;
         
       case ExecType.UNZIP_ALL_FILES:
         _resp = await unzipFolders(dataUserInput);

@@ -32,7 +32,6 @@ const ExecLauncherOne: React.FC = () => {
         setExcelGDrive(_listingType || ExecType.GenExcelOfGoogleDriveLinkPdfOnly);
     };
 
-
     const chooseGDriveFileType = (event: ChangeEvent<HTMLInputElement>) => {
         const _val = event.target.value;
         console.log("_val", _val)
@@ -58,7 +57,6 @@ const ExecLauncherOne: React.FC = () => {
             setLabel("All");
         }
     };
-
 
     const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event?.target?.files || []

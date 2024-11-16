@@ -121,6 +121,16 @@ export async function verifyUnzipFolders(folder: string): Promise<ExecResponseDe
     return jsonData;
 }
 
+export async function verifyGDriveDwnldSuccessFolders(folder: string): Promise<ExecResponseDetails> {
+    const jsonData = await makePostCallWithErrorHandling({
+        "folder": folder,
+        ignoreFolder: "proc"
+    }, `gDrive/verifyLocalDownloadSameAsGDrive`)
+
+    console.log(`result ${JSON.stringify(jsonData)}`)
+    return jsonData;
+}
+
 export async function launchYarnQaToDestFileMover(
     postParams: Record<string, unknown>): Promise<ExecResponseDetails> {
     const resource =
