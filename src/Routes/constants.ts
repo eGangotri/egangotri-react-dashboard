@@ -15,9 +15,9 @@ export const EXEC_LAUNCH_FOUR_B_PATH = "/execLauncher4bPath";
 export const FILE_MOVER_PATH = "/fileMoverPath";
 export const SEARCH_ARCHIVE_DB_PATH = "/searchArchiveDBPath";
 export const SEARCH_G_DRIVE_DB_PATH = "/searchGDriveDBPath";
-export const G_DRIVE_LISTING_MAKER_PATH = "/GDriveListingMaker";
-export const G_DRIVE_UPLOAD_INTEGRITY_CHECK_PATH = "/GDriveUploadIntegrityCheckPath";
-export const G_DRIVE_CRUD_PATH = "/GDriveCrudPath";
+export const G_DRIVE_LISTING_MAKER_PATH = "/gDriveListingMaker";
+export const G_DRIVE_UPLOAD_INTEGRITY_CHECK_PATH = "/gDriveUploadIntegrityCheckPath";
+export const G_DRIVE_CRUD_PATH = "/gDriveCrudPath";
 export const RENAME_PDFS = "/renamePdfsPath";
 
 export const TIFF_2_PDF = "/tiff2pdfPath";

@@ -32,7 +32,6 @@ const GDriveItemList: React.FC = () => {
     }, [page, pageSize, sortField, sortOrder]);
 
     const fetchItems = async () => {
-        ////
         try {
             const response = await makePostCall({
                 page,
@@ -40,10 +39,10 @@ const GDriveItemList: React.FC = () => {
                 sortField,
                 sortOrder,
             },
-                getBackendServer() + "googleDriveDB/getPerSource")
-                console.log(`resp from fetchItems: ${JSON.stringify(response)}`);
-            setItems(response.data.items);
-            setTotalPages(response.data.totalPages);
+                "googleDriveDB/getPerSource")
+            console.log(`resp from fetchItems: ${JSON.stringify(response?.response?.[0]?.titleGDrive)}`);
+            setItems(response?.response);
+            setTotalPages(response?.response?.length || 0);
         } catch (error) {
             console.error("Error fetching items:", error);
         }
