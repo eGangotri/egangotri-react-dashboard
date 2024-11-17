@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { Pagination, Select, MenuItem } from "@mui/material";
 import { makePostCall } from "mirror/utils";
-import { getBackendServer } from "utils/constants";
+import { useParams } from 'react-router-dom';
+import Spinner from "widgets/Spinner";
 
 interface GDriveItem {
     _id: string;
@@ -26,12 +27,16 @@ const GDriveItemList: React.FC = () => {
     const [totalPages, setTotalPages] = useState<number>(1);
     const [sortField, setSortField] = useState<string>("createdTime");
     const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+    const [isLoading, setIsLoading] = React.useState<boolean>(false);
+
+    const { src } = useParams<{ src: string }>(); // Replace 'paramName' with your actual parameter name
 
     useEffect(() => {
         fetchItems();
     }, [page, pageSize, sortField, sortOrder]);
 
     const fetchItems = async () => {
+        setIsLoading(true);
         try {
             const response = await makePostCall({
                 page,
@@ -39,10 +44,17 @@ const GDriveItemList: React.FC = () => {
                 sortField,
                 sortOrder,
             },
-                "googleDriveDB/getPerSource")
-            console.log(`resp from fetchItems: ${JSON.stringify(response?.response?.[0]?.titleGDrive)}`);
-            setItems(response?.response);
-            setTotalPages(response?.response?.length || 0);
+                `googleDriveDB/getPerSource` + (src ? `/${src}` : ""));
+            console.log(`resp from fetchItems(${src}): ${JSON.stringify(response?.response?.[0]?.titleGDrive)}`);
+            setIsLoading(false);
+            if (response && response?.response && response?.response?.length > 0) {
+                setItems(response?.response);
+                setTotalPages(response?.response?.length || 0);
+            }
+            else {
+                setItems([]);
+                setTotalPages(0);
+            }
         } catch (error) {
             console.error("Error fetching items:", error);
         }
@@ -69,6 +81,7 @@ const GDriveItemList: React.FC = () => {
 
     return (
         <div className="p-4">
+            {isLoading && <Spinner />}
             <DataGrid
                 rows={items}
                 columns={columns}

@@ -1,4 +1,4 @@
-import { AI_SERVER, MAX_ITEMS_LISTABLE } from "utils/constants";
+import { AI_SERVER, getBackendServer, MAX_ITEMS_LISTABLE } from "utils/constants";
 import * as _ from 'lodash';
 import { SelectedUploadItem } from "mirror/types"
 import { ExecResponseDetails } from "scriptsThruExec/types";
@@ -13,7 +13,7 @@ export const chooseApiPrefix = (forQueues = false) => {
 
 export const makeGetCall = async (resource: string) => {
   try {
-    const response = await fetch(resource);
+    const response = await fetch(getBackendServer() + resource);
     console.log(`response ${JSON.stringify(response)}`);
     const respAsJson = await response.json();
     console.log(`respAsJson ${respAsJson.length}`);

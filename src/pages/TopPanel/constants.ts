@@ -18,7 +18,8 @@ import {
     EXEC_LAUNCHER_TWO_C_PATH,
     RENAME_PDFS,
     EXEC_LAUNCHER_ZIP_PATH,
-    G_DRIVE_CRUD_PATH
+    G_DRIVE_ITEM_LIST_PATH,
+    G_DRIVE_ITEM_AGGREGATES_PATH
 } from 'Routes/constants';
 
 export const TOP_PANEL_MENU: TopPanelMenu[] = [{
@@ -113,9 +114,14 @@ export const TOP_PANEL_MENU: TopPanelMenu[] = [{
             label: 'G-Drive Upload Integrity Check',
         },
         {
-            path: G_DRIVE_CRUD_PATH,
-            label: 'G-Drive Crud',
+            path: G_DRIVE_ITEM_LIST_PATH,
+            label: 'G-Drive Listing',
+        },
+        {
+            path: G_DRIVE_ITEM_AGGREGATES_PATH,
+            label: 'G-Drive Aggregates',
         }
+
     ],
 },
 {
@@ -142,13 +148,17 @@ export interface TopPanelMenu {
     submenu: Submenu[];
 }
 
-export const getMenuLabels = (topPanelMenu: TopPanelMenu[], path: string) => {
+export const getMenuLabels = (topPanelMenu: TopPanelMenu[], _path: string[]) => {
+    const path = _path?.join().split(",").join("/")
+    let _defaultMenu = [topPanelMenu[0].menuLabel, topPanelMenu[0].submenu[0].label];
+    if (!path) return _defaultMenu;
+
     for (const menu of topPanelMenu) {
         for (const item of menu.submenu) {
-            if (item.path === `/${path}`) {
+            if (item.path != "/" && ("/" + path).includes(item.path)) {
                 return [menu.menuLabel, item.label];
             }
         }
     }
-    return [topPanelMenu[0].menuLabel, topPanelMenu[0].submenu[0].label];
+    return _defaultMenu;
 }

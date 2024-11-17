@@ -20,7 +20,7 @@ import ExecLauncherSix from 'scriptsThruExec/ExecLauncherSix';
 import Login from 'pages/GoogleLogin';
 import RenamePdfs from 'scriptsThruExec/RenamePdfs';
 import ExecLauncherZip from 'scriptsThruExec/ExecLauncherZip';
-import GDriveItemList from 'components/gDriveCrud';
+import GDriveItemList from 'components/gDriveListing';
 import {
     FILE_MOVER_PATH,
     EXEC_LAUNCHER_PATH,
@@ -41,8 +41,11 @@ import {
     EXEC_LAUNCHER_TWO_C_PATH,
     RENAME_PDFS,
     EXEC_LAUNCHER_ZIP_PATH,
-    G_DRIVE_CRUD_PATH
+    G_DRIVE_ITEM_LIST_PATH,
+    G_DRIVE_ITEM_AGGREGATES_PATH,
+    G_DRIVE_ITEM_LIST_WITH_FILTER_PATH
   } from './constants';
+import GDriveItemAggregates from 'components/gDriveListing/aggregates';
 const DashboardRoutes: React.FC = () => {
     const isLocalhost = true; //window.location.hostname === 'localhost';
     const allFrags = (
@@ -66,7 +69,10 @@ const DashboardRoutes: React.FC = () => {
             {<Route path={SEARCH_G_DRIVE_DB_PATH} element={<SearchGDriveDB />} />}
             {<Route path={G_DRIVE_LISTING_MAKER_PATH} element={<ExecLauncherFive />} />}
             {<Route path={G_DRIVE_UPLOAD_INTEGRITY_CHECK_PATH} element={<ExecLauncherSix />} />}
-            {<Route path={G_DRIVE_CRUD_PATH} element={<GDriveItemList />} />}
+            {<Route path={G_DRIVE_ITEM_LIST_PATH} element={<GDriveItemList />} />}
+            {<Route path={G_DRIVE_ITEM_LIST_WITH_FILTER_PATH} element={<GDriveItemList />} />}
+            {<Route path={G_DRIVE_ITEM_AGGREGATES_PATH} element={<GDriveItemAggregates />} />}
+            
             {<Route path={RENAME_PDFS} element={<RenamePdfs />} />}
         </>
     );

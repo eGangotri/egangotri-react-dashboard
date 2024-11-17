@@ -17,7 +17,9 @@ export const SEARCH_ARCHIVE_DB_PATH = "/searchArchiveDBPath";
 export const SEARCH_G_DRIVE_DB_PATH = "/searchGDriveDBPath";
 export const G_DRIVE_LISTING_MAKER_PATH = "/gDriveListingMaker";
 export const G_DRIVE_UPLOAD_INTEGRITY_CHECK_PATH = "/gDriveUploadIntegrityCheckPath";
-export const G_DRIVE_CRUD_PATH = "/gDriveCrudPath";
+export const G_DRIVE_ITEM_LIST_PATH = "/gDriveListingPath";
+export const G_DRIVE_ITEM_LIST_WITH_FILTER_PATH = "/gDriveListingPath/:src";
+export const G_DRIVE_ITEM_AGGREGATES_PATH = "/gDriveAggregatesPath";
 export const RENAME_PDFS = "/renamePdfsPath";
 
 export const TIFF_2_PDF = "/tiff2pdfPath";

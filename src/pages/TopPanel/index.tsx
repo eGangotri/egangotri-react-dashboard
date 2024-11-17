@@ -15,7 +15,7 @@ const location = useLocation();
 
 useEffect(() => {
   const path = location.pathname.split('/').filter(x => x);
-  const _breadcrumbs = getMenuLabels(TOP_PANEL_MENU, path[0]);
+  const _breadcrumbs = getMenuLabels(TOP_PANEL_MENU, path);
   setBreadcrumbs(_breadcrumbs);
 }, [location]);
 
@@ -31,7 +31,7 @@ const handleCloseMenu = () => {
 
 const createNavLink = (path: string, label: string) => (
   <NavLink to={path} style={{ textDecoration: 'none', color: 'inherit' }}>
-    <MenuItem onClick={handleCloseMenu}>{label}</MenuItem>
+    <MenuItem key={label} onClick={handleCloseMenu}>{label}</MenuItem>
   </NavLink>
 );
 
@@ -53,6 +53,7 @@ return (
                 anchorEl={anchorEl}
                 open={menuName === _panelMenu.menuLabel}
                 onClose={handleCloseMenu}
+                key={menuName}
               >
                 {
                   _panelMenu.submenu.map((item: Submenu) => {
