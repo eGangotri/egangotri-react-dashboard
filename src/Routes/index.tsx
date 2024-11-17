@@ -43,9 +43,14 @@ import {
     EXEC_LAUNCHER_ZIP_PATH,
     G_DRIVE_ITEM_LIST_PATH,
     G_DRIVE_ITEM_AGGREGATES_PATH,
-    G_DRIVE_ITEM_LIST_WITH_FILTER_PATH
+    G_DRIVE_ITEM_LIST_WITH_FILTER_PATH,
+    ARCHIVE_ITEM_LIST_PATH,
+    ARCHIVE_ITEM_AGGREGATES_PATH,
+    ARCHIVE_ITEM_LIST_WITH_FILTER_PATH
   } from './constants';
 import GDriveItemAggregates from 'components/gDriveListing/aggregates';
+import ArchiveItemList from 'components/archiveListing';
+import ArchiveItemAggregates from 'components/archiveListing/aggregates';
 const DashboardRoutes: React.FC = () => {
     const isLocalhost = true; //window.location.hostname === 'localhost';
     const allFrags = (
@@ -72,7 +77,9 @@ const DashboardRoutes: React.FC = () => {
             {<Route path={G_DRIVE_ITEM_LIST_PATH} element={<GDriveItemList />} />}
             {<Route path={G_DRIVE_ITEM_LIST_WITH_FILTER_PATH} element={<GDriveItemList />} />}
             {<Route path={G_DRIVE_ITEM_AGGREGATES_PATH} element={<GDriveItemAggregates />} />}
-            
+            {<Route path={ARCHIVE_ITEM_LIST_PATH} element={<ArchiveItemList />} />}
+            {<Route path={ARCHIVE_ITEM_LIST_WITH_FILTER_PATH} element={<ArchiveItemList />} />}
+            {<Route path={ARCHIVE_ITEM_AGGREGATES_PATH} element={<ArchiveItemAggregates />} />}
             {<Route path={RENAME_PDFS} element={<RenamePdfs />} />}
         </>
     );

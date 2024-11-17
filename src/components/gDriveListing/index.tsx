@@ -4,21 +4,7 @@ import { Pagination, Select, MenuItem } from "@mui/material";
 import { makePostCall } from "mirror/utils";
 import { useParams } from 'react-router-dom';
 import Spinner from "widgets/Spinner";
-
-interface GDriveItem {
-    _id: string;
-    serialNo: string;
-    titleGDrive: string;
-    gDriveLink: string;
-    truncFileLink: string;
-    sizeWithUnits: string;
-    sizeInBytes: string;
-    folderName: string;
-    createdTime: string;
-    source: string;
-    identifier: string;
-    // add more fields as required
-}
+import { GDriveItem, gDriveItemColumns } from "./constants";
 
 const GDriveItemList: React.FC = () => {
     const [items, setItems] = useState<GDriveItem[]>([]);
@@ -29,7 +15,7 @@ const GDriveItemList: React.FC = () => {
     const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
     const [isLoading, setIsLoading] = React.useState<boolean>(false);
 
-    const { src } = useParams<{ src: string }>(); // Replace 'paramName' with your actual parameter name
+    const { src } = useParams<{ src: string }>();
 
     useEffect(() => {
         fetchItems();
@@ -60,17 +46,6 @@ const GDriveItemList: React.FC = () => {
         }
     };
 
-    const columns: GridColDef[] = [
-        { field: "serialNo", headerName: "Serial No", width: 130 },
-        { field: "titleGDrive", headerName: "Title", width: 200 },
-        { field: "gDriveLink", headerName: "GDrive Link", width: 200 },
-        { field: "sizeWithUnits", headerName: "Size", width: 120 },
-        { field: "folderName", headerName: "Folder Name", width: 150 },
-        { field: "createdTime", headerName: "Created Time", width: 150 },
-        { field: "source", headerName: "Source", width: 150 },
-        { field: "identifier", headerName: "Identifier", width: 150 },
-    ];
-
     const handleSortModelChange = (sortModel: any) => {
         if (sortModel.length > 0) {
             const { field, sort } = sortModel[0];
@@ -84,12 +59,12 @@ const GDriveItemList: React.FC = () => {
             {isLoading && <Spinner />}
             <DataGrid
                 rows={items}
-                columns={columns}
+                columns={gDriveItemColumns}
                 pagination
                 pageSize={pageSize}
                 rowsPerPageOptions={[5, 10, 20]}
-                onPageChange={(params) => setPage(params.page)}
-                onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                onPageChange={(params:any) => setPage(params.page)}
+                onPageSizeChange={(newPageSize:number) => setPageSize(newPageSize)}
                 sortingOrder={["asc", "desc"]}
                 onSortModelChange={handleSortModelChange}
                 getRowId={(row) => row._id}

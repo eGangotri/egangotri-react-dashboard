@@ -19,7 +19,9 @@ import {
     RENAME_PDFS,
     EXEC_LAUNCHER_ZIP_PATH,
     G_DRIVE_ITEM_LIST_PATH,
-    G_DRIVE_ITEM_AGGREGATES_PATH
+    G_DRIVE_ITEM_AGGREGATES_PATH,
+    ARCHIVE_ITEM_LIST_PATH,
+    ARCHIVE_ITEM_AGGREGATES_PATH
 } from 'Routes/constants';
 
 export const TOP_PANEL_MENU: TopPanelMenu[] = [{
@@ -97,8 +99,12 @@ export const TOP_PANEL_MENU: TopPanelMenu[] = [{
             label: 'Search Archive DB',
         },
         {
-            path: SEARCH_G_DRIVE_DB_PATH,
-            label: 'Search G-Drive DB',
+            path: ARCHIVE_ITEM_LIST_PATH,
+            label: 'Archive Items List',
+        },
+        {
+            path: ARCHIVE_ITEM_AGGREGATES_PATH,
+            label: 'Archives by Profile',
         }
     ],
 },
@@ -114,12 +120,16 @@ export const TOP_PANEL_MENU: TopPanelMenu[] = [{
             label: 'G-Drive Upload Integrity Check',
         },
         {
+            path: SEARCH_G_DRIVE_DB_PATH,
+            label: 'Search G-Drive DB',
+        },
+        {
             path: G_DRIVE_ITEM_LIST_PATH,
             label: 'G-Drive Listing',
         },
         {
             path: G_DRIVE_ITEM_AGGREGATES_PATH,
-            label: 'G-Drive Aggregates',
+            label: 'G-Drive by Source',
         }
 
     ],
