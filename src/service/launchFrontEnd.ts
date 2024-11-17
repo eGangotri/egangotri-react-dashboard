@@ -4,6 +4,7 @@ import { readFile } from 'xlsx';
 import { writeFileSync } from 'fs';
 import * as XLSX from 'xlsx';
 import { read, utils } from 'xlsx';
+import { getBackendServer } from "utils/constants";
 
 //"
 
@@ -34,7 +35,7 @@ const handleExcel = (excelPath: string, column: string) => {
 }
 
 const downloadPdf = async (url: string, filename: string) => {
-    const response = await fetch(url, {
+    const response = await fetch(getBackendServer() + url, {
         mode: 'cors'
     });
     const blob = await response.blob();

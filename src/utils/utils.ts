@@ -2,6 +2,7 @@ import { format } from "date-fns";
 import {
   SECONDARY_DATE_FORMAT,
 } from "utils/date-constants";
+import { getBackendServer } from "./constants";
 
 export const formatWithTInMiddle = (date: Date, startOfDay = true):string => {
   const formattedTime = format(date, SECONDARY_DATE_FORMAT);
@@ -20,7 +21,7 @@ export const DD_MM_YYYY_WITH_TIME_FORMAT = 'DD-MMM-YYYY HH:MM'
 
 export async function checkUrlValidity(url: string): Promise<boolean> {
   try {
-    const response = await fetch(url, { method: 'HEAD' });
+    const response = await fetch(getBackendServer() + url, { method: 'HEAD' });
 
     // Check if the response status code indicates success (2xx) or redirection (3xx)
     if (response.ok || (response.status >= 300 && response.status < 400)) {
