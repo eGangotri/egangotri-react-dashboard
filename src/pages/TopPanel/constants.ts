@@ -21,7 +21,8 @@ import {
     G_DRIVE_ITEM_LIST_PATH,
     G_DRIVE_ITEM_AGGREGATES_PATH,
     ARCHIVE_ITEM_LIST_PATH,
-    ARCHIVE_ITEM_AGGREGATES_PATH
+    ARCHIVE_ITEM_AGGREGATES_PATH,
+    ARCHIVE_ITEM_AGGREGATES_BY_SOURCES_PATH
 } from 'Routes/constants';
 
 export const TOP_PANEL_MENU: TopPanelMenu[] = [{
@@ -105,6 +106,10 @@ export const TOP_PANEL_MENU: TopPanelMenu[] = [{
         {
             path: ARCHIVE_ITEM_AGGREGATES_PATH,
             label: 'Archives by Profile',
+        },
+        {
+            path: ARCHIVE_ITEM_AGGREGATES_BY_SOURCES_PATH,
+            label: 'Archives by Sources',
         }
     ],
 },

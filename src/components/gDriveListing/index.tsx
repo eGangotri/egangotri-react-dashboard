@@ -56,12 +56,12 @@ const GDriveItemList: React.FC = () => {
 
     return (
         <div className="p-4">
-            {isLoading && <Spinner />}
             <DataGrid
                 rows={items}
                 columns={gDriveItemColumns}
                 pagination
                 pageSize={pageSize}
+                loading={isLoading}
                 rowsPerPageOptions={[5, 10, 20]}
                 onPageChange={(params:any) => setPage(params.page)}
                 onPageSizeChange={(newPageSize:number) => setPageSize(newPageSize)}

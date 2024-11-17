@@ -24,6 +24,7 @@ export const G_DRIVE_ITEM_AGGREGATES_PATH = "/gDriveAggregatesPath";
 export const ARCHIVE_ITEM_LIST_PATH = "/archiveListingPath";
 export const ARCHIVE_ITEM_LIST_WITH_FILTER_PATH = "/archiveListingPath/:profile";
 export const ARCHIVE_ITEM_AGGREGATES_PATH = "/archiveAggregatesPath";
+export const ARCHIVE_ITEM_AGGREGATES_BY_SOURCES_PATH = "/archiveAggregatesPathBySources";
 export const RENAME_PDFS = "/renamePdfsPath";
 
 export const TIFF_2_PDF = "/tiff2pdfPath";

@@ -16,6 +16,7 @@ const GDriveItemAggregates: React.FC = () => {
     const [totalPages, setTotalPages] = useState<number>(1);
     const [sortField, setSortField] = useState<string>("firstItemCreatedTime");
     const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+    const [isLoading, setIsLoading] = React.useState<boolean>(false);
 
     useEffect(() => {
         fetchAggregates();
@@ -23,9 +24,12 @@ const GDriveItemAggregates: React.FC = () => {
 
     const fetchAggregates = async () => {
         try {
+            setIsLoading(true);
             const response = await makeGetCall(
                 "googleDriveDB/gdriveDBAggregatedBySource")
             console.log(`resp from fetchAggregates: ${JSON.stringify(response)}`);
+            setIsLoading(false);
+
             setItems(response?.response);
             setTotalPages(response?.response?.length || 0);
         } catch (error) {
@@ -49,11 +53,12 @@ const GDriveItemAggregates: React.FC = () => {
                 pagination
                 pageSize={pageSize}
                 rowsPerPageOptions={[5, 10, 20]}
-                onPageChange={(params:any) => setPage(params.page)}
-                onPageSizeChange={(newPageSize:number) => setPageSize(newPageSize)}
+                onPageChange={(params: any) => setPage(params.page)}
+                onPageSizeChange={(newPageSize: number) => setPageSize(newPageSize)}
                 sortingOrder={["asc", "desc"]}
                 onSortModelChange={handleSortModelChange}
                 getRowId={(row) => row.source}
+                loading={isLoading}
                 autoHeight
                 disableColumnMenu
             />

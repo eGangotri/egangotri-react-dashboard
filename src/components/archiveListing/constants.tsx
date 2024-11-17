@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
-import { GridColDef } from "@mui/x-data-grid";
+import { GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
 import { ARCHIVE_ITEM_LIST_PATH } from "Routes/constants";
+import { formatMem } from "mirror/utils";
+import { Typography } from "@mui/material";
 
 export interface ArchiveItem {
   link: string;
@@ -32,35 +34,36 @@ export interface ArchiveItemAggregateType {
 }
 
 export const archiveItemAggregateColumns: GridColDef[] = [
-  { field: 'acct', 
-    headerName: 'Account', 
+  {
+    field: 'acct',
+    headerName: 'Account',
     width: 150,
     renderCell: (params) => (
       <Link to={`${window.location.origin}${ARCHIVE_ITEM_LIST_PATH}/${params.value}`} className="text-blue-500 underline">
-          {params.value}
+        {params.value}
       </Link>
-  )
+    )
 
-   },
+  },
   { field: 'totalSize', headerName: 'Total Size', width: 180, sortable: true },
   { field: 'totalPageCount', headerName: 'Total Page Count', width: 180, sortable: true },
   {
     field: 'emailUsers',
     headerName: 'Email Users',
     width: 250,
-    valueGetter: (params:any) => params.row.emailUsers.join(', '),
+    valueGetter: (params: any) => params.row.emailUsers.join(', '),
   },
   {
     field: 'sources',
     headerName: 'Sources',
     width: 150,
-    valueGetter: (params:any) => params.row.sources.join(', '),
+    valueGetter: (params: any) => params.row.sources.join(', '),
   },
   { field: 'firstLowestDate', headerName: 'First Lowest Date', width: 150 },
 ];
 
-export   
-const archiveItemColumns: GridColDef[] = [
+export
+  const archiveItemColumns: GridColDef[] = [
     { field: "originalTitle", headerName: "Title", width: 200, sortable: true },
     { field: "subject", headerName: "Subject", width: 150, sortable: true },
     { field: "description", headerName: "Description", width: 300, sortable: true },
@@ -68,4 +71,41 @@ const archiveItemColumns: GridColDef[] = [
     { field: "sizeFormatted", headerName: "Size", width: 120, sortable: true },
     { field: "date", headerName: "Date", width: 150, sortable: true },
     { field: "type", headerName: "Type", width: 100, sortable: true },
+  ];
+
+
+export interface AggregatesBySourcesType {
+  totalSize: number;
+  totalPageCount: number;
+  accts: string[];
+  source: string;
+}
+
+
+
+export const aggregatesBySourcesColumns: GridColDef[] = [
+  { field: 'source', headerName: 'Source', width: 150 },
+  {
+    field: 'totalSize', headerName: 'Total Size', width: 150,
+    renderCell: (params) =>
+      <Typography>{formatMem(params.value)}</Typography>
+  },
+  { field: 'totalPageCount', headerName: 'Total Page Count', width: 150 },
+  {
+    field: 'accts',
+    headerName: 'Accounts',
+    width: 600,
+    renderCell: (params: GridValueGetterParams) => {
+      const _accts = params.row.accts;
+      const lists: string[] = [];
+      for (let i = 0; i < _accts.length; i += 3) {
+        const _slices = _accts.slice(i, i + 3);
+        lists.push(_slices.join(', '));
+      }
+      return (<ul>
+        {lists.map((list, index) => <li key={index}><Typography>{list}</Typography></li>)}
+      </ul>);
+    },
+  },
 ];
+

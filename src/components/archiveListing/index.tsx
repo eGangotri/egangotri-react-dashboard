@@ -7,7 +7,7 @@ import { useParams } from "react-router-dom";
 
 const ArchiveItemList: React.FC = () => {
     const [items, setItems] = useState<ArchiveItem[]>([]);
-    const [isLoading, setIsLoading] = React.useState<boolean>(false);
+    const [loading, setLoading] = React.useState<boolean>(false);
     const { profile } = useParams<{ profile: string }>();
 
     const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
@@ -21,7 +21,7 @@ const ArchiveItemList: React.FC = () => {
 
 
     const fetchItems = async () => {
-        setIsLoading(true);
+        setLoading(true);
         console.log(`profile ${profile}`);
         try {
             const response = await makePostCall({
@@ -32,7 +32,7 @@ const ArchiveItemList: React.FC = () => {
             },
                 `archiveItem/getArchiveItemPerProfile` + (profile ? `/${profile}` : ""));
             console.log(`resp from fetchItems(${profile}): ${JSON.stringify(response?.response?.[0]?.titleGDrive)}`);
-            setIsLoading(false);
+            setLoading(false);
             if (response && response?.response && response?.response?.length > 0) {
                 setItems(response?.response);
             }
@@ -43,7 +43,7 @@ const ArchiveItemList: React.FC = () => {
             console.error("Error fetching items:", error);
         }
         finally {
-            setIsLoading(false);
+            setLoading(false);
         }
     };
   
@@ -61,7 +61,7 @@ const ArchiveItemList: React.FC = () => {
                 pageSizeOptions={[10, 20, 50]}
                 paginationModel={paginationModel}
                 onPaginationModelChange={handlePaginationChange}
-                loading={isLoading}
+                loading={loading}
                 disableRowSelectionOnClick
                 sortingOrder={["asc", "desc"]}
                 initialState={{

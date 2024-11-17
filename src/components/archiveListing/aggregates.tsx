@@ -11,28 +11,33 @@ const ArchiveItemAggregates: React.FC = () => {
     const [pageSize, setPageSize] = useState<number>(10);
     const [sortField, setSortField] = useState<string>("firstItemCreatedTime");
     const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+    const [loading, setLoading] = React.useState<boolean>(false);
 
     useEffect(() => {
         fetchAggregates();
     }, [page, pageSize, sortField, sortOrder]);
-    
+
     const fetchAggregates = async () => {
         try {
+            setLoading(true);
             const response = await makeGetCall(
                 "archiveItem/archiveDBStatsByProfile")
             console.log(`resp from fetchAggregates: ${JSON.stringify(response)}`);
             setItems(response?.response);
+            setLoading(false);
+
         } catch (error) {
             console.error("Error fetching items:", error);
         }
     };
-    
+
     return (
         <Box sx={{ height: 600, width: '100%' }}>
             <DataGrid
                 rows={items.map((item, index) => ({ ...item, id: index }))}
                 columns={archiveItemAggregateColumns}
                 pageSize={pageSize}
+                loading={loading}
                 rowsPerPageOptions={[5, 10, 20]}
                 pagination
                 sortingOrder={['asc', 'desc']}

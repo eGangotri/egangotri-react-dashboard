@@ -1,5 +1,5 @@
 import { Typography } from "@mui/material";
-import { GridColDef } from "@mui/x-data-grid";
+import { GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
 import { formatMem } from "mirror/utils";
 import { Link } from "react-router-dom";
 import { G_DRIVE_ITEM_LIST_PATH } from "Routes/constants";
@@ -28,8 +28,7 @@ interface GDriveItem {
     // add more fields as required
 }
 
-export 
-const gDriveItemColumns: GridColDef[] = [
+export const gDriveItemColumns: GridColDef[] = [
     { field: "serialNo", headerName: "Serial No", width: 130 },
     { field: "titleGDrive", headerName: "Title", width: 200 },
     { field: "gDriveLink", headerName: "GDrive Link", width: 200 },
