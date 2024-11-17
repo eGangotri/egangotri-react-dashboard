@@ -4,11 +4,9 @@ import { Box, Typography } from "@mui/material";
 import { makePostCall } from "mirror/utils";
 import { ArchiveItem, archiveItemColumns } from "./constants";
 import { useParams } from "react-router-dom";
-import Spinner from "widgets/Spinner";
 
 const ArchiveItemList: React.FC = () => {
     const [items, setItems] = useState<ArchiveItem[]>([]);
-    const [loading, setLoading] = useState(true);
     const [isLoading, setIsLoading] = React.useState<boolean>(false);
     const { profile } = useParams<{ profile: string }>();
 
@@ -24,6 +22,7 @@ const ArchiveItemList: React.FC = () => {
 
     const fetchItems = async () => {
         setIsLoading(true);
+        console.log(`profile ${profile}`);
         try {
             const response = await makePostCall({
                 page: paginationModel.page,
@@ -56,14 +55,13 @@ const ArchiveItemList: React.FC = () => {
     return (
         <Box sx={{ height: 600, width: "100%", p: 2 }}>
             <Typography variant="h4" className="text-center mb-4">Archive Items</Typography>
-            {isLoading && <Spinner />}
             <DataGrid
                 rows={items}
                 columns={archiveItemColumns}
                 pageSizeOptions={[10, 20, 50]}
                 paginationModel={paginationModel}
                 onPaginationModelChange={handlePaginationChange}
-                loading={loading}
+                loading={isLoading}
                 disableRowSelectionOnClick
                 sortingOrder={["asc", "desc"]}
                 initialState={{

@@ -92,7 +92,7 @@ export const TOP_PANEL_MENU: TopPanelMenu[] = [{
     ]
 },
 {
-    menuLabel: "DB",
+    menuLabel: "Archive-DB",
     submenu: [
         {
             path: SEARCH_ARCHIVE_DB_PATH,
@@ -109,7 +109,7 @@ export const TOP_PANEL_MENU: TopPanelMenu[] = [{
     ],
 },
 {
-    menuLabel: "G-Drive-Listing-Upload",
+    menuLabel: "G-Drive-DB",
     submenu: [
         {
             path: G_DRIVE_LISTING_MAKER_PATH,
