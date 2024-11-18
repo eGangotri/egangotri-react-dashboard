@@ -83,15 +83,17 @@ const ExecLauncherFive: React.FC = () => {
                 <Box>
                     <Typography variant="h6" component="div" gutterBottom>
                         <ol>
-                            <li>1a. (Manual) snap2html</li>
-                            <li>1b. (Manual) Txt/Excel/CSV Via <Link href="/execLauncher3"></Link> 'List Files in Folders(Gradle)' Task</li>
-                            <li>1c. (Manual) dump 1a/1b to the correspodning Treasure in local. Dump Local to G-Drive 
-                                <Link href="https://drive.google.com/drive/folders/1F7j5eP-sMGav_D4amCbWiqWjpe2Zz4x1">here</Link>
+                            <li>0.1a. (Manual) snap2html</li>
+                            <li>0.1b. (Manual) Txt/Excel/CSV Via <Link href="/execLauncher3"></Link> 'List Files in Folders(Gradle)' Task</li>
+                            <li>0.1c. (Manual) dump 1a/1b to the corresponding Treasure in local. Dump Local to G-Drive 
+                                <Link href="https://drive.google.com/drive/folders/1F7j5eP-sMGav_D4amCbWiqWjpe2Zz4x1" className="px-1">here</Link>
                             </li>
-                            <li>1d. (Manual) Take Success Upload of 1c as screenshot and put in Local and G-Driv</li>
+                            <li>0.1d. (Manual) Take Success Upload of 1c as screenshot and put in Local and G-Driv</li>
                             <li>1a. Generate Excel of Google Drive Links</li>
                             <li>2. Create Reduced PDFs with First and Last 10 Pages</li>
-                            <li>Manual Task. Dump Reduced PDFs to Google Drive</li>
+                            <li>2b. Manual Task. Dump Reduced PDFs to Google Drive here
+                                <Link href="https://drive.google.com/drive/folders/0B574J2laJW2nfngzbjRNTnI2LXVMdjBYZFlWNTFXNm91ZUhaUHRzXzE1THRBLWVVTkRhTUk?resourcekey=0-NZqne5a21LtT83vy_2Y4ug&usp=drive_link" className="px-1">here</Link>
+                            </li>
                             <li>3. Generate Excel of Reduced PDFs</li>
                             <li>4. Combine Excel in Step 5 with 1</li>
                             <li>5 Upload to Mongo</li>
@@ -102,7 +104,7 @@ const ExecLauncherFive: React.FC = () => {
 
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
                 <ExecComponent
-                    buttonText="Get First and Last N Pages"
+                    buttonText="Get First and Last N Pages-Very Slow-Better use Gradle"
                     placeholder='Absolute Path to PDFs Folder(s) as CSV'
                     secondTextBoxPlaceHolder='Absolute Path to Destination Folder'
                     thirdTextBoxPlaceHolder='N Pages to Extract from Start and End'

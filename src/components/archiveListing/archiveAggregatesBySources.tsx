@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { DataGrid, GridColDef, GridPaginationModel, GridValueGetterParams } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridPaginationModel, GridRowHeightParams, GridValueGetterParams } from '@mui/x-data-grid';
 import { Container } from '@mui/material';
 import { aggregatesBySourcesColumns, AggregatesBySourcesType } from './constants';
 import { makeGetCall } from 'service/BackendFetchService';
@@ -45,7 +45,11 @@ const AggregatesBySources = () => {
       setSortOrder(sort as "asc" | "desc");
     }
   };
-
+  const getRowHeight = (params:GridRowHeightParams) => {
+    const accts = params.model.accts;
+    const lines = Math.ceil(accts.length / 3);
+    return lines * 24 + 16; // Adjust the multiplier and padding as needed
+};
   return (
     <Container>
       <DataGrid
@@ -57,11 +61,14 @@ const AggregatesBySources = () => {
         paginationModel={paginationModel}
         onPaginationModelChange={handlePaginationChange}
         loading={loading}
+        rowHeight={100}
         disableRowSelectionOnClick
         sortingOrder={["asc", "desc"]}
         initialState={{
           pagination: { paginationModel: { pageSize: 10, page: 0 } },
         }}
+        getRowHeight={getRowHeight}
+
       />
     </Container>
   );

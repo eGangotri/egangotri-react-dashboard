@@ -49,10 +49,10 @@ import {
     ARCHIVE_ITEM_LIST_WITH_FILTER_PATH,
     ARCHIVE_ITEM_AGGREGATES_BY_SOURCES_PATH
   } from './constants';
-import GDriveItemAggregates from 'components/gDriveListing/aggregatesByProfile';
+import GDriveItemAggregates from 'components/gDriveListing/gDriveAggregatesByProfile';
 import ArchiveItemList from 'components/archiveListing';
-import ArchiveItemAggregates from 'components/archiveListing/aggregates';
-import AggregatesBySources from 'components/archiveListing/aggregatesBySources';
+import ArchiveItemAggregates from 'components/archiveListing/archiveAgregates';
+import AggregatesBySources from 'components/archiveListing/archiveAggregatesBySources';
 const DashboardRoutes: React.FC = () => {
     const isLocalhost = true; //window.location.hostname === 'localhost';
     const allFrags = (

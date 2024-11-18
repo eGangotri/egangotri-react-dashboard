@@ -12,8 +12,8 @@ export interface GDriveItemAggregate {
     count: number;
 }
 
-export 
-interface GDriveItem {
+export
+    interface GDriveItem {
     _id: string;
     serialNo: string;
     titleGDrive: string;
@@ -41,6 +41,19 @@ export const gDriveItemColumns: GridColDef[] = [
 
 
 export const gDriveAggregateCol: GridColDef[] = [
+    {
+        field: "numericSource",
+        headerName: "Series",
+        width: 150,
+        renderCell: (params) => {
+            const match = params.row.source.match(/\d+/);
+            return (
+                <Typography>
+                    {match ? parseInt(match[0], 10) : 1}
+                </Typography>
+            );
+        }
+    },
     {
         field: "source",
         headerName: "Source",

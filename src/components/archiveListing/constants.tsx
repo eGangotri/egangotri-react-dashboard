@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
-import { GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
+import { GridColDef, GridRenderCellParams, GridValueGetterParams } from "@mui/x-data-grid";
 import { ARCHIVE_ITEM_LIST_PATH } from "Routes/constants";
 import { formatMem } from "mirror/utils";
-import { Typography } from "@mui/material";
+import { Box, Chip, Stack, Typography } from "@mui/material";
+import { ReactNode } from "react";
 
 export interface ArchiveItem {
   link: string;
@@ -92,19 +93,37 @@ export const aggregatesBySourcesColumns: GridColDef[] = [
   },
   { field: 'totalPageCount', headerName: 'Total Page Count', width: 150 },
   {
+    field: "acctsCount",
+    headerName: "Accounts-Count",
+    width: 150,
+    renderCell: (params) => {
+      return (<Typography>{params.row.accts.length}</Typography>);
+    }
+  },
+  {
     field: 'accts',
     headerName: 'Accounts',
     width: 600,
-    renderCell: (params: GridValueGetterParams) => {
+    renderCell: (params: GridRenderCellParams) => {
       const _accts = params.row.accts;
-      const lists: string[] = [];
-      for (let i = 0; i < _accts.length; i += 3) {
-        const _slices = _accts.slice(i, i + 3);
-        lists.push(_slices.join(', '));
+      const _acctsAsLinks: ReactNode[] = _accts.map((acct: string) => (
+        <Chip label={acct}
+          component="a" href={`${window.location.origin}${ARCHIVE_ITEM_LIST_PATH}/${acct}`} clickable />
+      ));
+      const lists: ReactNode[] = [];
+      for (let i = 0; i < _acctsAsLinks.length; i += 4) {
+        const _slices = _acctsAsLinks.slice(i, i + 4);
+        lists.push(_slices);
       }
-      return (<ul>
-        {lists.map((list, index) => <li key={index}><Typography>{list}</Typography></li>)}
-      </ul>);
+      return (<Stack gap={2} className="py-1 my-1 space-y-2">
+        <ul className="space-y-2">
+          {lists.map((list, index) => (
+            <li key={index} className="list-none">
+              {list}
+            </li>
+          ))}
+        </ul>
+      </Stack>);
     },
   },
 ];
