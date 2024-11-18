@@ -104,7 +104,7 @@ const ExecLauncherFive: React.FC = () => {
 
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
                 <ExecComponent
-                    buttonText="Get First and Last N Pages-Very Slow-Better use Gradle"
+                    buttonText="Get First and Last N Pages-Very Slow"
                     placeholder='Absolute Path to PDFs Folder(s) as CSV'
                     secondTextBoxPlaceHolder='Absolute Path to Destination Folder'
                     thirdTextBoxPlaceHolder='N Pages to Extract from Start and End'
@@ -122,6 +122,24 @@ const ExecLauncherFive: React.FC = () => {
                 <Box>
                     {topNFileDumpPath && <Typography variant="h6" component="div" gutterBottom>Path to Reduced PDFs {topNFileDumpPath} for dumping to G-Drive</Typography>}
                 </Box>
+
+                <ExecComponent
+                    buttonText="Get First and Last N Pages-Gradle"
+                    placeholder='Absolute Path to PDFs Folder(s) as CSV'
+                    secondTextBoxPlaceHolder='Absolute Path to Destination Folder'
+                    thirdTextBoxPlaceHolder='N Pages to Extract from Start and End'
+                    thirdTextBoxDefaultValue={"10"}
+                    execType={ExecType.GET_FIRST_N_PAGES_GRADLE}
+                    css={{ minWidth: "23vw" }}
+                    css2={{ minWidth: "23vw" }}
+                    css3={{ marginTop: "30px", minWidth: "23vw" }}
+                    thirdButton={<Button 
+                        variant="contained" 
+                        color="primary" 
+                        onClick={loadTopNPathFromLocalStorage} 
+                        sx={{ marginRight: "10px", marginBottom: "10px" }}>Load From Local Storage</Button>}
+                />
+                <Box></Box>
             </Box>
 
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">

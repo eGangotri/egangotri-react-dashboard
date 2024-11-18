@@ -119,6 +119,7 @@ export enum ExecType {
   RENAME_FIES_VIA_EXCEL = 101,
 
   GET_FIRST_N_PAGES = 200,
+  GET_FIRST_N_PAGES_GRADLE = 200200,
   COMBINE_GDRIVE_AND_REDUCED_PDF_DRIVE_EXCELS = 201,
   DUMP_GDRIVE_COMBO_EXCEL_TO_MONGO = 202,
   DUMP_ARCHIVE_EXCEL_TO_MONGO = 203,
@@ -449,6 +450,14 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
           nPages: dataUserInput3NonMandatory,
         }, `yarnListMaker/getFirstAndLastNPages`);
         break;
+
+        case ExecType.GET_FIRST_N_PAGES_GRADLE:
+          _resp = await makePostCallWithErrorHandling({
+            srcFolders: dataUserInput,
+            destRootFolder: dataUserInput2Mandatory,
+            nPages: dataUserInput3NonMandatory,
+          }, `execLauncher/getFirstAndLastNPagesGradle`)
+          break;
 
       case ExecType.FILE_NAME_LENGTH:
         _resp = await makePostCallWithErrorHandling({
