@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { DataGrid, GridColDef, GridPaginationModel } from "@mui/x-data-grid";
 import { Pagination, Select, MenuItem } from "@mui/material";
 import { makePostCall } from "mirror/utils";
 import { useParams } from 'react-router-dom';
@@ -14,6 +14,15 @@ const GDriveItemList: React.FC = () => {
     const [sortField, setSortField] = useState<string>("createdTime");
     const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
     const [isLoading, setIsLoading] = React.useState<boolean>(false);
+    const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
+        page: 0,
+        pageSize: 10,
+    });
+
+    // Handle pagination and sorting
+    const handlePaginationChange = (model: GridPaginationModel) => {
+        setPaginationModel(model);
+    };
 
     const { src } = useParams<{ src: string }>();
 
@@ -60,22 +69,19 @@ const GDriveItemList: React.FC = () => {
                 rows={items}
                 columns={gDriveItemColumns}
                 pagination
-                pageSize={pageSize}
                 loading={isLoading}
-                rowsPerPageOptions={[5, 10, 20]}
-                onPageChange={(params:any) => setPage(params.page)}
-                onPageSizeChange={(newPageSize:number) => setPageSize(newPageSize)}
-                sortingOrder={["asc", "desc"]}
                 onSortModelChange={handleSortModelChange}
                 getRowId={(row) => row._id}
                 autoHeight
                 disableColumnMenu
-            />
-            <Pagination
-                count={totalPages}
-                page={page}
-                onChange={(event, value) => setPage(value)}
-                className="mt-4"
+                pageSizeOptions={[10, 20, 50]}
+                paginationModel={paginationModel}
+                onPaginationModelChange={handlePaginationChange}
+                disableRowSelectionOnClick
+                sortingOrder={["asc", "desc"]}
+                initialState={{
+                    pagination: { paginationModel: { pageSize: 10, page: 0 } },
+                }}
             />
         </div>
     );

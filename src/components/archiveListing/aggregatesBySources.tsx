@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridPaginationModel, GridValueGetterParams } from '@mui/x-data-grid';
 import { Container } from '@mui/material';
 import { aggregatesBySourcesColumns, AggregatesBySourcesType } from './constants';
 import { makeGetCall } from 'service/BackendFetchService';
@@ -12,7 +12,15 @@ const AggregatesBySources = () => {
   const [sortField, setSortField] = useState<string>("sources");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [loading, setLoading] = React.useState<boolean>(false);
+  const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
+    page: 0,
+    pageSize: 10,
+  });
 
+  // Handle pagination and sorting
+  const handlePaginationChange = (model: GridPaginationModel) => {
+    setPaginationModel(model);
+  };
   useEffect(() => {
     fetchAggregates();
   }, [page, pageSize, sortField, sortOrder]);
@@ -43,11 +51,17 @@ const AggregatesBySources = () => {
       <DataGrid
         rows={items.map((item, index) => ({ id: index, ...item }))}
         columns={aggregatesBySourcesColumns}
-        pageSize={pageSize}
-        onPageSizeChange={(newPageSize: number) => setPageSize(newPageSize)}
-        rowsPerPageOptions={[5, 10, 20]}
         pagination
         autoHeight
+        pageSizeOptions={[10, 20, 50]}
+        paginationModel={paginationModel}
+        onPaginationModelChange={handlePaginationChange}
+        loading={loading}
+        disableRowSelectionOnClick
+        sortingOrder={["asc", "desc"]}
+        initialState={{
+          pagination: { paginationModel: { pageSize: 10, page: 0 } },
+        }}
       />
     </Container>
   );
