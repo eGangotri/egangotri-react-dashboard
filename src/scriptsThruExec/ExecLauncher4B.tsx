@@ -4,11 +4,14 @@ import Box from '@mui/material/Box';
 import { ExecType } from './ExecLauncherUtil';
 import { Button, Link, Typography } from '@mui/material';
 
-import {
-    TOP_N_FILE_LOCAL_STORAGE_KEY
-} from 'service/consts';
-
 const ExecLauncher4B: React.FC = () => {
+    const [filePath, setFilePath] = useState('');
+
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.files && event.target.files.length > 0) {
+            setFilePath(event.target.files[0]?.path);
+        }
+    };
 
     return (
         <Box display="flex" gap={4} mb={2} flexDirection="row">
@@ -18,12 +21,19 @@ const ExecLauncher4B: React.FC = () => {
                     placeholder='Absolute Path to PDFs Folder(s) as CSV'
                     secondTextBoxPlaceHolder='Absolute Path to Destination Folder'
                     thirdTextBoxPlaceHolder='N Pages to Extract from Start and End'
-                    thirdTextBoxDefaultValue={"15"}
+                    thirdTextBoxDefaultValue={"25"}
                     execType={ExecType.GET_FIRST_N_PAGES}
                     css={{ minWidth: "35vw" }}
                     css2={{ minWidth: "35vw" }}
                     css3={{ marginTop: "30px", minWidth: "23vw" }}
-
+                    textBoxOneValue={filePath}
+                    reactComponent={<>
+                        <input
+                            type="file"
+                            onChange={handleFileChange}
+                            className="mb-4"
+                        />
+                    </>}
                 />
 
                 <Box>

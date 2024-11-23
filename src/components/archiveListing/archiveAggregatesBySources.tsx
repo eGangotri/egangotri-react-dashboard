@@ -47,7 +47,9 @@ const AggregatesBySources = () => {
   };
   const getRowHeight = (params:GridRowHeightParams) => {
     const accts = params.model.accts;
-    const lines = Math.ceil(accts.length / 3);
+    const totalChars = accts.reduce((sum: number, acct: string) => sum + acct.length, 0);
+
+    const lines = Math.ceil(totalChars / 25);
     return lines * 24 + 16; // Adjust the multiplier and padding as needed
 };
   return (
