@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { DataGrid, GridColDef, GridPaginationModel } from '@mui/x-data-grid';
-import { Box } from '@mui/material';
+import { DataGrid, GridPaginationModel, GridSearchIcon } from '@mui/x-data-grid';
+import { Box, InputAdornment, TextField } from '@mui/material';
 import { makeGetCall } from 'service/BackendFetchService';
 import { archiveItemAggregateColumns, ArchiveItemAggregateType, archiveItemColumns } from './constants';
 
@@ -16,6 +16,8 @@ const ArchiveItemAggregates: React.FC = () => {
         page: 0,
         pageSize: 10,
     });
+    const [searchTerm, setSearchTerm] = useState<string>('');
+    const [filteredItems, setFilteredItems] = useState<ArchiveItemAggregateType[]>([]);
 
     // Handle pagination and sorting
     const handlePaginationChange = (model: GridPaginationModel) => {
@@ -39,10 +41,48 @@ const ArchiveItemAggregates: React.FC = () => {
         }
     };
 
+
+    useEffect(() => {
+        filterItems();
+    }, [items, searchTerm]);
+
+
+    const filterItems = () => {
+        const filtered = items.filter((item) =>
+            Object.values(item).some((value) =>
+                value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+            )
+        );
+        setFilteredItems(filtered);
+    };
+
+    const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchTerm(event.target.value);
+    };
+
     return (
         <Box sx={{ height: 600, width: '100%' }}>
+            <div className="grid grid-cols-3 gap-4">
+                <div className="col-span-3">
+
+                    <TextField
+                        variant="outlined"
+                        placeholder="Search..."
+                        value={searchTerm}
+                        onChange={handleSearchChange}
+                        sx={{ mb: 2 }}
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <GridSearchIcon />
+                                </InputAdornment>
+                            ),
+                        }}
+                    />
+                </div>
+            </div>
             <DataGrid
-                rows={items.map((item, index) => ({ ...item, id: index }))}
+                rows={filteredItems.map((item, index) => ({ ...item, id: index }))}
                 columns={archiveItemAggregateColumns}
                 pageSizeOptions={[10, 20, 50]}
                 paginationModel={paginationModel}
