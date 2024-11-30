@@ -71,7 +71,8 @@ const SearchGDriveDB = () => {
         <Stack spacing={2} sx={{ width: '100%' }}>
             <Box display="flex" alignItems="center" gap={4} mb={2}>
                 <form onSubmit={handleSubmit(onSubmit)}>
-                    <Stack direction="column" spacing={2}>
+                    <Stack direction="row" spacing={2}>
+                        <Box className="flex">
                         <TextField
                             variant="outlined"
                             placeholder="New Search"
@@ -83,9 +84,11 @@ const SearchGDriveDB = () => {
                                 }
                             })}
                             error={Boolean(errors.searchTerm)}
-                            sx={{ width: "100%" }}
+                            className="mr-4 mb-5 w-full"
                             helperText={errors.searchTerm?.message}
                         />
+                        <div className="ml-4">({gDriveSearchData?.length})</div>
+                        </Box>
                         <Box>
                             <Button
                                 variant="contained"
@@ -98,14 +101,14 @@ const SearchGDriveDB = () => {
                             </Button>
                             <Button variant="contained" color="primary" type="reset" onClick={() => resetData()}>
                                 Reset
-                            </Button> ({gDriveSearchData?.length})
+                            </Button> 
                         </Box>
-                        <Box sx={{ marginTop: "10px" }}>
+                        <Box className={"mt-2 flex"} >
                             <TextField variant="outlined"
                                 placeholder="Filter Results"
                                 {...register('filter')}
                                 error={Boolean(errors.filter)}
-                                sx={{ marginRight: "30px", marginBottom: "20px", width: "100%" }}
+                                className="mr-4 mb-5 w-full"
                                 helperText={errors.filter?.message}
                                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                     const newFilterTerm = e.target.value;
@@ -113,7 +116,8 @@ const SearchGDriveDB = () => {
                                     setFilteredData(_filterData(newFilterTerm, gDriveSearchData));
                                 }}
                             />
-                        </Box>{filteredData?.length}
+                            <div className='ml-4'>({filteredData?.length})</div>
+                        </Box>
                     </Stack>
                 </form>
             </Box>
@@ -123,7 +127,7 @@ const SearchGDriveDB = () => {
                     columns={SEARCH_GDRIVE_DB_COLUMNS}
                     paginationModel={paginationModel}
                     onPaginationModelChange={setPaginationModel}
-                    pageSizeOptions={[5, 10, 25]}
+                    pageSizeOptions={[10, 25, 50]}
                     disableRowSelectionOnClick
                     getRowId={(row) => row.identifier}
                 />
