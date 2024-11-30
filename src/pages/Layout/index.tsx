@@ -10,13 +10,13 @@ import TopPanel from "../../pages/TopPanel";
 const Layout: React.FC<PropsWithChildren> = ({ children }) => {
 
     return (
-        <Box className="px-4 flex flex-col">
-        <Header title="eGangotri Dashboard"/>
-        <TopPanel />
-            {children}
-            <Box className="footer">
-                <Footer />
-            </Box>
+        <Box className="px-4 flex flex-col min-h-screen">
+            <Header title="eGangotri Dashboard" />
+            <TopPanel />
+            <div className="flex-grow">
+                {children}
+            </div>
+            <Footer />
         </Box>
     );
 };

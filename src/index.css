@@ -37,11 +37,3 @@ body {
   position: relative;
 }
 
-/* Now set the height of your Footer equal to the padding that you left for it in your #root. 
-   To make it stay at the bottom, you will set it to be absolutely positioned.  If Main grows larger, your Footer will move down to remain at the bottom of the page. */
-.Footer {
-  height: 20px;
-  width: 100%;
-  position: absolute;
-  bottom: 0;
-}
