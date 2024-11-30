@@ -32,20 +32,14 @@ const SearchGDriveDB = () => {
     const _searchTerm = watch('searchTerm');
 
 
-    const _filterData = async (filterTerm: string) => {
+    const _filterData = (filterTerm: string, data: GDriveData[]) => {
         if (!filterTerm || filterTerm?.trim() === "") {
-            setFilteredData(gDriveSearchData);
-            return gDriveSearchData
+            return data;
+        } else {
+            const regex = new RegExp(filterTerm, 'i');
+            return data.filter(item => regex.test(item.titleGDrive));
         }
-        else {
-            console.log(`filterTerm ${JSON.stringify(filterTerm)}`)
-            const regex = new RegExp(filterTerm, 'i'); // 'i' makes it case insensitive
-            const filteredData = gDriveSearchData.filter(item => regex.test(item.titleGDrive));
-            setFilteredData(filteredData);
-            return filteredData
-        }
-    };
-
+    }
 
     const resetData = () => {
         setFilteredData([]);
@@ -62,10 +56,9 @@ const SearchGDriveDB = () => {
         setFilteredData([]);  // Clear filtered data if no results
         if (result?.length > 0) {
             setGDriveSearchData(result);
-            console.log(`filterValue ${filterTerm}`);
+            console.log(`filterTerm ${filterTerm}`);
             if (filterTerm) {
-                const _data = await _filterData(filterTerm);
-                setFilteredData(_data);
+                setFilteredData(_filterData(filterTerm, result));
             }
             else {
                 setFilteredData(result);  // Set filtered data immediately
@@ -116,11 +109,10 @@ const SearchGDriveDB = () => {
                                 error={Boolean(errors.filter)}
                                 sx={{ marginRight: "30px", marginBottom: "20px", width: "100%" }}
                                 helperText={errors.filter?.message}
-                                onChange={(e: React.FocusEvent<HTMLInputElement>) => {
-                                    console.log(`e.target.value ${e.target.value}`)
-                                    setFilterTerm(e.target.value);
-                                    _filterData(e.target.value);
-
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                    const newFilterTerm = e.target.value;
+                                    setFilterTerm(newFilterTerm);
+                                    setFilteredData(_filterData(newFilterTerm, gDriveSearchData));
                                 }}
                             />
                         </Box>
