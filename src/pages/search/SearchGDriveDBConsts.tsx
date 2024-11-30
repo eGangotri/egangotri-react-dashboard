@@ -30,12 +30,15 @@ export const SEARCH_GDRIVE_DB_COLUMNS: GridColDef[] = [
         headerName: 'Thumbnail',
         width: 150,
         renderCell: (params: GridRenderCellParams) => (
-            <img
-                src={`https://drive.google.com/thumbnail?id=${params.row.identifierTruncFile}`}
-                referrerPolicy="no-referrer"
-                alt={ellipsis(`https://lh3.googleusercontent.com/d/${params.row.identifierTruncFile}?authuser=0`) as string}
-                style={{ width: '100%', height: 'auto' }}
-            />
+            <div className="w-full h-auto transition-transform duration-300 transform hover:scale-200"
+            >            <img
+                    src={`https://drive.google.com/thumbnail?id=${params.row.identifierTruncFile}`}
+                    referrerPolicy="no-referrer"
+                    alt={ellipsis(`https://lh3.googleusercontent.com/d/${params.row.identifierTruncFile}?authuser=0`) as string}
+                    className="w-full h-full transition-transform duration-300 transform hover:scale-200"
+                />
+            </div>
+
         ),
     },
     {

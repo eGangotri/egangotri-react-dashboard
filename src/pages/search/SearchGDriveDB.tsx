@@ -121,7 +121,7 @@ const SearchGDriveDB = () => {
                     </Stack>
                 </form>
             </Box>
-            <Box sx={{ height: 400, width: '100%' }}>
+            <Box sx={{ width: '100%' }}>
                 <DataGrid
                     rows={filteredData}
                     columns={SEARCH_GDRIVE_DB_COLUMNS}
