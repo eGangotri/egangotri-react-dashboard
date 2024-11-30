@@ -98,10 +98,8 @@ const SearchGDriveDB = () => {
                             </Button>
                             <Button variant="contained" color="primary" type="reset" onClick={() => resetData()}>
                                 Reset
-                            </Button>
+                            </Button> ({gDriveSearchData?.length})
                         </Box>
-                        <div><Typography>Search Term ({gDriveSearchData?.length}): {_searchTerm}</Typography></div>
-                        <div><Typography>Current filter value({filteredData?.length}): {filterTerm}</Typography></div>
                         <Box sx={{ marginTop: "10px" }}>
                             <TextField variant="outlined"
                                 placeholder="Filter Results"
@@ -115,7 +113,7 @@ const SearchGDriveDB = () => {
                                     setFilteredData(_filterData(newFilterTerm, gDriveSearchData));
                                 }}
                             />
-                        </Box>
+                        </Box>{filteredData?.length}
                     </Stack>
                 </form>
             </Box>
