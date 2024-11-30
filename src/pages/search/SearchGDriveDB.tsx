@@ -130,6 +130,7 @@ const SearchGDriveDB = () => {
                     pageSizeOptions={[10, 25, 50]}
                     disableRowSelectionOnClick
                     getRowId={(row) => row.identifier}
+                    autoHeight 
                 />
             </Box>
         </Stack>
