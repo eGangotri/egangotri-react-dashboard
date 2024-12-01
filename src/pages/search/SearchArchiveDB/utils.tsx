@@ -2,7 +2,7 @@ import moment from 'moment';
 import { FaDownload } from 'react-icons/fa';
 import ItemToolTip, { ellipsis } from 'widgets/ItemTooltip';
 import { makePostCall } from 'mirror/utils'
-import { GridColDef, GridRenderCellParams  } from '@mui/x-data-grid';
+import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { DD_MM_YYYY_FORMAT } from 'utils/utils';
 
 const generateThumbnail = (identifier: string) => {
@@ -21,82 +21,82 @@ export async function searchArchiveDatabase(searchTerm: string) {
 
 export const SEARCH_ARCHIVE_DB_COLUMNS: GridColDef[] = [
     {
-      field: 'thumbnail',
-      headerName: 'Thumbnail',
-      width: 150,
-      renderCell: (params: GridRenderCellParams) => (
-        <img src={generateThumbnail(params.row.identifier)} alt={params.row.originalTitle} />
-      ),
+        field: 'thumbnail',
+        headerName: 'Thumbnail',
+        width: 150,
+        renderCell: (params: GridRenderCellParams) => (
+            <img src={generateThumbnail(params.row.identifier)} alt={params.row.originalTitle} />
+        ),
     },
     {
-      field: 'link',
-      headerName: 'Pdf View Link',
-      width: 200,
-      renderCell: (params: GridRenderCellParams) => (
-        <ItemToolTip
-          input={params.value}
-          url={true}
-          reactComponent={
-            <FaDownload
-              onClick={() => {
-                window.open(params.row.pdfDownloadLink, '_blank');
-              }}
+        field: 'originalTitle',
+        headerName: 'Original Title',
+        width: 450,
+        renderCell: (params: GridRenderCellParams) => (
+            <ItemToolTip input={params.value} alphabetCount={50}/>
+        ),
+    },
+    {
+        field: 'link',
+        headerName: 'Pdf View Link',
+        width: 200,
+        renderCell: (params: GridRenderCellParams) => (
+            <ItemToolTip
+                input={params.value}
+                url={true}
+                reactComponent={
+                    <FaDownload
+                        onClick={() => {
+                            window.open(params.row.pdfDownloadLink, '_blank');
+                        }}
+                    />
+                }
             />
-          }
-        />
-      ),
+        ),
     },
     {
-      field: 'allDownloadsLinkPage',
-      headerName: 'All Downloads Link Page',
-      width: 200,
-      renderCell: (params: GridRenderCellParams) => (
-        <ItemToolTip input={params.value} url={true} />
-      ),
+        field: 'allDownloadsLinkPage',
+        headerName: 'All Downloads Link Page',
+        width: 200,
+        renderCell: (params: GridRenderCellParams) => (
+            <ItemToolTip input={params.value} url={true} />
+        ),
     },
     {
-      field: 'originalTitle',
-      headerName: 'Original Title',
-      width: 200,
-      renderCell: (params: GridRenderCellParams) => (
-        <ItemToolTip input={params.value} />
-      ),
+        field: 'titleArchive',
+        headerName: 'Title-Archive',
+        width: 200,
+        renderCell: (params: GridRenderCellParams) => (
+            <ItemToolTip input={params.value} />
+        ),
     },
     {
-      field: 'titleArchive',
-      headerName: 'Title-Archive',
-      width: 200,
-      renderCell: (params: GridRenderCellParams) => (
-        <ItemToolTip input={params.value} />
-      ),
+        field: 'date',
+        headerName: 'Archive.org Upload Date',
+        width: 200,
+        valueGetter: (params: GridRenderCellParams) =>
+            moment(params.value).format(DD_MM_YYYY_FORMAT),
     },
     {
-      field: 'date',
-      headerName: 'Archive.org Upload Date',
-      width: 200,
-      valueGetter: (params: GridRenderCellParams) =>
-        moment(params.value).format(DD_MM_YYYY_FORMAT),
+        field: 'acct',
+        headerName: 'Acct',
+        width: 150,
+        renderCell: (params: GridRenderCellParams) => (
+            <ItemToolTip input={params.value} />
+        ),
     },
     {
-      field: 'acct',
-      headerName: 'Acct',
-      width: 150,
-      renderCell: (params: GridRenderCellParams) => (
-        <ItemToolTip input={params.value} />
-      ),
+        field: 'pageCount',
+        headerName: 'Page Count',
+        width: 150,
+        type: 'number',
     },
     {
-      field: 'pageCount',
-      headerName: 'Page Count',
-      width: 150,
-      type: 'number',
+        field: 'sizeFormatted',
+        headerName: 'Size Formatted',
+        width: 150,
+        renderCell: (params: GridRenderCellParams) => (
+            <ItemToolTip input={params.value} />
+        ),
     },
-    {
-      field: 'sizeFormatted',
-      headerName: 'Size Formatted',
-      width: 150,
-      renderCell: (params: GridRenderCellParams) => (
-        <ItemToolTip input={params.value} />
-      ),
-    },
-  ];
+];
