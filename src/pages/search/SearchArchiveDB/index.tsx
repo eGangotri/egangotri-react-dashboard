@@ -5,6 +5,7 @@ import { DataGrid, GridPaginationModel } from '@mui/x-data-grid';
 import { ArchiveData, SearchDBProps } from '../types';
 import { SEARCH_ARCHIVE_DB_COLUMNS, searchArchiveDatabase } from './utils';
 import ArchiveProfileSelector from '../ArchiveProfileSelector';
+import { filterLogicForArchiveSearch } from '../utils';
 
 
 export const getPdfDownloadLink = (driveId: string) => {
@@ -37,18 +38,7 @@ const SearchArchiveDB = () => {
         if (!filterTerm || filterTerm?.trim() === "") {
             return data;
         } else {
-            //const regex = new RegExp(filterTerm, 'i');
-            // return data.filter(item => regex.test(item.originalTitle));
-
-            const terms = filterTerm.toLowerCase().split(' ');
-            return data.filter(item => {
-                const title = item.originalTitle.toLowerCase();
-                if (_useOrLogic) {
-                    return terms.some(term => title.includes(term));
-                } else {
-                    return terms.every(term => title.includes(term));
-                }
-            });
+            return filterLogicForArchiveSearch(data, filterTerm, _useOrLogic);
         }
     }
 

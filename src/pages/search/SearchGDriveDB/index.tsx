@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Stack, Box, TextField, Button, CircularProgress, Typography } from '@mui/material';
+import { Stack, Box, TextField, Button, CircularProgress, Typography, Switch, FormControlLabel } from '@mui/material';
 import { DataGrid, GridPaginationModel } from '@mui/x-data-grid';
 ;
 import { GDriveData, SearchDBProps } from '../types';
-import { SEARCH_GDRIVE_DB_COLUMNS,  searchGoogleDrive } from './utils';
+import { SEARCH_GDRIVE_DB_COLUMNS, searchGoogleDrive } from './utils';
+import { filterLogic, filterLogicForGDriveSearch } from '../utils';
 
 
 export const getPdfDownloadLink = (driveId: string) => {
@@ -29,15 +30,14 @@ const SearchGDriveDB = () => {
         pageSize: 10,
     });
     const [filterTerm, setFilterTerm] = useState<string>(''); // watch doesn't work for filter because of onChange
-    const _searchTerm = watch('searchTerm');
+    const [useOrLogic, setUseOrLogic] = useState(true);
 
-
-    const _filterData = (filterTerm: string, data: GDriveData[]) => {
+    const _filterData = (filterTerm: string, data: GDriveData[], _useOrLogic = true) => {
         if (!filterTerm || filterTerm?.trim() === "") {
             return data;
-        } else {
-            const regex = new RegExp(filterTerm, 'i');
-            return data.filter(item => regex.test(item.titleGDrive));
+        }
+        else {
+            return filterLogicForGDriveSearch(data, filterTerm, _useOrLogic);
         }
     }
 
@@ -73,21 +73,21 @@ const SearchGDriveDB = () => {
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <Stack direction="row" spacing={2}>
                         <Box className="flex">
-                        <TextField
-                            variant="outlined"
-                            placeholder="New Search"
-                            {...register('searchTerm', {
-                                required: "This field is required",
-                                minLength: {
-                                    value: 3,
-                                    message: "This field requires a minimum of 3 characters"
-                                }
-                            })}
-                            error={Boolean(errors.searchTerm)}
-                            className="mr-4 mb-5 w-full"
-                            helperText={errors.searchTerm?.message}
-                        />
-                        <div className="ml-4">({gDriveSearchData?.length})</div>
+                            <TextField
+                                variant="outlined"
+                                placeholder="New Search"
+                                {...register('searchTerm', {
+                                    required: "This field is required",
+                                    minLength: {
+                                        value: 3,
+                                        message: "This field requires a minimum of 3 characters"
+                                    }
+                                })}
+                                error={Boolean(errors.searchTerm)}
+                                className="mr-4 mb-5 w-full"
+                                helperText={errors.searchTerm?.message}
+                            />
+                            <div className="ml-4">({gDriveSearchData?.length})</div>
                         </Box>
                         <Box className={"mt-2 flex"} >
                             <TextField variant="outlined"
@@ -104,6 +104,19 @@ const SearchGDriveDB = () => {
                             />
                             <div className='ml-4'>({filteredData?.length})</div>
                         </Box>
+                        <FormControlLabel
+                            control={
+                                <Switch
+                                    checked={useOrLogic}
+                                    onChange={(e) => {
+                                        setUseOrLogic(e.target.checked);
+                                        setFilteredData(_filterData(filterTerm, gDriveSearchData, e.target.checked));
+                                    }}
+                                    color="primary"
+                                />
+                            }
+                            label="Use OR logic"
+                        />
                         <Box>
                             <Button
                                 variant="contained"
@@ -116,7 +129,7 @@ const SearchGDriveDB = () => {
                             </Button>
                             <Button variant="contained" color="primary" type="reset" onClick={() => resetData()}>
                                 Reset
-                            </Button> 
+                            </Button>
                         </Box>
                     </Stack>
                 </form>
@@ -130,7 +143,7 @@ const SearchGDriveDB = () => {
                     pageSizeOptions={[10, 25, 50]}
                     disableRowSelectionOnClick
                     getRowId={(row) => row.identifier}
-                    autoHeight 
+                    autoHeight
                 />
             </Box>
         </Stack>
