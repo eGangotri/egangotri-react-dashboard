@@ -25,26 +25,25 @@ const SearchArchiveDB = () => {
 
     const [archiveData, setArchiveData] = useState<ArchiveData[]>([]);
     const [filteredData, setFilteredData] = useState<ArchiveData[]>([]);
-    const [useOrLogic, setUseOrLogic] = useState(false);
+    const [useOrLogic, setUseOrLogic] = useState(true);
     const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
         page: 0,
         pageSize: 10,
     });
     const [filterTerm, setFilterTerm] = useState<string>(''); // watch doesn't work for filter because of onChange
-    const _searchTerm = watch('searchTerm');
 
 
-    const _filterData = (filterTerm: string, data: ArchiveData[]) => {
+    const _filterData = (filterTerm: string, data: ArchiveData[], _useOrLogic = true) => {
         if (!filterTerm || filterTerm?.trim() === "") {
             return data;
         } else {
             //const regex = new RegExp(filterTerm, 'i');
-           // return data.filter(item => regex.test(item.originalTitle));
+            // return data.filter(item => regex.test(item.originalTitle));
 
             const terms = filterTerm.toLowerCase().split(' ');
             return data.filter(item => {
                 const title = item.originalTitle.toLowerCase();
-                if (useOrLogic) {
+                if (_useOrLogic) {
                     return terms.some(term => title.includes(term));
                 } else {
                     return terms.every(term => title.includes(term));
@@ -122,7 +121,7 @@ const SearchArchiveDB = () => {
                                     checked={useOrLogic}
                                     onChange={(e) => {
                                         setUseOrLogic(e.target.checked);
-                                        setFilteredData(_filterData(filterTerm, archiveData));
+                                        setFilteredData(_filterData(filterTerm, archiveData, e.target.checked));
                                     }}
                                     color="primary"
                                 />
