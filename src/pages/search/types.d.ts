@@ -50,3 +50,8 @@ export interface GDriveData {
     createdTime: string,
     source: string,
 }
+
+export interface SearchDBProps {
+    searchTerm: string
+    filter?: string
+}

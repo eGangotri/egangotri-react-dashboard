@@ -4,14 +4,8 @@ import ItemToolTip, { ellipsis } from 'widgets/ItemTooltip';
 import { getGDrivePdfDownloadLink } from 'mirror/GoogleDriveUtilsCommonCode';
 import { makePostCall } from 'mirror/utils'
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
+import { DD_MM_YYYY_FORMAT } from 'utils/utils';
 
-const DD_MM_YYYY_WITH_TIME_FORMAT = 'DD/MM/YYYY HH:mm';
-const DD_MM_YYYY_FORMAT = 'DD/MM/YYYY';
-
-export interface SearchDBProps {
-    searchTerm: string
-    filter?: string
-}
 
 export async function searchGoogleDrive(searchTerm: string) {
     const resource =

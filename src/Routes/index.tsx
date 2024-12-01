@@ -12,7 +12,7 @@ import AITextIdentifier from 'scriptsThruExec/AITextIdentifier';
 import ExecLauncherThree from 'scriptsThruExec/ExecLauncherThree';
 import ExecLauncherFour from 'scriptsThruExec/ExecLauncherFour';
 import SearchArchiveDB from 'pages/search/SearchArchiveDB';
-import SearchGDriveDB from 'pages/search/SearchGDriveDB';
+import SearchGDriveDB from 'pages/search/SearchGDriveDB'
 import ExecLauncherFive from 'scriptsThruExec/ExecLauncherFive';
 import ExecLauncherTwoB from 'scriptsThruExec/ExecLauncherTwoB';
 import ExecLauncherTwoC from 'scriptsThruExec/ExecLauncherTwoC';
