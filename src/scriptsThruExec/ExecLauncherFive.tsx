@@ -3,9 +3,11 @@ import ExecComponent from './ExecComponent';
 import Box from '@mui/material/Box';
 import { ExecType } from './ExecLauncherUtil';
 import { Button, FormControlLabel, Link, Radio, RadioGroup, Typography } from '@mui/material';
-import { COMBINATION_EXCEL_PATH_LOCAL_STORAGE_KEY, 
+import {
+    COMBINATION_EXCEL_PATH_LOCAL_STORAGE_KEY,
     GDRIVE_EXCEL_NAME_LOCAL_STORAGE_KEY,
-     REDUCED_SUFFIX, TOP_N_FILE_LOCAL_STORAGE_KEY } from 'service/consts';
+    REDUCED_SUFFIX, TOP_N_FILE_LOCAL_STORAGE_KEY
+} from 'service/consts';
 
 
 const ExecLauncherFive: React.FC = () => {
@@ -85,7 +87,7 @@ const ExecLauncherFive: React.FC = () => {
                         <ol>
                             <li>0.1a. (Manual) snap2html</li>
                             <li>0.1b. (Manual) Txt/Excel/CSV Via <Link href="/execLauncher3"></Link> 'List Files in Folders(Gradle)' Task</li>
-                            <li>0.1c. (Manual) dump 1a/1b to the corresponding Treasure in local. Dump Local to G-Drive 
+                            <li>0.1c. (Manual) dump 1a/1b to the corresponding Treasure in local. Dump Local to G-Drive
                                 <Link href="https://drive.google.com/drive/folders/1F7j5eP-sMGav_D4amCbWiqWjpe2Zz4x1" className="px-1">here</Link>
                             </li>
                             <li>0.1d. (Manual) Take Success Upload of 1c as screenshot and put in Local and G-Driv</li>
@@ -113,10 +115,10 @@ const ExecLauncherFive: React.FC = () => {
                     css={{ minWidth: "23vw" }}
                     css2={{ minWidth: "23vw" }}
                     css3={{ marginTop: "30px", minWidth: "23vw" }}
-                    thirdButton={<Button 
-                        variant="contained" 
-                        color="primary" 
-                        onClick={loadTopNPathFromLocalStorage} 
+                    thirdButton={<Button
+                        variant="contained"
+                        color="primary"
+                        onClick={loadTopNPathFromLocalStorage}
                         sx={{ marginRight: "10px", marginBottom: "10px" }}>Load From Local Storage</Button>}
                 />
                 <Box>
@@ -128,16 +130,22 @@ const ExecLauncherFive: React.FC = () => {
                     placeholder='Absolute Path to PDFs Folder(s) as CSV'
                     secondTextBoxPlaceHolder='Absolute Path to Destination Folder'
                     thirdTextBoxPlaceHolder='N Pages to Extract from Start and End'
-                    thirdTextBoxDefaultValue={"10"}
+                    thirdTextBoxDefaultValue={"20"}
                     execType={ExecType.GET_FIRST_N_PAGES_GRADLE}
                     css={{ minWidth: "23vw" }}
                     css2={{ minWidth: "23vw" }}
                     css3={{ marginTop: "30px", minWidth: "23vw" }}
-                    thirdButton={<Button 
-                        variant="contained" 
-                        color="primary" 
-                        onClick={loadTopNPathFromLocalStorage} 
+                    multiline1stTf
+                    rows1stTf={4}
+                    thirdButton={<Button
+                        variant="contained"
+                        color="primary"
+                        onClick={loadTopNPathFromLocalStorage}
                         sx={{ marginRight: "10px", marginBottom: "10px" }}>Load From Local Storage</Button>}
+                    reactComponent={
+                        <div>Can be run concurrently??</div>
+                    }
+
                 />
                 <Box></Box>
             </Box>

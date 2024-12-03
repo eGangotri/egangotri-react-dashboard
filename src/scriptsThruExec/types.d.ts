@@ -26,9 +26,11 @@ export type ExecComponentProps = {
     textBoxOneValue?: string;
     textBoxTwoValue?: string;
     thirdButton?: JSX.Element;
-    multiline?: boolean;
+    multiline1stTf?: boolean;
+    multiline2ndTf?: boolean;
     fullWidth?: boolean;
-    rows?: number;
+    rows1stTf?: number;
+    rows2ndTf?: number;
 };
 
 export type ExecResponse = {

@@ -31,9 +31,12 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
   secondComponentRequired = true,
   textBoxOneValue = "",
   textBoxTwoValue = "",
-  multiline = false,
+  multiline1stTf = false,
+  multiline2ndTf = false,
   fullWidth = false,
-  rows = 1,
+  rows1stTf = 1,
+  rows2ndTf = 1,
+
 }) => {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const { register, handleSubmit, setValue, formState: { errors }, reset } = useForm<ExecComponentFormData>();
@@ -88,6 +91,8 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
                 error={Boolean(errors.userInput)}
                 sx={{ marginRight: "30px", marginBottom: "20px", ...css }}
                 helperText={errors.userInput?.message}
+                rows={rows1stTf}
+                multiline={multiline1stTf}
               />
               {userInputOneInfo && <InfoIconWithTooltip input={userInputOneInfo} />
               }
@@ -153,12 +158,12 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
                 {...register('userInputSecond', secondComponentRequired === true ? { required: "This field is required" } : {})}
                 error={Boolean(errors.userInputSecond)}
                 sx={{ marginRight: "30px", width: "250px", ...css2 }}
-                helperText={errors.userInputSecond?.message} 
-                multiline
+                helperText={errors.userInputSecond?.message}
+                rows={rows2ndTf}
+                multiline={multiline2ndTf}
                 fullWidth
-                rows={rows}
-                />
-             
+              />
+
               {userInputTwoInfo && <InfoIconWithTooltip input={userInputTwoInfo} />}
             </Box>
             : null

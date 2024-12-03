@@ -17,7 +17,7 @@ const ExecLauncher4B: React.FC = () => {
         <Box display="flex" gap={4} mb={2} flexDirection="row">
             <Box display="flex" alignItems="center" gap={4} mb={2} flexDirection="column">
                 <ExecComponent
-                    buttonText="Get First and Last N Pages"
+                    buttonText="Get First and Last N Pages-Yarn"
                     placeholder='Absolute Path to PDFs Folder(s) as CSV'
                     secondTextBoxPlaceHolder='Absolute Path to Destination Folder'
                     thirdTextBoxPlaceHolder='N Pages to Extract from Start and End'
@@ -27,6 +27,8 @@ const ExecLauncher4B: React.FC = () => {
                     css2={{ minWidth: "35vw" }}
                     css3={{ marginTop: "30px", minWidth: "23vw" }}
                     textBoxOneValue={filePath}
+                    multiline1stTf
+                    rows1stTf={4}
                     reactComponent={<>
                         <input
                             type="file"
