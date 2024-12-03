@@ -20,8 +20,9 @@ const ExecLauncher4B: React.FC = () => {
                     buttonText="Get First and Last N Pages-Yarn"
                     placeholder='Absolute Path to PDFs Folder(s) as CSV'
                     secondTextBoxPlaceHolder='Absolute Path to Destination Folder'
-                    thirdTextBoxPlaceHolder='N Pages to Extract from Start and End'
+                    thirdTextBoxPlaceHolder='N Pages. Use - to specify diff. First and Last Values'
                     thirdTextBoxDefaultValue={"25"}
+                    userInputThreeInfoNonMandatory='Use - for dissimlar Page Count'
                     execType={ExecType.GET_FIRST_N_PAGES}
                     css={{ minWidth: "35vw" }}
                     css2={{ minWidth: "35vw" }}
@@ -29,13 +30,6 @@ const ExecLauncher4B: React.FC = () => {
                     textBoxOneValue={filePath}
                     multiline1stTf
                     rows1stTf={4}
-                    reactComponent={<>
-                        <input
-                            type="file"
-                            onChange={handleFileChange}
-                            className="mb-4"
-                        />
-                    </>}
                 />
 
                 <Box>
@@ -101,7 +95,7 @@ const ExecLauncher4B: React.FC = () => {
                     placeholder='Use Bulk Rename Conventions'
                     execType={ExecType.UseBulkRenameConventions} />
             </Box>
-        </Box>
+        </Box >
 
     );
 }

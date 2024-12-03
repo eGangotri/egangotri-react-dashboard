@@ -13,7 +13,7 @@ const InfoIconWithTooltip: React.FC<ItemToolTipPropsType> = ({
 }) => {
   return (
     <Tooltip title={input} arrow placement="right">
-      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+      <Box className="flex items-center m-1">
         <FaInfoCircle color="primary" />
       </Box>
     </Tooltip>

@@ -180,7 +180,6 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
                 sx={{ marginTop: "30px", width: "250px", ...css3 }}
                 helperText={errors.userInputThird?.message} />
               {userInputThreeInfo && <InfoIconWithTooltip input={userInputThreeInfo} />}
-
             </Box>
             : null
           }
