@@ -10,6 +10,10 @@ const ExecLauncherOne: React.FC = () => {
     const [excelGDrive, setExcelGDrive] = React.useState<number>(ExecType.GenExcelOfGoogleDriveLinkPdfOnly);
     const [gDriveFileType, setGDriveFileType] = React.useState<number>(ExecType.DWNLD_PDFS_ONLY_FROM_GOOGLE_DRIVE);
     const [label, setLabel] = React.useState<string>("");
+    const [validationCss, setValidationCss] = React.useState({
+        backgroundColor: "lightgreen",
+        width: "450px"
+    });
     const chooseGDriveExcelType = (event: ChangeEvent<HTMLInputElement>) => {
         const _val = event.target.value;
         console.log("_val", _val)
@@ -87,6 +91,16 @@ const ExecLauncherOne: React.FC = () => {
             console.error(error);
         }
     };
+
+    const handleInputChange = (inputValue: string) => {
+        console.log("inputValue", inputValue, `inputValue.includes("ab") ${inputValue.includes("ab")}`);
+        if (inputValue.includes("/") || inputValue.includes("\\")) {
+            setValidationCss({ backgroundColor: "red", width: "450px" });
+        } else {
+            setValidationCss({ backgroundColor: "lightgreen", width: "450px" });
+        }
+    };
+
     return (
         <Box display="flex" gap={4} mb={2} flexDirection="row">
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
@@ -110,6 +124,8 @@ const ExecLauncherOne: React.FC = () => {
                     <p>Use 7Zip Del to delete or from cmd prompt from:</p>
                     <p>File:  del "C:\path\to\your\file.txt"</p>
                     <p>Folder: rmdir /s /q "D:\_playground\FILE_PATH"</p>
+                    {JSON.stringify(validationCss)}
+
                 </Typography>
 
             </Box>
@@ -121,7 +137,8 @@ const ExecLauncherOne: React.FC = () => {
                     secondTextBoxPlaceHolder='Enter Folder Name (not path)'
                     execType={excelGDrive}
                     css={{ minWidth: "23vw", width: "450px" }}
-                    css2={{ backgroundColor: "lightgreen", width: "450px" }}
+                    css2={validationCss}
+                    onInputChange={handleInputChange}
                     reactComponent={<>
                         <RadioGroup aria-label="excelGDrive" name="excelGDrive" value={excelGDrive} onChange={chooseGDriveExcelType} row>
                             <FormControlLabel value={ExecType.GenExcelOfGoogleDriveLinkPdfOnly} control={<Radio />} label="PDF-Only" />
@@ -131,7 +148,6 @@ const ExecLauncherOne: React.FC = () => {
                         </RadioGroup>
                     </>}
                 />
-
                 <ExecComponent
                     buttonText="Download from GDrive Excel"
                     placeholder='Enter Excel Path'

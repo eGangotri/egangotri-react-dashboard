@@ -36,6 +36,7 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
   fullWidth = false,
   rows1stTf = 1,
   rows2ndTf = 1,
+  onInputChange
 
 }) => {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
@@ -78,6 +79,10 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
     setOpenDialog(true);
     setFormData(data)
   };
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    onInputChange(event.target.value);
+};
 
   return (
     <Stack spacing={2} sx={{ width: '100%' }}>
@@ -162,6 +167,7 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
                 rows={rows2ndTf}
                 multiline={multiline2ndTf}
                 fullWidth
+                onChange={handleInputChange} // Call the callback function on input change
               />
 
               {userInputTwoInfo && <InfoIconWithTooltip input={userInputTwoInfo} />}
