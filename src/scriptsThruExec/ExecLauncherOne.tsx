@@ -141,8 +141,6 @@ const ExecLauncherOne: React.FC = () => {
                     <p>Use 7Zip Del to delete or from cmd prompt from:</p>
                     <p>File:  del "C:\path\to\your\file.txt"</p>
                     <p>Folder: rmdir /s /q "D:\_playground\FILE_PATH"</p>
-                    {JSON.stringify(validationCss)}
-
                 </Typography>
 
             </Box>
@@ -175,7 +173,6 @@ const ExecLauncherOne: React.FC = () => {
                     css2={validationCss2}
                     onInputChange={(x) =>handleInputChange(x,2)}
                     userInputTwoInfoNonMandatory="Only Folder Name not Path"
-                    
                 />
 
             </Box>
