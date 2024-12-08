@@ -6,10 +6,10 @@ import { IMG_TYPE_JPG } from 'scriptsThruExec/constants';
 import { ALL_TYPE, PDF_TYPE, ZIP_TYPE } from 'mirror/CommonConstants';
 
 export async function launchVanitizeModule(
-    profile: string): Promise<ExecResponseDetails> {
+    profile: string, suffix:string = ""): Promise<ExecResponseDetails> {
     const resource = `yarn/vanitizePdfs`;
 
-    const result = await makePostCall({ profile },
+    const result = await makePostCall({ profile, suffix },
         resource);
     return result.response as ExecResponseDetails
 }

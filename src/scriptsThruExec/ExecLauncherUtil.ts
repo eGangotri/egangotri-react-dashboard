@@ -575,7 +575,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         break;
 
       case ExecType.VANITIZE:
-        _resp = await launchVanitizeModule(dataUserInput)
+        _resp = await launchVanitizeModule(dataUserInput, dataUserInput3NonMandatory)
         break;
 
       case ExecType.RENAME_FIES_VIA_EXCEL:

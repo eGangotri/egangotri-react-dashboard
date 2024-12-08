@@ -31,6 +31,7 @@ const ExecLauncherFour: React.FC = () => {
 
                 <ExecComponent buttonText="Vanitize Folder or Profile"
                     placeholder='Vanitize'
+                    thirdTextBoxPlaceHolder='Suffix to add to Pdf'
                     execType={ExecType.VANITIZE} />
 
                 <ExecComponent buttonText="Use Bulk Rename Conventions"
