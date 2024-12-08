@@ -32,6 +32,18 @@ const ExecLauncherFive: React.FC = () => {
         console.log("_listingType", _listingType);
         setExcelGDrive(_listingType || ExecType.GenExcelOfGoogleDriveLinkPdfOnly);
     };
+    const [validationCss, setValidationCss] = React.useState({
+        backgroundColor: "lightgreen",
+        width: "450px"
+    });
+    const handleInputChange = (inputValue: string) => {
+        console.log("inputValue", inputValue, `inputValue.includes("ab") ${inputValue.includes("ab")}`);
+        if (inputValue.includes("/") || inputValue.includes("\\")) {
+            setValidationCss({ backgroundColor: "red", width: "450px" });
+        } else {
+            setValidationCss({ backgroundColor: "lightgreen", width: "450px" });
+        }
+    };
 
 
     const loadFromLocalStorage = () => {
@@ -74,6 +86,10 @@ const ExecLauncherFive: React.FC = () => {
                     secondTextBoxPlaceHolder='Enter Folder Name (not path)'
                     execType={excelGDrive}
                     css={{ minWidth: "23vw" }}
+                    css2={validationCss}
+                    onInputChange={handleInputChange}
+                    userInputTwoInfoNonMandatory="Only Folder Name not Path"
+                  
                     reactComponent={<>
                         <RadioGroup aria-label="fileType" name="fileType" value={excelGDrive} onChange={chooseGDriveExcelType} row>
                             <FormControlLabel value={ExecType.GenExcelOfGoogleDriveLinkPdfOnly} control={<Radio />} label="ALL" />

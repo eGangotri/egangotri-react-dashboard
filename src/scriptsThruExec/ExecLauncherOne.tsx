@@ -10,10 +10,7 @@ const ExecLauncherOne: React.FC = () => {
     const [excelGDrive, setExcelGDrive] = React.useState<number>(ExecType.GenExcelOfGoogleDriveLinkPdfOnly);
     const [gDriveFileType, setGDriveFileType] = React.useState<number>(ExecType.DWNLD_PDFS_ONLY_FROM_GOOGLE_DRIVE);
     const [label, setLabel] = React.useState<string>("");
-    const [validationCss, setValidationCss] = React.useState({
-        backgroundColor: "lightgreen",
-        width: "450px"
-    });
+
     const chooseGDriveExcelType = (event: ChangeEvent<HTMLInputElement>) => {
         const _val = event.target.value;
         console.log("_val", _val)
@@ -92,12 +89,32 @@ const ExecLauncherOne: React.FC = () => {
         }
     };
 
-    const handleInputChange = (inputValue: string) => {
+    const [validationCss, setValidationCss] = React.useState({
+        backgroundColor: "lightgreen",
+        width: "450px"
+    });
+
+    
+    const [validationCss2, setValidationCss2] = React.useState({
+        backgroundColor: "lightgreen",
+        width: "450px"
+    });
+    
+    const handleInputChange = (inputValue: string, num = 1) => {
         console.log("inputValue", inputValue, `inputValue.includes("ab") ${inputValue.includes("ab")}`);
-        if (inputValue.includes("/") || inputValue.includes("\\")) {
-            setValidationCss({ backgroundColor: "red", width: "450px" });
-        } else {
-            setValidationCss({ backgroundColor: "lightgreen", width: "450px" });
+        if(num === 1){
+            if (inputValue.includes("/") || inputValue.includes("\\")) {
+                setValidationCss({ backgroundColor: "red", width: "450px" });
+            } else {
+                setValidationCss({ backgroundColor: "lightgreen", width: "450px" });
+            }
+        }
+        else {
+            if (inputValue.includes("/") || inputValue.includes("\\")) {
+                setValidationCss2({ backgroundColor: "red", width: "450px" });
+            } else {
+                setValidationCss2({ backgroundColor: "lightgreen", width: "450px" });
+            }
         }
     };
 
@@ -139,6 +156,7 @@ const ExecLauncherOne: React.FC = () => {
                     css={{ minWidth: "23vw", width: "450px" }}
                     css2={validationCss}
                     onInputChange={handleInputChange}
+                    userInputTwoInfoNonMandatory="Only Folder Name not Path"
                     reactComponent={<>
                         <RadioGroup aria-label="excelGDrive" name="excelGDrive" value={excelGDrive} onChange={chooseGDriveExcelType} row>
                             <FormControlLabel value={ExecType.GenExcelOfGoogleDriveLinkPdfOnly} control={<Radio />} label="PDF-Only" />
@@ -154,7 +172,10 @@ const ExecLauncherOne: React.FC = () => {
                     secondTextBoxPlaceHolder='Enter Folder Name (not path)'
                     execType={ExecType.DownloadAllGDriveItemsViaExcel}
                     css={{ width: "450px" }}
-                    css2={{ backgroundColor: "lightgreen", width: "450px" }}
+                    css2={validationCss2}
+                    onInputChange={(x) =>handleInputChange(x,2)}
+                    userInputTwoInfoNonMandatory="Only Folder Name not Path"
+                    
                 />
 
             </Box>

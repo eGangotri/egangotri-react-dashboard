@@ -13,6 +13,18 @@ const ExecLauncherSix: React.FC = () => {
 
     const [includeFilePath, setIncludeFilePath] = useState(false);
     const [fileNameLongerCheck, setFileNameLongerCheck] = useState(ExecType.FILE_NAME_LENGTH);
+    const [validationCss, setValidationCss] = React.useState({
+        backgroundColor: "lightgreen",
+        width: "450px"
+    });
+    const handleInputChange = (inputValue: string) => {
+        console.log("inputValue", inputValue, `inputValue.includes("ab") ${inputValue.includes("ab")}`);
+        if (inputValue.includes("/") || inputValue.includes("\\")) {
+            setValidationCss({ backgroundColor: "red", width: "450px" });
+        } else {
+            setValidationCss({ backgroundColor: "lightgreen", width: "450px" });
+        }
+    };
 
     const handleIncludeFilePath = (event: React.ChangeEvent<HTMLInputElement>) => {
         setIncludeFilePath(event.target.checked);
@@ -53,7 +65,10 @@ const ExecLauncherSix: React.FC = () => {
                     secondTextBoxPlaceHolder='Enter Folder Name (not path)'
                     execType={ExecType.GenExcelOfGoogleDriveLinkForAll}
                     userInputOneInfo='All Mime Types in G-Drive for All Mime Types'
-                    css={{ minWidth: "23vw" }}
+                    css={{ minWidth: "23vw" }}    css2={validationCss}
+                    onInputChange={handleInputChange}
+                    userInputTwoInfoNonMandatory="Only Folder Name not Path"
+                  
                 />
 
                 <Box>

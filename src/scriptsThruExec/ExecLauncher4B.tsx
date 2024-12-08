@@ -7,9 +7,16 @@ import { Button, Link, Typography } from '@mui/material';
 const ExecLauncher4B: React.FC = () => {
     const [filePath, setFilePath] = useState('');
 
-    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (event.target.files && event.target.files.length > 0) {
-            setFilePath(event.target.files[0]?.path);
+    const [validationCss, setValidationCss] = React.useState({
+        backgroundColor: "lightgreen",
+        width: "450px"
+    });
+    const handleInputChange = (inputValue: string) => {
+        console.log("inputValue", inputValue, `inputValue.includes("ab") ${inputValue.includes("ab")}`);
+        if (inputValue.includes("/") || inputValue.includes("\\")) {
+            setValidationCss({ backgroundColor: "red", width: "450px" });
+        } else {
+            setValidationCss({ backgroundColor: "lightgreen", width: "450px" });
         }
     };
 
@@ -54,6 +61,10 @@ const ExecLauncher4B: React.FC = () => {
                     secondTextBoxPlaceHolder='Enter Folder Name (not path)'
                     execType={ExecType.GenExcelOfGoogleDriveLinkForRenameFilesExcel}
                     css={{ minWidth: "23vw" }}
+                    css2={validationCss}
+                    onInputChange={handleInputChange}
+                    userInputTwoInfoNonMandatory="Only Folder Name not Path"
+                  
                 />
 
                 <ExecComponent buttonText="Rename Files via Excel"
