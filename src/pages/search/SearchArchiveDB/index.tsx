@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Stack, Box, TextField, Button, CircularProgress, Typography, FormControlLabel, Switch } from '@mui/material';
 import { DataGrid, GridPaginationModel } from '@mui/x-data-grid';
@@ -33,6 +33,9 @@ const SearchArchiveDB = () => {
     });
     const [filterTerm, setFilterTerm] = useState<string>(''); // watch doesn't work for filter because of onChange
 
+    useEffect(() => {   
+        _search("Shiva");
+    }, []);
 
     const _filterData = (filterTerm: string, data: ArchiveData[], _useOrLogic = true) => {
         if (!filterTerm || filterTerm?.trim() === "") {
@@ -50,9 +53,9 @@ const SearchArchiveDB = () => {
         reset()
     }
 
-    const onSubmit = async (searchItem: SearchDBProps) => {
+    const _search = async (searchTerm: string) => {
         setIsLoading(true);
-        const result = await searchArchiveDatabase(searchItem.searchTerm);
+        const result = await searchArchiveDatabase(searchTerm);
         setArchiveData([]);
         setFilteredData([]);  // Clear filtered data if no results
         if (result?.length > 0) {
@@ -66,6 +69,9 @@ const SearchArchiveDB = () => {
             }
         }
         setIsLoading(false);
+    }
+    const onSubmit = async (searchItem: SearchDBProps) => {
+        _search(searchItem.searchTerm);
     };
 
     return (
@@ -84,6 +90,7 @@ const SearchArchiveDB = () => {
                                         message: "This field requires a minimum of 3 characters"
                                     }
                                 })}
+                                defaultValue={"Shiva"}
                                 error={Boolean(errors.searchTerm)}
                                 className="mr-4 mb-5 w-full"
                                 helperText={errors.searchTerm?.message}

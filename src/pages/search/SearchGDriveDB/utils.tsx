@@ -5,6 +5,7 @@ import { getGDrivePdfDownloadLink } from 'mirror/GoogleDriveUtilsCommonCode';
 import { makePostCall } from 'mirror/utils'
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { DD_MM_YYYY_FORMAT } from 'utils/utils';
+import renderThumbnailCell from '../thumbnail';
 
 
 export async function searchGoogleDrive(searchTerm: string) {
@@ -23,17 +24,19 @@ export const SEARCH_GDRIVE_DB_COLUMNS: GridColDef[] = [
         field: 'thumbnail',
         headerName: 'Thumbnail',
         width: 150,
-        renderCell: (params: GridRenderCellParams) => (
-            <div className="w-full h-auto transition-transform duration-300 transform hover:scale-200"
-            >            <img
-                    src={`https://drive.google.com/thumbnail?id=${params.row.identifierTruncFile}`}
-                    referrerPolicy="no-referrer"
-                    alt={ellipsis(`https://lh3.googleusercontent.com/d/${params.row.identifierTruncFile}?authuser=0`) as string}
-                    className="w-full h-full transition-transform duration-300 transform hover:scale-200"
-                />
-            </div>
+        renderCell: renderThumbnailCell,
 
-        ),
+        // renderCell: (params: GridRenderCellParams) => (
+        //     <div className="w-full h-auto transition-transform duration-300 transform hover:scale-200"
+        //     >            <img
+        //             src={`https://drive.google.com/thumbnail?id=${params.row.identifierTruncFile}`}
+        //             referrerPolicy="no-referrer"
+        //             alt={ellipsis(`https://lh3.googleusercontent.com/d/${params.row.identifierTruncFile}?authuser=0`) as string}
+        //             className="w-full h-full transition-transform duration-300 transform hover:scale-200"
+        //         />
+        //     </div>
+
+        // ),
     },
     {
         field: 'titleGDrive',

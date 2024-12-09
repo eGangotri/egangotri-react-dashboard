@@ -1,10 +1,10 @@
 import moment from 'moment';
 import { FaDownload } from 'react-icons/fa';
-import ItemToolTip, { ellipsis } from 'widgets/ItemTooltip';
+import ItemToolTip from 'widgets/ItemTooltip';
 import { makePostCall } from 'mirror/utils'
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { DD_MM_YYYY_FORMAT } from 'utils/utils';
-import renderThumbnailCell from './thumbnail';
+import renderThumbnailCell from '../thumbnail';
 
 export async function searchArchiveDatabase(searchTerm: string) {
     const resource =
@@ -22,7 +22,6 @@ export const SEARCH_ARCHIVE_DB_COLUMNS: GridColDef[] = [
         headerName: 'Thumbnail',
         width: 150,
         renderCell: renderThumbnailCell,
-
     },
     {
         field: 'originalTitle',
