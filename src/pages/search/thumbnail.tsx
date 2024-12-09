@@ -16,8 +16,9 @@ const generateThumbnail = (params: any) => {
 }
 
 const generateAltText = (params: any) => {
-  if (params?.rows?.identifierTruncFile) {
-    return ellipsis(`https://lh3.googleusercontent.com/d/${params.row.identifierTruncFile}?authuser=0`) as string
+  console.log(`generateAltText:params: ${params?.row?.titleGDrive}`);
+  if (params?.rows?.titleGDrive) {
+    return params.row.titleGDrive;
   }
   return params.row.originalTitle;
 }
@@ -60,8 +61,8 @@ const renderThumbnailCell = (params: GridRenderCellParams) => {
     >
       <Box>
         <img
-          src={generateThumbnail(params)}
           alt={generateAltText(params)}
+          src={generateThumbnail(params)}
           className="w-full h-auto"
           referrerPolicy="no-referrer"
         />
