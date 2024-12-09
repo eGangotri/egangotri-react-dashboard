@@ -13,7 +13,6 @@ const generateGDriveThumbnailFromId = (identifier: string) => {
 }
 
 const generateThumbnail = (params: any) => {
-  console.log(`params: ${params?.row?.identifierTruncFile}`);
   if (params?.row?.identifierTruncFile) {
     return generateGDriveThumbnailFromId(params.row.identifierTruncFile);
   }
