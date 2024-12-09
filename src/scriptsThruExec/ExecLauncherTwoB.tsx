@@ -174,7 +174,9 @@ const ExecLauncherTwoB: React.FC = () => {
                     buttonText="Dump Archive-DB Excel Entries to MongoDB"
                     placeholder='Absolute Path to Archive Excel Folder'
                     execType={ExecType.DUMP_ARCHIVE_EXCEL_TO_MONGO}
+                    thirdTextBoxPlaceHolder='Enter Source (Optional) Lucknow , Vns etc'
                     userInputOneInfo="It will pick the latest Excel from the Folders"
+                    userInputThreeInfoNonMandatory="Lucknow, Varnasi, Other Cities etc"
                 />
 
 

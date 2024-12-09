@@ -4,10 +4,7 @@ import ItemToolTip, { ellipsis } from 'widgets/ItemTooltip';
 import { makePostCall } from 'mirror/utils'
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { DD_MM_YYYY_FORMAT } from 'utils/utils';
-
-const generateThumbnail = (identifier: string) => {
-    return `https://archive.org/services/img/${identifier}`;
-}
+import renderThumbnailCell from './thumbnail';
 
 export async function searchArchiveDatabase(searchTerm: string) {
     const resource =
@@ -24,9 +21,8 @@ export const SEARCH_ARCHIVE_DB_COLUMNS: GridColDef[] = [
         field: 'thumbnail',
         headerName: 'Thumbnail',
         width: 150,
-        renderCell: (params: GridRenderCellParams) => (
-            <img src={generateThumbnail(params.row.identifier)} alt={params.row.originalTitle} />
-        ),
+        renderCell: renderThumbnailCell,
+
     },
     {
         field: 'originalTitle',

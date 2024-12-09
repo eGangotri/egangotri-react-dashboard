@@ -48,12 +48,14 @@ const ArchiveItemAggregates: React.FC = () => {
 
 
     const filterItems = () => {
-        const filtered = items.filter((item) =>
-            Object.values(item).some((value) =>
-                value.toString().toLowerCase().includes(searchTerm.toLowerCase())
-            )
-        );
-        setFilteredItems(filtered);
+        if (items && items.length > 0) {
+            const filtered = items?.filter((item) =>
+                Object.values(item).some((value) =>
+                    value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+                )
+            );
+            setFilteredItems(filtered);
+        }
     };
 
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
