@@ -7,16 +7,20 @@ const generateArchiveThumbnailFromId = (identifier: string) => {
   return `https://archive.org/services/img/${identifier}`;
 }
 
+const generateGDriveThumbnailFromId = (identifier: string) => {
+  return `https://drive.google.com/thumbnail?id=${identifier}`;
+
+}
+
 const generateThumbnail = (params: any) => {
   console.log(`params: ${params?.row?.identifierTruncFile}`);
   if (params?.row?.identifierTruncFile) {
-    return `https://drive.google.com/thumbnail?id=${params.row.identifierTruncFile}`;
+    return generateGDriveThumbnailFromId(params.row.identifierTruncFile);
   }
   return generateArchiveThumbnailFromId(params.row.identifier);
 }
 
 const generateAltText = (params: any) => {
-  console.log(`generateAltText:params: ${params?.row?.titleGDrive}`);
   if (params?.rows?.titleGDrive) {
     return params.row.titleGDrive;
   }
