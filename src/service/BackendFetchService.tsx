@@ -30,7 +30,7 @@ export const makeGetCall = async (resource: string) => {
 export const makePostCallWithErrorHandling = async (body: Record<string, unknown>, resource: string) => {
   const result = await makePostCall(body, resource)
   console.log(`result.response ${JSON.stringify(result.response)}`)
-  
+
   return {
     ...result
   } as ExecResponseDetails;
@@ -235,5 +235,16 @@ export const verifyUploadStatusForUploadCycleId = async (
   const result = await makePostCall({ uploadCycleIdForVerification: uploadCycleId },
     resource);
   return result.response
+};
+
+export const deleteUploadCycleById = async (
+  uploadCycleId: string
+) => {
+  const result = 
+    await makePostCallWithErrorHandling({
+      "uploadCycleId":uploadCycleId,
+    }, `uploadCycle/deleteUploadCycleById`);
+
+  return result;
 };
 

@@ -15,7 +15,7 @@ type DialogProps = {
     openDialog: boolean;
     handleClose: () => void
     setOpenDialog: React.Dispatch<React.SetStateAction<boolean>>
-    invokeFuncOnClick?: (event: React.MouseEvent<HTMLButtonElement>) => Promise<void>
+    invokeFuncOnClick?: (event: React.MouseEvent<HTMLButtonElement|HTMLDivElement>) => Promise<void>
     invokeFuncOnClick2?: () => void;
 }
 

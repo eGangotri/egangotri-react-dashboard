@@ -45,6 +45,7 @@ export type ExecResponseDetails = {
     success_count?: number;
     error_count?: number;
     totalPdfsToDownload?: number;
+    success?: boolean;
     /* eslint-disable  @typescript-eslint/no-explicit-any */
     results?: any[];
 }

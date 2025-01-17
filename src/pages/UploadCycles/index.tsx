@@ -9,8 +9,8 @@ import {
 import "pages/UploadCycles/UploadCycles.css"
 import * as _ from 'lodash';
 import moment from 'moment';
-import { makePostCallWithErrorHandling, verifyUploadStatusForUploadCycleId } from "service/BackendFetchService";
-
+import { deleteUploadCycleById, makePostCallWithErrorHandling, verifyUploadStatusForUploadCycleId } from "service/BackendFetchService";
+import { FaTrash } from 'react-icons/fa';
 import { DD_MM_YYYY_WITH_TIME_FORMAT } from 'utils/utils';
 import { getDataForUploadCycle } from 'service/BackendFetchService';
 import { ArchiveProfileAndCount, UploadCycleArchiveProfile, UploadCycleTableData, UploadCycleTableDataDictionary } from 'mirror/types';
@@ -22,7 +22,7 @@ import { _launchGradlev2, launchGradleReuploadFailed } from 'service/launchGradl
 import UploadDialog from './UploadDialog';
 import { launchYarnMoveToFreezeByUploadId } from 'service/launchYarn';
 import ExecResponsePanel from 'scriptsThruExec/ExecResponsePanel';
-import { ExecResponse } from 'scriptsThruExec/types';
+import { ExecResponse, ExecResponseDetails } from 'scriptsThruExec/types';
 import { checkCountEquality, createBackgroundForRow } from './utils';
 import { ProfileAndCount } from './ProfileAndCount';
 import { TableHeaderCellForEqualityCount } from './TableHeaderCellForEqualityCount';
@@ -40,7 +40,7 @@ const UploadCycles = () => {
     const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
     const [anchorEl2, setAnchorEl2] = React.useState<HTMLButtonElement | null>(null);
     const [anchorEl3, setAnchorEl3] = React.useState<HTMLButtonElement | null>(null);
-    const [anchorEl4, setAnchorEl4] = React.useState<HTMLButtonElement | null>(null);
+    const [anchorEl4, setAnchorEl4] = React.useState<HTMLButtonElement | HTMLDivElement | null>(null);
     const [anchorElReuploadMissed, setAnchorElReuploadMissed] = React.useState<HTMLButtonElement | null>(null);
     const [anchorElReuploadFailed, setAnchorElReuploadFailed] = React.useState<HTMLButtonElement | null>(null);
 
@@ -50,11 +50,12 @@ const UploadCycles = () => {
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [openDialog, setOpenDialog] = useState<boolean>(false);
+    const [openDialogForDelete, setOpenDialogForDelete] = useState<boolean>(false);
     const [openDialogForReuploadMissed, setOpenDialogForReuploadMissed] = useState<boolean>(false);
     const [openDialogForReuploadFailed, setOpenDialogForReuploadFailed] = useState<boolean>(false);
     const [chosenProfilesForMove, setChosenProfilesForMove] = useState<[string, string[]]>(["", []]);
     const [reuploadables, setReuploadables] = useState<UploadCycleTableData>();
-
+    const [deletaleUploadCycleId, setDeletableUploadCycleId] = useState<string>("");
     const handleTitleClick = (event: React.MouseEvent<HTMLButtonElement>, absolutePaths: string[]) => {
         const _titles = (
             <>
@@ -92,6 +93,24 @@ const UploadCycles = () => {
 
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, sortedData?.length - page * rowsPerPage);
 
+    const handleDelete = async (event: React.MouseEvent<HTMLDivElement>) => {
+        const _uploadCycleId = deletaleUploadCycleId;
+        setDeletableUploadCycleId("");
+        console.log("Delete clicked ", _uploadCycleId);
+        const currentTarget = event.currentTarget
+        setOpenDialogForDelete(false)
+        setIsLoading(true);
+        const _resp: ExecResponseDetails = await deleteUploadCycleById(_uploadCycleId);
+        console.log(`result ${JSON.stringify(_resp)}`);
+        fetchUploadCycleAndSort();
+        setIsLoading(false);
+        const moveToFreezeRespPanel = (
+            <ExecResponsePanel response={_resp} />
+        )
+        setMoveToFreezeRespPopover(moveToFreezeRespPanel);
+        setAnchorEl4(currentTarget);
+    }
+
     const _verifyUploadStatus = async (event: React.MouseEvent<HTMLButtonElement>,
         _uploadCycleId: string
     ) => {
@@ -108,6 +127,10 @@ const UploadCycles = () => {
         setOpenDialog(true);
         setChosenProfilesForMove([uploadCycleId, profiles]);
     }
+    const showDialogForDelete = (event: React.MouseEvent<HTMLDivElement>, uploadCycleId: string) => {
+        setDeletableUploadCycleId(uploadCycleId);
+        setOpenDialogForDelete(true);
+    }
 
     const showDialogReuploadMissed = (event: React.MouseEvent<HTMLButtonElement>, row: UploadCycleTableData) => {
         setOpenDialogForReuploadMissed(true);
@@ -119,7 +142,7 @@ const UploadCycles = () => {
         setReuploadables(row)
     }
 
-    const moveToFreeze = async (event: React.MouseEvent<HTMLButtonElement>) => {
+    const moveToFreeze = async (event: React.MouseEvent<HTMLButtonElement | HTMLDivElement>) => {
         const currentTarget = event.currentTarget
         setOpenDialog(false)
         console.log(`_profiles ${chosenProfilesForMove} ${JSON.stringify(chosenProfilesForMove)}`)
@@ -141,7 +164,7 @@ const UploadCycles = () => {
     const findMissingTitles = async (row: UploadCycleTableData | undefined) => {
         const missed = await makePostCallWithErrorHandling({
             uploadCycleId: row?.uploadCycleId,
-        }, `uploadCycleRoute/getUploadQueueUploadUsheredMissed`);
+        }, `uploadCycle/getUploadQueueUploadUsheredMissed`);
         console.log(`missed ${JSON.stringify(missed)}`)
         return missed?.response?.missedData
     }
@@ -156,6 +179,7 @@ const UploadCycles = () => {
         setIsLoading(false);
         setTitlesForPopover(<>{_res}</>);
     }
+
     const findMissingAndSetInPopover = async (event: React.MouseEvent<HTMLButtonElement>, row: UploadCycleTableData) => {
         const currentTarget = event.currentTarget
         console.log("findMissing: eventCurTarget" + currentTarget)
@@ -383,7 +407,7 @@ const UploadCycles = () => {
                         <Box >
                             <Typography component="span">{archiveProfileAndCount.archiveProfile} </Typography>
                             <Typography component="div">
-                                <ItemToolTip input={archiveProfileAndCount?.archiveProfilePath||""} /></Typography>
+                                <ItemToolTip input={archiveProfileAndCount?.archiveProfilePath || ""} /></Typography>
                             <Typography component="span">{archiveProfileAndCount.count}</Typography>
                             <Typography component="div" sx={{ fontWeight: 600 }}>
                                 <Button
@@ -425,12 +449,16 @@ const UploadCycles = () => {
         return dataForUploadCycle;
     }
 
+    async function fetchUploadCycleAndSort() {
+        setIsLoading(true)
+        const _data = await fetchUploadCycles();
+        setSortedData(_data.map(x => x.uploadCycle));
+        setIsLoading(false)
+    }
+
     useEffect(() => {
         (async () => {
-            setIsLoading(true)
-            const _data = await fetchUploadCycles();
-            setSortedData(_data.map(x => x.uploadCycle));
-            setIsLoading(false)
+            fetchUploadCycleAndSort();
         })();
     }, []);
 
@@ -487,7 +515,14 @@ const UploadCycles = () => {
                                         </Table>
                                     </TableCell>
                                     <TableRowCellForEqualityCount row={row} />
-                                    <TableCell sx={{ verticalAlign: "top" }}>{row.totalCount}</TableCell>
+                                    <TableCell sx={{ verticalAlign: "top" }}>
+                                        {row.totalCount}
+                                        <div
+                                            onClick={(e) => showDialogForDelete(e, row.uploadCycleId)}
+                                            style={{ cursor: 'pointer', display: 'inline-block', marginLeft: '10px' }}>
+                                            <FaTrash />
+                                        </div>
+                                    </TableCell>
                                     <TableCell sx={{ verticalAlign: "top" }}>{moment(row.datetimeUploadStarted).format(DD_MM_YYYY_WITH_TIME_FORMAT)}</TableCell>
                                 </TableRow>
                             ))}
@@ -514,6 +549,11 @@ const UploadCycles = () => {
                 handleClose={handleClose}
                 setOpenDialog={setOpenDialog}
                 invokeFuncOnClick={moveToFreeze} />
+
+            <UploadDialog openDialog={openDialogForDelete}
+                handleClose={handleClose}
+                setOpenDialog={setOpenDialogForDelete}
+                invokeFuncOnClick={handleDelete} />
 
             <UploadDialog openDialog={openDialogForReuploadMissed}
                 handleClose={handleClose}

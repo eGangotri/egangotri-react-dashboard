@@ -552,7 +552,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       case ExecType.IDENTIFY_FAILED_BY_UPLOAD_CYCLE_ID:
         _resp = await makePostCallWithErrorHandling({
           uploadCycleId: dataUserInput,
-        }, `uploadCycleRoute/getUploadQueueUploadUsheredMissed`);
+        }, `uploadCycle/getUploadQueueUploadUsheredMissed`);
         break;
 
 
