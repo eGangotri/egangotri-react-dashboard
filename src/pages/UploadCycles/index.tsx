@@ -119,6 +119,7 @@ const UploadCycles = () => {
         const result: ExecResponse = await verifyUploadStatusForUploadCycleId(_uploadCycleId);
         console.log(`result ${JSON.stringify(result)}`);
         setIsLoading(false);
+        fetchUploadCycleAndSort();
         setFailedUploadsForPopover(<ExecResponsePanel response={result} />);
         setAnchorEl3(currentTarget);
     };
@@ -153,6 +154,7 @@ const UploadCycles = () => {
             flatten: "true"
         });
         setIsLoading(false);
+        fetchUploadCycleAndSort();
         const moveToFreezeRespPanel = (
             <ExecResponsePanel response={_resp} />
         )
