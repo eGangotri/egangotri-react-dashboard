@@ -140,6 +140,8 @@ export default function FileTransferList() {
             setTotalPages(result.totalPages)
         } catch (error) {
             console.error("Error fetching data:", error)
+            setData([])
+            setTotalPages(1)
         }
         setLoading(false)
     }
@@ -220,7 +222,11 @@ export default function FileTransferList() {
                     disabled={!filterField}
                 />
             </Box>
-            <DataGrid rows={rows} columns={columns} loading={loading} hideFooterPagination disableRowSelectionOnClick />
+            <DataGrid rows={rows}
+                columns={columns}
+                loading={loading}
+                hideFooterPagination
+                disableRowSelectionOnClick />
             <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
                 <Pagination count={totalPages} page={page} onChange={handlePageChange} color="primary" />
             </Box>
