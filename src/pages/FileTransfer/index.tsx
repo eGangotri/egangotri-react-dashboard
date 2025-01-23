@@ -1,154 +1,230 @@
-import React, { useState, useEffect } from "react"
-import { DataGrid, type GridColDef, type GridValueGetterParams } from "@mui/x-data-grid"
-import { Box, Typography } from "@mui/material"
+import type React from "react"
+import { useState, useEffect } from "react"
+import { DataGrid, type GridColDef, type GridValueGetterParams, type GridRenderCellParams } from "@mui/x-data-grid"
+import {
+    Box,
+    Typography,
+    TextField,
+    FormControl,
+    InputLabel,
+    Select,
+    MenuItem,
+    type SelectChangeEvent,
+    Button,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogActions,
+    List,
+    ListItem,
+    ListItemText,
+    Pagination,
+} from "@mui/material"
+import { makeGetCall } from "service/BackendFetchService"
 
 interface JsonData {
-  _id: { $oid: string }
-  src: string
-  dest: string
-  destFolderOrProfile: string
-  success: boolean
-  msg: string
-  errorList: string[]
-  fileCollisionsResolvedByRename: string[]
-  filesMoved: string[]
-  createdAt: { $date: string }
-  updatedAt: { $date: string }
-  __v: number
+    _id: string
+    src: string
+    dest: string
+    destFolderOrProfile: string
+    success: boolean
+    msg: string
+    errorList: string[]
+    srcPdfsBefore?: number
+    srcPdfsAfter?: number
+    destFilesBefore?: number
+    destFilesAfter?: number
+    fileCollisionsResolvedByRename: string[]
+    filesMoved: string[]
+    createdAt: string
+    updatedAt: string
+}
+
+interface FileTransferPopupProps {
+    open: boolean
+    onClose: () => void
+    files: string[]
+    title: string
+}
+
+function FileTransferPopup({ open, onClose, files, title }: FileTransferPopupProps) {
+    return (
+        <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
+            <DialogTitle>{title}</DialogTitle>
+            <DialogContent dividers>
+                <List>
+                    {files.map((file, index) => (
+                        <ListItem key={index}>
+                            <ListItemText primary={file} />
+                        </ListItem>
+                    ))}
+                </List>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={onClose}>Close</Button>
+            </DialogActions>
+        </Dialog>
+    )
+}
+
+function FileWidget({ files, label }: { files: string[]; label: string }) {
+    const [open, setOpen] = useState(false)
+
+    const handleOpen = () => setOpen(true)
+    const handleClose = () => setOpen(false)
+
+    const nonEmptyFiles = files.filter((file) => file !== "")
+
+    return (
+        <>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                <Typography>{nonEmptyFiles.length}</Typography>
+                <Button variant="outlined" size="small" onClick={handleOpen} disabled={nonEmptyFiles.length === 0}>
+                    View
+                </Button>
+            </Box>
+            <FileTransferPopup open={open} onClose={handleClose} files={nonEmptyFiles} title={label} />
+        </>
+    )
 }
 
 const columns: GridColDef[] = [
-  { field: "id", headerName: "ID", width: 90 },
-  { field: "src", headerName: "Source", width: 200 },
-  { field: "dest", headerName: "Destination", width: 200 },
-  { field: "destFolderOrProfile", headerName: "Folder/Profile", width: 150 },
-  { field: "success", headerName: "Success", width: 100, type: "boolean" },
-  { field: "msg", headerName: "Message", width: 300 },
-  {
-    field: "errorCount",
-    headerName: "Error Count",
-    width: 120,
-    valueGetter: (params: GridValueGetterParams) => params.row.errorList.length,
-  },
-  {
-    field: "createdAt",
-    headerName: "Created At",
-    width: 200,
-    valueGetter: (params: GridValueGetterParams) => new Date(params.row.createdAt.$date).toLocaleString(),
-  },
+    { field: "id", headerName: "ID", width: 90 },
+    { field: "src", headerName: "Source", width: 200 },
+    { field: "dest", headerName: "Destination", width: 200 },
+    { field: "destFolderOrProfile", headerName: "Folder/Profile", width: 150 },
+    { field: "success", headerName: "Success", width: 100, type: "boolean" },
+    { field: "msg", headerName: "Message", width: 300 },
+    { field: "srcPdfsBefore", headerName: "Source PDFs Before", width: 150, type: "number" },
+    { field: "srcPdfsAfter", headerName: "Source PDFs After", width: 150, type: "number" },
+    { field: "destFilesBefore", headerName: "Dest Files Before", width: 150, type: "number" },
+    { field: "destFilesAfter", headerName: "Dest Files After", width: 150, type: "number" },
+    {
+        field: "filesMoved",
+        headerName: "Files Transferred",
+        width: 150,
+        renderCell: (params: GridRenderCellParams) => (
+            <FileWidget files={params.row.filesMoved} label="Transferred Files" />
+        ),
+    },
+    {
+        field: "fileCollisionsResolvedByRename",
+        headerName: "Collisions Resolved",
+        width: 150,
+        renderCell: (params: GridRenderCellParams) => (
+            <FileWidget files={params.row.fileCollisionsResolvedByRename} label="Collisions Resolved" />
+        ),
+    },
+    {
+        field: "createdAt",
+        headerName: "Created At",
+        width: 200,
+        valueGetter: (params: GridValueGetterParams) => new Date(params.row.createdAt).toLocaleString(),
+    },
 ]
 
 export default function FileTransferList() {
-  const [data, setData] = useState<JsonData[]>([])
+    const [data, setData] = useState<JsonData[]>([])
+    const [loading, setLoading] = useState(true)
+    const [page, setPage] = useState(1)
+    const [totalPages, setTotalPages] = useState(1)
+    const [filterField, setFilterField] = useState<string>("")
+    const [filterValue, setFilterValue] = useState<string>("")
 
-  useEffect(() => {
     const fetchData = async () => {
-      try {
-        // const response = await fetch("/api/data")
-        // const jsonData = await response.json()
-        // setData(jsonData)
-        const mockData = [{
-            "_id": {
-              "$oid": "6703ea360d49d5017921cd39"
-            },
-            "src": "D:\\_Treasures75\\_data\\iks\\kangri",
-            "dest": "D:\\_Treasures75\\_freeze\\iks\\kangri",
-            "destFolderOrProfile": "KANGRI",
-            "success": false,
-            "msg": "206 files moved from Source dir D:\\_Treasures75\\_data\\iks\\kangri to target dir D:\\_Treasures75\\_freeze\\iks\\kangri.\n        \n0 files had collisions resolved by renaming.\n        \n1 files had errors while moving",
-            "errorList": [
-              "Exception thrown while moving file D:\\_Treasures75\\_data\\iks\\kangri\\Sampada 2 No 2,No 3,No 4,No 5,No 6,No 7,No 8,No 9,No 10,No 11,No12 A Journal Feb Delhi 1958 - Ashok Prakashan Mandir.pdf to D:\\_Treasures75\\_freeze\\iks\\kangri \nError: ENOENT: no such file or directory, rename 'D:\\_Treasures75\\_data\\iks\\kangri\\Sampada 2 No 2,No 3,No 4,No 5,No 6,No 7,No 8,No 9,No 10,No 11,No12 A Journal Feb Delhi 1958 - Ashok Prakashan Mandir.pdf' -> 'D:\\_Treasures75\\_freeze\\iks\\kangri\\Sampada 2 No 2,No 3,No 4,No 5,No 6,No 7,No 8,No 9,No 10,No 11,No12 A Journal Feb Delhi 1958 - Ashok Prakashan Mandir.pdf'",
-              "Exception thrown while moving file D:\\_Treasures75\\_data\\iks\\kangri\\Sampada No 2,No 3,No 4,No 5,No 6,No 7,No 8,No 9,No 10,No 11,No 12 A Journal Feb Delhi 1958 - Ashok Prakashan Mandir.pdf to D:\\_Treasures75\\_freeze\\iks\\kangri \nError: ENOENT: no such file or directory, rename 'D:\\_Treasures75\\_data\\iks\\kangri\\Sampada No 2,No 3,No 4,No 5,No 6,No 7,No 8,No 9,No 10,No 11,No 12 A Journal Feb Delhi 1958 - Ashok Prakashan Mandir.pdf' -> 'D:\\_Treasures75\\_freeze\\iks\\kangri\\Sampada No 2,No 3,No 4,No 5,No 6,No 7,No 8,No 9,No 10,No 11,No 12 A Journal Feb Delhi 1958 - Ashok Prakashan Mandir.pdf'",
-              "Exception thrown while moving file D:\\_Treasures75\\_data\\iks\\kangri\\SaraswatiPart 6 No 1,No 2,No 3,No 4,No 5,No 6,No 7,No 8,No 9,No 10,No 11,No 12 ed by Mahaveerprasad Dwivedi Allhabad - Indian Press.pdf to D:\\_Treasures75\\_freeze\\iks\\kangri \nError: ENOENT: no such file or directory, rename 'D:\\_Treasures75\\_data\\iks\\kangri\\SaraswatiPart 6 No 1,No 2,No 3,No 4,No 5,No 6,No 7,No 8,No 9,No 10,No 11,No 12 ed by Mahaveerprasad Dwivedi Allhabad - Indian Press.pdf' -> 'D:\\_Treasures75\\_freeze\\iks\\kangri\\SaraswatiPart 6 No 1,No 2,No 3,No 4,No 5,No 6,No 7,No 8,No 9,No 10,No 11,No 12 ed by Mahaveerprasad Dwivedi Allhabad - Indian Press.pdf'"
-            ],
-            "fileCollisionsResolvedByRename": [],
-            "filesMoved": [],
-            "createdAt": {
-              "$date": "2024-10-07T14:03:34.754Z"
-            },
-            "updatedAt": {
-              "$date": "2024-10-07T14:03:34.754Z"
-            },
-            "__v": 0
-          },{
-            "_id": {
-              "$oid": "6703ea360d49d5017921cd39"
-            },
-            "src": "D:\\_Treasures75\\_data\\iks\\kangri",
-            "dest": "D:\\_Treasures75\\_freeze\\iks\\kangri",
-            "destFolderOrProfile": "KANGRI",
-            "success": false,
-            "msg": "206 files moved from Source dir D:\\_Treasures75\\_data\\iks\\kangri to target dir D:\\_Treasures75\\_freeze\\iks\\kangri.\n        \n0 files had collisions resolved by renaming.\n        \n1 files had errors while moving",
-            "errorList": [
-              "Exception thrown while moving file D:\\_Treasures75\\_data\\iks\\kangri\\Sampada 2 No 2,No 3,No 4,No 5,No 6,No 7,No 8,No 9,No 10,No 11,No12 A Journal Feb Delhi 1958 - Ashok Prakashan Mandir.pdf to D:\\_Treasures75\\_freeze\\iks\\kangri \nError: ENOENT: no such file or directory, rename 'D:\\_Treasures75\\_data\\iks\\kangri\\Sampada 2 No 2,No 3,No 4,No 5,No 6,No 7,No 8,No 9,No 10,No 11,No12 A Journal Feb Delhi 1958 - Ashok Prakashan Mandir.pdf' -> 'D:\\_Treasures75\\_freeze\\iks\\kangri\\Sampada 2 No 2,No 3,No 4,No 5,No 6,No 7,No 8,No 9,No 10,No 11,No12 A Journal Feb Delhi 1958 - Ashok Prakashan Mandir.pdf'",
-              "Exception thrown while moving file D:\\_Treasures75\\_data\\iks\\kangri\\Sampada No 2,No 3,No 4,No 5,No 6,No 7,No 8,No 9,No 10,No 11,No 12 A Journal Feb Delhi 1958 - Ashok Prakashan Mandir.pdf to D:\\_Treasures75\\_freeze\\iks\\kangri \nError: ENOENT: no such file or directory, rename 'D:\\_Treasures75\\_data\\iks\\kangri\\Sampada No 2,No 3,No 4,No 5,No 6,No 7,No 8,No 9,No 10,No 11,No 12 A Journal Feb Delhi 1958 - Ashok Prakashan Mandir.pdf' -> 'D:\\_Treasures75\\_freeze\\iks\\kangri\\Sampada No 2,No 3,No 4,No 5,No 6,No 7,No 8,No 9,No 10,No 11,No 12 A Journal Feb Delhi 1958 - Ashok Prakashan Mandir.pdf'",
-              "Exception thrown while moving file D:\\_Treasures75\\_data\\iks\\kangri\\SaraswatiPart 6 No 1,No 2,No 3,No 4,No 5,No 6,No 7,No 8,No 9,No 10,No 11,No 12 ed by Mahaveerprasad Dwivedi Allhabad - Indian Press.pdf to D:\\_Treasures75\\_freeze\\iks\\kangri \nError: ENOENT: no such file or directory, rename 'D:\\_Treasures75\\_data\\iks\\kangri\\SaraswatiPart 6 No 1,No 2,No 3,No 4,No 5,No 6,No 7,No 8,No 9,No 10,No 11,No 12 ed by Mahaveerprasad Dwivedi Allhabad - Indian Press.pdf' -> 'D:\\_Treasures75\\_freeze\\iks\\kangri\\SaraswatiPart 6 No 1,No 2,No 3,No 4,No 5,No 6,No 7,No 8,No 9,No 10,No 11,No 12 ed by Mahaveerprasad Dwivedi Allhabad - Indian Press.pdf'"
-            ],
-            "fileCollisionsResolvedByRename": [],
-            "filesMoved": [],
-            "createdAt": {
-              "$date": "2024-10-07T14:03:34.754Z"
-            },
-            "updatedAt": {
-              "$date": "2024-10-07T14:03:34.754Z"
-            },
-            "__v": 0
-          },{
-            "_id": {
-              "$oid": "6703ea360d49d5017921cd39"
-            },
-            "src": "D:\\_Treasures75\\_data\\iks\\kangri",
-            "dest": "D:\\_Treasures75\\_freeze\\iks\\kangri",
-            "destFolderOrProfile": "KANGRI",
-            "success": false,
-            "msg": "206 files moved from Source dir D:\\_Treasures75\\_data\\iks\\kangri to target dir D:\\_Treasures75\\_freeze\\iks\\kangri.\n        \n0 files had collisions resolved by renaming.\n        \n1 files had errors while moving",
-            "errorList": [
-              "Exception thrown while moving file D:\\_Treasures75\\_data\\iks\\kangri\\Sampada 2 No 2,No 3,No 4,No 5,No 6,No 7,No 8,No 9,No 10,No 11,No12 A Journal Feb Delhi 1958 - Ashok Prakashan Mandir.pdf to D:\\_Treasures75\\_freeze\\iks\\kangri \nError: ENOENT: no such file or directory, rename 'D:\\_Treasures75\\_data\\iks\\kangri\\Sampada 2 No 2,No 3,No 4,No 5,No 6,No 7,No 8,No 9,No 10,No 11,No12 A Journal Feb Delhi 1958 - Ashok Prakashan Mandir.pdf' -> 'D:\\_Treasures75\\_freeze\\iks\\kangri\\Sampada 2 No 2,No 3,No 4,No 5,No 6,No 7,No 8,No 9,No 10,No 11,No12 A Journal Feb Delhi 1958 - Ashok Prakashan Mandir.pdf'",
-              "Exception thrown while moving file D:\\_Treasures75\\_data\\iks\\kangri\\Sampada No 2,No 3,No 4,No 5,No 6,No 7,No 8,No 9,No 10,No 11,No 12 A Journal Feb Delhi 1958 - Ashok Prakashan Mandir.pdf to D:\\_Treasures75\\_freeze\\iks\\kangri \nError: ENOENT: no such file or directory, rename 'D:\\_Treasures75\\_data\\iks\\kangri\\Sampada No 2,No 3,No 4,No 5,No 6,No 7,No 8,No 9,No 10,No 11,No 12 A Journal Feb Delhi 1958 - Ashok Prakashan Mandir.pdf' -> 'D:\\_Treasures75\\_freeze\\iks\\kangri\\Sampada No 2,No 3,No 4,No 5,No 6,No 7,No 8,No 9,No 10,No 11,No 12 A Journal Feb Delhi 1958 - Ashok Prakashan Mandir.pdf'",
-              "Exception thrown while moving file D:\\_Treasures75\\_data\\iks\\kangri\\SaraswatiPart 6 No 1,No 2,No 3,No 4,No 5,No 6,No 7,No 8,No 9,No 10,No 11,No 12 ed by Mahaveerprasad Dwivedi Allhabad - Indian Press.pdf to D:\\_Treasures75\\_freeze\\iks\\kangri \nError: ENOENT: no such file or directory, rename 'D:\\_Treasures75\\_data\\iks\\kangri\\SaraswatiPart 6 No 1,No 2,No 3,No 4,No 5,No 6,No 7,No 8,No 9,No 10,No 11,No 12 ed by Mahaveerprasad Dwivedi Allhabad - Indian Press.pdf' -> 'D:\\_Treasures75\\_freeze\\iks\\kangri\\SaraswatiPart 6 No 1,No 2,No 3,No 4,No 5,No 6,No 7,No 8,No 9,No 10,No 11,No 12 ed by Mahaveerprasad Dwivedi Allhabad - Indian Press.pdf'"
-            ],
-            "fileCollisionsResolvedByRename": [],
-            "filesMoved": [],
-            "createdAt": {
-              "$date": "2024-10-07T14:03:34.754Z"
-            },
-            "updatedAt": {
-              "$date": "2024-10-07T14:03:34.754Z"
-            },
-            "__v": 0
-          }]
-        setData(mockData);
-      } catch (error) {
-        console.error("Error fetching data:", error)
-      }
+        setLoading(true)
+        try {
+            const result = await makeGetCall(`fileUtil/file-move-list?page=${page}&limit=50`);
+            console.log("result", JSON.stringify(result))
+            setData(result.data)
+            setTotalPages(result.totalPages)
+        } catch (error) {
+            console.error("Error fetching data:", error)
+        }
+        setLoading(false)
     }
 
-    fetchData()
-  }, [])
+    useEffect(() => {
+        fetchData()
+    }, [page])
 
-  const rows = data.map((item) => ({
-    id: item._id.$oid,
-    ...item,
-  }))
+    useEffect(() => {
+        if (filterField && filterValue) {
+            const filtered = data.filter((item) => {
+                const fieldValue = item[filterField as keyof JsonData]
+                if (typeof fieldValue === "string") {
+                    return fieldValue.toLowerCase().includes(filterValue.toLowerCase())
+                } else if (typeof fieldValue === "boolean") {
+                    return fieldValue.toString() === filterValue.toLowerCase()
+                } else if (typeof fieldValue === "number") {
+                    return fieldValue.toString().includes(filterValue)
+                }
+                return false
+            })
+            setData(filtered)
+        } else {
+            fetchData()
+        }
+    }, [filterField, filterValue])
 
-  return (
-    <Box sx={{ height: 400, width: "100%" }}>
-      <Typography variant="h4" component="h1" gutterBottom>
-        JSON Array Listing
-      </Typography>
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        initialState={{
-          pagination: {
-            paginationModel: { pageSize: 5, page: 0 },
-          },
-        }}
-        pageSizeOptions={[5, 10, 25]}
-        checkboxSelection
-        disableRowSelectionOnClick
-      />
-    </Box>
-  )
+    const handleFilterFieldChange = (event: SelectChangeEvent) => {
+        setFilterField(event.target.value as string)
+    }
+
+    const handleFilterValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setFilterValue(event.target.value)
+    }
+
+    const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
+        setPage(value)
+    }
+
+    const rows = data?.map((item) => ({
+        id: item._id,
+        ...item,
+    }))
+
+    return (
+        <Box sx={{ height: 600, width: "100%" }}>
+            <Typography variant="h4" component="h1" gutterBottom>
+                File Transfer List
+            </Typography>
+            <Box sx={{ display: "flex", gap: 2, mb: 2 }}>
+                <FormControl sx={{ minWidth: 120 }}>
+                    <InputLabel id="filter-field-label">Filter Field</InputLabel>
+                    <Select
+                        labelId="filter-field-label"
+                        id="filter-field"
+                        value={filterField}
+                        label="Filter Field"
+                        onChange={handleFilterFieldChange}
+                    >
+                        <MenuItem value="">
+                            <em>None</em>
+                        </MenuItem>
+                        <MenuItem value="src">Source</MenuItem>
+                        <MenuItem value="dest">Destination</MenuItem>
+                        <MenuItem value="destFolderOrProfile">Folder/Profile</MenuItem>
+                        <MenuItem value="success">Success</MenuItem>
+                        <MenuItem value="srcPdfsBefore">Source PDFs Before</MenuItem>
+                        <MenuItem value="srcPdfsAfter">Source PDFs After</MenuItem>
+                        <MenuItem value="destFilesBefore">Dest Files Before</MenuItem>
+                        <MenuItem value="destFilesAfter">Dest Files After</MenuItem>
+                    </Select>
+                </FormControl>
+                <TextField
+                    label="Filter Value"
+                    variant="outlined"
+                    value={filterValue}
+                    onChange={handleFilterValueChange}
+                    disabled={!filterField}
+                />
+            </Box>
+            <DataGrid rows={rows} columns={columns} loading={loading} hideFooterPagination disableRowSelectionOnClick />
+            <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+                <Pagination count={totalPages} page={page} onChange={handlePageChange} color="primary" />
+            </Box>
+        </Box>
+    )
 }
 
