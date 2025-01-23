@@ -66,15 +66,6 @@ const UploadCycles = () => {
             [_uploadCycleId]: count
         }));
     };
-    const [uploadMissedCounts, setUploadMissedCounts] = useState<{ [key: string]: number }>({});
-    const setUploadMissedCount = (_uploadCycleId: string, count: number) => {
-        setUploadMissedCounts(prevCounts => ({
-            ...prevCounts,
-            [_uploadCycleId]: count
-        }));
-    };
-    const [totalCount, setTotalCount] = useState<number>(0);
-
 
     const handleTitleClick = (event: React.MouseEvent<HTMLButtonElement>, absolutePaths: string[]) => {
         const _titles = (
@@ -191,7 +182,6 @@ const UploadCycles = () => {
             uploadCycleId: row?.uploadCycleId,
         }, `uploadCycle/getUploadQueueUploadUsheredMissed`);
         console.log(`missed ${JSON.stringify(missed)}`)
-        setUploadMissedCount(row?.uploadCycleId || "", missed?.missedData.length as number);
         return missed?.response?.missedData
     }
 
@@ -343,9 +333,9 @@ const UploadCycles = () => {
                                 onClick={async (e: React.MouseEvent<HTMLButtonElement>) => await findMissingAndSetInPopover(e, row)}
                                 size="small"
                                 sx={{ color: "#f38484", width: "200px", marginTop: "10px" }}
-                                disabled={isLoading}
+                                disabled={isLoading || ((row.countIntended || 0) === (row?.totalQueueCount || 0))}
                             >
-                                Find Missing ({(row.countIntended || 0)-(row?.totalQueueCount || 0)}/{row.countIntended}) {uploadMissedCounts[row.uploadCycleId]}
+                                Find Missing ({(row.countIntended || 0)-(row?.totalQueueCount || 0)}/{row.countIntended})
                                 <InfoIconWithTooltip input="Find Missing (Unqueued/Unushered) Failure Type 1" />
                             </Button>
 
@@ -369,7 +359,7 @@ const UploadCycles = () => {
                                 onClick={async (e) => showDialogForFailed(e, row)}
                                 size="small"
                                 sx={{ color: "#f38484", width: "200px", marginTop: "10px" }}
-                                disabled={isLoading}
+                                disabled={isLoading || (row.allUploadVerified === true)}
                             >
                                 Reupload Failed { (uploadFailedCounts[row.uploadCycleId] > -1) ? `(${uploadFailedCounts[row.uploadCycleId]}/${row.totalCount})`:""}
                                 <InfoIconWithTooltip input="Reupload Failed (Queued/Ushered/But Didnt Make it). Failure Type 2" />

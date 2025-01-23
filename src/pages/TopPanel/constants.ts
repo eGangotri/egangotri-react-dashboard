@@ -22,7 +22,8 @@ import {
     G_DRIVE_ITEM_AGGREGATES_PATH,
     ARCHIVE_ITEM_LIST_PATH,
     ARCHIVE_ITEM_AGGREGATES_PATH,
-    ARCHIVE_ITEM_AGGREGATES_BY_SOURCES_PATH
+    ARCHIVE_ITEM_AGGREGATES_BY_SOURCES_PATH,
+    FILE_TRANSFER_LISTING
 } from 'Routes/constants';
 
 export const TOP_PANEL_MENU: TopPanelMenu[] = [{
@@ -89,6 +90,10 @@ export const TOP_PANEL_MENU: TopPanelMenu[] = [{
         {
             path: TIFF_2_PDF,
             label: 'Tiff 2 Pdf',
+        },
+        {
+            path: FILE_TRANSFER_LISTING,
+            label: 'File Transfer List',
         }
     ]
 },

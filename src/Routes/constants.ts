@@ -28,5 +28,6 @@ export const ARCHIVE_ITEM_AGGREGATES_BY_SOURCES_PATH = "/archiveAggregatesPathBy
 export const RENAME_PDFS = "/renamePdfsPath";
 
 export const TIFF_2_PDF = "/tiff2pdfPath";
+export const FILE_TRANSFER_LISTING = "/fileTransferListingPath";
 export const AI_TEXT_IDENTIFIER = "/aiPath";
 
