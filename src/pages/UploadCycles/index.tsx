@@ -56,6 +56,26 @@ const UploadCycles = () => {
     const [chosenProfilesForMove, setChosenProfilesForMove] = useState<[string, string[]]>(["", []]);
     const [reuploadables, setReuploadables] = useState<UploadCycleTableData>();
     const [deletaleUploadCycleId, setDeletableUploadCycleId] = useState<string>("");
+    
+    const [uploadSuccessCount, setUploadSuccessCount] = useState<number>(0);
+    const [uploadFailedCounts, setUploadFailedCounts] = useState<{ [key: string]: number }>({});
+    
+    const setUploadFailedCount = (_uploadCycleId: string, count: number) => {
+        setUploadFailedCounts(prevCounts => ({
+            ...prevCounts,
+            [_uploadCycleId]: count
+        }));
+    };
+    const [uploadMissedCounts, setUploadMissedCounts] = useState<{ [key: string]: number }>({});
+    const setUploadMissedCount = (_uploadCycleId: string, count: number) => {
+        setUploadMissedCounts(prevCounts => ({
+            ...prevCounts,
+            [_uploadCycleId]: count
+        }));
+    };
+    const [totalCount, setTotalCount] = useState<number>(0);
+
+
     const handleTitleClick = (event: React.MouseEvent<HTMLButtonElement>, absolutePaths: string[]) => {
         const _titles = (
             <>
@@ -116,8 +136,11 @@ const UploadCycles = () => {
     ) => {
         const currentTarget = event.currentTarget
         setIsLoading(true);
-        const result: ExecResponse = await verifyUploadStatusForUploadCycleId(_uploadCycleId);
-        console.log(`result ${JSON.stringify(result)}`);
+        const result = await verifyUploadStatusForUploadCycleId(_uploadCycleId);
+        console.log(`_verifyUploadStatus:result ${JSON.stringify(result)}`);
+        setUploadSuccessCount(result.successCount as number);
+        setUploadFailedCount(_uploadCycleId,result.failureCount as number);
+      
         setIsLoading(false);
         fetchUploadCycleAndSort();
         setFailedUploadsForPopover(<ExecResponsePanel response={result} />);
@@ -168,6 +191,7 @@ const UploadCycles = () => {
             uploadCycleId: row?.uploadCycleId,
         }, `uploadCycle/getUploadQueueUploadUsheredMissed`);
         console.log(`missed ${JSON.stringify(missed)}`)
+        setUploadMissedCount(row?.uploadCycleId || "", missed?.missedData.length as number);
         return missed?.response?.missedData
     }
 
@@ -321,7 +345,7 @@ const UploadCycles = () => {
                                 sx={{ color: "#f38484", width: "200px", marginTop: "10px" }}
                                 disabled={isLoading}
                             >
-                                Find Missing&nbsp;
+                                Find Missing ({row.totalCount-(row?.totalQueueCount || 0)}/{row.totalCount}) {uploadMissedCounts[row.uploadCycleId]}
                                 <InfoIconWithTooltip input="Find Missing (Unqueued/Unushered) Failure Type 1" />
                             </Button>
 
@@ -347,7 +371,7 @@ const UploadCycles = () => {
                                 sx={{ color: "#f38484", width: "200px", marginTop: "10px" }}
                                 disabled={isLoading}
                             >
-                                Reupload Failed&nbsp;
+                                Reupload Failed { (uploadFailedCounts[row.uploadCycleId] > -1) ? `(${uploadFailedCounts[row.uploadCycleId]}/${row.totalCount})`:""}
                                 <InfoIconWithTooltip input="Reupload Failed (Queued/Ushered/But Didnt Make it). Failure Type 2" />
                             </Button>
                             <Popover

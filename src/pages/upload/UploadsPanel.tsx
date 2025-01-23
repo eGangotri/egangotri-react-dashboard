@@ -12,7 +12,7 @@ import { FaTimes } from "react-icons/fa";
 import Spinner from "widgets/Spinner";
 
 import * as _ from 'lodash';
-import { ERROR_RED, LIGHT_GREEN, LIGHT_RED, LIGHT_YELLOW, SUCCESS_GREEN, WARNING_YELLOW } from "constants/colors";
+import { ERROR_RED, SUCCESS_GREEN } from "constants/colors";
 import { GridCloseIcon } from "@mui/x-data-grid";
 import InfoIconWithTooltip from "widgets/InfoIconWithTooltip";
 
