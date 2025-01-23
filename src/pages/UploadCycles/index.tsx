@@ -345,7 +345,7 @@ const UploadCycles = () => {
                                 sx={{ color: "#f38484", width: "200px", marginTop: "10px" }}
                                 disabled={isLoading}
                             >
-                                Find Missing ({row.totalCount-(row?.totalQueueCount || 0)}/{row.totalCount}) {uploadMissedCounts[row.uploadCycleId]}
+                                Find Missing ({(row.countIntended || 0)-(row?.totalQueueCount || 0)}/{row.countIntended}) {uploadMissedCounts[row.uploadCycleId]}
                                 <InfoIconWithTooltip input="Find Missing (Unqueued/Unushered) Failure Type 1" />
                             </Button>
 
