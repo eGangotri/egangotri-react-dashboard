@@ -7,7 +7,7 @@ import { makePostCall } from 'mirror/utils';
 import { getBackendServer } from 'utils/constants';
 
 export async function launchUploader(profiles: string, optionalParams: { [key: string]: any } = {}) {
-    return launchGradle(profiles, 'launchUploader',optionalParams)
+    return launchGradle(profiles, 'launchUploader', optionalParams)
 }
 
 export async function launchGradleMoveToFreeze(profiles: string) {
@@ -42,17 +42,27 @@ export async function launchLocalFolderListingForAll(params: string) {
     }, 'bookTitles')
 }
 
+const extractValue = (text: string, pattern: RegExp): string => {
+    const match = text.match(pattern);
+    return match ? match[1] : 'Not found';
+  };
+
 export async function launchLocalFolderListingForPdf(params: string) {
-    return _launchGradlev2({
+    const jsonResp = await _launchGradlev2({
         "argFirst": params,
         "pdfsOnly": "true"
     }, 'bookTitles')
+
+    const totalPages = extractValue(jsonResp?.response, /Total Pages:\s*([\d,]+)/);
+    const totalFileCount = extractValue(jsonResp?.response, /Total File Count:\s*(\d+)/);
+    console.log(`totalPages ${totalPages}`);
+    return { totalPages, totalFileCount,response: jsonResp.response }
 }
 
 export async function launchGradle(profiles: string, gradleTask: string, optionalParams: { [key: string]: any } = {}) {
     const params = Object.keys(optionalParams).length === 0 ? "" : new URLSearchParams(optionalParams).toString();
     console.log(`optionalParams ${JSON.stringify(optionalParams)} params ${params}`);
-    
+
     const _url = getBackendServer() + `execLauncher/${gradleTask}?profiles=${profiles}&${params}`
     console.log(`_url ${_url}`);
     const res = await fetch(_url);
