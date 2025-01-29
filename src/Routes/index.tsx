@@ -48,13 +48,15 @@ import {
     ARCHIVE_ITEM_AGGREGATES_PATH,
     ARCHIVE_ITEM_LIST_WITH_FILTER_PATH,
     ARCHIVE_ITEM_AGGREGATES_BY_SOURCES_PATH,
-    FILE_TRANSFER_LISTING
+    FILE_TRANSFER_LISTING,
+    GDRIVE_DWNL_LISTING
   } from './constants';
 import GDriveItemAggregates from 'components/gDriveListing/gDriveAggregatesByProfile';
 import ArchiveItemList from 'components/archiveListing';
 import ArchiveItemAggregates from 'components/archiveListing/archiveAgregates';
 import AggregatesBySources from 'components/archiveListing/archiveAggregatesBySources';
 import FileTransferList from 'pages/FileTransfer';
+import GDriveDownloadListing from 'pages/GDriveDownloadList';
 const DashboardRoutes: React.FC = () => {
     const isLocalhost = true; //window.location.hostname === 'localhost';
     const allFrags = (
@@ -74,6 +76,8 @@ const DashboardRoutes: React.FC = () => {
             {<Route path={AI_TEXT_IDENTIFIER} element={<AITextIdentifier />} />}
             {<Route path={FILE_MOVER_PATH} element={<FileMover />} />}
             {<Route path={FILE_TRANSFER_LISTING} element={<FileTransferList />} />}
+            {<Route path={GDRIVE_DWNL_LISTING} element={<GDriveDownloadListing />} />}
+            
             {<Route path={SEARCH_ARCHIVE_DB_PATH} element={<SearchArchiveDB />} />}
             {<Route path={SEARCH_G_DRIVE_DB_PATH} element={<SearchGDriveDB />} />}
             {<Route path={G_DRIVE_LISTING_MAKER_PATH} element={<ExecLauncherFive />} />}

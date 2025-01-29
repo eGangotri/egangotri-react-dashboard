@@ -23,7 +23,8 @@ import {
     ARCHIVE_ITEM_LIST_PATH,
     ARCHIVE_ITEM_AGGREGATES_PATH,
     ARCHIVE_ITEM_AGGREGATES_BY_SOURCES_PATH,
-    FILE_TRANSFER_LISTING
+    FILE_TRANSFER_LISTING,
+    GDRIVE_DWNL_LISTING
 } from 'Routes/constants';
 
 export const TOP_PANEL_MENU: TopPanelMenu[] = [{
@@ -94,6 +95,10 @@ export const TOP_PANEL_MENU: TopPanelMenu[] = [{
         {
             path: FILE_TRANSFER_LISTING,
             label: 'File Transfer List',
+        },
+        {
+            path: GDRIVE_DWNL_LISTING,
+            label: 'G-Drive Download List',
         }
     ]
 },
