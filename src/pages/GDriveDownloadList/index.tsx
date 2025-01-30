@@ -139,14 +139,14 @@ const GDriveDownloadListing: React.FC = () => {
     },
     {
       field: "quickStatus",
-      headerName: "Quick Status",
-      width: 200,
+      headerName: "Quick Status(Success-Count/ErrorCount/Total)",
+      width: 300,
       filterable: false,
       renderCell: (params) => {
         const { success_count = 0, error_count = 0, totalPdfsToDownload = 0 } = params.value || {}
         return (
           <div>
-            {success_count}/ <span className="text-red-500">{error_count}</span>/{totalPdfsToDownload}
+            {success_count}/<span className="text-red-500">{error_count}</span>/{totalPdfsToDownload}
           </div>
         )
       },

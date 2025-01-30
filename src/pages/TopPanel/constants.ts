@@ -54,7 +54,11 @@ export const TOP_PANEL_MENU: TopPanelMenu[] = [{
         {
             path: EXEC_LAUNCHER_ZIP_PATH,
             label: 'Zip-to-Pdf',
-        }],
+        },
+        {
+            path: GDRIVE_DWNL_LISTING,
+            label: 'G-Drive Download List',
+        }]
 },
 {
     menuLabel: "Archive",
@@ -95,10 +99,6 @@ export const TOP_PANEL_MENU: TopPanelMenu[] = [{
         {
             path: FILE_TRANSFER_LISTING,
             label: 'File Transfer List',
-        },
-        {
-            path: GDRIVE_DWNL_LISTING,
-            label: 'G-Drive Download List',
         }
     ]
 },
