@@ -18,6 +18,15 @@ interface ICompositeDocument {
   msg: string
 }
 
+export interface QuickStatus {
+  status?: string
+  success_count?: number | string
+  error_count?: number | string
+  dl_wrong_size_count?: string
+  totalPdfsToDownload?: number | string
+  error?: string
+}
+
 interface IGDriveDownload {
   _id: string
   status: "queued" | "in-progress" | "completed" | "failed"
@@ -29,29 +38,12 @@ interface IGDriveDownload {
   fileDumpFolder: string
   downloadType: string
   files: ICompositeDocument[]
+  quickStatus: QuickStatus
 }
 
 interface FetchResponse {
   data: IGDriveDownload[]
   totalItems: number
-}
-
-const fetchGDriveDownloads = async (
-  page: number,
-  pageSize: number,
-  filterModel: GridFilterModel,
-): Promise<FetchResponse> => {
-  const filterParams = filterModel.items
-    .map((filter) => `${filter.field}=${encodeURIComponent(filter.value)}`)
-    .join("&")
-
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/gdrivedownloads?page=${page}&limit=${pageSize}&${filterParams}`,
-  )
-  if (!response.ok) {
-    throw new Error("Failed to fetch GDrive downloads")
-  }
-  return response.json()
 }
 
 const GDriveDownloadListing: React.FC = () => {
@@ -66,26 +58,20 @@ const GDriveDownloadListing: React.FC = () => {
     items: [],
   })
   const [totalItems, setTotalItems] = useState(0)
-  
-  const fetchGDriveDownloads = async (
-    page: number,
-    pageSize: number,
-  ): Promise<{ data: any[]; totalItems: number }> => {
-  
-    const response = await makeGetCall(
-            `gDriveDownloadRoute/getGDriveDownloads?page=${page}&limit=${pageSize}`)
-          console.log(`resp from fetchAggregates: ${JSON.stringify(response)}`);
-    return response;
+
+  const fetchGDriveDownloads = async (page: number, pageSize: number): Promise<{ data: any[]; totalItems: number }> => {
+    const response = await makeGetCall(`gDriveDownloadRoute/getGDriveDownloads?page=${page}&limit=${pageSize}`)
+    console.log(`resp from fetchAggregates: ${JSON.stringify(response)}`)
+    return response
   }
+
   const [openMsgDialog, setOpenMsgDialog] = useState(false)
   const [selectedMsg, setSelectedMsg] = useState("")
+
   useEffect(() => {
     const loadDownloads = async () => {
       try {
-        const { data, totalItems } = await fetchGDriveDownloads(
-          paginationModel.page + 1,
-          paginationModel.pageSize,
-        )
+        const { data, totalItems } = await fetchGDriveDownloads(paginationModel.page + 1, paginationModel.pageSize)
         setDownloads(data)
         setTotalItems(totalItems)
       } catch (error) {
@@ -93,12 +79,13 @@ const GDriveDownloadListing: React.FC = () => {
       }
     }
     loadDownloads()
-  }, [paginationModel.page, paginationModel.pageSize, filterModel])
+  }, [paginationModel.page, paginationModel.pageSize])
 
   const handleOpenFiles = (files: ICompositeDocument[]) => {
     setSelectedFiles(files)
     setOpenDialog(true)
   }
+
   const handleOpenMsg = (msg: string) => {
     setSelectedMsg(msg)
     setOpenMsgDialog(true)
@@ -129,17 +116,23 @@ const GDriveDownloadListing: React.FC = () => {
       ),
     },
     {
-        field: "msg",
-        headerName: "Msg",
-        width: 100,
-        filterable: true,
-        renderCell: (params) => (
-          <Button variant="contained" onClick={() => handleOpenMsg(params.value)}>
-            View Msg
-          </Button>
-        ),
-      },
-    { field: "downloadType", headerName: "Type", width: 100, filterable: true },
+      field: "msg",
+      headerName: "Msg",
+      width: 100,
+      filterable: true,
+      renderCell: (params) => (
+        <Button variant="contained" onClick={() => handleOpenMsg(params.value)}>
+          View Msg
+        </Button>
+      ),
+    },
+    {
+      field: "downloadType",
+      headerName: "Type",
+      width: 100,
+      filterable: true,
+      valueFormatter: (params) => params.value.toString().toUpperCase(),
+    },
     {
       field: "createdAt",
       headerName: "Created At",
@@ -158,10 +151,24 @@ const GDriveDownloadListing: React.FC = () => {
         </Button>
       ),
     },
+    {
+      field: "quickStatus",
+      headerName: "Quick Status",
+      width: 200,
+      filterable: false,
+      renderCell: (params) => {
+        const { success_count = 0, error_count = 0, totalPdfsToDownload = 0 } = params.value || {}
+        return (
+          <div>
+            {success_count}/ <span className="text-red-500">{error_count}</span>/{totalPdfsToDownload}
+          </div>
+        )
+      },
+    },
   ]
 
   return (
-    <div style={{ height: 400, width: "100%" }}>
+    <div className="h-[400px] w-full">
       <DataGrid
         rows={downloads}
         columns={columns}
@@ -177,6 +184,11 @@ const GDriveDownloadListing: React.FC = () => {
         getRowId={(row) => row._id}
         components={{
           Toolbar: GridToolbar,
+        }}
+        getRowClassName={(params) => {
+          const { success_count = 0, totalPdfsToDownload = 0 } = params.row.quickStatus || {}
+          if(success_count === 0 && totalPdfsToDownload === 0) return "bg-yellow-100"
+          return success_count === totalPdfsToDownload ? "bg-green-100" : "bg-red-100"
         }}
       />
       <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
