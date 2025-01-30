@@ -92,13 +92,13 @@ const GDriveDownloadListing: React.FC = () => {
   }
 
   const columns: GridColDef[] = [
-    { field: "googleDriveLink", headerName: "Google Drive Link", width: 200, filterable: true },
-    { field: "profileNameOrAbsPath", headerName: "Profile/Path", width: 200, filterable: true },
+    { field: "googleDriveLink", headerName: "Google Drive Link", width: 150, filterable: true },
+    { field: "profileNameOrAbsPath", headerName: "Profile/Path", width: 150, filterable: true },
     { field: "fileDumpFolder", headerName: "Dump Folder", width: 150, filterable: true },
     {
       field: "status",
       headerName: "Status",
-      width: 120,
+      width: 100,
       filterable: true,
       renderCell: (params) => (
         <Chip
@@ -127,20 +127,6 @@ const GDriveDownloadListing: React.FC = () => {
       ),
     },
     {
-      field: "downloadType",
-      headerName: "Type",
-      width: 100,
-      filterable: true,
-      valueFormatter: (params) => params.value.toString().toUpperCase(),
-    },
-    {
-      field: "createdAt",
-      headerName: "Created At",
-      width: 200,
-      filterable: true,
-      valueFormatter: (params) => new Date(params.value).toLocaleString(),
-    },
-    {
       field: "files",
       headerName: "Files",
       width: 120,
@@ -164,6 +150,20 @@ const GDriveDownloadListing: React.FC = () => {
           </div>
         )
       },
+    },
+    {
+      field: "downloadType",
+      headerName: "Type",
+      width: 50,
+      filterable: true,
+      valueFormatter: (params) => params.value.toString().toUpperCase(),
+    },
+    {
+      field: "createdAt",
+      headerName: "Created At",
+      width: 200,
+      filterable: true,
+      valueFormatter: (params) => new Date(params.value).toLocaleString(),
     },
   ]
 
