@@ -73,14 +73,13 @@ function FileWidget({ files, label }: { files: string[]; label: string }) {
     const handleOpen = () => setOpen(true)
     const handleClose = () => setOpen(false)
 
-    const nonEmptyFiles = files.filter((file) => file !== "")
+    const nonEmptyFiles = files?.filter((file) => file !== "") || []
 
     return (
         <>
             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                <Typography>{nonEmptyFiles.length}</Typography>
-                <Button variant="outlined" size="small" onClick={handleOpen} disabled={nonEmptyFiles.length === 0}>
-                    View
+                <Button variant="outlined" size="small" onClick={handleOpen} disabled={nonEmptyFiles?.length === 0}>
+                    View ({nonEmptyFiles?.length === 0 ? 0 : nonEmptyFiles?.length})
                 </Button>
             </Box>
             <FileTransferPopup open={open} onClose={handleClose} files={nonEmptyFiles} title={label} />
@@ -108,11 +107,22 @@ const columns: GridColDef[] = [
         ),
     },
     {
+        field: "filesAbsPathMoved",
+        headerName: "Files with Abs Path Transferred",
+        width: 150,
+        renderCell: (params: GridRenderCellParams) => (
+            <FileWidget files={params.row.filesAbsPathMoved} label="Transferred Files"
+            />
+        ),
+    },
+    {
         field: "fileCollisionsResolvedByRename",
         headerName: "Collisions Resolved",
         width: 150,
         renderCell: (params: GridRenderCellParams) => (
-            <FileWidget files={params.row.fileCollisionsResolvedByRename} label="Collisions Resolved" />
+            <FileWidget files={params.row.fileCollisionsResolvedByRename}
+                label="Collisions Resolved"
+            />
         ),
     },
     {
