@@ -88,16 +88,6 @@ function FileWidget({ files, label }: { files: string[]; label: string }) {
 }
 
 const columns: GridColDef[] = [
-    { field: "id", headerName: "ID", width: 90 },
-    { field: "src", headerName: "Source", width: 200 },
-    { field: "dest", headerName: "Destination", width: 200 },
-    { field: "destFolderOrProfile", headerName: "Folder/Profile", width: 150 },
-    { field: "success", headerName: "Success", width: 100, type: "boolean" },
-    { field: "msg", headerName: "Message", width: 300 },
-    { field: "srcPdfsBefore", headerName: "Source PDFs Before", width: 150, type: "number" },
-    { field: "srcPdfsAfter", headerName: "Source PDFs After", width: 150, type: "number" },
-    { field: "destFilesBefore", headerName: "Dest Files Before", width: 150, type: "number" },
-    { field: "destFilesAfter", headerName: "Dest Files After", width: 150, type: "number" },
     {
         field: "filesMoved",
         headerName: "Files Transferred",
@@ -125,6 +115,16 @@ const columns: GridColDef[] = [
             />
         ),
     },
+    { field: "src", headerName: "Source", width: 200 },
+    { field: "dest", headerName: "Destination", width: 200 },
+    { field: "destFolderOrProfile", headerName: "Folder/Profile", width: 150 },
+    { field: "success", headerName: "Success", width: 100, type: "boolean" },
+    { field: "msg", headerName: "Message", width: 300 },
+    { field: "srcPdfsBefore", headerName: "Source PDFs Before", width: 150, type: "number" },
+    { field: "srcPdfsAfter", headerName: "Source PDFs After", width: 150, type: "number" },
+    { field: "destFilesBefore", headerName: "Dest Files Before", width: 150, type: "number" },
+    { field: "destFilesAfter", headerName: "Dest Files After", width: 150, type: "number" },
+    
     {
         field: "createdAt",
         headerName: "Created At",
