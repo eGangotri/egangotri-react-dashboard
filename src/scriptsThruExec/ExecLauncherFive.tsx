@@ -89,7 +89,7 @@ const ExecLauncherFive: React.FC = () => {
                     css2={validationCss}
                     onInputChange={handleInputChange}
                     userInputTwoInfoNonMandatory="Only Folder Name not Path"
-                  
+
                     reactComponent={<>
                         <RadioGroup aria-label="fileType" name="fileType" value={excelGDrive} onChange={chooseGDriveExcelType} row>
                             <FormControlLabel value={ExecType.GenExcelOfGoogleDriveLinkPdfOnly} control={<Radio />} label="ALL" />
@@ -122,11 +122,12 @@ const ExecLauncherFive: React.FC = () => {
 
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
                 <ExecComponent
-                    buttonText="Get First and Last N Pages-Very Slow"
+                    buttonText="Get First and Last N Pages-Python"
                     placeholder='Absolute Path to PDFs Folder(s) as CSV'
-                    secondTextBoxPlaceHolder='Absolute Path to Destination Folder'
-                    thirdTextBoxPlaceHolder='N Pages to Extract from Start and End'
-                    thirdTextBoxDefaultValue={"10"}
+                    secondTextBoxPlaceHolder='"reduced", unless you state otherwise'
+                    thirdTextBoxPlaceHolder='N Pages. Ex. 10 or 10-20'
+                    userInputThreeInfoNonMandatory='N Pages. Use - to specify diff. First and Last Values Ex. 10-20'
+                    thirdTextBoxDefaultValue={"25"}
                     execType={ExecType.GET_FIRST_N_PAGES}
                     css={{ minWidth: "23vw" }}
                     css2={{ minWidth: "23vw" }}
@@ -144,10 +145,11 @@ const ExecLauncherFive: React.FC = () => {
                 <ExecComponent
                     buttonText="Get First and Last N Pages-Gradle"
                     placeholder='Absolute Path to PDFs Folder(s) as CSV'
-                    secondTextBoxPlaceHolder='Absolute Path to Destination Folder'
-                    thirdTextBoxPlaceHolder='N Pages to Extract from Start and End'
+                    secondTextBoxPlaceHolder='"reduced", unless you state otherwise'
+                    thirdTextBoxPlaceHolder='N Pages. Ex. 10 or 10-20'
+                    userInputThreeInfoNonMandatory='N Pages. Use - to specify diff. First and Last Values Ex. 10-20'
                     thirdTextBoxDefaultValue={"20"}
-                    execType={ExecType.GET_FIRST_N_PAGES_GRADLE}
+                    execType={ExecType.GET_FIRST_N_PAGES}
                     css={{ minWidth: "23vw" }}
                     css2={{ minWidth: "23vw" }}
                     css3={{ marginTop: "30px", minWidth: "23vw" }}

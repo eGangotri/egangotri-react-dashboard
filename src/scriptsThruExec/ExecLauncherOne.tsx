@@ -3,7 +3,8 @@ import ExecComponent from './ExecComponent';
 import Box from '@mui/material/Box';
 import { ExecType } from './ExecLauncherUtil';
 import * as XLSX from 'xlsx';
-import { FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material';
+import { Button, FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material';
+import { ALL_NOT_JUST_PDF_SUFFIX, GDRIVE_EXCEL_NAME_LOCAL_STORAGE_KEY, LOCAL_LISTING_EXCEL_LOCAL_STORAGE_KEY } from 'service/consts';
 
 
 const ExecLauncherOne: React.FC = () => {
@@ -99,7 +100,26 @@ const ExecLauncherOne: React.FC = () => {
         backgroundColor: "lightgreen",
         width: "450px"
     });
+
     
+        const [gDriveExcelName, setGDriveExcelName] = useState('');
+        const [localListingExcelName, setLocalListingExcelName] = useState('');
+        const loadFromLocalStorage = () => {
+            let storedValue = localStorage.getItem(`${GDRIVE_EXCEL_NAME_LOCAL_STORAGE_KEY}${ALL_NOT_JUST_PDF_SUFFIX}`);
+    
+            console.log(`loadFromLocalStorage called ${storedValue}`)
+            if (storedValue) {
+                setGDriveExcelName(storedValue || "-");
+            }
+    
+            let storedValue2 = localStorage.getItem(LOCAL_LISTING_EXCEL_LOCAL_STORAGE_KEY);
+            console.log(`loadFromLocalStorage called ${storedValue2}`)
+            if (storedValue2) {
+                setLocalListingExcelName(storedValue2);
+            }
+        }
+    
+
     const handleInputChange = (inputValue: string, num = 1) => {
         console.log("inputValue", inputValue, `inputValue.includes("ab") ${inputValue.includes("ab")}`);
         if(num === 1){
@@ -175,6 +195,25 @@ const ExecLauncherOne: React.FC = () => {
                     userInputTwoInfoNonMandatory="Only Folder Name not Path"
                 />
 
+            </Box>
+
+            <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
+            <ExecComponent buttonText="List all Files in Local Folder as Excel - PNPM"
+                    placeholder='Folder Path or Freezed Profile'
+                    execType={ExecType.GenListingsofLocalFolderAsAllYarn}
+                />
+                
+                <ExecComponent
+                    buttonText="Compare G-Drive and Local Excel"
+                    placeholder='Absolute Path to G-Drive Excel'
+                    secondTextBoxPlaceHolder='Absolute Path to Local Excel'
+                    execType={ExecType.COMPARE_G_DRIVE_AND_LOCAL_EXCEL}
+                    css={{ minWidth: "33vw" }}
+                    css2={{ minWidth: "35vw" }}
+                    textBoxOneValue={gDriveExcelName}
+                    textBoxTwoValue={localListingExcelName}
+                    thirdButton={<Button variant="contained" color="primary" onClick={loadFromLocalStorage} sx={{ marginRight: "10px", marginBottom: "10px" }}>Load From Local Storage</Button>}
+                />
             </Box>
         </Box>
 

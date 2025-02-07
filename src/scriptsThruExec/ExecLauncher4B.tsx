@@ -24,12 +24,12 @@ const ExecLauncher4B: React.FC = () => {
         <Box display="flex" gap={4} mb={2} flexDirection="row">
             <Box display="flex" alignItems="center" gap={4} mb={2} flexDirection="column">
                 <ExecComponent
-                    buttonText="Get First and Last N Pages-Yarn"
+                    buttonText="Get First and Last N Pages-Python"
                     placeholder='Absolute Path to PDFs Folder(s) as CSV'
-                    secondTextBoxPlaceHolder='Absolute Path to Destination Folder'
-                    thirdTextBoxPlaceHolder='N Pages. Use - to specify diff. First and Last Values'
+                    secondTextBoxPlaceHolder='"reduced", unless you state otherwise'
+                    thirdTextBoxPlaceHolder='N Pages. Ex. 10 or 10-20'
+                    userInputThreeInfoNonMandatory='N Pages. Use - to specify diff. First and Last Values Ex. 10-20'
                     thirdTextBoxDefaultValue={"25"}
-                    userInputThreeInfoNonMandatory='Use - for dissimlar Page Count'
                     execType={ExecType.GET_FIRST_N_PAGES}
                     css={{ minWidth: "35vw" }}
                     css2={{ minWidth: "35vw" }}
@@ -64,7 +64,7 @@ const ExecLauncher4B: React.FC = () => {
                     css2={validationCss}
                     onInputChange={handleInputChange}
                     userInputTwoInfoNonMandatory="Only Folder Name not Path"
-                  
+
                 />
 
                 <ExecComponent buttonText="Rename Files via Excel"

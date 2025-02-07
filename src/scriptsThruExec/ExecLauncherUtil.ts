@@ -448,9 +448,10 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
           srcFolders: dataUserInput,
           destRootFolder: dataUserInput2Mandatory,
           nPages: dataUserInput3NonMandatory,
-        }, `yarnListMaker/getFirstAndLastNPages`);
+        }, `pythonScripts/getFirstAndLastNPages`);
         break;
 
+        //deprecated
         case ExecType.GET_FIRST_N_PAGES_GRADLE:
           _resp = await makePostCallWithErrorHandling({
             srcFolders: dataUserInput,
