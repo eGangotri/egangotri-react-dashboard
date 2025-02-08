@@ -15,6 +15,7 @@ import Dialog from "@mui/material/Dialog"
 import DialogActions from "@mui/material/DialogActions"
 import DialogContent from "@mui/material/DialogContent"
 import DialogTitle from "@mui/material/DialogTitle"
+import InfoIconWithTooltip from "widgets/InfoIconWithTooltip"
 
 interface SelectedUploadItem {
   id: string
@@ -167,174 +168,185 @@ const Uploads: React.FC<UploadsType> = ({ forQueues = false }) => {
 
   const formatShareableData = (textData: Item[]) => {
     const formattedResult = textData.map((item: Item, index: number) => {
-      const _row =  `(${index + 1}).${item.title}\n\n${createArchiveLink(item.archiveItemId)}`.toString();
+      const _row = `(${index + 1}).${item.title}\n\n${createArchiveLink(item.archiveItemId)}`.toString();
       return _row;
-  });
-  console.log(  `formattedResult: ${formattedResult.join("\n\n")}`);
-  return formattedResult.join("\n\n");  
-}
-const handleShareableText = () => {
-  const selectedRows = gridApiRef.current.getSelectedRows()
-  const textData: Item[] = selectedRowCount > 0 ? Array.from(selectedRows.values()) : filteredData;
-  const textDataFormatted = formatShareableData(textData);
-  setShareableText(textDataFormatted)
-  setOpenDialog(true)
-}
-
-const handleCloseDialog = () => {
-  setOpenDialog(false)
-}
-
-const handleCopyText = () => {
-  navigator.clipboard.writeText(shareableText)
-  handleCloseDialog()
-}
-
-const highlightRow = (item: Item) => {
-  if ("uploadFlag" in item && item?.uploadFlag === false) {
-    return "bg-red-600 text-black"
-  } else if (item?.uploadFlag === null) {
-    return "bg-yellow-600 text-black"
-  } else {
-    return "bg-green-600 text-black"
+    });
+    console.log(`formattedResult: ${formattedResult.join("\n\n")}`);
+    return formattedResult.join("\n\n");
   }
-}
+  const handleShareableText = () => {
+    const selectedRows = gridApiRef.current.getSelectedRows()
+    const textData: Item[] = selectedRowCount > 0 ? Array.from(selectedRows.values()) : filteredData;
+    const textDataFormatted = formatShareableData(textData);
+    setShareableText(textDataFormatted)
+    setOpenDialog(true)
+  }
 
-const handleVerifyUploadStatus = async () => {
-  const selectedRows = Array.from(gridApiRef.current.getSelectedRows().values()) || []
-  const rowsToVerify: Item[] = (selectedRows.length > 0 ? selectedRows : filteredData) || []
-  const selectedUploadItems: SelectedUploadItem[] = rowsToVerify?.map((row: Item) => ({
-    id: row._id,
-    archiveId: row.archiveItemId,
-    isValid: row.isValid,
-  }))
-  const result = await verifyUploadStatus(selectedUploadItems)
-  setVerificationResults(result)
-}
+  const handleCloseDialog = () => {
+    setOpenDialog(false)
+  }
 
-return (
-  <LocalizationProvider dateAdapter={AdapterDateFns}>
-    <Box sx={{ height: 600, width: "100%" }}>
-      <Typography variant="h4" gutterBottom>
-        Manuscript Listing
-      </Typography>
-      <Grid container spacing={2} sx={{ mb: 2 }}>
-        <Grid item xs={12} sm={6} md={3}>
-          <TextField
-            label="Archive Profile"
-            value={archiveProfileFilter}
-            onChange={(e) => setArchiveProfileFilter(e.target.value)}
-            variant="outlined"
-            fullWidth
-          />
+  const handleCopyText = () => {
+    navigator.clipboard.writeText(shareableText)
+    handleCloseDialog()
+  }
+
+  const highlightRow = (item: Item) => {
+    if ("uploadFlag" in item && item?.uploadFlag === false) {
+      return "bg-red-600 text-black"
+    } else if (item?.uploadFlag === null) {
+      return "bg-yellow-600 text-black"
+    } else {
+      return "bg-green-600 text-black"
+    }
+  }
+
+  const handleVerifyUploadStatus = async () => {
+    const selectedRows = Array.from(gridApiRef.current.getSelectedRows().values()) || []
+    const rowsToVerify: Item[] = (selectedRows.length > 0 ? selectedRows : filteredData) || []
+    const selectedUploadItems: SelectedUploadItem[] = rowsToVerify?.map((row: Item) => ({
+      id: row._id,
+      archiveId: row.archiveItemId,
+      isValid: row.isValid,
+    }))
+    const result = await verifyUploadStatus(selectedUploadItems)
+    setVerificationResults(result)
+  }
+
+  return (
+    <LocalizationProvider dateAdapter={AdapterDateFns}>
+      <Box sx={{ height: 600, width: "100%" }}>
+        <Typography variant="h4" gutterBottom>
+          Manuscript Listing
+        </Typography>
+        <Grid container spacing={2} sx={{ mb: 2 }}>
+          <Grid item xs={12} sm={6} md={3}>
+            <TextField
+              label="Archive Profile"
+              value={archiveProfileFilter}
+              onChange={(e) => setArchiveProfileFilter(e.target.value)}
+              variant="outlined"
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <TextField
+              label="Title"
+              value={titleFilter}
+              onChange={(e) => setTitleFilter(e.target.value)}
+              variant="outlined"
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <DatePicker
+              label="Created At Start"
+              value={startDate}
+              onChange={(newValue) => setStartDate(newValue)}
+              slotProps={{ textField: { fullWidth: true } }}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <DatePicker
+              label="Created At End"
+              value={endDate}
+              onChange={(newValue) => setEndDate(newValue)}
+              slotProps={{ textField: { fullWidth: true } }}
+            />
+          </Grid>
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <TextField
-            label="Title"
-            value={titleFilter}
-            onChange={(e) => setTitleFilter(e.target.value)}
-            variant="outlined"
-            fullWidth
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <DatePicker
-            label="Created At Start"
-            value={startDate}
-            onChange={(newValue) => setStartDate(newValue)}
-            slotProps={{ textField: { fullWidth: true } }}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <DatePicker
-            label="Created At End"
-            value={endDate}
-            onChange={(newValue) => setEndDate(newValue)}
-            slotProps={{ textField: { fullWidth: true } }}
-          />
-        </Grid>
-      </Grid>
-      <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
-        <Button variant="contained" color="secondary" onClick={handleReset} sx={{ mr: 2 }}>
-          Reset
-        </Button>
-        <Button variant="contained" color="primary" onClick={handleShareableText} sx={{ mr: 2 }}>
-          Shareable Text ({selectedRowCount || filteredData.length})
-        </Button>
-        <Button variant="contained" color="primary" onClick={handleVerifyUploadStatus} sx={{ mr: 2 }}>
-          Verify Upload Status ({selectedRowCount || filteredData.length})
-        </Button>
-        <Button variant="contained" color="primary" onClick={downloadExcel}>
-          Download Excel ({selectedRowCount || filteredData.length})
-        </Button>
-      </Box>
-      <Box>
-        {verificationResults && (
-          <>
-            <Alert severity={verificationResults?.failureCount === 0 ? "success" : "error"} sx={{ mt: 2, mb: 2 }}>
-              Verification Results: {verificationResults?.successCount} success, {verificationResults?.failureCount}{" "}
-              failure
-              {verificationResults?.failures?.length > 0 && (
-                <Box sx={{ mt: 2 }}>
-                  <Typography variant="h6">Failures</Typography>
-                  <ul>
-                    {verificationResults?.failures?.map((failure, index) => (
-                      <li key={index}>{failure}</li>
-                    ))}
-                  </ul>
-                </Box>
-              )}
-              <Box>{verificationResults?.status}</Box>
-              <Box>{verificationResults?.note}</Box>
-            </Alert>
-          </>
-        )}
-      </Box>
-      <Box sx={{ height: 400, width: "100%" }}>
-      <DataGrid
-        rows={filteredData}
-        columns={columns}
-        initialState={{
-          pagination: {
-            paginationModel: { page: 0, pageSize: 10 },
-          },
-        }}
-        pageSizeOptions={[10, 20, 50]}
-        checkboxSelection
-        getRowClassName={(params) => highlightRow(params.row)}
-        apiRef={gridApiRef}
-        onRowSelectionModelChange={(newSelectionModel) => {
-          setSelectedRowCount(newSelectionModel.length)
-        }}
-      />
-      </Box>
-      <Dialog open={openDialog} onClose={handleCloseDialog}>
-        <DialogTitle>Shareable Text</DialogTitle>
-        <DialogContent>
-          <TextField
-            multiline
-            fullWidth
-            rows={10}
-            value={shareableText}
-            variant="outlined"
-            margin="normal"
-            InputProps={{
-              readOnly: true,
+        <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
+          <Button variant="contained" color="secondary" onClick={handleReset} sx={{ mr: 2 }}>
+            Reset
+          </Button>
+          <Button variant="contained" color="primary" onClick={handleShareableText} sx={{ mr: 2 }}>
+            Shareable Text ({selectedRowCount || filteredData.length})
+          </Button>
+          <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start' }}>
+            <Button variant="contained" color="primary" onClick={handleVerifyUploadStatus} sx={{ mr: 2 }}>
+              Verify Upload Status ({selectedRowCount || filteredData.length})
+            </Button>
+            <InfoIconWithTooltip input="It will mark uploadFlag in DB permanently" />
+          </Box>
+          <Button variant="contained" color="primary" onClick={downloadExcel}>
+            Download Excel ({selectedRowCount || filteredData.length})
+          </Button>
+        </Box>
+        <Box>
+          <Typography>
+            <span className="text-black-500">White implies never checked.</span>
+            <span className="text-yellow-500">Yellow implies never uploaded.</span>
+            <span className="text-green-600">Green implies Verfied-Uploaded.</span>
+            <span className="text-red-600">Red implies Upload Attempt Failed</span>
+          </Typography>
+        </Box>
+        <Box>
+          {verificationResults && (
+            <>
+              <Alert severity={verificationResults?.failureCount === 0 ? "success" : "error"} sx={{ mt: 2, mb: 2 }}>
+                Verification Results: {verificationResults?.successCount} success, {verificationResults?.failureCount}{" "}
+                failure
+                {verificationResults?.failures?.length > 0 && (
+                  <Box sx={{ mt: 2 }}>
+                    <Typography variant="h6">Failures</Typography>
+                    <ul>
+                      {verificationResults?.failures?.map((failure, index) => (
+                        <li key={index}>{failure}</li>
+                      ))}
+                    </ul>
+                  </Box>
+                )}
+                <Box>{verificationResults?.status}</Box>
+                <Box>{verificationResults?.note}</Box>
+              </Alert>
+            </>
+          )}
+        </Box>
+        <Box sx={{ height: 400, width: "100%" }}>
+          <DataGrid
+            rows={filteredData}
+            columns={columns}
+            initialState={{
+              pagination: {
+                paginationModel: { page: 0, pageSize: 10 },
+              },
+            }}
+            pageSizeOptions={[10, 20, 50]}
+            checkboxSelection
+            getRowClassName={(params) => highlightRow(params.row)}
+            apiRef={gridApiRef}
+            onRowSelectionModelChange={(newSelectionModel) => {
+              setSelectedRowCount(newSelectionModel.length)
             }}
           />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDialog} color="primary">
-            Close
-          </Button>
-          <Button onClick={handleCopyText} color="primary">
-            Copy
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </Box>
-  </LocalizationProvider>
-)
+        </Box>
+        <Dialog open={openDialog} onClose={handleCloseDialog}>
+          <DialogTitle>Shareable Text</DialogTitle>
+          <DialogContent>
+            <TextField
+              multiline
+              fullWidth
+              rows={10}
+              value={shareableText}
+              variant="outlined"
+              margin="normal"
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseDialog} color="primary">
+              Close
+            </Button>
+            <Button onClick={handleCopyText} color="primary">
+              Copy
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </Box>
+    </LocalizationProvider>
+  )
 }
 
 export default Uploads
