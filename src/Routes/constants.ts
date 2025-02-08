@@ -1,6 +1,7 @@
 
 export const LANDING_PAGE_PATH = "/"
 export const UPLOADS_USHERED_PATH = "/uploadsUsheredPath";
+export const UPLOADS_USHERED_OLD_PATH = "/uploadsUsheredPath2";
 export const UPLOADS_QUEUED_PATH = "/uploadsQueuedPath";
 export const UPLOAD_CYCLES_PATH = "/uploadCyclesPath";
 export const EXEC_LAUNCHER_PATH = "/execLauncherPath";

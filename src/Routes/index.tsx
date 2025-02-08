@@ -49,7 +49,8 @@ import {
     ARCHIVE_ITEM_LIST_WITH_FILTER_PATH,
     ARCHIVE_ITEM_AGGREGATES_BY_SOURCES_PATH,
     FILE_TRANSFER_LISTING,
-    GDRIVE_DWNL_LISTING
+    GDRIVE_DWNL_LISTING,
+    UPLOADS_USHERED_OLD_PATH
   } from './constants';
 import GDriveItemAggregates from 'components/gDriveListing/gDriveAggregatesByProfile';
 import ArchiveItemList from 'components/archiveListing';
@@ -57,12 +58,14 @@ import ArchiveItemAggregates from 'components/archiveListing/archiveAgregates';
 import AggregatesBySources from 'components/archiveListing/archiveAggregatesBySources';
 import FileTransferList from 'pages/FileTransfer';
 import GDriveDownloadListing from 'pages/GDriveDownloadList';
+import UploadsOld from 'pages/upload/indexOld';
 const DashboardRoutes: React.FC = () => {
     const isLocalhost = true; //window.location.hostname === 'localhost';
     const allFrags = (
         <>
             {<Route path={LANDING_PAGE_PATH} element={<UploadCycles />} />}
             {<Route path={UPLOADS_USHERED_PATH} element={<Uploads forQueues={false} />} />}
+            {<Route path={UPLOADS_USHERED_OLD_PATH} element={<UploadsOld forQueues={false} />} />}
             {<Route path={UPLOADS_QUEUED_PATH} element={<Uploads forQueues={true} />} />}
             {<Route path={EXEC_LAUNCHER_PATH} element={<ExecLauncher />} />}
             {<Route path={EXEC_LAUNCHER_ZIP_PATH} element={<ExecLauncherZip />} />}

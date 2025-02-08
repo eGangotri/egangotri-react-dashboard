@@ -24,7 +24,8 @@ import {
     ARCHIVE_ITEM_AGGREGATES_PATH,
     ARCHIVE_ITEM_AGGREGATES_BY_SOURCES_PATH,
     FILE_TRANSFER_LISTING,
-    GDRIVE_DWNL_LISTING
+    GDRIVE_DWNL_LISTING,
+    UPLOADS_USHERED_OLD_PATH
 } from 'Routes/constants';
 
 export const TOP_PANEL_MENU: TopPanelMenu[] = [{
@@ -37,6 +38,10 @@ export const TOP_PANEL_MENU: TopPanelMenu[] = [{
         {
             path: UPLOADS_USHERED_PATH,
             label: "Uploads Ushered",
+        },
+        {
+            path: UPLOADS_USHERED_OLD_PATH,
+            label: "Uploads Ushered - Old",
         },
         {
             path: UPLOADS_QUEUED_PATH,

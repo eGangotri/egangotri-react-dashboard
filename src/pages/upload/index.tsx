@@ -1,149 +1,78 @@
-import React, { useState, useEffect } from "react";
-import UploadsPanel from "pages/upload/UploadsPanel";
-import FilterAsMultipleSelectChip from "pages/upload/FilterAsMultiSelectchip";
-import Stack from "@mui/material/Stack";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
-import * as _ from 'lodash';
+import React, { useState } from 'react';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { Button, Box, Typography } from '@mui/material';
+import * as XLSX from 'xlsx';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
-import {
-  getUploadStatusData,
-} from "service/BackendFetchService";
-import { FaRegTrashAlt } from "react-icons/fa";
+const columns: GridColDef[] = [
+  { field: '_id', headerName: 'ID', width: 150 },
+  { field: 'archiveProfile', headerName: 'Archive Profile', width: 150 },
+  { field: 'uploadLink', headerName: 'Upload Link', width: 300 },
+  { field: 'localPath', headerName: 'Local Path', width: 300 },
+  { field: 'title', headerName: 'Title', width: 300 },
+  { field: 'uploadCycleId', headerName: 'Upload Cycle ID', width: 200 },
+  { field: 'archiveItemId', headerName: 'Archive Item ID', width: 200 },
+  { field: 'csvName', headerName: 'CSV Name', width: 100 },
+  { field: 'uploadFlag', headerName: 'Upload Flag', width: 100, type: 'boolean' },
+  { field: 'datetimeUploadStarted', headerName: 'Upload Started', width: 200 },
+  { field: 'createdAt', headerName: 'Created At', width: 200 },
+  { field: 'updatedAt', headerName: 'Updated At', width: 200 },
+];
 
-import dayjs, { Dayjs } from 'dayjs';
-import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DateRange } from '@mui/x-date-pickers-pro';
-import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
-import moment from 'moment';
-import { DD_MM_YYYY_FORMAT } from "utils/utils";
+const rows = [
+  {
+    _id: "67a48ae532bd5668b43eefd5",
+    archiveProfile: "PZ",
+    uploadLink: "https://archive.org/upload?description=Peerzada%20Muhammad%20Ashraf%20Collection,%20Srinagar\nFilename: 'Manuscript 34 - Saundarya Lahari (Shankaracharya), Rudra Mantras, Bhagavad Gita and others Sharada Manuscript - Mohd. Ashraf Peerzada Collection - Mohd Ashraf Peerzada Collection'&subject=Peerzada Muhammad Ashraf Collection, Srinagar, Funded-By-IKS-MoE,IKS-Peerzada&creator=eGangotri",
+    localPath: "F:\\_Treasures78\\_data\\iks\\pz\\_vanitized\\Manuscript 34 - Saundarya Lahari (Shankaracharya), Rudra Mantras, Bhagavad Gita and others Sharada Manuscript - Mohd. Ashraf Peerzada Collection - Mohd Ashraf Peerzada Collection.pdf",
+    title: "Manuscript 34 - Saundarya Lahari (Shankaracharya), Rudra Mantras, Bhagavad Gita and others Sharada Manuscript - Mohd. Ashraf Peerzada Collection - Mohd Ashraf Peerzada Collection",
+    uploadCycleId: "2e3a28cb-9ea1-4538-af81-6aed993372a3",
+    archiveItemId: "uwod_manuscript-34-saundarya-lahari-shankaracharya-rudra-mantras-bhagavad-gita-and-ot",
+    csvName: "X",
+    uploadFlag: true,
+    datetimeUploadStarted: "2025-02-06T10:11:49.471Z",
+    createdAt: "2025-02-06T10:11:49.472Z",
+    updatedAt: "2025-02-06T17:12:21.729Z",
+    __v: 0
+  },
+  // Add other manuscript objects here...
+];
 
-import { MAX_ITEMS_LISTABLE } from "utils/constants";
-import { useSearchParams } from 'react-router-dom'
-import { SelectedUploadItem } from "mirror/types"
+const Uploads: React.FC = () => {
+  const [data, setData] = useState(rows);
 
-interface UploadsType {
-  forQueues: boolean
-}
-
-const Uploads: React.FC<UploadsType> = ({ forQueues = false }) => {
-  const [searchParams, _] = useSearchParams()
-
-  const [profiles, setProfiles] = useState<string[]>([]);
-  const [filteredProfiles, setFilteredProfiles] = useState<string[]>([]);
-
-  const [applyFilter, setApplyFilter] = useState<boolean>(false);
-
-  const [uploadableItems, setUploadableItems] = useState<Item[]>([]);
-
-  const [startTimeValues, setStartTimeValues] = useState<Date>(new Date());
-  const [endTimeValues, setEndTimeValues] = useState<Date>(new Date());
-
-  const [selectedRows, setSelectedRows] = useState<SelectedUploadItem[]>([]);
-
-
-  const [selectedStartDate, setSelectedStartDate] = React.useState<string | null>(null);
-  const [selectedEndDate, setSelectedEndDate] = React.useState<string | null>(null);
-
-  const fetchMyAPI = async () => {
-    const uploadCycleIdParam:string = searchParams.get('uploadCycleId') || "";
-    const archiveProfileParam:string = searchParams?.get('archiveProfile') || "";
-    const _profiles = archiveProfileParam?.length > 0 ? [archiveProfileParam] : filteredProfiles;
-
-    const uploadStatusData: ItemListResponseType = await getUploadStatusData(MAX_ITEMS_LISTABLE,
-      forQueues,
-      uploadCycleIdParam,
-      _profiles)
-    return uploadStatusData?.response;
-  }
-
-  const [dayRangeValue, setDayRangeValue] = React.useState<DateRange<Dayjs | null>>([
-    dayjs(null),
-    dayjs(null),
-  ]);
-
-  const clearResults = () => {
-    setDayRangeValue([
-      dayjs(null),
-      dayjs(null),
-    ]);
-    setSelectedStartDate(null);
-    setSelectedEndDate(null);
+  const downloadExcel = () => {
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Manuscripts');
+    XLSX.writeFile(workbook, 'manuscripts.xlsx');
   };
 
-  const onDatePickerChange = (newDayRangeValue: DateRange<Dayjs>) => {
-    console.log(`newValue ${newDayRangeValue[0]}`)
-    const _newValue = moment(newDayRangeValue[0]?.toDate());
-    setSelectedStartDate(_newValue.format(DD_MM_YYYY_FORMAT));
-    console.log(`newValue ${newDayRangeValue[1]}`)
-    setSelectedEndDate(moment(newDayRangeValue[1]?.toDate()).format(DD_MM_YYYY_FORMAT) || null);
-    setDayRangeValue(newDayRangeValue);
-  }
-
-  useEffect(() => {
-    (async () => {
-      const _data = await fetchMyAPI() || [];
-      setUploadableItems(_data);
-      const uniqueProfiles = Array.from(new Set<string>(_data?.map(x => x.archiveProfile)));
-      console.log(`uniqueProfiles: ${Array.from(uniqueProfiles)}`)
-      setProfiles(uniqueProfiles)
-      setFilteredProfiles(uniqueProfiles)
-      console.log(`--filteredProfiles: ${profiles}`)
-    })();
-  }, []);
-
-  useEffect(() => {
-    (async () => {
-      const _data = await fetchMyAPI() || [];
-      setUploadableItems(_data);
-      console.log(`:filteredProfiles: ${profiles}`)
-    })();
-  }, [filteredProfiles]);
+  const downloadPDF = () => {
+    const doc = new jsPDF();
+    doc.autoTable({
+      head: [columns.map(col => col.headerName)],
+      body: data.map(row => columns.map(col => row[col.field])),
+    });
+    doc.save('manuscripts.pdf');
+  };
 
   return (
-    <Stack spacing="2" sx={{ display: "flex" }}>
-      <Box sx={{ justifyContent: "flexStart" }}>
-        <FilterAsMultipleSelectChip
-          profiles={profiles}
-          setFilteredProfiles={setFilteredProfiles}
-        />
-      </Box>
-
-      <Box sx={{ justifyContent: "flexStart" }}>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DemoContainer components={['DateRangePicker', 'DateRangePicker']}>
-            <DemoItem label="Filter by Time: " component="DateRangePicker">
-              <DateRangePicker
-                sx={{ width: "500px" }}
-                value={dayRangeValue}
-                onChange={(newValue: DateRange<Dayjs>) => onDatePickerChange(newValue)}
-              />
-            </DemoItem>
-          </DemoContainer>
-        </LocalizationProvider>
-      </Box>
-
-      <Box sx={{ justifyContent: "flexStart", padding: "10px 0" }}>
-        <Button
-          variant="contained"
-          endIcon={<FaRegTrashAlt style={{ color: "primary" }} />}
-          onClick={() => clearResults()}
-          sx={{ width: "100px", textAlign: "left", padding: "10px 10px 10px 10px" }}
-        >
-          Clear
+    <Box sx={{ height: 600, width: '100%' }}>
+      <Typography variant="h4" gutterBottom>
+        Manuscript Listing
+      </Typography>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
+        <Button variant="contained" color="primary" onClick={downloadExcel}>
+          Download Excel
+        </Button>
+        <Button variant="contained" color="secondary" onClick={downloadPDF}>
+          Download PDF
         </Button>
       </Box>
-
-      <Typography variant="h4" sx={{ padding: "25px 0 25px 0" }}>Uploads[{uploadableItems?.length} ({selectedRows?.length} selected)]</Typography>
-      <UploadsPanel
-        items={uploadableItems}
-        forQueues={forQueues}
-        selectedRows={selectedRows}
-        setSelectedRows={setSelectedRows}></UploadsPanel>
-    </Stack>
+      <DataGrid rows={data} columns={columns} pagination pageSizeOptions={[10, 20, 50]} />
+    </Box>
   );
 };
 
