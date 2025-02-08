@@ -38,6 +38,7 @@ bower_components
 build
 # Dependency directories
 node_modules/
+node_modules2/
 *.node_modules.*
 jspm_packages/
 

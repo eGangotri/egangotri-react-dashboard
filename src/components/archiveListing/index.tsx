@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { DataGrid, GridColDef, GridPaginationModel } from "@mui/x-data-grid";
+import { DataGrid, GridPaginationModel } from "@mui/x-data-grid";
 import { Box, Typography } from "@mui/material";
 import { makePostCall } from "mirror/utils";
 import { ArchiveItem, archiveItemColumns } from "./constants";
