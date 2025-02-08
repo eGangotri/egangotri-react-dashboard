@@ -16,6 +16,8 @@ import DialogActions from "@mui/material/DialogActions"
 import DialogContent from "@mui/material/DialogContent"
 import DialogTitle from "@mui/material/DialogTitle"
 import InfoIconWithTooltip from "widgets/InfoIconWithTooltip"
+import moment from "moment"
+import { DD_MM_YYYY_WITH_TIME_FORMAT } from "utils/utils"
 
 interface SelectedUploadItem {
   id: string
@@ -112,8 +114,10 @@ const Uploads: React.FC<UploadsType> = ({ forQueues = false }) => {
     const dataToExport = selectedRows.size > 0 ? Array.from(selectedRows.values()) : filteredData
     const worksheet = XLSX.utils.json_to_sheet(dataToExport)
     const workbook = XLSX.utils.book_new()
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Upload-Listing")
-    XLSX.writeFile(workbook, "uploadListing.xlsx")
+    const timeComponent = moment(new Date()).format(DD_MM_YYYY_WITH_TIME_FORMAT);
+    const fileName = `uploadListing-${timeComponent}.xlsx`
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Archive-Upload-Listing")
+    XLSX.writeFile(workbook, fileName);
   }
 
   const fetchMyAPI = useCallback(async () => {
