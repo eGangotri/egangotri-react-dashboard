@@ -112,8 +112,8 @@ const Uploads: React.FC<UploadsType> = ({ forQueues = false }) => {
     const dataToExport = selectedRows.size > 0 ? Array.from(selectedRows.values()) : filteredData
     const worksheet = XLSX.utils.json_to_sheet(dataToExport)
     const workbook = XLSX.utils.book_new()
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Manuscripts")
-    XLSX.writeFile(workbook, "manuscripts.xlsx")
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Upload-Listing")
+    XLSX.writeFile(workbook, "uploadListing.xlsx")
   }
 
   const fetchMyAPI = useCallback(async () => {
