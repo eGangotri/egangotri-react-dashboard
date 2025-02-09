@@ -57,16 +57,6 @@ const UploadCycles = () => {
     const [reuploadables, setReuploadables] = useState<UploadCycleTableData>();
     const [deletaleUploadCycleId, setDeletableUploadCycleId] = useState<string>("");
     
-    const [uploadSuccessCount, setUploadSuccessCount] = useState<number>(0);
-    const [uploadFailedCounts, setUploadFailedCounts] = useState<{ [key: string]: number }>({});
-    
-    const setUploadFailedCount = (_uploadCycleId: string, count: number) => {
-        setUploadFailedCounts(prevCounts => ({
-            ...prevCounts,
-            [_uploadCycleId]: count
-        }));
-    };
-
     const handleTitleClick = (event: React.MouseEvent<HTMLButtonElement>, absolutePaths: string[]) => {
         const _titles = (
             <>
@@ -86,6 +76,12 @@ const UploadCycles = () => {
         setAnchorElReuploadMissed(null);
         setAnchorElReuploadFailed(null);
     };
+
+    const calcRowUploadFailures = (row: UploadCycleTableData) => {
+        const rowSucess = row.archiveProfileAndCount.reduce((acc, curr) => acc + (curr?.uploadSuccessCount||0), 0)
+        const rowFailures = row.totalCount - rowSucess;
+        return `(${rowFailures}/${row.totalCount})`;
+    }
 
     const open = Boolean(anchorEl);
     const open2 = Boolean(anchorEl2);
@@ -129,9 +125,6 @@ const UploadCycles = () => {
         setIsLoading(true);
         const result = await verifyUploadStatusForUploadCycleId(_uploadCycleId);
         console.log(`_verifyUploadStatus:result ${JSON.stringify(result)}`);
-        setUploadSuccessCount(result.successCount as number);
-        setUploadFailedCount(_uploadCycleId,result.failureCount as number);
-      
         setIsLoading(false);
         fetchUploadCycleAndSort();
         setFailedUploadsForPopover(<ExecResponsePanel response={result} />);
@@ -361,7 +354,7 @@ const UploadCycles = () => {
                                 sx={{ color: "#f38484", width: "200px", marginTop: "10px" }}
                                 disabled={isLoading || (row.allUploadVerified === true)}
                             >
-                                Reupload Failed { (uploadFailedCounts[row.uploadCycleId] > -1) ? `(${uploadFailedCounts[row.uploadCycleId]}/${row.totalCount})`:""}
+                                Reupload Failed { calcRowUploadFailures(row)}
                                 <InfoIconWithTooltip input="Reupload Failed (Queued/Ushered/But Didnt Make it). Failure Type 2" />
                             </Button>
                             <Popover

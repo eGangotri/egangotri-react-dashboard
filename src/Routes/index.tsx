@@ -50,7 +50,8 @@ import {
     ARCHIVE_ITEM_AGGREGATES_BY_SOURCES_PATH,
     FILE_TRANSFER_LISTING,
     GDRIVE_DWNL_LISTING,
-    UPLOADS_USHERED_OLD_PATH
+    UPLOADS_USHERED_OLD_PATH,
+    LANDING_PAGE_OLD_PATH
   } from './constants';
 import GDriveItemAggregates from 'components/gDriveListing/gDriveAggregatesByProfile';
 import ArchiveItemList from 'components/archiveListing';
@@ -59,11 +60,13 @@ import AggregatesBySources from 'components/archiveListing/archiveAggregatesBySo
 import FileTransferList from 'pages/FileTransfer';
 import GDriveDownloadListing from 'pages/GDriveDownloadList';
 import UploadsOld from 'pages/upload/indexOld';
+import UploadCyclesList from 'pages/UploadCycles/UploadCyclesList';
 const DashboardRoutes: React.FC = () => {
     const isLocalhost = true; //window.location.hostname === 'localhost';
     const allFrags = (
         <>
-            {<Route path={LANDING_PAGE_PATH} element={<UploadCycles />} />}
+            {<Route path={LANDING_PAGE_PATH} element={<UploadCyclesList />} />}
+            {<Route path={LANDING_PAGE_OLD_PATH} element={<UploadCycles />} />}
             {<Route path={UPLOADS_USHERED_PATH} element={<Uploads forQueues={false} />} />}
             {<Route path={UPLOADS_USHERED_OLD_PATH} element={<UploadsOld forQueues={false} />} />}
             {<Route path={UPLOADS_QUEUED_PATH} element={<Uploads forQueues={true} />} />}

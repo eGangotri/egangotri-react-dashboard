@@ -1,7 +1,7 @@
-import { BURGUNDY_RED_TW, GREEN_TO_YELLOW, INHERIT_BG_TW, LIGHT_YELLOW_TW, RED_TO_YELLOW as RED_TO_YELLOW_GRADIENT_TW, SUCCESS_GREEN_TW } from "constants/colors"
+import { BURGUNDY_RED_TW, GREEN_TO_YELLOW, INHERIT_BG_TW, LIGHT_YELLOW_TW, RED_TO_YELLOW as RED_TO_YELLOW_GRADIENT_TW, SUCCESS_GREEN_TW, WHITE_SMOKE } from "constants/colors"
 import { UploadCycleTableData } from "mirror/types"
 
-export const createBackgroundForRow = (row: UploadCycleTableData) => {
+export const createBackgroundForRow = (row: UploadCycleTableData):string => {
     const countMatch = row?.countIntended === row?.totalCount;
 
     console.log(`row?.allUploadVerified( ${row?.allUploadVerified}) && countMatch(${countMatch})  -> ${row?.allUploadVerified && countMatch}`)
@@ -27,6 +27,8 @@ export const createBackgroundForRow = (row: UploadCycleTableData) => {
     if (row?.allUploadVerified) {
         return SUCCESS_GREEN_TW
     }
+
+    return WHITE_SMOKE
 }
 
 export const checkCountEquality = (row: UploadCycleTableData) => {

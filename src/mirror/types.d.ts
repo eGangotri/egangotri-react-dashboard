@@ -3,6 +3,7 @@ import { ObjectId } from "mongodb";
 export interface ArchiveProfileAndCount {
     archiveProfile: string;
     count: number;
+    uploadSuccessCount ?:number;
 }
 export interface UploadCycleArchiveProfile {
     archiveProfile?: string;
@@ -20,6 +21,7 @@ export interface ArchiveProfileAndAbsPath {
 }
 
 export interface UploadCycleTableData {
+    id?: string;
     uploadCycleId: string;
     countIntended?: number;
     mode?: string;
