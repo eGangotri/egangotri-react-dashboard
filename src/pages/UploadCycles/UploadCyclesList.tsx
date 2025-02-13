@@ -54,8 +54,8 @@ const columns: GridColDef[] = [
         field: "archiveProfileAndCount",
         headerName: "Archive Profile Details",
         width: 300,
-        renderCell: (params: GridRenderCellParams<UploadCycleTableData, ArchiveProfileAndCount[]>) => (
-            <NestedTable data={params.value || []} uploadCycleId={params.row.uploadCycleId} />
+        renderCell: (params: GridRenderCellParams<UploadCycleTableData>) => (
+            <NestedTable data={params.row || []}  />
         ),
     },
     {
@@ -69,7 +69,7 @@ const columns: GridColDef[] = [
             return (
                 <Box sx={{ height: "100%", display: "flex", flexDirection: "column", justifyContent: "center" }}>
                     <Typography variant="body2" sx={{ mb: 1 }}>{`${queueCount}/${intendedCount}/${totalCount}`}</Typography>
-                    <ActionButtons uploadCycleId={params.row.uploadCycleId} row={params.row}/>
+                    <ActionButtons uploadCycleId={params.row.uploadCycleId} row={params.row} />
                 </Box>
             )
         },
@@ -98,12 +98,6 @@ const columns: GridColDef[] = [
                         {params.value}
                         <FaTrash className="ml-1" />
                     </div>
-                    <UploadDialog
-                        openDialog={openDialog}
-                        handleClose={() => setOpenDialog(false)}
-                        setOpenDialog={setOpenDialog}
-                        invokeFuncOnClick={handleConfirm}
-                    />
                 </>
             )
         },
@@ -115,6 +109,24 @@ const columns: GridColDef[] = [
 const UploadCyclesList: React.FC = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [data, setData] = useState<UploadCycleTableData[]>([])
+    
+    const handleDelete = async (event: React.MouseEvent<HTMLDivElement>) => {
+       // const _uploadCycleId = deletaleUploadCycleId;
+        // setDeletableUploadCycleId("");
+        // console.log("Delete clicked ", _uploadCycleId);
+        // const currentTarget = event.currentTarget
+        // setOpenDialogForDelete(false)
+        // setIsLoading(true);
+        // const _resp: ExecResponseDetails = await deleteUploadCycleById(_uploadCycleId);
+        // console.log(`result ${JSON.stringify(_resp)}`);
+        // fetchUploadCycleAndSort();
+        // setIsLoading(false);
+        // const moveToFreezeRespPanel = (
+        //     <ExecResponsePanel response={_resp} />
+        // )
+        // setMoveToFreezeRespPopover(moveToFreezeRespPanel);
+        // setAnchorEl4(currentTarget);
+    }
 
     async function fetchUploadCycles() {
         const dataForUploadCycle: UploadCycleTableDataDictionary[] = await getDataForUploadCycle(MAX_ITEMS_LISTABLE)
