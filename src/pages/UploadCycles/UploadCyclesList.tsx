@@ -69,7 +69,7 @@ const columns: GridColDef[] = [
             return (
                 <Box sx={{ height: "100%", display: "flex", flexDirection: "column", justifyContent: "center" }}>
                     <Typography variant="body2" sx={{ mb: 1 }}>{`${queueCount}/${intendedCount}/${totalCount}`}</Typography>
-                    <ActionButtons uploadCycleId={params.row.uploadCycleId} />
+                    <ActionButtons uploadCycleId={params.row.uploadCycleId} row={params.row}/>
                 </Box>
             )
         },
@@ -115,18 +115,6 @@ const columns: GridColDef[] = [
 const UploadCyclesList: React.FC = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [data, setData] = useState<UploadCycleTableData[]>([])
-
-    const _verifyUploadStatusXXX = async (event: React.MouseEvent<HTMLButtonElement>,
-        _uploadCycleId: string
-    ) => {
-        const currentTarget = event.currentTarget
-        setIsLoading(true);
-        const result = await verifyUploadStatusForUploadCycleId(_uploadCycleId);
-        console.log(`_verifyUploadStatus:result ${JSON.stringify(result)}`);
-        setIsLoading(false);
-        // setFailedUploadsForPopover(<ExecResponsePanel response={result} />);
-        // setAnchorEl3(currentTarget);
-    };
 
     async function fetchUploadCycles() {
         const dataForUploadCycle: UploadCycleTableDataDictionary[] = await getDataForUploadCycle(MAX_ITEMS_LISTABLE)
