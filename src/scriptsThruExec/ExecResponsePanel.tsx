@@ -13,7 +13,7 @@ const ExecResponsePanel: React.FC<ExecResponse> = ({ response }) => {
       <>
         <Typography>Backend Resp.</Typography>
         {<div>
-          <RenderJsonData response={response} />
+          <RenderJsonData response={{ "date": new Date(), ...response }} />
         </div>}
       </>
     )

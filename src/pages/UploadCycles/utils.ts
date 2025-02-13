@@ -4,7 +4,7 @@ import { UploadCycleTableData } from "mirror/types"
 export const createBackgroundForRow = (row: UploadCycleTableData):string => {
     const countMatch = row?.countIntended === row?.totalCount;
 
-    console.log(`row?.allUploadVerified( ${row?.allUploadVerified}) && countMatch(${countMatch})  -> ${row?.allUploadVerified && countMatch}`)
+   // console.log(`row?.allUploadVerified( ${row?.allUploadVerified}) && countMatch(${countMatch})  -> ${row?.allUploadVerified && countMatch}`)
 
     if (row?.allUploadVerified === null && !countMatch) {
         return LIGHT_YELLOW_TW;
