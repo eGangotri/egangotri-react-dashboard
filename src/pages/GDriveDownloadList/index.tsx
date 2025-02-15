@@ -7,8 +7,9 @@ import {
     type GridFilterModel,
     GridToolbar,
 } from "@mui/x-data-grid"
-import { Button, Dialog, DialogTitle, DialogContent, Chip } from "@mui/material"
+import { Button, Dialog, DialogTitle, DialogContent, Chip, IconButton } from "@mui/material"
 import { makeGetCall } from "service/BackendFetchService"
+import { FaCopy } from "react-icons/fa";
 
 // Types
 interface ICompositeDocument {
@@ -85,7 +86,7 @@ const GDriveDownloadListing: React.FC = () => {
             }
         }
         loadDownloads()
-    }, [paginationModel.page, paginationModel.pageSize, fetchGDriveDownloads]) // Added fetchGDriveDownloads to dependencies
+    }, [paginationModel.page, paginationModel.pageSize]) // Added fetchGDriveDownloads to dependencies
 
     const handleOpenFiles = (files: ICompositeDocument[]) => {
         setSelectedFiles(files.map((file, index) => ({ ...file, id: index.toString() })))
@@ -96,11 +97,29 @@ const GDriveDownloadListing: React.FC = () => {
         setSelectedMsg(msg)
         setOpenMsgDialog(true)
     }
-
+    const handleCopyLink = (link: string) => {
+        navigator.clipboard.writeText(link);
+        alert("Link copied to clipboard!");
+      };
     const columns: GridColDef[] = [
-        { field: "googleDriveLink", headerName: "Google Drive Link", width: 150, filterable: true },
-        { field: "profileNameOrAbsPath", headerName: "Profile/Path", width: 150, filterable: true },
-        { field: "fileDumpFolder", headerName: "Dump Folder", width: 150, filterable: true },
+        {
+            field: "googleDriveLink",
+            headerName: "Google Drive Link",
+            width: 150,
+            filterable: true,
+            renderCell: (params) => (
+                <div className="flex items-center">
+                    <IconButton onClick={() => handleCopyLink(params.value)} className="ml-2">
+                        <FaCopy />
+                    </IconButton>
+                    <a href={params.value} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">
+                        {params.value}
+                    </a>
+                </div>
+            ),
+        },
+        { field: "profileNameOrAbsPath", headerName: "Profile/Path", width:150 , filterable: true },
+        { field: "fileDumpFolder", headerName: "Dump Folder", width: 250, filterable: true },
         {
             field: "status",
             headerName: "Status",
