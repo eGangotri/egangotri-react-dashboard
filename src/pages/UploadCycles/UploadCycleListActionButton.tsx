@@ -90,7 +90,7 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({ uploadCycleId, row
                                 onClick={() => launchReuploadMissed(uploadCycleId)}
                                 size="small"
                                 sx={{ width: "200px", marginTop: "20px" }}
-                                disabled={isLoading}>Find Missing ({(row.countIntended || 0) - (row?.totalQueueCount || 0)}/{row.countIntended})
+                                disabled={isLoading}>Reupload Missing ({(row.countIntended || 0) - (row?.totalQueueCount || 0)}/{row.countIntended})
                             </Button>
                         </Box>
                         {
