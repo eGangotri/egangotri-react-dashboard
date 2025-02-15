@@ -16,7 +16,7 @@ export const ERROR_RED = '#CF1E1E';
 export const DARK_RED = '#5d2a2a';
 export const BURGUNDY_RED = '#800020';
 
-export const BURGUNDY_RED_TW = 'bg-red-800';
+export const BURGUNDY_RED_TW = 'bg-red-400';
 export const INHERIT_BG_TW = 'bg-inherit';
 export const SUCCESS_GREEN_TW = "bg-green-600";
 export const LIGHT_YELLOW_TW = 'bg-yellow-300';

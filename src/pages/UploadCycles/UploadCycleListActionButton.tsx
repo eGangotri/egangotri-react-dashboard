@@ -10,7 +10,6 @@ import {
 } from "@mui/material"
 import { makePostCallWithErrorHandling, verifyUploadStatusForUploadCycleId } from "service/BackendFetchService"
 import UploadDialog from "./UploadDialog"
-import Spinner from "widgets/Spinner"
 import { FaCopy, FaTimes } from "react-icons/fa"
 import { _launchGradlev2, launchGradleReuploadFailed } from "service/launchGradle"
 import { launchYarnMoveToFreezeByUploadId } from "service/launchYarn"
@@ -29,11 +28,15 @@ const TASK_TYPE_ENUM = {
     MOVE_TO_FREEZE: "Move to Freeze",
 }
 
-export const ActionButtons: React.FC<{
+interface ActionButtonsProps {
     uploadCycleId: string,
-    row: UploadCycleTableData
-}> = ({ uploadCycleId, row }) => {
-    const [isLoading, setIsLoading] = useState<boolean>(false)
+    row: UploadCycleTableData,
+    isLoading: boolean,
+    setIsLoading: (value: boolean) => void,
+    fetchData: () => void
+}
+
+export const ActionButtons: React.FC<ActionButtonsProps> = ({ uploadCycleId, row,isLoading, setIsLoading,fetchData }) => {
     const [openDialog, setOpenDialog] = useState(false)
     const [actionType, setActionType] = useState("")
     const [popoverAnchor, setPopoverAnchor] = useState<HTMLButtonElement | null>(null)
@@ -152,18 +155,20 @@ export const ActionButtons: React.FC<{
         setOpenDialog(false)
         if (actionType === TASK_TYPE_ENUM.VERIFY_UPLOAD_STATUS) {
             await _verifyUploadStatus();
+            fetchData();
         } else if (actionType === TASK_TYPE_ENUM.FIND_MISSING) {
             await _findMissing();
         } else if (actionType === TASK_TYPE_ENUM.REUPLOAD_FAILED) {
             await _reuploadFailed();
+            fetchData();
         } else if (actionType === TASK_TYPE_ENUM.MOVE_TO_FREEZE) {
             await _moveToFreeze();
+            fetchData();
         }
     }
 
     return (
         <>
-            {isLoading && <Spinner />}
             <Stack spacing={0.5}>
                 <Button
                     id="verify-upload-status-button"
@@ -171,7 +176,7 @@ export const ActionButtons: React.FC<{
                     size="small"
                     onClick={(event) => confirm(TASK_TYPE_ENUM.VERIFY_UPLOAD_STATUS)}
                 >
-                    Verify Upload Status (?)
+                    Verify Upload Status
                 </Button>
                 <Button
                     id="find-missing-button"
