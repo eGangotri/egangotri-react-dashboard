@@ -200,10 +200,6 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         }
         console.log(`optionalParams ${JSON.stringify(optionalParams)} dataUserInput3NonMandatory${dataUserInput3NonMandatory}`)
         _resp = await launchUploader(dataUserInput, optionalParams);
-
-        // _resp = await _launchGradlev2({
-        //   profiles: dataUserInput
-        // }, "launchUploader");
         break;
 
       case ExecType.UploadPdfsViaExcelV1:

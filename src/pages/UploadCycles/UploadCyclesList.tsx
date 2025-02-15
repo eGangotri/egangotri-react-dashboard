@@ -1,12 +1,11 @@
+"use client"
+
 import type React from "react"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import { DataGrid, type GridColDef, type GridRenderCellParams } from "@mui/x-data-grid"
-import {
-    Typography, Box, Table, TableBody, TableCell,
-    TableHead, TableRow, Button, Stack, Link
-} from "@mui/material"
-import type { UploadCycleTableData, UploadCycleTableDataDictionary, ArchiveProfileAndCount } from "mirror/types"
-import { deleteUploadCycleById, getDataForUploadCycle, verifyUploadStatusForUploadCycleId } from "service/BackendFetchService"
+import { Typography, Box, Link, TextField, Select, MenuItem, FormControl, InputLabel, Button } from "@mui/material"
+import type { UploadCycleTableData, UploadCycleTableDataDictionary } from "mirror/types"
+import { deleteUploadCycleById, getDataForUploadCycle } from "service/BackendFetchService"
 import { MAX_ITEMS_LISTABLE } from "utils/constants"
 import { createBackgroundForRow } from "./utils"
 import { ColorCodeInformationPanel } from "./ColorCodedInformationPanel"
@@ -15,16 +14,21 @@ import UploadDialog from "./UploadDialog"
 import { NestedTable } from "./UploadCycleListNestedTable"
 import { ActionButtons } from "./UploadCycleListActionButton"
 import { UploadCycleListPopover } from "./UploadCycleListPopover"
+import { launchUploader } from "service/launchGradle"
 
+type VerifiedFilter = "all" | "true" | "false" | "null"
 
 const UploadCyclesList: React.FC = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [data, setData] = useState<UploadCycleTableData[]>([])
+    const [filteredData, setFilteredData] = useState<UploadCycleTableData[]>([])
     const [openDialog, setOpenDialog] = useState(false)
-    const [deletableUploadCycleId, setDeletableUploadCycleId] = useState<string>("");
+    const [deletableUploadCycleId, setDeletableUploadCycleId] = useState<string>("")
     const [popoverAnchor, setPopoverAnchor] = useState<HTMLButtonElement | null>(null)
     const [popoverContent, setPopoverContent] = useState<string>("")
     const [reactComponent, setReactComponent] = useState<JSX.Element>(<></>)
+    const [filterValue, setFilterValue] = useState<string>("")
+    const [verifiedFilter, setVerifiedFilter] = useState<VerifiedFilter>("all")
 
     const handleClick = (event: React.MouseEvent, _uploadCycleId: string) => {
         event.stopPropagation()
@@ -33,26 +37,61 @@ const UploadCyclesList: React.FC = () => {
     }
 
     const handleConfirm = async () => {
-        //console.log("Delete confirmed for Upload Cycle ID:", params.row.uploadCycleId)
-        // Implement the actual delete action here
         setOpenDialog(false)
         handleDelete()
     }
-    
+
     const handleDelete = async () => {
-        const _uploadCycleId = deletableUploadCycleId;
-        setDeletableUploadCycleId("");
-        console.log("Delete clicked ", _uploadCycleId);
-        setIsLoading(true);
-        const _resp = await deleteUploadCycleById(_uploadCycleId);
-        console.log(`result ${JSON.stringify(_resp)}`);
-        setIsLoading(false);
-        setPopoverContent(JSON.stringify(_resp, null, 2))
-        setPopoverAnchor(document.getElementById(`delete-button-${_uploadCycleId}`) as HTMLButtonElement)
-        fetchData();
+        const _uploadCycleId = deletableUploadCycleId
+        setDeletableUploadCycleId("")
+        console.log("Delete clicked ", _uploadCycleId)
+        setIsLoading(true)
+        try {
+            const _resp = await deleteUploadCycleById(_uploadCycleId)
+            console.log(`result ${JSON.stringify(_resp)}`)
+            setPopoverContent(JSON.stringify(_resp, null, 2))
+            setPopoverAnchor(document.getElementById(`delete-button-${_uploadCycleId}`) as HTMLButtonElement)
+        } catch (error) {
+            console.error("Error deleting upload cycle:", error)
+            setPopoverContent(`Error deleting upload cycle: ${error}`)
+            setPopoverAnchor(document.getElementById(`delete-button-${_uploadCycleId}`) as HTMLButtonElement)
+        } finally {
+            setIsLoading(false)
+            fetchData()
+        }
     }
 
-  
+    const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const value = event.target.value.toLowerCase()
+        setFilterValue(value)
+        applyFilters(value, verifiedFilter)
+    }
+
+    const handleVerifiedFilterChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+        const value = event.target.value as VerifiedFilter
+        setVerifiedFilter(value)
+        applyFilters(filterValue, value)
+    }
+
+    const applyFilters = (textFilter: string, verifiedStatus: VerifiedFilter) => {
+        const filtered = data.filter((item) => {
+            const matchesText =
+                item.uploadCycleId.toLowerCase().includes(textFilter) ||
+                item.archiveProfileAndCount.some((profile) => profile.archiveProfile.toLowerCase().includes(textFilter))
+
+            let matchesVerified = true
+            if (verifiedStatus !== "all") {
+                if (verifiedStatus === "null") {
+                    matchesVerified = item.allUploadVerified === null
+                } else {
+                    matchesVerified = item.allUploadVerified === (verifiedStatus === "true")
+                }
+            }
+
+            return matchesText && matchesVerified
+        })
+        setFilteredData(filtered)
+    }
 
     const columns: GridColDef[] = [
         {
@@ -62,10 +101,7 @@ const UploadCyclesList: React.FC = () => {
             renderCell: (params: GridRenderCellParams<UploadCycleTableData>) => {
                 return (
                     <>
-                        <Link href="#">
-                            {params.row.uploadCycleId}
-                        </Link>
-
+                        <Link href="#">{params.row.uploadCycleId}</Link>
                     </>
                 )
             },
@@ -74,9 +110,7 @@ const UploadCyclesList: React.FC = () => {
             field: "archiveProfileAndCount",
             headerName: "Archive Profile Details",
             width: 300,
-            renderCell: (params: GridRenderCellParams<UploadCycleTableData>) => (
-                <NestedTable data={params.row || []} />
-            ),
+            renderCell: (params: GridRenderCellParams<UploadCycleTableData>) => <NestedTable data={params.row || []} />,
         },
         {
             field: "combinedCounts",
@@ -89,11 +123,13 @@ const UploadCyclesList: React.FC = () => {
                 return (
                     <Box sx={{ height: "100%", display: "flex", flexDirection: "column", justifyContent: "center" }}>
                         <Typography variant="body2" sx={{ mb: 1 }}>{`${queueCount}/${intendedCount}/${totalCount}`}</Typography>
-                        <ActionButtons uploadCycleId={params.row.uploadCycleId}
+                        <ActionButtons
+                            uploadCycleId={params.row.uploadCycleId}
                             row={params.row}
                             isLoading={isLoading}
                             setIsLoading={setIsLoading}
-                            fetchData={fetchData} />
+                            fetchData={fetchData}
+                        />
                     </Box>
                 )
             },
@@ -105,47 +141,94 @@ const UploadCyclesList: React.FC = () => {
             renderCell: (params: GridRenderCellParams<UploadCycleTableData>) => {
                 return (
                     <>
-                        <div 
-                        id={`delete-button-${params.row.uploadCycleId}`}
-                        onClick={(e) => handleClick(e, params.row.uploadCycleId)} className="cursor-pointer inline-block ml-2 flex items-center">
+                        <div
+                            id={`delete-button-${params.row.uploadCycleId}`}
+                            onClick={(e) => handleClick(e, params.row.uploadCycleId)}
+                            className="cursor-pointer inline-block ml-2 flex items-center"
+                        >
                             {params.value}
                             <FaTrash className="ml-1" />
                         </div>
-                        <UploadCycleListPopover uploadCycleId={params.row.uploadCycleId} row={params.row}
+                        <UploadCycleListPopover
+                            uploadCycleId={params.row.uploadCycleId}
+                            row={params.row}
                             popoverAnchor={popoverAnchor}
                             setPopoverAnchor={setPopoverAnchor}
                             popoverContent={popoverContent}
                             actionType={"Delete Results"}
                             reactComponent={reactComponent}
-                            setReactComponent={setReactComponent} />
+                            setReactComponent={setReactComponent}
+                        />
                     </>
                 )
             },
         },
         { field: "datetimeUploadStarted", headerName: "Upload Started", width: 180 },
         { field: "mode", headerName: "Mode", width: 100 },
+        {
+            field: "allUploadVerified",
+            headerName: "All Upload Verified",
+            width: 150,
+            renderCell: (params: GridRenderCellParams<UploadCycleTableData>) => {
+                return <Typography>{params.value === null ? "N/A" : params.value.toString()}</Typography>
+            },
+        },
     ]
 
+    const fetchUploadCycles = useCallback(async () => {
+        try {
+            const dataForUploadCycle: UploadCycleTableDataDictionary[] = await getDataForUploadCycle(MAX_ITEMS_LISTABLE)
+            return dataForUploadCycle?.map((item) => ({
+                id: item.uploadCycle.uploadCycleId,
+                ...item.uploadCycle,
+            }))
+        } catch (error) {
+            console.error("Error fetching upload cycles:", error)
+            return [] // Return an empty array in case of error
+        }
+    }, [])
 
-    async function fetchUploadCycles() {
-        const dataForUploadCycle: UploadCycleTableDataDictionary[] = await getDataForUploadCycle(MAX_ITEMS_LISTABLE)
-
-        return dataForUploadCycle?.map((item) => ({
-            id: item.uploadCycle.uploadCycleId,
-            ...item.uploadCycle,
-        }))
-    }
-
-    async function fetchData() {
+    const fetchData = useCallback(async () => {
         setIsLoading(true)
-        const data = await fetchUploadCycles()
-        setData(data)
-        setIsLoading(false)
+        try {
+            const fetchedData = await fetchUploadCycles()
+            setData(fetchedData)
+            setFilteredData(fetchedData)
+        } catch (error) {
+            console.error("Error fetching data:", error)
+            // Handle error appropriately, e.g., display an error message
+        } finally {
+            setIsLoading(false)
+        }
+    }, [fetchUploadCycles])
+
+    const [profilesCsv, setProfilesCsv] = useState("")
+    const [extraDescription, setExtraDescription] = useState("")
+
+    const uploadToArchive = async () => {
+        const optionalParams = extraDescription?.trim() === "" ? {} : {
+            subjectDesc:
+                extraDescription
+        }
+        setIsLoading(true)
+        try {
+            const _resp = await launchUploader(profilesCsv, optionalParams);
+            console.log(`result ${JSON.stringify(_resp)}`)
+            setPopoverContent(JSON.stringify(_resp, null, 2))
+            setPopoverAnchor(document.getElementById("profiles-csv") as HTMLButtonElement)
+        } catch (error) {
+            console.error("Error uploading:", error)
+            setPopoverContent(`Error uploading: ${error}`)
+            setPopoverAnchor(document.getElementById("profiles-csv") as HTMLButtonElement)
+        } finally {
+            setIsLoading(false)
+            fetchData()
+        }
     }
 
     useEffect(() => {
         fetchData()
-    }, []) //Fixed: Added empty dependency array to useEffect
+    }, [fetchData])
 
     return (
         <>
@@ -154,8 +237,54 @@ const UploadCyclesList: React.FC = () => {
                 <Typography variant="h4" component="h1" gutterBottom>
                     Upload Cycles
                 </Typography>
+                <Box sx={{ mt: 4 }}>
+                    <TextField
+                        id="profiles-csv"
+                        label="Profiles as CSV"
+                        value={profilesCsv}
+                        onChange={(e) => setProfilesCsv(e.target.value)}
+                        sx={{ mb: 2, mr: 2 }}
+                    />
+
+                    <TextField
+                        label="Optional Extra Subject/Description"
+                        value={extraDescription}
+                        onChange={(e) => setExtraDescription(e.target.value)}
+                        sx={{ mb: 2, mr: 2 }}
+                    />
+
+                    <Button variant="contained"
+                        color="primary" onClick={uploadToArchive}
+                        sx={{ mt: 1 }}>
+                        Upload PDFs to Archive for profile
+                    </Button>
+                </Box>
+
+                <Box sx={{ display: "flex", gap: 2, mb: 2, mr: 2 }}>
+                    <TextField
+                        label="Filter by Archive Profile or Upload Cycle ID"
+                        variant="outlined"
+                        value={filterValue}
+                        sx={{ mb: 2, mr: 2 }}
+                        onChange={handleFilterChange}
+                    />
+                    <FormControl variant="outlined" sx={{ minWidth: 200, mb: 2, mr: 2 }}>
+                        <InputLabel id="verified-filter-label">All Upload Verified</InputLabel>
+                        <Select
+                            labelId="verified-filter-label"
+                            value={verifiedFilter}
+                            onChange={handleVerifiedFilterChange}
+                            label="All Upload Verified"
+                        >
+                            <MenuItem value="all">All</MenuItem>
+                            <MenuItem value="true">Verified</MenuItem>
+                            <MenuItem value="false">Not Verified</MenuItem>
+                            <MenuItem value="null">N/A</MenuItem>
+                        </Select>
+                    </FormControl>
+                </Box>
                 <DataGrid
-                    rows={data}
+                    rows={filteredData}
                     columns={columns}
                     initialState={{
                         pagination: {
@@ -182,3 +311,4 @@ const UploadCyclesList: React.FC = () => {
 }
 
 export default UploadCyclesList
+

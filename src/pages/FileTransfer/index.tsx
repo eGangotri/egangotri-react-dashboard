@@ -21,6 +21,8 @@ import {
     Pagination,
 } from "@mui/material"
 import { makeGetCall } from "service/BackendFetchService"
+import { IconButton, Tooltip } from "@mui/material";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 
 interface JsonData {
     _id: string
@@ -115,8 +117,38 @@ const columns: GridColDef[] = [
             />
         ),
     },
-    { field: "src", headerName: "Source", width: 200 },
-    { field: "dest", headerName: "Destination", width: 200 },
+    {
+        field: "src", headerName: "Source", width: 250,
+        renderCell: (params: GridRenderCellParams) => (
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                <Tooltip title="Copy">
+                    <IconButton
+                        size="small"
+                        onClick={() => navigator.clipboard.writeText(params.value)}
+                    >
+                        <ContentCopyIcon fontSize="small" />
+                    </IconButton>
+                </Tooltip>
+                <Typography>{params.value}</Typography>
+            </Box>
+        ),
+    },
+    {
+        field: "dest", headerName: "Destination", width: 250,
+        renderCell: (params: GridRenderCellParams) => (
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                <Tooltip title="Copy">
+                    <IconButton
+                        size="small"
+                        onClick={() => navigator.clipboard.writeText(params.value)}
+                    >
+                        <ContentCopyIcon fontSize="small" />
+                    </IconButton>
+                </Tooltip>
+                <Typography>{params.value}</Typography>
+            </Box>
+        ),
+    },
     { field: "destFolderOrProfile", headerName: "Folder/Profile", width: 150 },
     { field: "success", headerName: "Success", width: 100, type: "boolean" },
     { field: "msg", headerName: "Message", width: 300 },
@@ -124,7 +156,7 @@ const columns: GridColDef[] = [
     { field: "srcPdfsAfter", headerName: "Source PDFs After", width: 150, type: "number" },
     { field: "destFilesBefore", headerName: "Dest Files Before", width: 150, type: "number" },
     { field: "destFilesAfter", headerName: "Dest Files After", width: 150, type: "number" },
-    
+
     {
         field: "createdAt",
         headerName: "Created At",
