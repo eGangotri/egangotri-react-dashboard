@@ -255,7 +255,8 @@ const UploadCyclesList: React.FC = () => {
 
                     <Button variant="contained"
                         color="primary" onClick={uploadToArchive}
-                        sx={{ mt: 1 }}>
+                        sx={{ mt: 1 }}
+                        disabled={isLoading}>
                         Upload PDFs to Archive for profile
                     </Button>
                 </Box>

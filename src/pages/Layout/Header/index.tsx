@@ -1,4 +1,4 @@
-import { Typography } from "@mui/material";
+import { Link, Typography } from "@mui/material";
 import { DecodedJWT } from "components/common/types";
 import { jwtDecode } from "jwt-decode";
 import { loggedInState, loggedUser, loggedUserRole, loginToken } from "pages/Dashboard";
@@ -32,7 +32,9 @@ const Header: React.FC<HeaderProps> = ({ title }) => {
 
     return (
         <header className="Header flex justify-between items-center text-center mt-5">
-            <Typography variant="h5" className="text-turquoise-900 flex-1 text-center">{title}</Typography>
+            <Typography variant="h5" className="text-turquoise-900 flex-1 text-center">
+            <Link href="/" sx={{ textDecoration: 'none' }}>{title}</Link>
+            </Typography>
             <div className="flex items-center">
                 <Typography variant="body1" className="text-turquoise-900 text-right pr-2">{welcomeMessage}</Typography>
                 <button onClick={handleLogout} className="bg-red-500 text-white px-4 py-2 rounded">Logout</button>
