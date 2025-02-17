@@ -15,6 +15,7 @@ import { NestedTable } from "./UploadCycleListNestedTable"
 import { ActionButtons } from "./UploadCycleListActionButton"
 import { UploadCycleListPopover } from "./UploadCycleListPopover"
 import { launchUploader } from "service/launchGradle"
+import { UPLOADS_USHERED_PATH } from "Routes/constants"
 
 type VerifiedFilter = "all" | "true" | "false" | "null"
 
@@ -101,7 +102,9 @@ const UploadCyclesList: React.FC = () => {
             renderCell: (params: GridRenderCellParams<UploadCycleTableData>) => {
                 return (
                     <>
-                        <Link href="#">{params.row.uploadCycleId}</Link>
+                        <Link href={`${UPLOADS_USHERED_PATH}?uploadCycleId=${params.row.uploadCycleId}`}>
+                            {params.row.uploadCycleId}
+                        </Link>
                     </>
                 )
             },
