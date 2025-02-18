@@ -118,7 +118,8 @@ export enum ExecType {
   VANITIZE = 100,
   RENAME_FIES_VIA_EXCEL = 101,
 
-  GET_FIRST_N_PAGES = 200,
+  GET_FIRST_N_PAGES_PYTHON = 200,
+  COPY_ALL_PDFS_PYTHON = 200300,
   GET_FIRST_N_PAGES_GRADLE = 200200,
   COMBINE_GDRIVE_AND_REDUCED_PDF_DRIVE_EXCELS = 201,
   DUMP_GDRIVE_COMBO_EXCEL_TO_MONGO = 202,
@@ -439,14 +440,22 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         });
         break;
 
-      case ExecType.GET_FIRST_N_PAGES:
+      case ExecType.GET_FIRST_N_PAGES_PYTHON:
         _resp = await makePostCallForTopN({
           srcFolders: dataUserInput,
           destRootFolder: dataUserInput2Mandatory,
           nPages: dataUserInput3NonMandatory,
         }, `pythonScripts/getFirstAndLastNPages`);
         break;
-
+        
+        case ExecType.COPY_ALL_PDFS_PYTHON:
+          _resp = await makePostCallForTopN({
+            srcFolders: dataUserInput,
+            destRootFolder: dataUserInput2Mandatory,
+            nPages: dataUserInput3NonMandatory,
+          }, `pythonScripts/copyAllPdfs`);
+          break;
+        
         //deprecated
         case ExecType.GET_FIRST_N_PAGES_GRADLE:
           _resp = await makePostCallWithErrorHandling({

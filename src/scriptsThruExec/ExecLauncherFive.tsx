@@ -128,7 +128,7 @@ const ExecLauncherFive: React.FC = () => {
                     thirdTextBoxPlaceHolder='N Pages. Ex. 10 or 10-20'
                     userInputThreeInfoNonMandatory='N Pages. Use - to specify diff. First and Last Values Ex. 10-20'
                     thirdTextBoxDefaultValue={"25"}
-                    execType={ExecType.GET_FIRST_N_PAGES}
+                    execType={ExecType.GET_FIRST_N_PAGES_PYTHON}
                     css={{ minWidth: "23vw" }}
                     css2={{ minWidth: "23vw" }}
                     css3={{ marginTop: "30px", minWidth: "23vw" }}
@@ -149,7 +149,7 @@ const ExecLauncherFive: React.FC = () => {
                     thirdTextBoxPlaceHolder='N Pages. Ex. 10 or 10-20'
                     userInputThreeInfoNonMandatory='N Pages. Use - to specify diff. First and Last Values Ex. 10-20'
                     thirdTextBoxDefaultValue={"20"}
-                    execType={ExecType.GET_FIRST_N_PAGES}
+                    execType={ExecType.GET_FIRST_N_PAGES_PYTHON}
                     css={{ minWidth: "23vw" }}
                     css2={{ minWidth: "23vw" }}
                     css3={{ marginTop: "30px", minWidth: "23vw" }}

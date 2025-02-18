@@ -30,7 +30,7 @@ const ExecLauncher4B: React.FC = () => {
                     thirdTextBoxPlaceHolder='N Pages. Ex. 10 or 10-20'
                     userInputThreeInfoNonMandatory='N Pages. Use - to specify diff. First and Last Values Ex. 10-20'
                     thirdTextBoxDefaultValue={"25"}
-                    execType={ExecType.GET_FIRST_N_PAGES}
+                    execType={ExecType.GET_FIRST_N_PAGES_PYTHON}
                     css={{ minWidth: "35vw" }}
                     css2={{ minWidth: "35vw" }}
                     css3={{ marginTop: "30px", minWidth: "23vw" }}
@@ -55,6 +55,22 @@ const ExecLauncher4B: React.FC = () => {
             </Box>
 
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
+                <ExecComponent
+                    buttonText="Get First and Last N Pages-Python"
+                    placeholder='Absolute Path to PDFs Folder(s) as CSV'
+                    secondTextBoxPlaceHolder='"reduced", unless you state otherwise'
+                    thirdTextBoxPlaceHolder='N Pages. Ex. 10 or 10-20'
+                    userInputThreeInfoNonMandatory='N Pages. Use - to specify diff. First and Last Values Ex. 10-20'
+                    thirdTextBoxDefaultValue={"25"}
+                    execType={ExecType.GET_FIRST_N_PAGES_PYTHON}
+                    css={{ minWidth: "35vw" }}
+                    css2={{ minWidth: "35vw" }}
+                    css3={{ marginTop: "30px", minWidth: "23vw" }}
+                    textBoxOneValue={filePath}
+                    multiline1stTf
+                    rows1stTf={4}
+                />
+
                 <ExecComponent
                     buttonText="Create G-Drive Excel Renamer-Version"
                     placeholder='Enter Google Drive Link(s)/Identifiers as csv'
