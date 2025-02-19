@@ -124,7 +124,7 @@ const ExecLauncherFive: React.FC = () => {
                 <ExecComponent
                     buttonText="Get First and Last N Pages-Python"
                     placeholder='Absolute Path to PDFs Folder(s) as CSV'
-                    secondTextBoxPlaceHolder='"reduced", unless you state otherwise'
+                    secondTextBoxPlaceHolder='"reduced", unless stated otherwise'
                     thirdTextBoxPlaceHolder='N Pages. Ex. 10 or 10-20'
                     userInputThreeInfoNonMandatory='N Pages. Use - to specify diff. First and Last Values Ex. 10-20'
                     thirdTextBoxDefaultValue={"25"}
@@ -145,7 +145,7 @@ const ExecLauncherFive: React.FC = () => {
                 <ExecComponent
                     buttonText="Get First and Last N Pages-Gradle"
                     placeholder='Absolute Path to PDFs Folder(s) as CSV'
-                    secondTextBoxPlaceHolder='"reduced", unless you state otherwise'
+                    secondTextBoxPlaceHolder='"reduced", unless stated otherwise'
                     thirdTextBoxPlaceHolder='N Pages. Ex. 10 or 10-20'
                     userInputThreeInfoNonMandatory='N Pages. Use - to specify diff. First and Last Values Ex. 10-20'
                     thirdTextBoxDefaultValue={"20"}

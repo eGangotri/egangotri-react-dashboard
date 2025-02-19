@@ -26,7 +26,7 @@ const ExecLauncher4B: React.FC = () => {
                 <ExecComponent
                     buttonText="Get First and Last N Pages-Python"
                     placeholder='Absolute Path to PDFs Folder(s) as CSV'
-                    secondTextBoxPlaceHolder='"reduced", unless you state otherwise'
+                    secondTextBoxPlaceHolder='"reduced", unless stated otherwise'
                     thirdTextBoxPlaceHolder='N Pages. Ex. 10 or 10-20'
                     userInputThreeInfoNonMandatory='N Pages. Use - to specify diff. First and Last Values Ex. 10-20'
                     thirdTextBoxDefaultValue={"25"}
@@ -56,16 +56,12 @@ const ExecLauncher4B: React.FC = () => {
 
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
                 <ExecComponent
-                    buttonText="Get First and Last N Pages-Python"
+                    buttonText="Copy All PDFs-Python"
                     placeholder='Absolute Path to PDFs Folder(s) as CSV'
-                    secondTextBoxPlaceHolder='"reduced", unless you state otherwise'
-                    thirdTextBoxPlaceHolder='N Pages. Ex. 10 or 10-20'
-                    userInputThreeInfoNonMandatory='N Pages. Use - to specify diff. First and Last Values Ex. 10-20'
-                    thirdTextBoxDefaultValue={"25"}
-                    execType={ExecType.GET_FIRST_N_PAGES_PYTHON}
+                    secondTextBoxPlaceHolder='"-copy", unless stated otherwise'
+                    execType={ExecType.COPY_ALL_PDFS_PYTHON}
                     css={{ minWidth: "35vw" }}
                     css2={{ minWidth: "35vw" }}
-                    css3={{ marginTop: "30px", minWidth: "23vw" }}
                     textBoxOneValue={filePath}
                     multiline1stTf
                     rows1stTf={4}
