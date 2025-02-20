@@ -51,6 +51,7 @@ export enum ExecType {
   JPG_TO_PDF = 37,
   PNG_TO_PDF = 38,
   TIFF_TO_PDF = 39,
+  CR2_TO_PDF = 391,
   ANY_IMG_TYPE_TO_PDF = 40,
   LoginToArchive = 4,
   UseBulkRenameConventions = 5,
@@ -65,6 +66,7 @@ export enum ExecType {
   VERIFY_IMG_TO_PDF_SUCCESS_JPG = 668,
   VERIFY_IMG_TO_PDF_SUCCESS_PNG = 669,
   VERIFY_IMG_TO_PDF_SUCCESS_TIF = 700,
+  VERIFY_CR2_TO_PDF_SUCCESS_TIF = 7007,
 
   VERIFY_G_DRIVE_PDF_DOWNLOAD = 701,
   VERIFY_G_DRIVE_ZIP_DOWNLOAD = 702,
@@ -521,6 +523,11 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       case ExecType.TIFF_TO_PDF:
         _resp = await launchImgFilesToPdf(dataUserInput, "TIF");
         break;
+
+      case ExecType.TIFF_TO_PDF:
+          _resp = await launchImgFilesToPdf(dataUserInput, "CR2");
+          break;
+          
       case ExecType.ANY_IMG_TYPE_TO_PDF:
         _resp = await launchImgFilesToPdf(dataUserInput, "ANY");
         break;

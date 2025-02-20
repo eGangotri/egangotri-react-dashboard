@@ -210,6 +210,7 @@ const ExecLauncherZip: React.FC = () => {
                             <FormControlLabel value={ExecType.JPG_TO_PDF} control={<Radio />} label={IMG_TYPE_JPG} />
                             <FormControlLabel value={ExecType.PNG_TO_PDF} control={<Radio />} label="PNG" />
                             <FormControlLabel value={ExecType.TIFF_TO_PDF} control={<Radio />} label="TIFF" />
+                            <FormControlLabel value={ExecType.CR2_TO_PDF} control={<Radio />} label="TIFF" />
                         </RadioGroup>
                     </>}
                     thirdButton={<Button
@@ -233,6 +234,7 @@ const ExecLauncherZip: React.FC = () => {
                             <FormControlLabel value={ExecType.VERIFY_IMG_TO_PDF_SUCCESS_JPG} control={<Radio />} label={IMG_TYPE_JPG} />
                             <FormControlLabel value={ExecType.VERIFY_IMG_TO_PDF_SUCCESS_PNG} control={<Radio />} label={IMG_TYPE_PNG} />
                             <FormControlLabel value={ExecType.VERIFY_IMG_TO_PDF_SUCCESS_TIF} control={<Radio />} label={IMG_TYPE_TIF} />
+                            <FormControlLabel value={ExecType.VERIFY_CR2_TO_PDF_SUCCESS_TIF} control={<Radio />} label={IMG_TYPE_TIF} />
                         </RadioGroup>
                     </>}
                     thirdButton={<Button
