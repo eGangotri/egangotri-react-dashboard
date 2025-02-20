@@ -70,7 +70,7 @@ export async function launchImgFilesToPdf(folder: string,
         folder: folder,
         imgType: imgType,
     }, `execLauncher/imgFilesToPdfGradleVersion`)
-    console.log(`result ${JSON.stringify(jsonData)}`)
+    console.log(`result ${JSON.stringify(jsonData)}`);
     return jsonData;
 }
 

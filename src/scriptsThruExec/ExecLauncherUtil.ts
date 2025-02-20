@@ -31,7 +31,7 @@ import { makePostCallForCombineGDriveAndReducedPdfExcels, makePostCallForCreateU
 import { downloadFromExcelUsingFrontEnd } from "service/launchFrontEnd";
 import { replaceQuotes } from "mirror/utils";
 import { handleYarnListingGeneration } from "./Utils";
-import { IMG_TYPE_ANY, IMG_TYPE_JPG, IMG_TYPE_PNG, IMG_TYPE_TIF } from "./constants";
+import { IMG_TYPE_ANY, IMG_TYPE_CR2, IMG_TYPE_JPG, IMG_TYPE_PNG, IMG_TYPE_TIF } from "./constants";
 import { ALL_TYPE, PDF_TYPE, ZIP_TYPE } from "mirror/CommonConstants";
 
 export enum ExecType {
@@ -66,7 +66,7 @@ export enum ExecType {
   VERIFY_IMG_TO_PDF_SUCCESS_JPG = 668,
   VERIFY_IMG_TO_PDF_SUCCESS_PNG = 669,
   VERIFY_IMG_TO_PDF_SUCCESS_TIF = 700,
-  VERIFY_CR2_TO_PDF_SUCCESS_TIF = 7007,
+  VERIFY_IMG_TO_PDF_SUCCESS_CR2 = 7007,
 
   VERIFY_G_DRIVE_PDF_DOWNLOAD = 701,
   VERIFY_G_DRIVE_ZIP_DOWNLOAD = 702,
@@ -295,14 +295,14 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         _resp = await verifyGDriveDwnldSuccessFolders(dataUserInput, dataUserInput2Mandatory, PDF_TYPE);
         break;
 
-        case ExecType.VERIFY_G_DRIVE_ZIP_DOWNLOAD:
-          _resp = await verifyGDriveDwnldSuccessFolders(dataUserInput, dataUserInput2Mandatory, ZIP_TYPE);
-          break;
+      case ExecType.VERIFY_G_DRIVE_ZIP_DOWNLOAD:
+        _resp = await verifyGDriveDwnldSuccessFolders(dataUserInput, dataUserInput2Mandatory, ZIP_TYPE);
+        break;
 
-          case ExecType.VERIFY_G_DRIVE_ALL_DOWNLOAD:
-            _resp = await verifyGDriveDwnldSuccessFolders(dataUserInput, dataUserInput2Mandatory, ALL_TYPE);
-            break;
-      
+      case ExecType.VERIFY_G_DRIVE_ALL_DOWNLOAD:
+        _resp = await verifyGDriveDwnldSuccessFolders(dataUserInput, dataUserInput2Mandatory, ALL_TYPE);
+        break;
+
       case ExecType.UNZIP_ALL_FILES:
         _resp = await unzipFolders(dataUserInput);
         break;
@@ -341,6 +341,9 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         _resp = await verifyImgToPdfSuccess(dataUserInput, IMG_TYPE_TIF)
         break;
 
+      case ExecType.VERIFY_IMG_TO_PDF_SUCCESS_CR2:
+        _resp = await verifyImgToPdfSuccess(dataUserInput, IMG_TYPE_CR2)
+        break;
       //unimplemented  
       case ExecType.DownloadFilesFromExcel_Via_Front_End:
         _resp = await downloadFromExcelUsingFrontEnd(dataUserInput, dataUserInput2Mandatory);
@@ -449,23 +452,23 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
           nPages: dataUserInput3NonMandatory,
         }, `pythonScripts/getFirstAndLastNPages`);
         break;
-        
-        case ExecType.COPY_ALL_PDFS_PYTHON:
-          _resp = await makePostCallForTopN({
-            srcFolders: dataUserInput,
-            destRootFolder: dataUserInput2Mandatory,
-            nPages: dataUserInput3NonMandatory,
-          }, `pythonScripts/copyAllPdfs`);
-          break;
-        
-        //deprecated
-        case ExecType.GET_FIRST_N_PAGES_GRADLE:
-          _resp = await makePostCallWithErrorHandling({
-            srcFolders: dataUserInput,
-            destRootFolder: dataUserInput2Mandatory,
-            nPages: dataUserInput3NonMandatory,
-          }, `execLauncher/getFirstAndLastNPagesGradle`)
-          break;
+
+      case ExecType.COPY_ALL_PDFS_PYTHON:
+        _resp = await makePostCallForTopN({
+          srcFolders: dataUserInput,
+          destRootFolder: dataUserInput2Mandatory,
+          nPages: dataUserInput3NonMandatory,
+        }, `pythonScripts/copyAllPdfs`);
+        break;
+
+      //deprecated
+      case ExecType.GET_FIRST_N_PAGES_GRADLE:
+        _resp = await makePostCallWithErrorHandling({
+          srcFolders: dataUserInput,
+          destRootFolder: dataUserInput2Mandatory,
+          nPages: dataUserInput3NonMandatory,
+        }, `execLauncher/getFirstAndLastNPagesGradle`)
+        break;
 
       case ExecType.FILE_NAME_LENGTH:
         _resp = await makePostCallWithErrorHandling({
@@ -513,23 +516,23 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         break;
 
       case ExecType.JPG_TO_PDF:
-        _resp = await launchImgFilesToPdf(dataUserInput, "JPG");
+        _resp = await launchImgFilesToPdf(dataUserInput, IMG_TYPE_JPG);
         break;
 
       case ExecType.PNG_TO_PDF:
-        _resp = await launchImgFilesToPdf(dataUserInput, "PNG");
+        _resp = await launchImgFilesToPdf(dataUserInput, IMG_TYPE_PNG);
         break;
 
       case ExecType.TIFF_TO_PDF:
-        _resp = await launchImgFilesToPdf(dataUserInput, "TIF");
+        _resp = await launchImgFilesToPdf(dataUserInput, IMG_TYPE_TIF);
         break;
 
-      case ExecType.TIFF_TO_PDF:
-          _resp = await launchImgFilesToPdf(dataUserInput, "CR2");
-          break;
-          
+      case ExecType.CR2_TO_PDF:
+        _resp = await launchImgFilesToPdf(dataUserInput, IMG_TYPE_CR2);
+        break;
+
       case ExecType.ANY_IMG_TYPE_TO_PDF:
-        _resp = await launchImgFilesToPdf(dataUserInput, "ANY");
+        _resp = await launchImgFilesToPdf(dataUserInput, IMG_TYPE_ANY);
         break;
 
       case ExecType.COMBINE_GDRIVE_AND_REDUCED_PDF_DRIVE_EXCELS:
@@ -552,7 +555,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       case ExecType.DUMP_ARCHIVE_EXCEL_TO_MONGO:
         _resp = await makePostCallWithErrorHandling({
           archiveExcelPath: dataUserInput,
-          source:dataUserInput3NonMandatory
+          source: dataUserInput3NonMandatory
         }, `yarnArchive/dumpArchiveExcelToMongo`);
         break;
 

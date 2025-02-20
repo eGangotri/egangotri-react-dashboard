@@ -6,7 +6,7 @@ import * as XLSX from 'xlsx';
 import { FOLDER_OF_UNZIPPED_IMGS, FOLDER_TO_UNZIP } from 'service/consts';
 import { Button, FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material';
 import { unzipFolders } from 'service/launchYarn';
-import { IMG_TYPE_ANY, IMG_TYPE_JPG, IMG_TYPE_PNG, IMG_TYPE_TIF } from './constants';
+import { IMG_TYPE_ANY, IMG_TYPE_CR2, IMG_TYPE_JPG, IMG_TYPE_PNG, IMG_TYPE_TIF } from './constants';
 
 
 const ExecLauncherZip: React.FC = () => {
@@ -208,9 +208,9 @@ const ExecLauncherZip: React.FC = () => {
                         <RadioGroup aria-label="fileType" name="fileType" value={imgType} onChange={handleChangeImgFilesToPdf} row>
                             <FormControlLabel value={ExecType.ANY_IMG_TYPE_TO_PDF} control={<Radio />} label="ANY" />
                             <FormControlLabel value={ExecType.JPG_TO_PDF} control={<Radio />} label={IMG_TYPE_JPG} />
-                            <FormControlLabel value={ExecType.PNG_TO_PDF} control={<Radio />} label="PNG" />
-                            <FormControlLabel value={ExecType.TIFF_TO_PDF} control={<Radio />} label="TIFF" />
-                            <FormControlLabel value={ExecType.CR2_TO_PDF} control={<Radio />} label="TIFF" />
+                            <FormControlLabel value={ExecType.PNG_TO_PDF} control={<Radio />} label={IMG_TYPE_PNG} />
+                            <FormControlLabel value={ExecType.TIFF_TO_PDF} control={<Radio />} label={IMG_TYPE_TIF} />
+                            <FormControlLabel value={ExecType.CR2_TO_PDF} control={<Radio />} label={IMG_TYPE_CR2} />
                         </RadioGroup>
                     </>}
                     thirdButton={<Button
@@ -234,7 +234,7 @@ const ExecLauncherZip: React.FC = () => {
                             <FormControlLabel value={ExecType.VERIFY_IMG_TO_PDF_SUCCESS_JPG} control={<Radio />} label={IMG_TYPE_JPG} />
                             <FormControlLabel value={ExecType.VERIFY_IMG_TO_PDF_SUCCESS_PNG} control={<Radio />} label={IMG_TYPE_PNG} />
                             <FormControlLabel value={ExecType.VERIFY_IMG_TO_PDF_SUCCESS_TIF} control={<Radio />} label={IMG_TYPE_TIF} />
-                            <FormControlLabel value={ExecType.VERIFY_CR2_TO_PDF_SUCCESS_TIF} control={<Radio />} label={IMG_TYPE_TIF} />
+                            <FormControlLabel value={ExecType.VERIFY_IMG_TO_PDF_SUCCESS_CR2} control={<Radio />} label={IMG_TYPE_CR2} />
                         </RadioGroup>
                     </>}
                     thirdButton={<Button
