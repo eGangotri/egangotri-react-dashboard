@@ -3,7 +3,7 @@
 import type React from "react"
 import { useEffect, useState, useCallback } from "react"
 import { DataGrid, type GridColDef, type GridRenderCellParams } from "@mui/x-data-grid"
-import { Typography, Box, Link, TextField, Select, MenuItem, FormControl, InputLabel, Button } from "@mui/material"
+import { Typography, Box, Link, TextField, Select, MenuItem, FormControl, InputLabel, Button, SelectChangeEvent } from "@mui/material"
 import type { UploadCycleTableData, UploadCycleTableDataDictionary } from "mirror/types"
 import { deleteUploadCycleById, getDataForUploadCycle } from "service/BackendFetchService"
 import { MAX_ITEMS_LISTABLE } from "utils/constants"
@@ -67,7 +67,7 @@ const UploadCyclesList: React.FC = () => {
         applyFilters(value, verifiedFilter)
     }
 
-    const handleVerifiedFilterChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    const handleVerifiedFilterChange = (event: SelectChangeEvent<VerifiedFilter>) => {
         const value = event.target.value as VerifiedFilter
         setVerifiedFilter(value)
         applyFilters(filterValue, value)
