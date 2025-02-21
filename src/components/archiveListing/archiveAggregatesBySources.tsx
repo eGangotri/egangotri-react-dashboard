@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { DataGrid, GridColDef, GridPaginationModel, GridRowHeightParams, GridValueGetterParams } from '@mui/x-data-grid';
 import { Container } from '@mui/material';
 import { aggregatesBySourcesColumns, AggregatesBySourcesType } from './constants';
-import { makeGetCall } from 'service/BackendFetchService';
+import { makeGetCall } from 'service/ApiInterceptor';
 
 
 const AggregatesBySources = () => {

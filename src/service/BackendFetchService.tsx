@@ -2,16 +2,50 @@ import { AI_SERVER, getBackendServer, MAX_ITEMS_LISTABLE } from "utils/constants
 import * as _ from 'lodash';
 import { SelectedUploadItem } from "mirror/types"
 import { ExecResponseDetails } from "scriptsThruExec/types";
-import { makePostCall } from "mirror/utils";
 import { ALL_NOT_JUST_PDF_SUFFIX, COMBINATION_EXCEL_PATH_LOCAL_STORAGE_KEY, GDRIVE_EXCEL_NAME_LOCAL_STORAGE_KEY, LOCAL_LISTING_EXCEL_LOCAL_STORAGE_KEY, REDUCED_SUFFIX, TOP_N_FILE_LOCAL_STORAGE_KEY, UPLOADABLE_EXCELS_V1, UPLOADABLE_EXCELS_V1_PROFILES, UPLOADABLE_EXCELS_V3, UPLOADABLE_EXCELS_V3_PROFILES } from "./consts";
+import { makeGetCall, makePostCall } from "./ApiInterceptor";
+
 const QUEUE_API_PREFIX = "itemsQueued";
 const USHERED_API_PREFIX = "itemsushered";
 
+
+export const originalMakePostCall = async (body: Record<string, unknown>, resource: string) => {
+  const requestOptions: RequestInit = {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  };
+
+  try {
+    console.log(`going to fetch ${JSON.stringify(body)}`)
+    const response = await fetch(getBackendServer() + resource, requestOptions);
+    console.log(`response ${JSON.stringify(response)}`)
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    }
+    else {
+      console.log(`response not ok ${response.statusText}`)
+      return {
+        success: false,
+        error: response.statusText
+      };
+    }
+  }
+  catch (error) {
+    const err = error as Error;
+    console.log(`catch err ${err.message}`)
+    return {
+      success: false,
+      error: "Exception thrown. May be Backend Server down." + err.message
+    };
+  }
+};
 export const chooseApiPrefix = (forQueues = false) => {
   return forQueues ? QUEUE_API_PREFIX : USHERED_API_PREFIX;
 };
 
-export const makeGetCall = async (resource: string) => {
+export const originalMakeGetCall = async (resource: string) => {
   try {
     const response = await fetch(getBackendServer() + resource);
     console.log(`response ${JSON.stringify(response)}`);
@@ -46,10 +80,6 @@ export const makePostCallWithErrorHandling = async (body: Record<string, unknown
     ...result
   } as ExecResponseDetails;
 }
-
-
-
-
 
 export const makePostCallForGenExcelForGDrive = async (body: Record<string, unknown>, resource: string) => {
   const result = await makePostCallWithErrorHandling(body, resource)
@@ -147,7 +177,6 @@ export const makePostCallForCreateUploadableExcelV3 = async (body: Record<string
 
   return result;
 }
-
 
 export const makePostCallForCombineGDriveAndReducedPdfExcels = async (body: Record<string, unknown>, resource: string) => {
   const result = await makePostCallWithErrorHandling(body, resource)

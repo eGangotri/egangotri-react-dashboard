@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { DataGrid, GridPaginationModel, GridSearchIcon } from '@mui/x-data-grid';
 import { Box, InputAdornment, TextField } from '@mui/material';
-import { makeGetCall } from 'service/BackendFetchService';
 import { archiveItemAggregateColumns, ArchiveItemAggregateType, archiveItemColumns } from './constants';
-
+import { makeGetCall } from 'service/ApiInterceptor';
 
 const ArchiveItemAggregates: React.FC = () => {
     const [items, setItems] = useState<ArchiveItemAggregateType[]>([]);

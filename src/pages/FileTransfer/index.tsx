@@ -20,7 +20,7 @@ import {
     ListItemText,
     Pagination,
 } from "@mui/material"
-import { makeGetCall } from "service/BackendFetchService"
+import { makeGetCall } from 'service/ApiInterceptor';
 import { IconButton, Tooltip } from "@mui/material";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { FileWidget } from "./FileWidget"

@@ -1,10 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { DataGrid, GridColDef, GridPaginationModel } from "@mui/x-data-grid";
-import { Pagination, Typography } from "@mui/material";
-import { formatMem, } from "mirror/utils";
-import { makeGetCall } from "service/BackendFetchService";
-import { Link } from "react-router-dom";
-import { G_DRIVE_ITEM_LIST_PATH } from "Routes/constants";
+import { DataGrid, GridPaginationModel } from "@mui/x-data-grid";
+import { makeGetCall } from 'service/ApiInterceptor';
 import { gDriveAggregateCol, GDriveItemAggregate } from "./constants";
 
 

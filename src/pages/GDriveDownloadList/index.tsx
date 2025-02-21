@@ -8,7 +8,7 @@ import {
     GridToolbar,
 } from "@mui/x-data-grid"
 import { Button, Dialog, DialogTitle, DialogContent, Chip, IconButton } from "@mui/material"
-import { makeGetCall } from "service/BackendFetchService"
+import { makeGetCall } from 'service/ApiInterceptor';
 import { FaCopy } from "react-icons/fa";
 
 // Types
