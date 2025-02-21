@@ -23,6 +23,10 @@ import {
 import { makeGetCall } from "service/BackendFetchService"
 import { IconButton, Tooltip } from "@mui/material";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import { FileWidget } from "./FileWidget"
+import { makePostCall } from "mirror/utils"
+import UploadDialog from "pages/UploadCycles/UploadDialog"
+import { set } from "lodash"
 
 interface JsonData {
     _id: string
@@ -38,6 +42,9 @@ interface JsonData {
     destFilesAfter?: number
     fileCollisionsResolvedByRename: string[]
     filesMoved: string[]
+    filesMovedNewAbsPath: string[]
+    filesAbsPathMoved: string[]
+    reversed: boolean
     createdAt: string
     updatedAt: string
 }
@@ -48,6 +55,8 @@ interface FileTransferPopupProps {
     files: string[]
     title: string
 }
+
+
 
 function FileTransferPopup({ open, onClose, files, title }: FileTransferPopupProps) {
     return (
@@ -69,101 +78,6 @@ function FileTransferPopup({ open, onClose, files, title }: FileTransferPopupPro
     )
 }
 
-function FileWidget({ files, label }: { files: string[]; label: string }) {
-    const [open, setOpen] = useState(false)
-
-    const handleOpen = () => setOpen(true)
-    const handleClose = () => setOpen(false)
-
-    const nonEmptyFiles = files?.filter((file) => file !== "") || []
-
-    return (
-        <>
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                <Button variant="outlined" size="small" onClick={handleOpen} disabled={nonEmptyFiles?.length === 0}>
-                    View ({nonEmptyFiles?.length === 0 ? 0 : nonEmptyFiles?.length})
-                </Button>
-            </Box>
-            <FileTransferPopup open={open} onClose={handleClose} files={nonEmptyFiles} title={label} />
-        </>
-    )
-}
-
-const columns: GridColDef[] = [
-    {
-        field: "filesMoved",
-        headerName: "Files Transferred",
-        width: 150,
-        renderCell: (params: GridRenderCellParams) => (
-            <FileWidget files={params.row.filesMoved} label="Transferred Files" />
-        ),
-    },
-    {
-        field: "filesAbsPathMoved",
-        headerName: "Files with Abs Path Transferred",
-        width: 150,
-        renderCell: (params: GridRenderCellParams) => (
-            <FileWidget files={params.row.filesAbsPathMoved} label="Transferred Files"
-            />
-        ),
-    },
-    {
-        field: "fileCollisionsResolvedByRename",
-        headerName: "Collisions Resolved",
-        width: 150,
-        renderCell: (params: GridRenderCellParams) => (
-            <FileWidget files={params.row.fileCollisionsResolvedByRename}
-                label="Collisions Resolved"
-            />
-        ),
-    },
-    {
-        field: "src", headerName: "Source", width: 250,
-        renderCell: (params: GridRenderCellParams) => (
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                <Tooltip title="Copy">
-                    <IconButton
-                        size="small"
-                        onClick={() => navigator.clipboard.writeText(params.value)}
-                    >
-                        <ContentCopyIcon fontSize="small" />
-                    </IconButton>
-                </Tooltip>
-                <Typography>{params.value}</Typography>
-            </Box>
-        ),
-    },
-    {
-        field: "dest", headerName: "Destination", width: 250,
-        renderCell: (params: GridRenderCellParams) => (
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                <Tooltip title="Copy">
-                    <IconButton
-                        size="small"
-                        onClick={() => navigator.clipboard.writeText(params.value)}
-                    >
-                        <ContentCopyIcon fontSize="small" />
-                    </IconButton>
-                </Tooltip>
-                <Typography>{params.value}</Typography>
-            </Box>
-        ),
-    },
-    { field: "destFolderOrProfile", headerName: "Folder/Profile", width: 150 },
-    { field: "success", headerName: "Success", width: 100, type: "boolean" },
-    { field: "msg", headerName: "Message", width: 300 },
-    { field: "srcPdfsBefore", headerName: "Source PDFs Before", width: 150, type: "number" },
-    { field: "srcPdfsAfter", headerName: "Source PDFs After", width: 150, type: "number" },
-    { field: "destFilesBefore", headerName: "Dest Files Before", width: 150, type: "number" },
-    { field: "destFilesAfter", headerName: "Dest Files After", width: 150, type: "number" },
-
-    {
-        field: "createdAt",
-        headerName: "Created At",
-        width: 200,
-        valueGetter: (params: GridValueGetterParams) => new Date(params.row.createdAt).toLocaleString(),
-    },
-]
 
 export default function FileTransferList() {
     const [data, setData] = useState<JsonData[]>([])
@@ -172,14 +86,142 @@ export default function FileTransferList() {
     const [totalPages, setTotalPages] = useState(1)
     const [filterField, setFilterField] = useState<string>("")
     const [filterValue, setFilterValue] = useState<string>("")
+    const [openDialog, setOpenDialog] = useState(false)
+    const [idForReverse, setIdForReverse] = useState<string>("")
 
+
+    const columns: GridColDef[] = [
+        {
+            field: "reverse",
+            headerName: "Reverse",
+            width: 150,
+            renderCell: (params: GridRenderCellParams) => (
+                <Button
+                    variant="contained"
+                    color="primary"
+                    disabled={params.row.reversed === true || params.row.success === false}
+                    onClick={async () => {
+                        setIdForReverse(params.row._id)
+                        setOpenDialog(true)
+                        return
+                    }}
+                >
+                    Reverse
+                </Button>
+            ),
+        },
+        {
+            field: "filesMoved",
+            headerName: "Files Transferred",
+            width: 150,
+            renderCell: (params: GridRenderCellParams) => (
+                <FileWidget files={params.row.filesMoved} label="Transferred Files" />
+            ),
+        },
+        {
+            field: "filesAbsPathMoved",
+            headerName: "Files with Abs Path Transferred",
+            width: 150,
+            renderCell: (params: GridRenderCellParams) => (
+                <FileWidget files={params.row.filesAbsPathMoved} label="Transferred Files with Old Abs Path"
+                />
+            ),
+        },
+        {
+            field: "filesMovedNewAbsPath",
+            headerName: "Transferred Files with New Abs Path",
+            width: 150,
+            renderCell: (params: GridRenderCellParams) => (
+                <FileWidget files={params.row.filesMovedNewAbsPath} label="Transferred Files with New Abs Path"
+                />
+            ),
+        },
+
+        {
+            field: "fileCollisionsResolvedByRename",
+            headerName: "Collisions Resolved",
+            width: 150,
+            renderCell: (params: GridRenderCellParams) => (
+                <FileWidget files={params.row.fileCollisionsResolvedByRename}
+                    label="Collisions Resolved"
+                />
+            ),
+        },
+        {
+            field: "src", headerName: "Source", width: 250,
+            renderCell: (params: GridRenderCellParams) => (
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                    <Tooltip title="Copy">
+                        <IconButton
+                            size="small"
+                            onClick={() => navigator.clipboard.writeText(params.value)}
+                        >
+                            <ContentCopyIcon fontSize="small" />
+                        </IconButton>
+                    </Tooltip>
+                    <Typography>{params.value}</Typography>
+                </Box>
+            ),
+        },
+        {
+            field: "dest", headerName: "Destination", width: 250,
+            renderCell: (params: GridRenderCellParams) => (
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                    <Tooltip title="Copy">
+                        <IconButton
+                            size="small"
+                            onClick={() => navigator.clipboard.writeText(params.value)}
+                        >
+                            <ContentCopyIcon fontSize="small" />
+                        </IconButton>
+                    </Tooltip>
+                    <Typography>{params.value}</Typography>
+                </Box>
+            ),
+        },
+        { field: "destFolderOrProfile", headerName: "Folder/Profile", width: 150 },
+        { field: "success", headerName: "Success", width: 100, type: "boolean" },
+        { field: "msg", headerName: "Message", width: 300 },
+        { field: "srcPdfsBefore", headerName: "Source PDFs Before", width: 150, type: "number" },
+        { field: "srcPdfsAfter", headerName: "Source PDFs After", width: 150, type: "number" },
+        { field: "destFilesBefore", headerName: "Dest Files Before", width: 150, type: "number" },
+        { field: "destFilesAfter", headerName: "Dest Files After", width: 150, type: "number" },
+
+        {
+            field: "createdAt",
+            headerName: "Created At",
+            width: 200,
+            valueGetter: (params: GridValueGetterParams) => new Date(params.row.createdAt).toLocaleString(),
+        },
+    ]
+    const reverseFileMove = async () => {
+        setOpenDialog(false);
+        try {
+            // const resource =
+            //     `fileUtil/reverse-file-move`;
+            // const data = await makePostCall({ id:idForReverse },
+            //     resource);
+            // console.log(`data ${JSON.stringify(data)}`);
+            // return data.response;
+            console.log("reverseFileMove", idForReverse)
+            return { x: idForReverse }
+        } catch (error) {
+            console.error("Error reversing file move:", error)
+        }
+    }
     const fetchData = async () => {
         setLoading(true)
         try {
             const result = await makeGetCall(`fileUtil/file-move-list?page=${page}&limit=50`);
-            console.log("result", JSON.stringify(result))
-            setData(result.data)
-            setTotalPages(result.totalPages)
+            console.log("result", JSON.stringify(result?.length))
+            if (result && result.data) {
+                setData(result.data)
+                setTotalPages(result.totalPages)
+            }
+            else {
+                setData([])
+                setTotalPages(0)
+            }
         } catch (error) {
             console.error("Error fetching data:", error)
             setData([])
@@ -268,10 +310,24 @@ export default function FileTransferList() {
                 columns={columns}
                 loading={loading}
                 hideFooterPagination
-                disableRowSelectionOnClick />
+                disableRowSelectionOnClick
+                getRowClassName={(params) => {
+                    if (params.row.reversed) {
+                        return 'pointer-events-none opacity-50';
+                    }
+                    return params.row.success ? 'bg-green-100' : 'bg-red-100';
+                }}
+                isRowSelectable={(params) => !params.row.reversed}
+            />
             <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
                 <Pagination count={totalPages} page={page} onChange={handlePageChange} color="primary" />
             </Box>
+            <UploadDialog
+                openDialog={openDialog}
+                handleClose={() => setOpenDialog(false)}
+                setOpenDialog={setOpenDialog}
+                invokeFuncOnClick2={reverseFileMove}
+            />
         </Box>
     )
 }

@@ -15,13 +15,24 @@ export const makeGetCall = async (resource: string) => {
   try {
     const response = await fetch(getBackendServer() + resource);
     console.log(`response ${JSON.stringify(response)}`);
-    const respAsJson = await response.json();
-    console.log(`respAsJson ${respAsJson.length}`);
-    return respAsJson;
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    }
+    else {
+      console.log(`response not ok ${response.statusText}`)
+      return {
+        success: false,
+        error: response.statusText
+      };
+    }
   }
-  catch (err) {
+  catch (error) {
+    const err = error as Error;
+    console.log(`catch err ${err.message}`)
     return {
-      error: err
+      success: false,
+      error: "Exception thrown. May be Backend Server down." + err.message
     };
   }
 };
@@ -240,9 +251,9 @@ export const verifyUploadStatusForUploadCycleId = async (
 export const deleteUploadCycleById = async (
   uploadCycleId: string
 ) => {
-  const result = 
+  const result =
     await makePostCallWithErrorHandling({
-      "uploadCycleId":uploadCycleId,
+      "uploadCycleId": uploadCycleId,
     }, `uploadCycle/deleteUploadCycleById`);
 
   return result;
