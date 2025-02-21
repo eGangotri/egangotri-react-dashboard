@@ -17,7 +17,7 @@ export const ResultDisplayPopover: React.FC<{
     popoverContent: string,
     actionType: string,
     reactComponent?: JSX.Element,
-    setReactComponent?: (component: JSX.Element) => void
+    setReactComponent: (component: JSX.Element) => void = () => { }
 
 }> = ({ popoverAnchor, setPopoverAnchor, 
     popoverContent, actionType, reactComponent, setReactComponent }) => {

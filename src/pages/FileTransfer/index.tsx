@@ -147,7 +147,7 @@ export default function FileTransferList() {
                             return
                         }}
                     >
-                        Reverse
+                        { params.row.reversed === true ? "Reversed": "Reverse" }
                     </Button>
                     <ResultDisplayPopover
                         popoverAnchor={popoverAnchor}
@@ -336,12 +336,8 @@ export default function FileTransferList() {
                 hideFooterPagination
                 disableRowSelectionOnClick
                 getRowClassName={(params) => {
-                    if (params.row.reversed) {
-                        return 'pointer-events-none opacity-50';
-                    }
-                    return params.row.success ? 'bg-green-100' : 'bg-red-100';
+                    return params.row.success ? 'bg-green-500' : 'bg-red-500';
                 }}
-                isRowSelectable={(params) => !params.row.reversed}
             />
             <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
                 <Pagination count={totalPages} page={page} onChange={handlePageChange} color="primary" />
