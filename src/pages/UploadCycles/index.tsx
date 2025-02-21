@@ -19,7 +19,7 @@ import { MAX_ITEMS_LISTABLE } from 'utils/constants';
 import { ERROR_RED, SUCCESS_GREEN } from 'constants/colors';
 import Spinner from 'widgets/Spinner';
 import { _launchGradlev2, launchGradleReuploadFailed } from 'service/launchGradle';
-import ConfirmDialog from './UploadDialog';
+import ConfirmDialog from '../../widgets/UploadDialog';
 import { launchYarnMoveToFreezeByUploadId } from 'service/launchYarn';
 import ExecResponsePanel from 'scriptsThruExec/ExecResponsePanel';
 import { ExecResponse, ExecResponseDetails } from 'scriptsThruExec/types';

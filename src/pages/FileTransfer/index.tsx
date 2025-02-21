@@ -25,7 +25,7 @@ import { IconButton, Tooltip } from "@mui/material";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { FileWidget } from "./FileWidget"
 import { makePostCall } from "mirror/utils"
-import ConfirmDialog from "pages/UploadCycles/UploadDialog"
+import ConfirmDialog from "widgets/UploadDialog"
 import { set } from "lodash"
 
 interface JsonData {
@@ -213,8 +213,8 @@ export default function FileTransferList() {
         setLoading(true)
         try {
             const result = await makeGetCall(`fileUtil/file-move-list?page=${page}&limit=50`);
-            console.log("result", JSON.stringify(result?.length))
             if (result && result.data) {
+            console.log("result", result?.data?.length)
                 setData(result.data)
                 setTotalPages(result.totalPages)
             }

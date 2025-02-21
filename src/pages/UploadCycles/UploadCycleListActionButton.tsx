@@ -9,7 +9,7 @@ import {
     Box
 } from "@mui/material"
 import { makePostCallWithErrorHandling, verifyUploadStatusForUploadCycleId } from "service/BackendFetchService"
-import ConfirmDialog from "./UploadDialog"
+import ConfirmDialog from "../../widgets/UploadDialog"
 import { FaCopy, FaTimes } from "react-icons/fa"
 import { _launchGradlev2, launchGradleReuploadFailed } from "service/launchGradle"
 import { launchYarnMoveToFreezeByUploadId } from "service/launchYarn"
