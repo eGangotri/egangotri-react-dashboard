@@ -8,7 +8,7 @@ import type { ArchiveProfileAndCount, UploadCycleArchiveProfile, UploadCycleTabl
 import { UPLOADS_USHERED_PATH } from "Routes/constants"
 import path from 'path';
 import React from "react";
-import { UploadCycleListPopover } from "./UploadCycleListPopover";
+import { ResultDisplayPopover } from "../../widgets/ResultDisplayPopover";
 
 
 export const NestedTable: React.FC<{ data: UploadCycleTableData }> = ({ data }) => {
@@ -55,7 +55,7 @@ export const NestedTable: React.FC<{ data: UploadCycleTableData }> = ({ data }) 
                     ))}
                 </TableBody>
             </Table>
-            <UploadCycleListPopover uploadCycleId={data.uploadCycleId} row={data} popoverAnchor={anchorEl} setPopoverAnchor={setAnchorEl} popoverContent={titlesForPopover} actionType="Titles" />
+            <ResultDisplayPopover popoverAnchor={anchorEl} setPopoverAnchor={setAnchorEl} popoverContent={titlesForPopover} actionType="Titles" />
         </>
     )
 }

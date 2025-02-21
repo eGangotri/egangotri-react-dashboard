@@ -1,29 +1,17 @@
-import React, { useState } from "react"
+import React from "react"
 import {
     Button,
-    Stack,
     Popover,
     Typography,
     IconButton,
     Paper,
     Box
 } from "@mui/material"
-import { makePostCallWithErrorHandling, verifyUploadStatusForUploadCycleId } from "service/BackendFetchService"
-import ConfirmDialog from "../../widgets/UploadDialog"
-import Spinner from "widgets/Spinner"
 import { FaCopy, FaTimes } from "react-icons/fa"
-import { _launchGradlev2, launchGradleReuploadFailed } from "service/launchGradle"
-import { launchYarnMoveToFreezeByUploadId } from "service/launchYarn"
-import { profile } from "console"
-import { UploadCycleTableData } from "mirror/types"
-import InfoIconWithTooltip from "widgets/InfoIconWithTooltip"
-import { ERROR_RED } from "constants/colors"
-import { DD_MM_YYYY_WITH_TIME_FORMAT } from "utils/utils"
 import moment from "moment"
+import { DD_MM_YYYY_WITH_TIME_FORMAT } from "utils/utils"
 
-export const UploadCycleListPopover: React.FC<{
-    uploadCycleId: string,
-    row: UploadCycleTableData,
+export const ResultDisplayPopover: React.FC<{
     popoverAnchor: HTMLButtonElement | null,
     setPopoverAnchor: (anchor: HTMLButtonElement | null) => void,
     popoverContent: string,
@@ -31,7 +19,7 @@ export const UploadCycleListPopover: React.FC<{
     reactComponent?: JSX.Element,
     setReactComponent: (component: JSX.Element) => void
 
-}> = ({ uploadCycleId, row, popoverAnchor, setPopoverAnchor, 
+}> = ({ popoverAnchor, setPopoverAnchor, 
     popoverContent, actionType, reactComponent, setReactComponent }) => {
 
     const handleCopyContent = () => {

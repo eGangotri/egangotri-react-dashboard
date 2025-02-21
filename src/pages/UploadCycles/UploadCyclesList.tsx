@@ -10,10 +10,10 @@ import { MAX_ITEMS_LISTABLE } from "utils/constants"
 import { createBackgroundForRow } from "./utils"
 import { ColorCodeInformationPanel } from "./ColorCodedInformationPanel"
 import { FaTrash } from "react-icons/fa"
-import ConfirmDialog from "../../widgets/UploadDialog"
+import ConfirmDialog from "../../widgets/ConfirmDialog"
 import { NestedTable } from "./UploadCycleListNestedTable"
 import { ActionButtons } from "./UploadCycleListActionButton"
-import { UploadCycleListPopover } from "./UploadCycleListPopover"
+import { ResultDisplayPopover } from "../../widgets/ResultDisplayPopover"
 import { launchUploader } from "service/launchGradle"
 import { UPLOADS_USHERED_PATH } from "Routes/constants"
 
@@ -152,9 +152,7 @@ const UploadCyclesList: React.FC = () => {
                             {params.value}
                             <FaTrash className="ml-1" />
                         </div>
-                        <UploadCycleListPopover
-                            uploadCycleId={params.row.uploadCycleId}
-                            row={params.row}
+                        <ResultDisplayPopover
                             popoverAnchor={popoverAnchor}
                             setPopoverAnchor={setPopoverAnchor}
                             popoverContent={popoverContent}

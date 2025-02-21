@@ -4,7 +4,7 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import { ExecType, invokeFuncBasedOnExecType } from './ExecLauncherUtil';
-import ConfirmDialog from '../widgets/UploadDialog';
+import ConfirmDialog from '../widgets/ConfirmDialog';
 import Spinner from '../widgets/Spinner';
 import { Popover, Typography, Stack, Tooltip } from '@mui/material';
 import ExecResponsePanel from './ExecResponsePanel';

@@ -9,7 +9,7 @@ import {
     Box
 } from "@mui/material"
 import { makePostCallWithErrorHandling, verifyUploadStatusForUploadCycleId } from "service/BackendFetchService"
-import ConfirmDialog from "../../widgets/UploadDialog"
+import ConfirmDialog from "../../widgets/ConfirmDialog"
 import { FaCopy, FaTimes } from "react-icons/fa"
 import { _launchGradlev2, launchGradleReuploadFailed } from "service/launchGradle"
 import { launchYarnMoveToFreezeByUploadId } from "service/launchYarn"
@@ -19,7 +19,7 @@ import InfoIconWithTooltip from "widgets/InfoIconWithTooltip"
 import { ERROR_RED } from "constants/colors"
 import { DD_MM_YYYY_WITH_TIME_FORMAT } from "utils/utils"
 import moment from "moment"
-import { UploadCycleListPopover } from "./UploadCycleListPopover"
+import { ResultDisplayPopover } from "../../widgets/ResultDisplayPopover"
 
 const TASK_TYPE_ENUM = {
     VERIFY_UPLOAD_STATUS: "Verify Upload Status",
@@ -215,7 +215,7 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({ uploadCycleId, row
                 setOpenDialog={setOpenDialog}
                 invokeFuncOnClick={handleConfirm}
             />
-            <UploadCycleListPopover uploadCycleId={uploadCycleId} row={row} popoverAnchor={popoverAnchor} setPopoverAnchor={setPopoverAnchor} popoverContent={popoverContent} actionType={actionType} reactComponent={reactComponent} setReactComponent={setReactComponent} />
+            <ResultDisplayPopover popoverAnchor={popoverAnchor} setPopoverAnchor={setPopoverAnchor} popoverContent={popoverContent} actionType={actionType} reactComponent={reactComponent} setReactComponent={setReactComponent} />
         </>
     )
 }

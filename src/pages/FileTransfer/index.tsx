@@ -25,7 +25,7 @@ import { IconButton, Tooltip } from "@mui/material";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { FileWidget } from "./FileWidget"
 import { makePostCall } from "mirror/utils"
-import ConfirmDialog from "widgets/UploadDialog"
+import ConfirmDialog from "widgets/ConfirmDialog"
 import { set } from "lodash"
 
 interface JsonData {
@@ -88,7 +88,8 @@ export default function FileTransferList() {
     const [filterValue, setFilterValue] = useState<string>("")
     const [openDialog, setOpenDialog] = useState(false)
     const [idForReverse, setIdForReverse] = useState<string>("")
-
+    const [popoverAnchor, setPopoverAnchor] = useState<HTMLButtonElement | null>(null)
+    const [popoverContent, setPopoverContent] = useState<string>("")
 
     const columns: GridColDef[] = [
         {
@@ -99,6 +100,7 @@ export default function FileTransferList() {
                 <Button
                     variant="contained"
                     color="primary"
+                    id={`reverse-button-${params.row._id}`}
                     disabled={params.row.reversed === true || params.row.success === false}
                     onClick={async () => {
                         setIdForReverse(params.row._id)
@@ -196,13 +198,26 @@ export default function FileTransferList() {
     ]
     const reverseFileMove = async () => {
         setOpenDialog(false);
+        setLoading(true);
         try {
-            // const resource =
-            //     `fileUtil/reverse-file-move`;
-            // const data = await makePostCall({ id:idForReverse },
-            //     resource);
-            // console.log(`data ${JSON.stringify(data)}`);
-            // return data.response;
+            const resource =
+                `fileUtil/reverse-file-move`;
+            const data = await makePostCall({ id: idForReverse },
+                resource);
+            console.log(`data ${JSON.stringify(data)}`);
+            const resp = data.response;
+            setPopoverContent(JSON.stringify(resp, null, 2))
+            setPopoverAnchor(document.getElementById(`reverse-button-${idForReverse}`) as HTMLButtonElement)
+        } catch (error) {
+            console.error("Error deleting upload cycle:", error)
+            setPopoverContent(`Error deleting upload cycle: ${error}`)
+            setPopoverAnchor(document.getElementById(`reverse-button-${idForReverse}`) as HTMLButtonElement)
+        } finally {
+            setLoading(false)
+            fetchData()
+        }
+        try {
+
             console.log("reverseFileMove", idForReverse)
             return { x: idForReverse }
         } catch (error) {
@@ -214,7 +229,7 @@ export default function FileTransferList() {
         try {
             const result = await makeGetCall(`fileUtil/file-move-list?page=${page}&limit=50`);
             if (result && result.data) {
-            console.log("result", result?.data?.length)
+                console.log("result", result?.data?.length)
                 setData(result.data)
                 setTotalPages(result.totalPages)
             }
