@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { DataGrid, GridPaginationModel } from "@mui/x-data-grid";
 import { Box, Typography } from "@mui/material";
-import { makePostCall } from "mirror/utils";
 import { ArchiveItem, archiveItemColumns } from "./constants";
 import { useParams } from "react-router-dom";
+import { makePostCall } from "service/ApiInterceptor";
 
 const ArchiveItemList: React.FC = () => {
     const [items, setItems] = useState<ArchiveItem[]>([]);

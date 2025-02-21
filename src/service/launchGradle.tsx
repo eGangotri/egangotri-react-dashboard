@@ -1,10 +1,7 @@
 import { ArchiveProfileAndAbsPath } from 'mirror/types';
 
-import { utils, writeFile } from 'xlsx';
-import os from 'os';
-import path from 'path';
-import { makePostCall } from 'mirror/utils';
 import { getBackendServer } from 'utils/constants';
+import { makeGetCall ,makePostCall} from './ApiInterceptor';
 
 export async function launchUploader(profiles: string, optionalParams: { [key: string]: any } = {}) {
     return launchGradle(profiles, 'launchUploader', optionalParams)
@@ -65,18 +62,14 @@ export async function launchGradle(profiles: string, gradleTask: string, optiona
 
     const _url = getBackendServer() + `execLauncher/${gradleTask}?profiles=${profiles}&${params}`
     console.log(`_url ${_url}`);
-    const res = await fetch(_url);
-    const jsonResp = res.json()
-    console.log(`res ${JSON.stringify(jsonResp)}`);
+    const jsonResp = await makeGetCall(_url);
     return jsonResp;
 }
 
 export async function _launchGradle(argFirst: string, gradleTask: string) {
     const _url = getBackendServer() + `execLauncher/${gradleTask}?argFirst=${argFirst}`
     console.log(`_url ${_url}`);
-    const res = await fetch(_url);
-    const jsonResp = res.json()
-    console.log(`res ${JSON.stringify(jsonResp)}`);
+    const jsonResp = await makeGetCall(_url);
     return jsonResp;
 }
 
@@ -86,19 +79,8 @@ export async function _launchGradlev2(args: { [key: string]: string }, gradleTas
     const _url = getBackendServer() + `execLauncher/${gradleTask}?${params}`
     console.log(`_url ${_url}`);
     try {
-        const response = await fetch(_url);
-        if (response.ok) {
-            const jsonResp = response.json()
-            console.log(`_launchGradlev2: res ${JSON.stringify(jsonResp)}`);
-            return jsonResp
-        }
-        else {
-            console.log(`response not ok ${response.statusText}`)
-            return {
-                success: false,
-                error: response.statusText
-            };
-        }
+        const response = await makeGetCall(_url);
+        return response;
     }
     catch (error) {
         const err = error as Error;

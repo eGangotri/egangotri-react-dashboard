@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { DataGrid, GridColDef, GridPaginationModel } from "@mui/x-data-grid";
 import { Pagination, Select, MenuItem } from "@mui/material";
-import { makePostCall } from "mirror/utils";
 import { useParams } from 'react-router-dom';
 import Spinner from "widgets/Spinner";
 import { GDriveItem, gDriveItemColumns } from "./constants";
+import { makePostCall } from "service/ApiInterceptor";
 
 const GDriveItemList: React.FC = () => {
     const [items, setItems] = useState<GDriveItem[]>([]);

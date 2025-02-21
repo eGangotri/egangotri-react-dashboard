@@ -20,11 +20,10 @@ import {
     ListItemText,
     Pagination,
 } from "@mui/material"
-import { makeGetCall } from 'service/ApiInterceptor';
+import { makeGetCall, makePostCall } from 'service/ApiInterceptor';
 import { IconButton, Tooltip } from "@mui/material";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { FileWidget } from "./FileWidget"
-import { makePostCall } from "mirror/utils"
 import ConfirmDialog from "widgets/ConfirmDialog"
 import { set } from "lodash"
 import { ResultDisplayPopover } from "widgets/ResultDisplayPopover"

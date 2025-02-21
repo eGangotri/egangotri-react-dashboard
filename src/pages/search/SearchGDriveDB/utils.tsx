@@ -2,10 +2,10 @@ import moment from 'moment';
 import { FaDownload } from 'react-icons/fa';
 import ItemToolTip, { ellipsis } from 'widgets/ItemTooltip';
 import { getGDrivePdfDownloadLink } from 'mirror/GoogleDriveUtilsCommonCode';
-import { makePostCall } from 'mirror/utils'
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { DD_MM_YYYY_FORMAT } from 'utils/utils';
 import renderThumbnailCell from '../thumbnail';
+import { makePostCall } from 'service/ApiInterceptor';
 
 
 export async function searchGoogleDrive(searchTerm: string) {

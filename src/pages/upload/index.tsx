@@ -207,12 +207,12 @@ const Uploads: React.FC<UploadsType> = ({ forQueues = false }) => {
 
   const handleVerifyUploadStatus = async () => {
     const selectedRows = Array.from(gridApiRef.current.getSelectedRows().values()) || []
-    const rowsToVerify: Item[] = (selectedRows.length > 0 ? selectedRows : filteredData) || []
+    const rowsToVerify: Item[] = (selectedRows.length > 0 ? selectedRows as Item[] : filteredData) || []
     const selectedUploadItems: SelectedUploadItem[] = rowsToVerify?.map((row: Item) => ({
       id: row._id,
       archiveId: row.archiveItemId,
       isValid: row.isValid,
-    }))
+    })) 
     const result = await verifyUploadStatus(selectedUploadItems)
     setVerificationResults(result)
   }

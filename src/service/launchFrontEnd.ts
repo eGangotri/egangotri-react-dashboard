@@ -34,25 +34,3 @@ const handleExcel = (excelPath: string, column: string) => {
     return jsonData//.map(row => row[column]);
 }
 
-const downloadPdf = async (url: string, filename: string) => {
-    const response = await fetch(getBackendServer() + url, {
-        mode: 'cors'
-    });
-    const blob = await response.blob();
-
-    const blobUrl = URL.createObjectURL(blob);
-
-    const link = document.createElement('a');
-    link.href = blobUrl;
-    link.download = filename;
-
-    link.dispatchEvent(
-        new MouseEvent('click', {
-            bubbles: true,
-            cancelable: true,
-            view: window
-        })
-    );
-
-    setTimeout(() => URL.revokeObjectURL(blobUrl), 100);
-};

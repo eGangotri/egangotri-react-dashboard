@@ -1,9 +1,9 @@
 import { makePostCallWithErrorHandling } from './BackendFetchService';
 import { ExecResponseDetails } from 'scriptsThruExec/types';
-import { makePostCall } from 'mirror/utils';
 import { FOLDER_OF_UNZIPPED_IMGS, FOLDER_TO_UNZIP } from './consts';
 import { IMG_TYPE_JPG } from 'scriptsThruExec/constants';
 import { ALL_TYPE, PDF_TYPE, ZIP_TYPE } from 'mirror/CommonConstants';
+import { makePostCall } from './ApiInterceptor';
 
 export async function launchVanitizeModule(
     profile: string, suffix:string = ""): Promise<ExecResponseDetails> {

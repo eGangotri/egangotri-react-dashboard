@@ -1,10 +1,10 @@
 import moment from 'moment';
 import { FaDownload } from 'react-icons/fa';
 import ItemToolTip from 'widgets/ItemTooltip';
-import { makePostCall } from 'mirror/utils'
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { DD_MM_YYYY_FORMAT } from 'utils/utils';
 import renderThumbnailCell from '../thumbnail';
+import { makePostCall } from 'service/ApiInterceptor';
 
 export async function searchArchiveDatabase(searchTerm: string) {
     const resource =

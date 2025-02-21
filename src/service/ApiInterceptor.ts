@@ -6,6 +6,7 @@ export const makeGetCall = async (resource: string) => {
     const response = await originalMakeGetCall(resource);
     const endTime = performance.now();
     const timeTaken = endTime - startTime;
+    console.log(`timeTaken for ${resource} ${formatTime(timeTaken)}`);
     return {
         ...response,
         timeTaken: formatTime(timeTaken)
@@ -17,6 +18,7 @@ export const makePostCall = async (body: Record<string, unknown>, resource: stri
     const response = await originalMakePostCall(body, resource);
     const endTime = performance.now();
     const timeTaken = endTime - startTime;
+    console.log(`timeTaken for ${resource} ${formatTime(timeTaken)}`);
     return {
         ...response,
         timeTaken: formatTime(timeTaken)
