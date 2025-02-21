@@ -13,14 +13,14 @@ import { ResultDisplayPopover } from "../../widgets/ResultDisplayPopover";
 
 export const NestedTable: React.FC<{ data: UploadCycleTableData }> = ({ data }) => {
     const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
-    const [titlesForPopover, setTitlesForPopover] = React.useState<JSX.Element | null>(null);
+    const [titlesForPopover, setTitlesForPopover] = React.useState<string>("");
     const handleTitleClick = (event: React.MouseEvent<HTMLButtonElement>, absolutePaths: string[]) => {
         const _titles = (
             <>
                 {absolutePaths?.map((absPath, index) => <Box>({index + 1}) {path.basename(absPath)}</Box>)}
             </>
         )
-        setTitlesForPopover(_titles);
+        setTitlesForPopover(absolutePaths?.map((absPath, index) => `(${index + 1}) ${path.basename(absPath)}`).join("\n"));
         console.log("handleTitleClick: " + event.currentTarget)
         setAnchorEl(event.currentTarget);
     };
@@ -55,7 +55,9 @@ export const NestedTable: React.FC<{ data: UploadCycleTableData }> = ({ data }) 
                     ))}
                 </TableBody>
             </Table>
-            <ResultDisplayPopover popoverAnchor={anchorEl} setPopoverAnchor={setAnchorEl} popoverContent={titlesForPopover} actionType="Titles" />
+            <ResultDisplayPopover popoverAnchor={anchorEl} 
+             setPopoverAnchor={setAnchorEl} 
+             popoverContent={titlesForPopover} actionType="Titles" />
         </>
     )
 }
