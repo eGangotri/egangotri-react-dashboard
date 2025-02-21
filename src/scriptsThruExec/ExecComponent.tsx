@@ -4,7 +4,7 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import { ExecType, invokeFuncBasedOnExecType } from './ExecLauncherUtil';
-import UploadDialog from '../pages/UploadCycles/UploadDialog';
+import ConfirmDialog from '../pages/UploadCycles/UploadDialog';
 import Spinner from '../widgets/Spinner';
 import { Popover, Typography, Stack, Tooltip } from '@mui/material';
 import ExecResponsePanel from './ExecResponsePanel';
@@ -201,7 +201,7 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
             {thirdButton}
           </Box>
         </form>
-        <UploadDialog openDialog={openDialog}
+        <ConfirmDialog openDialog={openDialog}
           handleClose={handleClose}
           setOpenDialog={setOpenDialog}
           invokeFuncOnClick={funcToInvoke} />

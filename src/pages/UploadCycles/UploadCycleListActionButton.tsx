@@ -9,7 +9,7 @@ import {
     Box
 } from "@mui/material"
 import { makePostCallWithErrorHandling, verifyUploadStatusForUploadCycleId } from "service/BackendFetchService"
-import UploadDialog from "./UploadDialog"
+import ConfirmDialog from "./UploadDialog"
 import { FaCopy, FaTimes } from "react-icons/fa"
 import { _launchGradlev2, launchGradleReuploadFailed } from "service/launchGradle"
 import { launchYarnMoveToFreezeByUploadId } from "service/launchYarn"
@@ -209,7 +209,7 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({ uploadCycleId, row
                     <InfoIconWithTooltip input="pnpm move Uploaded items to Freeze folder and disable this button" />
                 </Button>
             </Stack>
-            <UploadDialog
+            <ConfirmDialog
                 openDialog={openDialog}
                 handleClose={() => setOpenDialog(false)}
                 setOpenDialog={setOpenDialog}

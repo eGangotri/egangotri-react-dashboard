@@ -19,7 +19,7 @@ type DialogProps = {
     invokeFuncOnClick2?: () => void;
 }
 
-const UploadDialog: React.FC<DialogProps> = ({ openDialog,
+const ConfirmDialog: React.FC<DialogProps> = ({ openDialog,
     handleClose,
     setOpenDialog,
     invokeFuncOnClick,
@@ -51,4 +51,4 @@ const UploadDialog: React.FC<DialogProps> = ({ openDialog,
     )
 }
 
-export default UploadDialog;
+export default ConfirmDialog;

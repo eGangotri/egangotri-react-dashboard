@@ -25,7 +25,7 @@ import { IconButton, Tooltip } from "@mui/material";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { FileWidget } from "./FileWidget"
 import { makePostCall } from "mirror/utils"
-import UploadDialog from "pages/UploadCycles/UploadDialog"
+import ConfirmDialog from "pages/UploadCycles/UploadDialog"
 import { set } from "lodash"
 
 interface JsonData {
@@ -322,7 +322,7 @@ export default function FileTransferList() {
             <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
                 <Pagination count={totalPages} page={page} onChange={handlePageChange} color="primary" />
             </Box>
-            <UploadDialog
+            <ConfirmDialog
                 openDialog={openDialog}
                 handleClose={() => setOpenDialog(false)}
                 setOpenDialog={setOpenDialog}

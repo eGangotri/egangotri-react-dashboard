@@ -19,7 +19,7 @@ import { MAX_ITEMS_LISTABLE } from 'utils/constants';
 import { ERROR_RED, SUCCESS_GREEN } from 'constants/colors';
 import Spinner from 'widgets/Spinner';
 import { _launchGradlev2, launchGradleReuploadFailed } from 'service/launchGradle';
-import UploadDialog from './UploadDialog';
+import ConfirmDialog from './UploadDialog';
 import { launchYarnMoveToFreezeByUploadId } from 'service/launchYarn';
 import ExecResponsePanel from 'scriptsThruExec/ExecResponsePanel';
 import { ExecResponse, ExecResponseDetails } from 'scriptsThruExec/types';
@@ -554,22 +554,22 @@ const UploadCycles = () => {
                     />
                 </TableContainer>
             </div>
-            <UploadDialog openDialog={openDialog}
+            <ConfirmDialog openDialog={openDialog}
                 handleClose={handleClose}
                 setOpenDialog={setOpenDialog}
                 invokeFuncOnClick={moveToFreeze} />
 
-            <UploadDialog openDialog={openDialogForDelete}
+            <ConfirmDialog openDialog={openDialogForDelete}
                 handleClose={handleClose}
                 setOpenDialog={setOpenDialogForDelete}
                 invokeFuncOnClick={handleDelete} />
 
-            <UploadDialog openDialog={openDialogForReuploadMissed}
+            <ConfirmDialog openDialog={openDialogForReuploadMissed}
                 handleClose={handleClose}
                 setOpenDialog={setOpenDialogForReuploadMissed}
                 invokeFuncOnClick={async () => { console.log("--") }} />
 
-            <UploadDialog openDialog={openDialogForReuploadFailed}
+            <ConfirmDialog openDialog={openDialogForReuploadFailed}
                 handleClose={handleClose}
                 setOpenDialog={setOpenDialogForReuploadFailed}
                 invokeFuncOnClick={reuploadFailed} />

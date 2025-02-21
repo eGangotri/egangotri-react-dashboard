@@ -10,7 +10,7 @@ import { MAX_ITEMS_LISTABLE } from "utils/constants"
 import { createBackgroundForRow } from "./utils"
 import { ColorCodeInformationPanel } from "./ColorCodedInformationPanel"
 import { FaTrash } from "react-icons/fa"
-import UploadDialog from "./UploadDialog"
+import ConfirmDialog from "./UploadDialog"
 import { NestedTable } from "./UploadCycleListNestedTable"
 import { ActionButtons } from "./UploadCycleListActionButton"
 import { UploadCycleListPopover } from "./UploadCycleListPopover"
@@ -304,7 +304,7 @@ const UploadCyclesList: React.FC = () => {
                     getRowClassName={(params) => createBackgroundForRow(params.row)}
                 />
             </Box>
-            <UploadDialog
+            <ConfirmDialog
                 openDialog={openDialog}
                 handleClose={() => setOpenDialog(false)}
                 setOpenDialog={setOpenDialog}
