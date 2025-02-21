@@ -198,7 +198,7 @@ const UploadCyclesList: React.FC = () => {
         } finally {
             setIsLoading(false)
         }
-    }, [fetchUploadCycles])
+    }, [])
 
     const [profilesCsv, setProfilesCsv] = useState("")
     const [extraDescription, setExtraDescription] = useState("")
@@ -226,8 +226,15 @@ const UploadCyclesList: React.FC = () => {
 
     useEffect(() => {
         fetchData()
-    }, [fetchData])
+    }, [])
 
+    const reset = () => {
+        setFilterValue("")
+        setVerifiedFilter("all")
+        setProfilesCsv("")
+        setExtraDescription("")
+
+    }
     return (
         <>
             <ColorCodeInformationPanel />
@@ -281,6 +288,13 @@ const UploadCyclesList: React.FC = () => {
                             <MenuItem value="null">N/A</MenuItem>
                         </Select>
                     </FormControl>
+                    <Button variant="contained"
+                        color="primary"
+                        sx={{ my: 1 ,pt:1}}
+                        onClick={() => reset()}
+                        disabled={isLoading}>
+                        Reset
+                    </Button>
                 </Box>
                 <DataGrid
                     rows={filteredData}
@@ -290,7 +304,7 @@ const UploadCyclesList: React.FC = () => {
                             paginationModel: { page: 0, pageSize: 5 },
                         },
                     }}
-                    pageSizeOptions={[5, 10, 25]}
+                    pageSizeOptions={[8, 10, 25]}
                     checkboxSelection
                     disableRowSelectionOnClick
                     loading={isLoading}
