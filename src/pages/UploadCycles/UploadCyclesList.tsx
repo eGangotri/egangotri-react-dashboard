@@ -27,7 +27,6 @@ const UploadCyclesList: React.FC = () => {
     const [deletableUploadCycleId, setDeletableUploadCycleId] = useState<string>("")
     const [popoverAnchor, setPopoverAnchor] = useState<HTMLButtonElement | null>(null)
     const [popoverContent, setPopoverContent] = useState<string>("")
-    const [reactComponent, setReactComponent] = useState<JSX.Element>(<></>)
     const [filterValue, setFilterValue] = useState<string>("")
     const [verifiedFilter, setVerifiedFilter] = useState<VerifiedFilter>("all")
 
@@ -157,8 +156,6 @@ const UploadCyclesList: React.FC = () => {
                             setPopoverAnchor={setPopoverAnchor}
                             popoverContent={popoverContent}
                             actionType={"Delete Results"}
-                            reactComponent={reactComponent}
-                            setReactComponent={setReactComponent}
                         />
                     </>
                 )

@@ -17,7 +17,7 @@ export const ResultDisplayPopover: React.FC<{
     popoverContent: string,
     actionType: string,
     reactComponent?: JSX.Element,
-    setReactComponent: (component: JSX.Element) => void
+    setReactComponent?: (component: JSX.Element) => void
 
 }> = ({ popoverAnchor, setPopoverAnchor, 
     popoverContent, actionType, reactComponent, setReactComponent }) => {
@@ -47,7 +47,7 @@ export const ResultDisplayPopover: React.FC<{
     >
         <Paper className="p-4 max-w-md">
             <div className="flex justify-between items-center mb-2">
-                <Typography variant="h6">{actionType} Result</Typography>
+                <Typography variant="h6">{actionType}</Typography>
                 <div>
                     <IconButton onClick={handleCopyContent} size="small" className="mr-2">
                         <FaCopy className="h-4 w-4" />

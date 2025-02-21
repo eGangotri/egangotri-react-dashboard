@@ -27,6 +27,7 @@ import { FileWidget } from "./FileWidget"
 import { makePostCall } from "mirror/utils"
 import ConfirmDialog from "widgets/ConfirmDialog"
 import { set } from "lodash"
+import { ResultDisplayPopover } from "widgets/ResultDisplayPopover"
 
 interface JsonData {
     _id: string
@@ -93,26 +94,6 @@ export default function FileTransferList() {
 
     const columns: GridColDef[] = [
         {
-            field: "reverse",
-            headerName: "Reverse",
-            width: 150,
-            renderCell: (params: GridRenderCellParams) => (
-                <Button
-                    variant="contained"
-                    color="primary"
-                    id={`reverse-button-${params.row._id}`}
-                    disabled={params.row.reversed === true || params.row.success === false}
-                    onClick={async () => {
-                        setIdForReverse(params.row._id)
-                        setOpenDialog(true)
-                        return
-                    }}
-                >
-                    Reverse
-                </Button>
-            ),
-        },
-        {
             field: "filesMoved",
             headerName: "Files Transferred",
             width: 150,
@@ -147,6 +128,34 @@ export default function FileTransferList() {
                 <FileWidget files={params.row.fileCollisionsResolvedByRename}
                     label="Collisions Resolved"
                 />
+            ),
+        },
+        {
+            field: "reverse",
+            headerName: "Reverse",
+            width: 150,
+            renderCell: (params: GridRenderCellParams) => (
+                <>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        id={`reverse-button-${params.row._id}`}
+                        disabled={params.row.reversed === true || params.row.success === false}
+                        onClick={async () => {
+                            setIdForReverse(params.row._id)
+                            setOpenDialog(true)
+                            return
+                        }}
+                    >
+                        Reverse
+                    </Button>
+                    <ResultDisplayPopover
+                        popoverAnchor={popoverAnchor}
+                        setPopoverAnchor={setPopoverAnchor}
+                        popoverContent={popoverContent}
+                        actionType={"Reverse File Move"}
+                    />
+                </>
             ),
         },
         {
