@@ -1,12 +1,7 @@
 import path from "path";
 import { ExecResponseDetails } from "scriptsThruExec/types";
 import { readFile } from 'xlsx';
-import { writeFileSync } from 'fs';
 import * as XLSX from 'xlsx';
-import { read, utils } from 'xlsx';
-import { getBackendServer } from "utils/constants";
-
-//"
 
 export const downloadFromExcelUsingFrontEnd = async (excelPath: string, column: string): Promise<ExecResponseDetails> => {
     handleExcel(excelPath, column);

@@ -9,6 +9,9 @@ const QUEUE_API_PREFIX = "itemsQueued";
 const USHERED_API_PREFIX = "itemsushered";
 
 
+export const chooseApiPrefix = (forQueues = false) => {
+  return forQueues ? QUEUE_API_PREFIX : USHERED_API_PREFIX;
+};
 export const originalMakePostCall = async (body: Record<string, unknown>, resource: string) => {
   const requestOptions: RequestInit = {
     method: "POST",
@@ -40,9 +43,6 @@ export const originalMakePostCall = async (body: Record<string, unknown>, resour
       error: "Exception thrown. May be Backend Server down." + err.message
     };
   }
-};
-export const chooseApiPrefix = (forQueues = false) => {
-  return forQueues ? QUEUE_API_PREFIX : USHERED_API_PREFIX;
 };
 
 export const originalMakeGetCall = async (resource: string) => {

@@ -2,7 +2,6 @@ import { format } from "date-fns";
 import {
   SECONDARY_DATE_FORMAT,
 } from "utils/date-constants";
-import { getBackendServer } from "./constants";
 
 export const formatWithTInMiddle = (date: Date, startOfDay = true):string => {
   const formattedTime = format(date, SECONDARY_DATE_FORMAT);

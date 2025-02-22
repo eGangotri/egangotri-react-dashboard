@@ -27,6 +27,7 @@ const UploadCyclesList: React.FC = () => {
     const [deletableUploadCycleId, setDeletableUploadCycleId] = useState<string>("")
     const [popoverAnchor, setPopoverAnchor] = useState<HTMLButtonElement | null>(null)
     const [popoverContent, setPopoverContent] = useState<string>("")
+    const [popoverTitle, setPopoverTitle] = useState<string>("")
     const [filterValue, setFilterValue] = useState<string>("")
     const [verifiedFilter, setVerifiedFilter] = useState<VerifiedFilter>("all")
 
@@ -50,10 +51,12 @@ const UploadCyclesList: React.FC = () => {
             const _resp = await deleteUploadCycleById(_uploadCycleId)
             console.log(`result ${JSON.stringify(_resp)}`)
             setPopoverContent(JSON.stringify(_resp, null, 2))
+            setPopoverTitle("Delete Results")
             setPopoverAnchor(document.getElementById(`delete-button-${_uploadCycleId}`) as HTMLButtonElement)
         } catch (error) {
             console.error("Error deleting upload cycle:", error)
             setPopoverContent(`Error deleting upload cycle: ${error}`)
+            setPopoverTitle("Delete Results")
             setPopoverAnchor(document.getElementById(`delete-button-${_uploadCycleId}`) as HTMLButtonElement)
         } finally {
             setIsLoading(false)
@@ -214,10 +217,12 @@ const UploadCyclesList: React.FC = () => {
             console.log(`result ${JSON.stringify(_resp)}`)
             setPopoverContent(JSON.stringify(_resp, null, 2))
             setPopoverAnchor(document.getElementById("profiles-csv") as HTMLButtonElement)
+            setPopoverTitle("Upload Results")
         } catch (error) {
             console.error("Error uploading:", error)
             setPopoverContent(`Error uploading: ${error}`)
             setPopoverAnchor(document.getElementById("profiles-csv") as HTMLButtonElement)
+            setPopoverTitle("Upload Results")
         } finally {
             setIsLoading(false)
             fetchData()

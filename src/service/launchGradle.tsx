@@ -1,6 +1,5 @@
 import { ArchiveProfileAndAbsPath } from 'mirror/types';
 
-import { getBackendServer } from 'utils/constants';
 import { makeGetCall ,makePostCall} from './ApiInterceptor';
 
 export async function launchUploader(profiles: string, optionalParams: { [key: string]: any } = {}) {
@@ -40,7 +39,7 @@ export async function launchLocalFolderListingForAll(params: string) {
 }
 
 const extractValue = (text: string, pattern: RegExp): string => {
-    const match = text.match(pattern);
+    const match = text?.match(pattern);
     return match ? match[1] : 'Not found';
   };
 
@@ -50,8 +49,8 @@ export async function launchLocalFolderListingForPdf(params: string) {
         "pdfsOnly": "true"
     }, 'bookTitles')
 
-    const totalPages = extractValue(jsonResp?.response, /Total Pages:\s*([\d,]+)/);
-    const totalFileCount = extractValue(jsonResp?.response, /Total File Count:\s*(\d+)/);
+    const totalPages = extractValue(jsonResp?.response.stdout, /Total Pages:\s*([\d,]+)/);
+    const totalFileCount = extractValue(jsonResp?.response.stdout, /Total File Count:\s*(\d+)/);
     console.log(`totalPages ${totalPages}`);
     return { totalPages, totalFileCount,response: jsonResp.response }
 }
@@ -60,14 +59,14 @@ export async function launchGradle(profiles: string, gradleTask: string, optiona
     const params = Object.keys(optionalParams).length === 0 ? "" : new URLSearchParams(optionalParams).toString();
     console.log(`optionalParams ${JSON.stringify(optionalParams)} params ${params}`);
 
-    const _url = getBackendServer() + `execLauncher/${gradleTask}?profiles=${profiles}&${params}`
+    const _url = `execLauncher/${gradleTask}?profiles=${profiles}&${params}`
     console.log(`_url ${_url}`);
     const jsonResp = await makeGetCall(_url);
     return jsonResp;
 }
 
 export async function _launchGradle(argFirst: string, gradleTask: string) {
-    const _url = getBackendServer() + `execLauncher/${gradleTask}?argFirst=${argFirst}`
+    const _url = `execLauncher/${gradleTask}?argFirst=${argFirst}`
     console.log(`_url ${_url}`);
     const jsonResp = await makeGetCall(_url);
     return jsonResp;
@@ -76,7 +75,7 @@ export async function _launchGradle(argFirst: string, gradleTask: string) {
 
 export async function _launchGradlev2(args: { [key: string]: string }, gradleTask: string) {
     const params = new URLSearchParams(args).toString();
-    const _url = getBackendServer() + `execLauncher/${gradleTask}?${params}`
+    const _url = `execLauncher/${gradleTask}?${params}`
     console.log(`_url ${_url}`);
     try {
         const response = await makeGetCall(_url);
