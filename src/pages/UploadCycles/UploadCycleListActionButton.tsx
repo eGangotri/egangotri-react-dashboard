@@ -24,7 +24,7 @@ import { ResultDisplayPopover } from "../../widgets/ResultDisplayPopover"
 const TASK_TYPE_ENUM = {
     VERIFY_UPLOAD_STATUS: "Verify Upload Status",
     FIND_MISSING: "Find Missing",
-    REUPLOAD_FAILED: "Reupload Failed",
+    REUPLOAD_FAILED: "Reupload of Failed-Items",
     MOVE_TO_FREEZE: "Move to Freeze",
 }
 

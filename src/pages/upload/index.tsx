@@ -144,7 +144,7 @@ const Uploads: React.FC<UploadsType> = ({ forQueues = false }) => {
     })()
   }, [fetchMyAPI])
 
-  const handleFilterChange = useCallback(() => {
+  const handleFilterChangeO = useCallback(() => {
     const filtered = data.filter((row) => {
       const matchesArchiveProfile = archiveProfileFilter ? row.archiveProfile.includes(archiveProfileFilter) : true
       const matchesTitle = titleFilter ? row.title.includes(titleFilter) : true
@@ -154,6 +154,22 @@ const Uploads: React.FC<UploadsType> = ({ forQueues = false }) => {
     })
     setFilteredData(filtered)
   }, [data, archiveProfileFilter, titleFilter, startDate, endDate])
+
+
+  const matchesFilter = (row: Item) => {
+    const matchesArchiveProfile = archiveProfileFilter ? row.archiveProfile.toLowerCase().includes(archiveProfileFilter.toLowerCase()) : true
+    const matchesTitle = titleFilter ? row.title.toLowerCase().includes(titleFilter.toLowerCase()) : true
+
+    const matchesDateRange =
+      startDate && endDate ? new Date(row.createdAt) >= startDate && new Date(row.createdAt) <= endDate : true
+    return matchesArchiveProfile && matchesTitle && matchesDateRange
+  }
+
+  const handleFilterChange = useCallback(() => {
+    const filtered = data.filter(matchesFilter)
+    setFilteredData(filtered)
+  }, [data, archiveProfileFilter, titleFilter, startDate, endDate])
+
 
   useEffect(() => {
     handleFilterChange()
@@ -221,7 +237,7 @@ const Uploads: React.FC<UploadsType> = ({ forQueues = false }) => {
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <Box sx={{ height: 600, width: "100%" }}>
         <Typography variant="h4" gutterBottom>
-          Manuscript Listing
+         Scanned Material Listing
         </Typography>
         <Grid container spacing={2} sx={{ mb: 2 }}>
           <Grid item xs={12} sm={6} md={3}>
