@@ -79,8 +79,10 @@ const GDriveDownloadListing: React.FC = () => {
         const loadDownloads = async () => {
             try {
                 const { data, totalItems } = await fetchGDriveDownloads(paginationModel.page + 1, paginationModel.pageSize)
-                setDownloads(data)
-                setTotalItems(totalItems)
+                if (data) {
+                    setDownloads(data)
+                    setTotalItems(totalItems)
+                }
             } catch (error) {
                 console.error("Error fetching GDrive downloads:", error)
             }
@@ -100,7 +102,7 @@ const GDriveDownloadListing: React.FC = () => {
     const handleCopyLink = (link: string) => {
         navigator.clipboard.writeText(link);
         alert("Link copied to clipboard!");
-      };
+    };
     const columns: GridColDef[] = [
         {
             field: "googleDriveLink",
@@ -118,7 +120,7 @@ const GDriveDownloadListing: React.FC = () => {
                 </div>
             ),
         },
-        { field: "profileNameOrAbsPath", headerName: "Profile/Path", width:150 , filterable: true },
+        { field: "profileNameOrAbsPath", headerName: "Profile/Path", width: 150, filterable: true },
         { field: "fileDumpFolder", headerName: "Dump Folder", width: 250, filterable: true },
         {
             field: "status",
@@ -143,11 +145,11 @@ const GDriveDownloadListing: React.FC = () => {
         {
             field: "msg",
             headerName: "Msg",
-            width: 100,
+            width: 130,
             filterable: true,
             renderCell: (params) => (
                 <Button variant="contained" onClick={() => handleOpenMsg(params.value)}>
-                    View Msg
+                    View Msg ({params?.value?.split(",").length})
                 </Button>
             ),
         },
