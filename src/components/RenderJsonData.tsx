@@ -109,8 +109,7 @@ const ExpandableText: React.FC<ExpandableTextProps> = ({ text }) => {
               variant="outlined"
               size="small"
               onClick={handleCopy}
-              sta
-              rtIcon={<ContentCopy fontSize="small" />}
+              startIcon={<ContentCopy fontSize="small" />}
               sx={{ mt: 1 }}
             >
               Copy
