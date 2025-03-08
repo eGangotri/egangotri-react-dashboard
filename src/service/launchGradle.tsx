@@ -51,8 +51,10 @@ export async function launchLocalFolderListingForPdf(params: string) {
 
     const totalPages = extractValue(jsonResp?.response.stdout, /Total Pages:\s*([\d,]+)/);
     const totalFileCount = extractValue(jsonResp?.response.stdout, /Total File Count:\s*(\d+)/);
+    const excelPath = extractValue(jsonResp?.response.stdout, /CSV to Excel :\s*([^\s]+\.xlsx)\b/)?.trim();
+    
     console.log(`totalPages ${totalPages}`);
-    return { totalPages, totalFileCount,response: jsonResp.response }
+    return { totalPages, totalFileCount, excelPath, response: jsonResp.response }
 }
 
 export async function launchGradle(profiles: string, gradleTask: string, optionalParams: { [key: string]: any } = {}) {
