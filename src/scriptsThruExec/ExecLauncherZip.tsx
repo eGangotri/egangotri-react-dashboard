@@ -204,6 +204,7 @@ const ExecLauncherZip: React.FC = () => {
                     buttonText="Img Files(any/jpg/png/tiff) to pdf"
                     placeholder='Folder Abs Path'
                     execType={imgType}
+                    secondTextBoxPlaceHolder='Dest Folder Abs Path'
                     reactComponent={<>
                         <RadioGroup aria-label="fileType" name="fileType" value={imgType} onChange={handleChangeImgFilesToPdf} row>
                             <FormControlLabel value={ExecType.ANY_IMG_TYPE_TO_PDF} control={<Radio />} label="ANY" />
@@ -223,11 +224,13 @@ const ExecLauncherZip: React.FC = () => {
                     css2={{ backgroundColor: "violet", width: "450px" }}
                 />
                 <ExecComponent
-                    buttonText="Verify Img Files(any/jpg/png/tiff) to pdf"
+                    buttonText="Verify(PY) Img Files(any/jpg/png/tiff) to pdf"
                     placeholder='Folder Abs Path'
                     execType={imgTypeForVerification}
                     textBoxOneValue={folderOfUnzippedImgs}
+                    secondTextBoxPlaceHolder='Dest Folder Abs Path'
                     css={{ backgroundColor: "violet", width: "450px" }}
+                    css2={{ backgroundColor: "violet", width: "450px" }}
                     reactComponent={<>
                         <RadioGroup aria-label="imgTypeForVerification" name="imgTypeForVerification" value={imgTypeForVerification} onChange={handleChangeImgFilesForVerificationToPdf} row>
                             <FormControlLabel value={ExecType.VERIFY_IMG_TO_PDF_SUCCESS_ANY} control={<Radio />} label={IMG_TYPE_ANY} />

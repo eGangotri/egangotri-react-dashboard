@@ -74,7 +74,7 @@ export async function launchImgFilesToPdf(folder: string,
     return jsonData;
 }
 
-export async function verifyImgToPdfSuccess(folder: string,
+export async function verifyImgToPdfSuccessOld(folder: string,
     imgType: string = IMG_TYPE_JPG): Promise<ExecResponseDetails> {
     const jsonData = await makePostCallWithErrorHandling({
         folder: folder,
@@ -83,6 +83,9 @@ export async function verifyImgToPdfSuccess(folder: string,
     console.log(`result ${JSON.stringify(jsonData)}`)
     return jsonData;
 }
+
+
+
 export async function unzipFolders(folder: string): Promise<ExecResponseDetails> {
     const jsonData = await makePostCallWithErrorHandling({
         "folder": folder,
