@@ -64,15 +64,6 @@ export async function launchGoogleDriveZipDownload(googleDriveLink: string,
     return jsonData;
 }
 
-export async function launchImgFilesToPdf(folder: string,
-    imgType: string = IMG_TYPE_JPG): Promise<ExecResponseDetails> {
-    const jsonData = await makePostCallWithErrorHandling({
-        folder: folder,
-        imgType: imgType,
-    }, `execLauncher/imgFilesToPdfGradleVersion`)
-    console.log(`result ${JSON.stringify(jsonData)}`);
-    return jsonData;
-}
 
 export async function verifyImgToPdfSuccessOld(folder: string,
     imgType: string = IMG_TYPE_JPG): Promise<ExecResponseDetails> {

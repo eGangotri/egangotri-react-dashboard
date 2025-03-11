@@ -14,7 +14,6 @@ import {
   launchArchivePdfDownload,
   launchGoogleDriveDownload,
   launchGoogleDriveZipDownload,
-  launchImgFilesToPdf,
   launchVanitizeModule,
   launchYarnMoveToFreeze,
   launchYarnMoveToFreezeByUploadId,
@@ -263,7 +262,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
           profileOrFolder: dataUserInput,
           absPathsAsCSV: dataUserInput2Mandatory,
         },
-          `fileUtil/moveFilesAsCSVOfAbsPaths`,);
+          `fileUtil/moveFilesAsCSVOfAbsPaths`);
         break;
 
       case ExecType.ReverseMove:
@@ -360,7 +359,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         }, `pythonScripts/verfiyImgtoPdf`);
         break;
 
-        //unimplemented  
+      //unimplemented  
       case ExecType.DownloadFilesFromExcel_Via_Front_End:
         _resp = await downloadFromExcelUsingFrontEnd(dataUserInput, dataUserInput2Mandatory);
         break;
@@ -492,7 +491,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
           topN: dataUserInput2Mandatory,
           includePathInCalc: false
         },
-          `fileUtil/topLongFileNames`,);
+          `fileUtil/topLongFileNames`);
         break;
 
 
@@ -502,7 +501,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
           topN: dataUserInput2Mandatory,
           includePathInCalc: true
         },
-          `fileUtil/topLongFileNames`,);
+          `fileUtil/topLongFileNames`);
         break;
 
       case ExecType.DUPLICATES_BY_FILE_SIZE:
@@ -511,7 +510,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
           folder2: dataUserInput2Mandatory,
           findDisjoint: false
         },
-          `fileUtil/findByFileSize`,);
+          `fileUtil/findByFileSize`);
         break;
 
       case ExecType.DISJOINT_SET_BY_FILE_SIZE:
@@ -520,7 +519,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
           folder2: dataUserInput2Mandatory,
           findDisjoint: true
         },
-          `fileUtil/findByFileSize`,);
+          `fileUtil/findByFileSize`);
         break;
 
       case ExecType.RENAME_NON_ASCII_FILE_NAMES_IN_FOLDER:
@@ -528,23 +527,41 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
           folder: dataUserInput,
           script: dataUserInput2Mandatory,
         },
-          `fileUtil/renameNonAsciiFiles`,);
+          `fileUtil/renameNonAsciiFiles`);
         break;
 
       case ExecType.JPG_TO_PDF:
-        _resp = await launchImgFilesToPdf(dataUserInput, IMG_TYPE_JPG);
+        _resp = await makePostCallWithErrorHandling({
+          src_folder: dataUserInput,
+          dest_folder: dataUserInput2Mandatory,
+          img_type: IMG_TYPE_ANY,
+        }, `pythonScripts/convert-img-folder-to-pdf`);
         break;
 
       case ExecType.PNG_TO_PDF:
-        _resp = await launchImgFilesToPdf(dataUserInput, IMG_TYPE_PNG);
+        _resp = await makePostCallWithErrorHandling({
+          src_folder: dataUserInput,
+          dest_folder: dataUserInput2Mandatory,
+          img_type: IMG_TYPE_ANY,
+        }, `pythonScripts/convert-img-folder-to-pdf`);
         break;
 
       case ExecType.TIFF_TO_PDF:
-        _resp = await launchImgFilesToPdf(dataUserInput, IMG_TYPE_TIF);
+
+        _resp = await makePostCallWithErrorHandling({
+          src_folder: dataUserInput,
+          dest_folder: dataUserInput2Mandatory,
+          img_type: IMG_TYPE_ANY,
+        }, `pythonScripts/convert-img-folder-to-pdf`);
         break;
 
       case ExecType.CR2_TO_PDF:
-        _resp = await launchImgFilesToPdf(dataUserInput, IMG_TYPE_CR2);
+
+        _resp = await makePostCallWithErrorHandling({
+          src_folder: dataUserInput,
+          dest_folder: dataUserInput2Mandatory,
+          img_type: IMG_TYPE_ANY,
+        }, `pythonScripts/convert-img-folder-to-pdf`);
         break;
 
       case ExecType.ANY_IMG_TYPE_TO_PDF:
@@ -552,7 +569,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
           src_folder: dataUserInput,
           dest_folder: dataUserInput2Mandatory,
           img_type: IMG_TYPE_ANY,
-        }, `pythonScripts/convert-folder-to-pdf`);
+        }, `pythonScripts/convert-img-folder-to-pdf`);
         break;
 
       case ExecType.COMBINE_GDRIVE_AND_REDUCED_PDF_DRIVE_EXCELS:
