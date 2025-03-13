@@ -40,8 +40,8 @@ const RenderJsonData: React.FC<ApiResponse> = ({ response }) => {
       );
     }
     else {
-      const text = json.toString();
-      if (text.length > MAX_DISPLAYABLE) {
+      const text = json?.toString();
+      if (text?.length > MAX_DISPLAYABLE) {
         return <ExpandableText text={text} />;
       }
       return <span>{text}</span>;

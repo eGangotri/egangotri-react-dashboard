@@ -52,7 +52,35 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
 
   const [backendResp, setBackendResp] = React.useState({});
 
-  
+  const formatResponse = (resp: any): string => {
+    const date = new Date().toLocaleString();
+    let result = 'Backend Resp.\n\n';
+    result += `date: ${date}\n`;
+
+    const formatObject = (obj: any, indent: string = ''): string => {
+      let output = '';
+      for (const [key, value] of Object.entries(obj)) {
+        if (Array.isArray(value)) {
+          output += `${indent}${key}:\n`;
+          value.forEach((item) => {
+            if (typeof item === 'object') {
+              output += formatObject(item, indent + '  ');
+            } else {
+              output += `${indent}  ${item}\n`;
+            }
+          });
+        } else if (value && typeof value === 'object') {
+          output += `${indent}${key}:\n${formatObject(value, indent + '  ')}`;
+        } else {
+          output += `${indent}${key}: ${value}\n`;
+        }
+      }
+      return output;
+    };
+
+    return result + formatObject(resp);
+  };
+
   const funcToInvoke = async (event: React.MouseEvent<HTMLButtonElement>) => {
     const currentTarget = event.currentTarget
     setOpenDialog(false);
@@ -127,10 +155,26 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
               <Button
                 variant="contained"
                 onClick={async (e: React.MouseEvent<HTMLButtonElement>) => {
-                  //  await findMissingAndSetInPopover(e, row)
                   try {
-                    await navigator.clipboard.writeText(JSON.stringify(backendResp));
+                    await navigator.clipboard.writeText(JSON.stringify(backendResp, null, 2));
                     console.log('Text copied to clipboard');
+                  } catch (err) {
+                    console.error('Failed to copy text: ', err);
+                  }
+                }
+                }
+                size="small"
+                sx={{ color: "#f38484", width: "200px", marginTop: "10px", marginRight: "10px" }}
+                disabled={isLoading}
+              >
+                Copy JSON
+              </Button>
+              <Button
+                variant="contained"
+                onClick={async (e: React.MouseEvent<HTMLButtonElement>) => {
+                  try {
+                    await navigator.clipboard.writeText(formatResponse(backendResp));
+                    console.log('Formatted text copied to clipboard');
                   } catch (err) {
                     console.error('Failed to copy text: ', err);
                   }
@@ -140,7 +184,7 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
                 sx={{ color: "#f38484", width: "200px", marginTop: "10px" }}
                 disabled={isLoading}
               >
-                Copy Logs
+                Copy Formatted
               </Button>
               <IconButton
                 aria-label="close"

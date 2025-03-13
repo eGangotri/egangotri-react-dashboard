@@ -325,7 +325,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
 
       case ExecType.VERIFY_IMG_TO_PDF_SUCCESS_ANY:
         _resp = await makePostCallWithErrorHandling({
-          folder_path: dataUserInput,
+          src_folder: dataUserInput,
           img_type: IMG_TYPE_ANY,
           dest_folder: dataUserInput2Mandatory
         }, `pythonScripts/verfiyImgtoPdf`);
@@ -333,28 +333,28 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
 
       case ExecType.VERIFY_IMG_TO_PDF_SUCCESS_JPG:
         _resp = await makePostCallWithErrorHandling({
-          folder_path: dataUserInput, img_type: IMG_TYPE_JPG,
+          src_folder: dataUserInput, img_type: IMG_TYPE_JPG,
           dest_folder: dataUserInput2Mandatory
         }, `pythonScripts/verfiyImgtoPdf`);
         break;
 
       case ExecType.VERIFY_IMG_TO_PDF_SUCCESS_PNG:
         _resp = await makePostCallWithErrorHandling({
-          folder_path: dataUserInput, img_type: IMG_TYPE_PNG,
+          src_folder: dataUserInput, img_type: IMG_TYPE_PNG,
           dest_folder: dataUserInput2Mandatory
         }, `pythonScripts/verfiyImgtoPdf`);
         break;
 
       case ExecType.VERIFY_IMG_TO_PDF_SUCCESS_TIF:
         _resp = await makePostCallWithErrorHandling({
-          folder_path: dataUserInput, img_type: IMG_TYPE_TIF,
+          src_folder: dataUserInput, img_type: IMG_TYPE_TIF,
           dest_folder: dataUserInput2Mandatory
         }, `pythonScripts/verfiyImgtoPdf`);
         break;
 
       case ExecType.VERIFY_IMG_TO_PDF_SUCCESS_CR2:
         _resp = await makePostCallForTopN({
-          folder_path: dataUserInput, img_type: IMG_TYPE_CR2,
+          src_folder: dataUserInput, img_type: IMG_TYPE_CR2,
           dest_folder: dataUserInput2Mandatory
         }, `pythonScripts/verfiyImgtoPdf`);
         break;
