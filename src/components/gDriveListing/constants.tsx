@@ -1,5 +1,5 @@
 import { Typography } from "@mui/material";
-import { GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
+import { GridColDef } from "@mui/x-data-grid";
 import { formatMem } from "mirror/utils";
 import { Link } from "react-router-dom";
 import { G_DRIVE_ITEM_LIST_PATH } from "Routes/constants";

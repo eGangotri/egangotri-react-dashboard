@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { GridColDef, GridRenderCellParams, GridValueGetterParams } from "@mui/x-data-grid";
+import { GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { ARCHIVE_ITEM_LIST_PATH } from "Routes/constants";
 import { formatMem } from "mirror/utils";
 import { Box, Chip, Stack, Typography } from "@mui/material";
