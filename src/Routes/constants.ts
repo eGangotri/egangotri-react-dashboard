@@ -34,4 +34,5 @@ export const FILE_TRANSFER_LISTING = "/fileTransferListingPath";
 export const GDRIVE_DWNL_LISTING = "/gDriveDwnldListingPath";
 
 export const AI_TEXT_IDENTIFIER = "/aiPath";
+export const PDF_UTIL = "/pdfMerge";
 

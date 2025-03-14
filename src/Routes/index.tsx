@@ -51,7 +51,8 @@ import {
     FILE_TRANSFER_LISTING,
     GDRIVE_DWNL_LISTING,
     UPLOADS_USHERED_OLD_PATH,
-    LANDING_PAGE_OLD_PATH
+    LANDING_PAGE_OLD_PATH,
+    PDF_UTIL
   } from './constants';
 import GDriveItemAggregates from 'components/gDriveListing/gDriveAggregatesByProfile';
 import ArchiveItemList from 'components/archiveListing';
@@ -97,6 +98,7 @@ const DashboardRoutes: React.FC = () => {
             {<Route path={ARCHIVE_ITEM_AGGREGATES_PATH} element={<ArchiveItemAggregates />} />}
             
             {<Route path={RENAME_PDFS} element={<RenamePdfs />} />}
+            {<Route path={PDF_UTIL} element={<RenamePdfs />} />}
         </>
     );
 

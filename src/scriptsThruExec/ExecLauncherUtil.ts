@@ -119,6 +119,7 @@ export enum ExecType {
   RENAME_FIES_VIA_EXCEL = 101,
 
   GET_FIRST_N_PAGES_PYTHON = 200,
+  MERGE_PDFS_PYTHON = 200499,
   COPY_ALL_PDFS_PYTHON = 200300,
   GET_FIRST_N_PAGES_GRADLE = 200200,
   COMBINE_GDRIVE_AND_REDUCED_PDF_DRIVE_EXCELS = 201,
@@ -461,15 +462,22 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         break;
 
       case ExecType.GET_FIRST_N_PAGES_PYTHON:
-        _resp = await makePostCallForTopN({
+        _resp = await makePostCallWithErrorHandling({
           srcFolders: dataUserInput,
           destRootFolder: dataUserInput2Mandatory,
           nPages: dataUserInput3NonMandatory,
         }, `pythonScripts/getFirstAndLastNPages`);
         break;
-
+        
+      case ExecType.MERGE_PDFS_PYTHON:
+        _resp = await makePostCallWithErrorHandling({
+          first_pdf_path: dataUserInput,
+          second_pdf_path: dataUserInput2Mandatory,
+        }, `pythonScripts/merge-pdfs`);
+        break;
+        
       case ExecType.COPY_ALL_PDFS_PYTHON:
-        _resp = await makePostCallForTopN({
+        _resp = await makePostCallWithErrorHandling({
           srcFolders: dataUserInput,
           destRootFolder: dataUserInput2Mandatory,
           nPages: dataUserInput3NonMandatory,
