@@ -62,6 +62,7 @@ import FileTransferList from 'pages/FileTransfer';
 import GDriveDownloadListing from 'pages/GDriveDownloadList';
 import UploadsOld from 'pages/upload/indexOld';
 import UploadCyclesList from 'pages/UploadCycles/UploadCyclesList';
+import PdfUtil from 'scriptsThruExec/PdfUtil';
 const DashboardRoutes: React.FC = () => {
     const isLocalhost = true; //window.location.hostname === 'localhost';
     const allFrags = (
@@ -98,7 +99,7 @@ const DashboardRoutes: React.FC = () => {
             {<Route path={ARCHIVE_ITEM_AGGREGATES_PATH} element={<ArchiveItemAggregates />} />}
             
             {<Route path={RENAME_PDFS} element={<RenamePdfs />} />}
-            {<Route path={PDF_UTIL} element={<RenamePdfs />} />}
+            {<Route path={PDF_UTIL} element={<PdfUtil />} />}
         </>
     );
 

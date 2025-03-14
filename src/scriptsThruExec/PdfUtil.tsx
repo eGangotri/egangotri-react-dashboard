@@ -20,22 +20,16 @@ const PdfUtil: React.FC = () => {
 
     return (
         <Box display="flex" gap={4} mb={2} flexDirection="row">
-    
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
                 <ExecComponent
                     buttonText="Merge PDF"
                     placeholder='Absolute Path to Pdf-1'
                     secondTextBoxPlaceHolder='Absolute Path to Pdf-1'
-                    execType={ExecType.GET_FIRST_N_PAGES_PYTHON}
-                    css={{ minWidth: "23vw" }}
-                    css2={{ minWidth: "23vw" }}
-                    css3={{ marginTop: "30px", minWidth: "23vw" }}
+                    thirdTextBoxPlaceHolder='Optional Abs Path to 3rd Pdf if exists'
+                    execType={ExecType.MERGE_PDFS_PYTHON}
+                    css={{ minWidth: "453vw" }}
+                    css2={{ minWidth: "453vw" }}
                 />
-            </Box>
-
-            <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
-               
-             
             </Box>
         </Box>
 

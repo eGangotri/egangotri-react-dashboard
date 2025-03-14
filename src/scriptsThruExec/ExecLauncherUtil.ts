@@ -473,7 +473,8 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         _resp = await makePostCallWithErrorHandling({
           first_pdf_path: dataUserInput,
           second_pdf_path: dataUserInput2Mandatory,
-        }, `pythonScripts/merge-pdfs`);
+          third_pdf_path: dataUserInput3NonMandatory,
+        }, `pythonScripts/mergePdfs`);
         break;
         
       case ExecType.COPY_ALL_PDFS_PYTHON:
