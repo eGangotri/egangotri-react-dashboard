@@ -138,12 +138,16 @@ const Uploads: React.FC<UploadsType> = ({ forQueues = false }) => {
 
   useEffect(() => {
     ; (async () => {
-      const _data = (await fetchMyAPI()) || []
-      const formattedData = _data.map((x: any) => ({ id: x._id, ...x }))
-      setData(formattedData)
-      setFilteredData(formattedData)
-      const uniqueProfiles = Array.from(new Set<string>(_data?.map((x: Item) => x.archiveProfile)))
-      console.log(`_data ${_data.length} ${formattedData[0]} uniqueProfiles: ${Array.from(uniqueProfiles)}`)
+      try {
+        const _data = (await fetchMyAPI()) || []
+        const formattedData = _data.map((x: any) => ({ id: x._id, ...x }))
+        setData(formattedData)
+        setFilteredData(formattedData)
+        const uniqueProfiles = Array.from(new Set<string>(_data?.map((x: Item) => x.archiveProfile)))
+        console.log(`_data ${_data.length} ${JSON.stringify(formattedData[0])} uniqueProfiles: ${Array.from(uniqueProfiles)}`)
+      } catch (error) {
+        console.error("Error fetching data:", error)
+      }
     })()
   }, [fetchMyAPI])
 
@@ -343,6 +347,7 @@ const Uploads: React.FC<UploadsType> = ({ forQueues = false }) => {
             onRowSelectionModelChange={(newSelectionModel) => {
               setSelectedRowCount(newSelectionModel.length)
             }}
+            getRowId={(row) => row.id}
           />
         </Box>
         <Dialog open={openDialog} onClose={handleCloseDialog}>
