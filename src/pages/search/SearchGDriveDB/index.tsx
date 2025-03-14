@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Stack, Box, TextField, Button, CircularProgress, Typography, Switch, FormControlLabel } from '@mui/material';
+import { Stack, Box, TextField, Button, CircularProgress, Switch, FormControlLabel } from '@mui/material';
 import { DataGrid, GridPaginationModel } from '@mui/x-data-grid';
 ;
 import { GDriveData, SearchDBProps } from '../types';
 import { SEARCH_GDRIVE_DB_COLUMNS, searchGoogleDrive } from './utils';
-import { filterLogic, filterLogicForGDriveSearch } from '../utils';
+import { filterLogicForGDriveSearch } from '../utils';
 
 
 export const getPdfDownloadLink = (driveId: string) => {
