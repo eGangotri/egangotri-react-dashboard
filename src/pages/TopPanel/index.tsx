@@ -1,13 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { AppBar, Toolbar, Menu, MenuItem, Typography, Box, Button, Breadcrumbs, Link } from '@mui/material';
-
+import { AppBar, Toolbar, Menu, MenuItem, Box, Button, Breadcrumbs, Link } from '@mui/material';
 import { getMenuLabels, Submenu, TOP_PANEL_MENU, TopPanelMenu } from './constants';
 
-
-
 const TopPanel: React.FC = () => {
- 
 const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 const [menuName, setMenuName] = useState<string | null>(null);
 const [breadcrumbs, setBreadcrumbs] = useState<string[]>([]);
