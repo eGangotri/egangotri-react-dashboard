@@ -29,9 +29,9 @@ const handleCloseMenu = () => {
   setMenuName(null);
 };
 
-const createNavLink = (path: string, label: string) => (
-  <NavLink to={path} style={{ textDecoration: 'none', color: 'inherit' }}>
-    <MenuItem key={label} onClick={handleCloseMenu}>{label}</MenuItem>
+const createNavLink = (path: string, label: string, index: number) => (
+  <NavLink key={`nav-${label}-${index}`} to={path} style={{ textDecoration: 'none', color: 'inherit' }}>
+    <MenuItem onClick={handleCloseMenu}>{label}</MenuItem>
   </NavLink>
 );
 
@@ -40,31 +40,28 @@ return (
     <AppBar position="static" className='mt-4 mb-4 mr-4'>
       <Toolbar>
         <Box sx={{ display: 'flex', gap: 2 }} >
-          {TOP_PANEL_MENU.map((_panelMenu: TopPanelMenu) => (
-            <>
+          {TOP_PANEL_MENU.map((_panelMenu: TopPanelMenu, menuIndex: number) => (
+            <React.Fragment key={`menu-${_panelMenu.menuLabel}-${menuIndex}`}>
               <Button
-                key={_panelMenu.menuLabel}
                 onClick={(event) => handleOpenMenu(event, _panelMenu.menuLabel)}
                 color="inherit"
               >
                 {_panelMenu.menuLabel}
               </Button>
               <Menu
+                id={_panelMenu.menuLabel}
                 anchorEl={anchorEl}
                 open={menuName === _panelMenu.menuLabel}
                 onClose={handleCloseMenu}
-                key={menuName}
               >
                 {
-                  _panelMenu.submenu.map((item: Submenu) => {
-                    return (createNavLink(item.path, item.label)
-                    )
-                  }
-                  )}
+                  _panelMenu.submenu.map((item: Submenu, itemIndex: number) => 
+                    createNavLink(item.path, item.label, itemIndex)
+                  )
+                }
               </Menu>
-            </>
+            </React.Fragment>
           ))}
-
         </Box>
       </Toolbar>
     </AppBar>

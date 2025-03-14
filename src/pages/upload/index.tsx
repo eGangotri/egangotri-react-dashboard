@@ -336,7 +336,7 @@ const Uploads: React.FC<UploadsType> = ({ forQueues = false }) => {
                 paginationModel: { page: 0, pageSize: 10 },
               },
             }}
-            pageSizeOptions={[10, 20, 50]}
+            pageSizeOptions={[5, 10, 20, 50]}
             checkboxSelection
             getRowClassName={(params) => highlightRow(params.row)}
             apiRef={gridApiRef}
