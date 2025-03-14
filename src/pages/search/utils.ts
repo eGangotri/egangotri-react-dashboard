@@ -1,5 +1,5 @@
 
- const filterLogic = (data: any[],
+export const filterLogic = (data: any[],
      filterTerm: string,
       _useOrLogic: boolean,
       titleKey: string = "titleGDrive") => {
