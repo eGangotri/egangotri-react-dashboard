@@ -1,6 +1,7 @@
 import type React from "react"
-import { useEffect, useState, useCallback, useRef } from "react"
-import { DataGrid, type GridColDef, type GridApiRef } from "@mui/x-data-grid"
+import { useEffect, useState, useCallback } from "react"
+import { DataGrid, type GridColDef } from "@mui/x-data-grid"
+import { useGridApiRef } from "@mui/x-data-grid"
 import { Button, Box, Typography, TextField, Grid, Alert } from "@mui/material"
 import { DatePicker } from "@mui/x-date-pickers/DatePicker"
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider"
@@ -36,7 +37,7 @@ interface VerificationResponse {
   response: VerificationResult
 }
 const columns: GridColDef[] = [
-  { field: "_id", headerName: "ID", width: 40 },
+  { field: "id", headerName: "ID", width: 40 },
   {
     field: "uploadCycleId",
     headerName: "Upload Cycle ID",
@@ -78,6 +79,7 @@ interface UploadsType {
 }
 
 interface Item {
+  id: string
   _id: string
   archiveProfile: string
   uploadLink: string
@@ -105,13 +107,14 @@ const Uploads: React.FC<UploadsType> = ({ forQueues = false }) => {
   const [verificationResults, setVerificationResults] = useState<VerificationResult>()
   const [selectedRowCount, setSelectedRowCount] = useState(0) // Added state for selected row count
 
-  const gridApiRef = useRef<GridApiRef>(null)
+  const gridApiRef = useGridApiRef()
 
   const [searchParams] = useSearchParams()
 
   const downloadExcel = () => {
-    const selectedRows = gridApiRef.current.getSelectedRows()
-    const dataToExport = selectedRows.size > 0 ? Array.from(selectedRows.values()) : filteredData
+    const selectedRowIds = gridApiRef.current?.getSelectedRows()
+    const selectedItems = filteredData.filter(item => selectedRowIds?.has(item.id))
+    const dataToExport = selectedItems.length > 0 ? selectedItems : filteredData
     const worksheet = XLSX.utils.json_to_sheet(dataToExport)
     const workbook = XLSX.utils.book_new()
     const timeComponent = moment(new Date()).format(DD_MM_YYYY_WITH_TIME_FORMAT);
@@ -136,7 +139,7 @@ const Uploads: React.FC<UploadsType> = ({ forQueues = false }) => {
   useEffect(() => {
     ; (async () => {
       const _data = (await fetchMyAPI()) || []
-      const formattedData = _data.map((x: Item) => ({ id: x._id, ...x }))
+      const formattedData = _data.map((x: any) => ({ id: x._id, ...x }))
       setData(formattedData)
       setFilteredData(formattedData)
       const uniqueProfiles = Array.from(new Set<string>(_data?.map((x: Item) => x.archiveProfile)))
@@ -195,8 +198,9 @@ const Uploads: React.FC<UploadsType> = ({ forQueues = false }) => {
     return formattedResult.join("\n\n");
   }
   const handleShareableText = () => {
-    const selectedRows = gridApiRef.current.getSelectedRows()
-    const textData: Item[] = selectedRowCount > 0 ? Array.from(selectedRows.values()) : filteredData;
+    const selectedRowIds = gridApiRef.current?.getSelectedRows()
+    const selectedItems = filteredData.filter(item => selectedRowIds?.has(item.id))
+    const textData: Item[] = selectedItems.length > 0 ? selectedItems : filteredData;
     const textDataFormatted = formatShareableData(textData);
     setShareableText(textDataFormatted)
     setOpenDialog(true)
@@ -222,10 +226,11 @@ const Uploads: React.FC<UploadsType> = ({ forQueues = false }) => {
   }
 
   const handleVerifyUploadStatus = async () => {
-    const selectedRows = Array.from(gridApiRef.current.getSelectedRows().values()) || []
-    const rowsToVerify: Item[] = (selectedRows.length > 0 ? selectedRows as Item[] : filteredData) || []
+    const selectedRowIds = gridApiRef.current?.getSelectedRows()
+    const selectedItems = filteredData.filter(item => selectedRowIds?.has(item.id))
+    const rowsToVerify: Item[] = selectedItems.length > 0 ? selectedItems : filteredData
     const selectedUploadItems: SelectedUploadItem[] = rowsToVerify?.map((row: Item) => ({
-      id: row._id,
+      id: row.id,
       archiveId: row.archiveItemId,
       isValid: row.isValid,
     })) 
@@ -370,4 +375,3 @@ const Uploads: React.FC<UploadsType> = ({ forQueues = false }) => {
 }
 
 export default Uploads
-
