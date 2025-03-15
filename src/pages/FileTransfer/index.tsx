@@ -303,6 +303,8 @@ export default function FileTransferList() {
                     placeholder='Src Path for Moving QA-Passed-to-Pipeline'
                     secondTextBoxPlaceHolder="Profile Name or Absolute Path"
                     execType={ExecType.MoveFolderContents}
+                    css={{ minWidth: "350vw" }}
+                    css2={{ minWidth: "350vw" }}
                 />
             </Box>
             <Typography variant="h4" component="h1" gutterBottom>
