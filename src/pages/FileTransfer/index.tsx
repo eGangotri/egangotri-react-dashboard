@@ -27,6 +27,8 @@ import { FileWidget } from "./FileWidget"
 import ConfirmDialog from "widgets/ConfirmDialog"
 import { set } from "lodash"
 import { ResultDisplayPopover } from "widgets/ResultDisplayPopover"
+import { ExecType } from "scriptsThruExec/ExecLauncherUtil";
+import ExecComponent from "scriptsThruExec/ExecComponent";
 
 interface JsonData {
     _id: string
@@ -146,7 +148,7 @@ export default function FileTransferList() {
                             return
                         }}
                     >
-                        { params.row.reversed === true ? "Reversed": "Reverse" }
+                        {params.row.reversed === true ? "Reversed" : "Reverse"}
                     </Button>
                     <ResultDisplayPopover
                         popoverAnchor={popoverAnchor}
@@ -235,7 +237,7 @@ export default function FileTransferList() {
     const fetchData = async () => {
         setLoading(true)
         try {
-            const result = await makeGetCall(`fileUtil/file-move-list?page=${page}&limit=50`);
+            const result = await makeGetCall(`fileUtil/file-move-list?page=${page}&limit=150`);
             if (result && result.data) {
                 console.log("result", result?.data?.length)
                 setData(result.data)
@@ -295,6 +297,14 @@ export default function FileTransferList() {
 
     return (
         <Box sx={{ height: 600, width: "100%" }}>
+            <Box display="flex" alignItems="center" gap={4} mb={2} flexDirection="column">
+                <ExecComponent
+                    buttonText="Move Folder Contents"
+                    placeholder='Src Path for Moving QA-Passed-to-Pipeline'
+                    secondTextBoxPlaceHolder="Profile Name or Absolute Path"
+                    execType={ExecType.MoveFolderContents}
+                />
+            </Box>
             <Typography variant="h4" component="h1" gutterBottom>
                 File Transfer List
             </Typography>
