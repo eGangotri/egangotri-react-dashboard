@@ -1,4 +1,4 @@
-import type React from "react"
+import React, { ChangeEvent } from "react"
 import { useState, useEffect } from "react"
 import {
     DataGrid,
@@ -7,9 +7,11 @@ import {
     type GridFilterModel,
     GridToolbar,
 } from "@mui/x-data-grid"
-import { Button, Dialog, DialogTitle, DialogContent, Chip, IconButton } from "@mui/material"
+import { Button, Dialog, DialogTitle, DialogContent, Chip, IconButton, Box, RadioGroup, FormControlLabel, Typography, Radio } from "@mui/material"
 import { makeGetCall } from 'service/ApiInterceptor';
 import { FaCopy } from "react-icons/fa";
+import ExecComponent from "scriptsThruExec/ExecComponent";
+import { ExecType } from "scriptsThruExec/ExecLauncherUtil";
 
 // Types
 interface ICompositeDocument {
@@ -48,7 +50,11 @@ interface FetchResponse {
     totalItems: number
 }
 
+
 const GDriveDownloadListing: React.FC = () => {
+    
+    const [gDriveFileType, setGDriveFileType] = React.useState<number>(ExecType.DWNLD_PDFS_ONLY_FROM_GOOGLE_DRIVE);
+    const [label, setLabel] = React.useState<string>("");
     const [downloads, setDownloads] = useState<IGDriveDownload[]>([])
     const [selectedFiles, setSelectedFiles] = useState<ICompositeDocument[]>([])
     const [openDialog, setOpenDialog] = useState(false)
@@ -69,6 +75,31 @@ const GDriveDownloadListing: React.FC = () => {
         pageSize: 5,
     })
 
+    const chooseGDriveFileType = (event: ChangeEvent<HTMLInputElement>) => {
+        const _val = event.target.value;
+        console.log("_val", _val)
+        let _dwnldFileType;
+        switch (Number(_val)) {
+            case ExecType.DWNLD_PDFS_ONLY_FROM_GOOGLE_DRIVE:
+                _dwnldFileType = ExecType.DWNLD_PDFS_ONLY_FROM_GOOGLE_DRIVE;
+                break;
+            case ExecType.DWNLD_ZIPS_ONLY_FROM_GOOGLE_DRIVE:
+                _dwnldFileType = ExecType.DWNLD_ZIPS_ONLY_FROM_GOOGLE_DRIVE;
+                break;
+            case ExecType.DWNLD_ALL_FROM_GOOGLE_DRIVE:
+                _dwnldFileType = ExecType.DWNLD_ALL_FROM_GOOGLE_DRIVE;
+                break;
+        }
+        console.log("_dwnldFileType", _dwnldFileType);
+        setGDriveFileType(_dwnldFileType || ExecType.DWNLD_PDFS_ONLY_FROM_GOOGLE_DRIVE);
+        if (_dwnldFileType === ExecType.DWNLD_PDFS_ONLY_FROM_GOOGLE_DRIVE) {
+            setLabel("PDFs");
+        } else if (_dwnldFileType === ExecType.DWNLD_ZIPS_ONLY_FROM_GOOGLE_DRIVE) {
+            setLabel("Zips");
+        } else if (_dwnldFileType === ExecType.DWNLD_ALL_FROM_GOOGLE_DRIVE) {
+            setLabel("All");
+        }
+    };
     const fetchGDriveDownloads = async (page: number, pageSize: number): Promise<FetchResponse> => {
         const response = await makeGetCall(`gDriveDownloadRoute/getGDriveDownloads?page=${page}&limit=${pageSize}`)
         console.log(`resp from fetchAggregates: ${JSON.stringify(response)}`)
@@ -107,7 +138,7 @@ const GDriveDownloadListing: React.FC = () => {
         {
             field: "googleDriveLink",
             headerName: "Google Drive Link",
-            width: 150,
+            width: 200,
             filterable: true,
             renderCell: (params) => (
                 <div className="flex items-center">
@@ -145,7 +176,7 @@ const GDriveDownloadListing: React.FC = () => {
         {
             field: "msg",
             headerName: "Msg",
-            width: 130,
+            width: 150,
             filterable: true,
             renderCell: (params) => (
                 <Button variant="contained" onClick={() => handleOpenMsg(params.value)}>
@@ -156,7 +187,7 @@ const GDriveDownloadListing: React.FC = () => {
         {
             field: "files",
             headerName: "Files",
-            width: 120,
+            width: 150,
             filterable: false,
             renderCell: (params) => (
                 <Button variant="contained" onClick={() => handleOpenFiles(params.value)}>
@@ -183,14 +214,14 @@ const GDriveDownloadListing: React.FC = () => {
             headerName: "Type",
             width: 50,
             filterable: true,
-            valueFormatter: (params) => params.value.toString().toUpperCase(),
+            valueFormatter: (params) => params?.value?.toString()?.toUpperCase(),
         },
         {
             field: "createdAt",
             headerName: "Created At",
             width: 200,
             filterable: true,
-            valueFormatter: (params) => new Date(params.value).toLocaleString(),
+            valueFormatter: (params) => new Date(params?.value)?.toLocaleString(),
         },
     ]
 
@@ -222,6 +253,30 @@ const GDriveDownloadListing: React.FC = () => {
 
     return (
         <div className="h-[400px] w-full">
+            <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
+                <ExecComponent
+                    buttonText={`D/l ${label} from GDrive`}
+                    placeholder='Enter Google Drive Link(s)/Identifiers as csv'
+                    secondTextBoxPlaceHolder='Enter Profile or File Abs Path'
+                    execType={gDriveFileType}
+                    css={{ backgroundColor: "lightgreen", width: "450px" }}
+                    css2={{ backgroundColor: "lightgreen", width: "450px" }}
+                    reactComponent={<>
+                        <RadioGroup aria-label="gDriveFileType" name="gDriveFileType" value={gDriveFileType} onChange={chooseGDriveFileType} row>
+                            <FormControlLabel value={ExecType.DWNLD_PDFS_ONLY_FROM_GOOGLE_DRIVE} control={<Radio />} label="PDF-Only" />
+                            <FormControlLabel value={ExecType.DWNLD_ZIPS_ONLY_FROM_GOOGLE_DRIVE} control={<Radio />} label="ZIP-ONLY" />
+                            <FormControlLabel value={ExecType.DWNLD_ALL_FROM_GOOGLE_DRIVE} control={<Radio />} label="ALL" />
+                        </RadioGroup>
+                    </>}
+                />
+                <Typography variant="body1" gutterBottom>
+                    <p>Warning. Some G-drive-dwnld-ed folders dont delete.</p>
+                    <p>Use 7Zip Del to delete or from cmd prompt from:</p>
+                    <p>File:  del "C:\path\to\your\file.txt"</p>
+                    <p>Folder: rmdir /s /q "D:\_playground\FILE_PATH"</p>
+                </Typography>
+
+            </Box>
             <DataGrid
                 rows={downloads}
                 columns={columns}
