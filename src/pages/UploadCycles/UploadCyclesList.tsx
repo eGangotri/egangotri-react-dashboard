@@ -255,14 +255,12 @@ const UploadCyclesList: React.FC = () => {
                         onChange={(e) => setProfilesCsv(e.target.value)}
                         sx={{ mb: 2, mr: 2 }}
                     />
-
                     <TextField
                         label="Optional Extra Subject/Description"
                         value={extraDescription}
                         onChange={(e) => setExtraDescription(e.target.value)}
                         sx={{ mb: 2, mr: 2 }}
                     />
-
                     <Button variant="contained"
                         color="primary" onClick={uploadToArchive}
                         sx={{ mt: 1 }}
