@@ -7,7 +7,7 @@ import {
     type GridFilterModel,
     GridToolbar,
 } from "@mui/x-data-grid"
-import { Button, Dialog, DialogTitle, DialogContent, Chip, IconButton, Box, RadioGroup, FormControlLabel, Typography, Radio } from "@mui/material"
+import { Button, Dialog, DialogTitle, DialogContent, Chip, IconButton, Box, RadioGroup, FormControlLabel, Typography, Radio, CircularProgress } from "@mui/material"
 import { makeGetCall } from 'service/ApiInterceptor';
 import { FaCopy } from "react-icons/fa";
 import ExecComponent from "scriptsThruExec/ExecComponent";
@@ -70,6 +70,11 @@ const GDriveDownloadListing: React.FC = () => {
     const [openMsgDialog, setOpenMsgDialog] = useState(false)
     const [selectedMsg, setSelectedMsg] = useState("")
 
+    const [apiResult, setApiResult] = useState<any>(null)
+    const [apiLoading, setApiLoading] = useState(false)
+    const [openApiResultDialog, setOpenApiResultDialog] = useState(false)
+    const [apiError, setApiError] = useState<string | null>(null)
+
     const [filesPaginationModel, setFilesPaginationModel] = useState<GridPaginationModel>({
         page: 0,
         pageSize: 5,
@@ -130,6 +135,25 @@ const GDriveDownloadListing: React.FC = () => {
         setSelectedMsg(msg)
         setOpenMsgDialog(true)
     }
+
+    const handleApiCall = async (googleDriveLink: string, profileNameOrAbsPath: string) => {
+        setApiLoading(true)
+        setApiError(null)
+        try {
+            // Replace with your actual API endpoint
+            const response = await makeGetCall(`api/processGDriveLink?googleDriveLink=${encodeURIComponent(googleDriveLink)}&profileNameOrAbsPath=${encodeURIComponent(profileNameOrAbsPath)}`)
+            setApiResult(response)
+            setOpenApiResultDialog(true)
+        } catch (error) {
+            console.error("Error calling API:", error)
+            setApiError(error instanceof Error ? error.message : "Unknown error occurred")
+            setApiResult(null)
+            setOpenApiResultDialog(true)
+        } finally {
+            setApiLoading(false)
+        }
+    }
+
     const handleCopyLink = (link: string) => {
         navigator.clipboard.writeText(link);
         alert("Link copied to clipboard!");
@@ -152,6 +176,7 @@ const GDriveDownloadListing: React.FC = () => {
             ),
         },
         { field: "profileNameOrAbsPath", headerName: "Profile/Path", width: 150, filterable: true },
+        
         { field: "fileDumpFolder", headerName: "Dump Folder", width: 250, filterable: true },
         {
             field: "status",
@@ -223,6 +248,22 @@ const GDriveDownloadListing: React.FC = () => {
             filterable: true,
             valueFormatter: (params) => new Date(params?.value)?.toLocaleString(),
         },
+        {
+            field: "apiCall",
+            headerName: "API Action",
+            width: 150,
+            filterable: false,
+            renderCell: (params) => (
+                <Button 
+                    variant="contained" 
+                    color="primary"
+                    onClick={() => handleApiCall(params.row.googleDriveLink, params.row.profileNameOrAbsPath)}
+                    disabled={apiLoading}
+                >
+                    {apiLoading ? <CircularProgress size={24} /> : "Process Link"}
+                </Button>
+            ),
+        },
     ]
 
     const fileColumns: GridColDef[] = [
@@ -269,13 +310,6 @@ const GDriveDownloadListing: React.FC = () => {
                         </RadioGroup>
                     </>}
                 />
-                <Typography variant="body1" gutterBottom>
-                    <p>Warning. Some G-drive-dwnld-ed folders dont delete.</p>
-                    <p>Use 7Zip Del to delete or from cmd prompt from:</p>
-                    <p>File:  del "C:\path\to\your\file.txt"</p>
-                    <p>Folder: rmdir /s /q "D:\_playground\FILE_PATH"</p>
-                </Typography>
-
             </Box>
             <DataGrid
                 rows={downloads}
@@ -325,9 +359,31 @@ const GDriveDownloadListing: React.FC = () => {
                     ))}
                 </DialogContent>
             </Dialog>
+
+            {/* New Dialog for API Result */}
+            <Dialog open={openApiResultDialog} onClose={() => setOpenApiResultDialog(false)} maxWidth="md" fullWidth>
+                <DialogTitle>API Result</DialogTitle>
+                <DialogContent className="max-h-96 overflow-y-auto">
+                    {apiLoading ? (
+                        <Box display="flex" justifyContent="center" alignItems="center" height="200px">
+                            <CircularProgress />
+                        </Box>
+                    ) : apiError ? (
+                        <Typography color="error">{apiError}</Typography>
+                    ) : apiResult ? (
+                        <Box>
+                            <Typography variant="h6" gutterBottom>Result:</Typography>
+                            <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
+                                {JSON.stringify(apiResult, null, 2)}
+                            </pre>
+                        </Box>
+                    ) : (
+                        <Typography>No result available</Typography>
+                    )}
+                </DialogContent>
+            </Dialog>
         </div>
     )
 }
 
 export default GDriveDownloadListing
-
