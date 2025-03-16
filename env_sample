@@ -1,0 +1,6 @@
+VITE_BACKEND_SERVER_PROD=https://egangotri-node-backend-.onrender.com
+VITE_BACKEND_SERVER_DEV=http://localhost:8000/
+VITE_DEV_ENV="dev"
+VITE_LAST_DEPLOYMENT_ON="24-04-24"
+VITE_FAST_REFRESH=false
+VITE_GOOGLE_CLIENT_ID=42342342342-li0lsvrogjv23rr7234234a024n88n2t9o.apps.googleusercontent.com
