@@ -260,7 +260,7 @@ const GDriveDownloadListing: React.FC = () => {
                     onClick={() => handleApiCall(params.row.googleDriveLink, params.row.profileNameOrAbsPath)}
                     disabled={apiLoading}
                 >
-                    {apiLoading ? <CircularProgress size={24} /> : "Process Link"}
+                    {apiLoading ? <CircularProgress size={24} /> : "Verify"}
                 </Button>
             ),
         },
