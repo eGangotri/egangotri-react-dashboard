@@ -11,6 +11,7 @@ const ExecLauncherOne: React.FC = () => {
     const [excelGDrive, setExcelGDrive] = React.useState<number>(ExecType.GenExcelOfGoogleDriveLinkPdfOnly);
     const [gDriveFileType, setGDriveFileType] = React.useState<number>(ExecType.DWNLD_PDFS_ONLY_FROM_GOOGLE_DRIVE);
     const [label, setLabel] = React.useState<string>("");
+    const [verfiyGDrive, setVerifyGDrive] = React.useState<number>(ExecType.VERIFY_G_DRIVE_PDF_DOWNLOAD);
 
     const chooseGDriveExcelType = (event: ChangeEvent<HTMLInputElement>) => {
         const _val = event.target.value;
@@ -60,6 +61,24 @@ const ExecLauncherOne: React.FC = () => {
         }
     };
 
+    const chooseVerifyGDriveFileType = (event: ChangeEvent<HTMLInputElement>) => {
+        const _val = event.target.value;
+        console.log("_val", _val)
+        let _verifyFileType;
+        switch (Number(_val)) {
+            case ExecType.VERIFY_G_DRIVE_PDF_DOWNLOAD:
+                _verifyFileType = ExecType.VERIFY_G_DRIVE_PDF_DOWNLOAD;
+                break;
+            case ExecType.VERIFY_G_DRIVE_ZIP_DOWNLOAD:
+                _verifyFileType = ExecType.VERIFY_G_DRIVE_ZIP_DOWNLOAD;
+                break;
+            case ExecType.VERIFY_G_DRIVE_ALL_DOWNLOAD:
+                _verifyFileType = ExecType.VERIFY_G_DRIVE_ALL_DOWNLOAD;
+                break;
+        }
+        console.log("_dwnldFileType", _verifyFileType);
+    };
+
     const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event?.target?.files || []
         const file0 = (file?.length || 0) > 0 ? file[0] : null;
@@ -95,34 +114,34 @@ const ExecLauncherOne: React.FC = () => {
         width: "450px"
     });
 
-    
+
     const [validationCss2, setValidationCss2] = React.useState({
         backgroundColor: "lightgreen",
         width: "450px"
     });
 
-    
-        const [gDriveExcelName, setGDriveExcelName] = useState('');
-        const [localListingExcelName, setLocalListingExcelName] = useState('');
-        const loadFromLocalStorage = () => {
-            let storedValue = localStorage.getItem(`${GDRIVE_EXCEL_NAME_LOCAL_STORAGE_KEY}${ALL_NOT_JUST_PDF_SUFFIX}`);
-    
-            console.log(`loadFromLocalStorage called ${storedValue}`)
-            if (storedValue) {
-                setGDriveExcelName(storedValue || "-");
-            }
-    
-            let storedValue2 = localStorage.getItem(LOCAL_LISTING_EXCEL_LOCAL_STORAGE_KEY);
-            console.log(`loadFromLocalStorage called ${storedValue2}`)
-            if (storedValue2) {
-                setLocalListingExcelName(storedValue2);
-            }
+
+    const [gDriveExcelName, setGDriveExcelName] = useState('');
+    const [localListingExcelName, setLocalListingExcelName] = useState('');
+    const loadFromLocalStorage = () => {
+        let storedValue = localStorage.getItem(`${GDRIVE_EXCEL_NAME_LOCAL_STORAGE_KEY}${ALL_NOT_JUST_PDF_SUFFIX}`);
+
+        console.log(`loadFromLocalStorage called ${storedValue}`)
+        if (storedValue) {
+            setGDriveExcelName(storedValue || "-");
         }
-    
+
+        let storedValue2 = localStorage.getItem(LOCAL_LISTING_EXCEL_LOCAL_STORAGE_KEY);
+        console.log(`loadFromLocalStorage called ${storedValue2}`)
+        if (storedValue2) {
+            setLocalListingExcelName(storedValue2);
+        }
+    }
+
 
     const handleInputChange = (inputValue: string, num = 1) => {
         console.log("inputValue", inputValue, `inputValue.includes("ab") ${inputValue.includes("ab")}`);
-        if(num === 1){
+        if (num === 1) {
             if (inputValue.includes("/") || inputValue.includes("\\")) {
                 setValidationCss({ backgroundColor: "red", width: "450px" });
             } else {
@@ -162,7 +181,20 @@ const ExecLauncherOne: React.FC = () => {
                     <p>File:  del "C:\path\to\your\file.txt"</p>
                     <p>Folder: rmdir /s /q "D:\_playground\FILE_PATH"</p>
                 </Typography>
-
+                <ExecComponent
+                    execType={verfiyGDrive}
+                    css={{ minWidth: "30vw" }}
+                    css2={{ minWidth: "30vw" }}
+                    buttonText="Verify Task:D/l Tasks from GDrive"
+                    placeholder='Enter Google Drive Link(s)/Identifiers as csv'
+                    secondTextBoxPlaceHolder='Enter Profile or File Abs Path'
+                    reactComponent={<>
+                        <RadioGroup aria-label="verfiyGDrive" name="verfiyGDrive" value={verfiyGDrive} onChange={chooseVerifyGDriveFileType} row>
+                            <FormControlLabel value={ExecType.VERIFY_G_DRIVE_PDF_DOWNLOAD} control={<Radio />} label="PDF-Only" />
+                            <FormControlLabel value={ExecType.VERIFY_G_DRIVE_ZIP_DOWNLOAD} control={<Radio />} label="ZIP-ONLY" />
+                            <FormControlLabel value={ExecType.VERIFY_G_DRIVE_ALL_DOWNLOAD} control={<Radio />} label="ALL" />
+                        </RadioGroup></>}
+                />
             </Box>
 
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
@@ -191,18 +223,18 @@ const ExecLauncherOne: React.FC = () => {
                     execType={ExecType.DownloadAllGDriveItemsViaExcel}
                     css={{ width: "450px" }}
                     css2={validationCss2}
-                    onInputChange={(x) =>handleInputChange(x,2)}
+                    onInputChange={(x) => handleInputChange(x, 2)}
                     userInputTwoInfoNonMandatory="Only Folder Name not Path"
                 />
 
             </Box>
 
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
-            <ExecComponent buttonText="List all Files in Local Folder as Excel - PNPM"
+                <ExecComponent buttonText="List all Files in Local Folder as Excel - PNPM"
                     placeholder='Folder Path or Freezed Profile'
                     execType={ExecType.GenListingsofLocalFolderAsAllYarn}
                 />
-                
+
                 <ExecComponent
                     buttonText="Compare G-Drive and Local Excel"
                     placeholder='Absolute Path to G-Drive Excel'
