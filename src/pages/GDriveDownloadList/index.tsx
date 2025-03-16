@@ -156,7 +156,6 @@ const GDriveDownloadListing: React.FC = () => {
 
     const handleCopyLink = (link: string) => {
         navigator.clipboard.writeText(link);
-        alert("Link copied to clipboard!");
     };
     const columns: GridColDef[] = [
         {
