@@ -1,6 +1,6 @@
 import type React from "react"
 import { useState, useEffect } from "react"
-import { DataGrid, type GridColDef, , type GridRenderCellParams } from "@mui/x-data-grid"
+import { DataGrid, type GridColDef, type GridRenderCellParams } from "@mui/x-data-grid"
 import {
     Box,
     Typography,
