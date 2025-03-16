@@ -41,7 +41,7 @@ const UploadCycles = () => {
     const [anchorEl2, setAnchorEl2] = React.useState<HTMLButtonElement | null>(null);
     const [anchorEl3, setAnchorEl3] = React.useState<HTMLButtonElement | null>(null);
     const [anchorEl4, setAnchorEl4] = React.useState<HTMLButtonElement | HTMLDivElement | null>(null);
-    const [anchorElReuploadMissed, setAnchorElReuploadMissed] = React.useState<HTMLButtonElement | null>(null);
+    const [anchorElReuploadMissed, setAnchorElReuploadMissed] = React.useState<HTMLButtonElement | HTMLDivElement | null>(null);
     const [anchorElReuploadFailed, setAnchorElReuploadFailed] = React.useState<HTMLButtonElement | null>(null);
 
     const [titlesForPopover, setTitlesForPopover] = useState(<></>);
@@ -100,7 +100,7 @@ const UploadCycles = () => {
 
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, sortedData?.length - page * rowsPerPage);
 
-    const handleDelete = async (event: React.MouseEvent<HTMLDivElement>) => {
+    const handleDelete = async (event: React.MouseEvent<HTMLButtonElement | HTMLDivElement>) => {
         const _uploadCycleId = deletaleUploadCycleId;
         setDeletableUploadCycleId("");
         console.log("Delete clicked ", _uploadCycleId);
@@ -236,7 +236,7 @@ const UploadCycles = () => {
         setAnchorEl2(currentTarget);
     };
 
-    const reuploadFailed = async (event: React.MouseEvent<HTMLButtonElement>) => {
+    const reuploadFailed = async (event: React.MouseEvent<HTMLButtonElement | HTMLDivElement>) => {
         const currentTarget = event.currentTarget
         setOpenDialogForReuploadFailed(false)
         setIsLoading(true);

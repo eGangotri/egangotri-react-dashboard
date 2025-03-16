@@ -1,6 +1,6 @@
 import type React from "react"
 import { useState, useEffect } from "react"
-import { DataGrid, type GridColDef, type GridValueGetterParams, type GridRenderCellParams } from "@mui/x-data-grid"
+import { DataGrid, type GridColDef, , type GridRenderCellParams } from "@mui/x-data-grid"
 import {
     Box,
     Typography,
@@ -203,7 +203,7 @@ export default function FileTransferList() {
             field: "createdAt",
             headerName: "Created At",
             width: 200,
-            valueGetter: (params: GridValueGetterParams) => new Date(params.row.createdAt).toLocaleString(),
+            renderCell: (params: GridRenderCellParams) => new Date(params?.value)?.toLocaleString(),
         },
     ]
     const reverseFileMove = async () => {
