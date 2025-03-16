@@ -6,6 +6,7 @@ import {
     type GridPaginationModel,
     type GridFilterModel,
     GridToolbar,
+    GridTooltip,
 } from "@mui/x-data-grid"
 import { Button, Dialog, DialogTitle, DialogContent, Chip, IconButton, Box, RadioGroup, FormControlLabel, Typography, Radio, CircularProgress } from "@mui/material"
 import { makeGetCall } from 'service/ApiInterceptor';
@@ -221,34 +222,6 @@ const GDriveDownloadListing: React.FC = () => {
             ),
         },
         {
-            field: "quickStatus",
-            headerName: "Quick Status(Success-Count/ErrorCount/Total)",
-            width: 300,
-            filterable: false,
-            renderCell: (params) => {
-                const { success_count = 0, error_count = 0, totalPdfsToDownload = 0 } = params.value || {}
-                return (
-                    <div>
-                        {success_count}/<span className="text-red-500">{error_count}</span>/{totalPdfsToDownload}
-                    </div>
-                )
-            },
-        },
-        {
-            field: "downloadType",
-            headerName: "Type",
-            width: 50,
-            filterable: true,
-            valueFormatter: (params) => params?.value?.toString()?.toUpperCase(),
-        },
-        {
-            field: "createdAt",
-            headerName: "Created At",
-            width: 200,
-            filterable: true,
-            valueFormatter: (params) => new Date(params?.value)?.toLocaleString(),
-        },
-        {
             field: "apiCall",
             headerName: "API Action",
             width: 150,
@@ -263,6 +236,35 @@ const GDriveDownloadListing: React.FC = () => {
                     {apiLoading ? <CircularProgress size={24} /> : "Verify"}
                 </Button>
             ),
+        },
+        {
+            field: "quickStatus",
+            headerName: "Quick Status",
+            description: "Quick Status(Success-Count/ErrorCount/Total)",
+            width: 100,
+            filterable: false,
+            renderCell: (params) => {
+                const { success_count = 0, error_count = 0, totalPdfsToDownload = 0 } = params.value || {}
+                return (
+                    <div>
+                        {success_count}/<span className="text-red-500">{error_count}</span>/{totalPdfsToDownload}
+                    </div>
+                )
+            },
+        },
+        {
+            field: "createdAt",
+            headerName: "Created At",
+            width: 200,
+            filterable: true,
+            renderCell: (params) => new Date(params?.value)?.toLocaleString(),
+        },
+        {
+            field: "downloadType",
+            headerName: "Type",
+            width: 50,
+            filterable: true,
+            renderCell: (params) => params?.value?.toString()?.toUpperCase(),
         },
     ]
 
