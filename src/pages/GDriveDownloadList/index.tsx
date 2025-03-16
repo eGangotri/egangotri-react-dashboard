@@ -13,6 +13,7 @@ import { makeGetCall } from 'service/ApiInterceptor';
 import { FaCopy } from "react-icons/fa";
 import ExecComponent from "scriptsThruExec/ExecComponent";
 import { ExecType } from "scriptsThruExec/ExecLauncherUtil";
+import { verifyGDriveDwnldSuccessFolders } from "service/launchYarn";
 
 // Types
 interface ICompositeDocument {
@@ -137,12 +138,11 @@ const GDriveDownloadListing: React.FC = () => {
         setOpenMsgDialog(true)
     }
 
-    const handleApiCall = async (googleDriveLink: string, profileNameOrAbsPath: string) => {
+    const handleApiCall = async (googleDriveLink: string, profileNameOrAbsPath: string, downloadType:string) => {
         setApiLoading(true)
         setApiError(null)
         try {
-            // Replace with your actual API endpoint
-            const response = await makeGetCall(`api/processGDriveLink?googleDriveLink=${encodeURIComponent(googleDriveLink)}&profileNameOrAbsPath=${encodeURIComponent(profileNameOrAbsPath)}`)
+            const response = await verifyGDriveDwnldSuccessFolders(googleDriveLink, profileNameOrAbsPath, downloadType);
             setApiResult(response)
             setOpenApiResultDialog(true)
         } catch (error) {
@@ -230,7 +230,9 @@ const GDriveDownloadListing: React.FC = () => {
                 <Button 
                     variant="contained" 
                     color="primary"
-                    onClick={() => handleApiCall(params.row.googleDriveLink, params.row.profileNameOrAbsPath)}
+                    onClick={() => handleApiCall(params.row.googleDriveLink, 
+                        params.row.profileNameOrAbsPath,
+                    params.row.downloadType)}
                     disabled={apiLoading}
                 >
                     {apiLoading ? <CircularProgress size={24} /> : "Verify"}
