@@ -81,7 +81,7 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
     return result + formatObject(resp);
   };
 
-  const funcToInvoke = async (event: React.MouseEvent<HTMLButtonElement>) => {
+  const funcToInvoke = async (event: React.MouseEvent<HTMLButtonElement | HTMLDivElement>) => {
     const currentTarget = event.currentTarget
     setOpenDialog(false);
     setIsLoading(true);
@@ -90,8 +90,7 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
     setIsLoading(false);
     setBackendResp(_resp);
     setExecLogsForPopover(<ExecResponsePanel response={_resp} />);
-    setAnchorEl(currentTarget);
-
+    setAnchorEl(currentTarget as HTMLButtonElement);
   }
   const id = open ? 'simple-popover' : undefined;
 
@@ -110,8 +109,10 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    onInputChange(event.target.value);
-};
+    if (onInputChange) {
+      onInputChange(event.target.value);
+    }
+  };
 
   return (
     <Stack spacing={2} sx={{ width: '100%' }}>
