@@ -183,8 +183,8 @@ const ExecLauncherOne: React.FC = () => {
                 </Typography>
                 <ExecComponent
                     execType={verfiyGDrive}
-                    css={{ minWidth: "30vw" }}
-                    css2={{ minWidth: "30vw" }}
+                    css={{ minWidth: "450px" }}
+                    css2={{ minWidth: "450px" }}
                     buttonText="Verify Task:D/l Tasks from GDrive"
                     placeholder='Enter Google Drive Link(s)/Identifiers as csv'
                     secondTextBoxPlaceHolder='Enter Profile or File Abs Path'
