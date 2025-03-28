@@ -182,7 +182,7 @@ const GDriveDownloadListing: React.FC = () => {
             renderCell: (params) => (
                 <div>
                     {params.row.profileNameOrAbsPath === params.row.fileDumpFolder ? params.row.fileDumpFolder : `${params.row.profileNameOrAbsPath} - ${params.row.fileDumpFolder}`}
-                    {params.row.gDriveRootFolder}
+                    /{params.row.gDriveRootFolder}
                 </div>
             ),
         },
