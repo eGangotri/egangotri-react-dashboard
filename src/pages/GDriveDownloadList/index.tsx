@@ -41,6 +41,7 @@ interface IGDriveDownload {
     googleDriveLink: string
     profileNameOrAbsPath: string
     fileDumpFolder: string
+    gDriveRootFolder?: string
     downloadType: string
     files: ICompositeDocument[]
     quickStatus: QuickStatus
@@ -53,7 +54,7 @@ interface FetchResponse {
 
 
 const GDriveDownloadListing: React.FC = () => {
-    
+
     const [gDriveFileType, setGDriveFileType] = React.useState<number>(ExecType.DWNLD_PDFS_ONLY_FROM_GOOGLE_DRIVE);
     const [label, setLabel] = React.useState<string>("");
     const [downloads, setDownloads] = useState<IGDriveDownload[]>([])
@@ -137,11 +138,11 @@ const GDriveDownloadListing: React.FC = () => {
         setOpenMsgDialog(true)
     }
 
-    const handleApiCall = async (googleDriveLink: string, profileNameOrAbsPath: string, downloadType:string) => {
+    const handleApiCall = async ( googleDriveLink: string, profileNameOrAbsPath: string, downloadType: string, id: string = "") => {
         setApiLoading(true)
         setApiError(null)
         try {
-            const response = await verifyGDriveDwnldSuccessFolders(googleDriveLink, profileNameOrAbsPath, downloadType);
+            const response = await verifyGDriveDwnldSuccessFolders(googleDriveLink, profileNameOrAbsPath, downloadType, id);
             setApiResult(response)
             setOpenApiResultDialog(true)
         } catch (error) {
@@ -174,9 +175,17 @@ const GDriveDownloadListing: React.FC = () => {
                 </div>
             ),
         },
-        { field: "profileNameOrAbsPath", headerName: "Profile/Path", width: 150, filterable: true },
-        
-        { field: "fileDumpFolder", headerName: "Dump Folder", width: 250, filterable: true },
+        {
+            field: "gDriveRootFolder",
+            headerName: "Root Folder", width: 250,
+            filterable: true,
+            renderCell: (params) => (
+                <div>
+                    {params.row.profileNameOrAbsPath === params.row.fileDumpFolder ? params.row.fileDumpFolder : `${params.row.profileNameOrAbsPath} - ${params.row.fileDumpFolder}`}
+                    {params.row.gDriveRootFolder}
+                </div>
+            ),
+        },
         {
             field: "status",
             headerName: "Status",
@@ -225,12 +234,12 @@ const GDriveDownloadListing: React.FC = () => {
             width: 150,
             filterable: false,
             renderCell: (params) => (
-                <Button 
-                    variant="contained" 
+                <Button
+                    variant="contained"
                     color="primary"
-                    onClick={() => handleApiCall(params.row.googleDriveLink, 
+                    onClick={() => handleApiCall( params.row.googleDriveLink,
                         params.row.profileNameOrAbsPath,
-                    params.row.downloadType)}
+                        params.row.downloadType,params.row._id)}
                     disabled={apiLoading}
                 >
                     {apiLoading ? <CircularProgress size={24} /> : "Verify"}
@@ -331,6 +340,12 @@ const GDriveDownloadListing: React.FC = () => {
                 }}
                 getRowClassName={(params) => {
                     const { success_count = 0, totalPdfsToDownload = 0 } = params.row.quickStatus || {}
+                    if(params.row.verify === false) {
+                        return "bg-red-500"
+                    }
+                    if(params.row.verify === true) {
+                        return "bg-green-500"
+                    }
                     if (success_count === 0 && totalPdfsToDownload === 0) return "bg-yellow-100"
                     return success_count === totalPdfsToDownload ? "bg-green-100" : "bg-red-100"
                 }}

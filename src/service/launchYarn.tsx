@@ -6,7 +6,7 @@ import { ALL_TYPE, PDF_TYPE, ZIP_TYPE } from 'mirror/CommonConstants';
 import { makePostCall } from './ApiInterceptor';
 
 export async function launchVanitizeModule(
-    profile: string, suffix:string = ""): Promise<ExecResponseDetails> {
+    profile: string, suffix: string = ""): Promise<ExecResponseDetails> {
     const resource = `yarn/vanitizePdfs`;
 
     const result = await makePostCall({ profile, suffix },
@@ -114,12 +114,14 @@ export async function verifyUnzipFolders(folder: string): Promise<ExecResponseDe
 
 export async function verifyGDriveDwnldSuccessFolders(googleDriveLink: string,
     folderOrProfile: string,
-    fileType = PDF_TYPE): Promise<ExecResponseDetails> {
+    fileType = PDF_TYPE,
+     id: string = ""): Promise<ExecResponseDetails> {
     const jsonData = await makePostCallWithErrorHandling({
         googleDriveLink,
         folderOrProfile,
         ignoreFolder: "proc",
-        fileType
+        fileType,
+        id,
     }, `gDrive/verifyLocalDownloadSameAsGDrive`)
 
     console.log(`result ${JSON.stringify(jsonData)}`)
