@@ -12,7 +12,7 @@ import { makeGetCall } from 'service/ApiInterceptor';
 import { FaCopy } from "react-icons/fa";
 import ExecComponent from "scriptsThruExec/ExecComponent";
 import { ExecType } from "scriptsThruExec/ExecLauncherUtil";
-import { verifyGDriveDwnldSuccessFolders } from "service/launchYarn";
+import { redownloadFromGDrive, verifyGDriveDwnldSuccessFolders } from "service/launchYarn";
 
 // Types
 interface ICompositeDocument {
@@ -138,11 +138,28 @@ const GDriveDownloadListing: React.FC = () => {
         setOpenMsgDialog(true)
     }
 
-    const handleApiCall = async ( googleDriveLink: string, profileNameOrAbsPath: string, downloadType: string, id: string = "") => {
+    const handleApiCall = async (googleDriveLink: string, profileNameOrAbsPath: string, downloadType: string, id: string = "") => {
         setApiLoading(true)
         setApiError(null)
         try {
             const response = await verifyGDriveDwnldSuccessFolders(googleDriveLink, profileNameOrAbsPath, downloadType, id);
+            setApiResult(response)
+            setOpenApiResultDialog(true)
+        } catch (error) {
+            console.error("Error calling API:", error)
+            setApiError(error instanceof Error ? error.message : "Unknown error occurred")
+            setApiResult(null)
+            setOpenApiResultDialog(true)
+        } finally {
+            setApiLoading(false)
+        }
+    }
+
+    const handleApiCall2 = async (id: string) => {
+        setApiLoading(true)
+        setApiError(null)
+        try {
+            const response = await redownloadFromGDrive(id);
             setApiResult(response)
             setOpenApiResultDialog(true)
         } catch (error) {
@@ -234,16 +251,27 @@ const GDriveDownloadListing: React.FC = () => {
             width: 150,
             filterable: false,
             renderCell: (params) => (
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => handleApiCall( params.row.googleDriveLink,
-                        params.row.profileNameOrAbsPath,
-                        params.row.downloadType,params.row._id)}
-                    disabled={apiLoading}
-                >
-                    {apiLoading ? <CircularProgress size={24} /> : "Verify"}
-                </Button>
+                <>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => handleApiCall(params.row.googleDriveLink,
+                            params.row.profileNameOrAbsPath,
+                            params.row.downloadType, params.row._id)}
+                        disabled={apiLoading}
+                    >
+                        {apiLoading ? <CircularProgress size={24} /> : "Verify"}
+                    </Button>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => handleApiCall2(params.row._id)}
+                        disabled={apiLoading || params.row.verify}
+                    >
+                        {apiLoading ? <CircularProgress size={24} /> : "Re-D/L"}
+                    </Button>
+                </>
+
             ),
         },
         {
@@ -340,10 +368,10 @@ const GDriveDownloadListing: React.FC = () => {
                 }}
                 getRowClassName={(params) => {
                     const { success_count = 0, totalPdfsToDownload = 0 } = params.row.quickStatus || {}
-                    if(params.row.verify === false) {
+                    if (params.row.verify === false) {
                         return "bg-red-500"
                     }
-                    if(params.row.verify === true) {
+                    if (params.row.verify === true) {
                         return "bg-green-500"
                     }
                     if (success_count === 0 && totalPdfsToDownload === 0) return "bg-yellow-100"
