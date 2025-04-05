@@ -158,9 +158,9 @@ export enum Tif2PdfExecType {
 export const invokeFuncBasedOnExecType = async (execType: ExecType,
   data: ExecComponentFormData): Promise<ExecResponseDetails> => {
   let _resp: ExecResponseDetails = {}
-  const dataUserInput = replaceQuotes(data.userInput)?.trim();
-  const dataUserInput2Mandatory = replaceQuotes(data.userInputSecond || "")?.trim();
-  const dataUserInput3NonMandatory = replaceQuotes(data.userInputThird || "")?.trim();
+  const dataUserInput = replaceQuotes(data.userInput?.trim() || "")?.trim();
+  const dataUserInput2Mandatory = replaceQuotes(data.userInputSecond?.trim() || "")?.trim();
+  const dataUserInput3NonMandatory = replaceQuotes(data.userInputThird?.trim() || "")?.trim();
   console.log(`data.userInput ${dataUserInput} 
   dataUserInput2 ${dataUserInput2Mandatory}
   dataUserInput3 ${dataUserInput3NonMandatory}
