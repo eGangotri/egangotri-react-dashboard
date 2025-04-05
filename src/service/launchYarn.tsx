@@ -128,6 +128,15 @@ export async function verifyGDriveDwnldSuccessFolders(googleDriveLink: string,
     return jsonData;
 }
 
+export async function redownloadFromGDrive(id: string = ""): Promise<ExecResponseDetails> {
+    const jsonData = await makePostCallWithErrorHandling({
+        id,
+    }, `gDrive/redownloadFromGDrive`)
+
+    console.log(`result ${JSON.stringify(jsonData)}`)
+    return jsonData;
+}
+
 export async function launchYarnQaToDestFileMover(
     postParams: Record<string, unknown>): Promise<ExecResponseDetails> {
     const resource = `yarn/qaToDestFileMover`;
