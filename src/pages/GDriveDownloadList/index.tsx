@@ -138,11 +138,11 @@ const GDriveDownloadListing: React.FC = () => {
         setOpenMsgDialog(true)
     }
 
-    const handleApiCall = async (googleDriveLink: string, profileNameOrAbsPath: string, downloadType: string, id: string = "") => {
+    const handleGDriveDwnldVerification = async (id: string = "") => {
         setApiLoading(true)
         setApiError(null)
         try {
-            const response = await verifyGDriveDwnldSuccessFolders(googleDriveLink, profileNameOrAbsPath, downloadType, id);
+            const response = await verifyGDriveDwnldSuccessFolders(id);
             setApiResult(response)
             setOpenApiResultDialog(true)
         } catch (error) {
@@ -155,7 +155,8 @@ const GDriveDownloadListing: React.FC = () => {
         }
     }
 
-    const handleRedownload = async (id: string) => {
+    const handleRedownload = async (id: string ) => {
+
         setApiLoading(true)
         setApiError(null)
         try {
@@ -195,11 +196,11 @@ const GDriveDownloadListing: React.FC = () => {
         },
         {
             field: "gDriveRootFolder",
-            headerName: "Root Folder", 
+            headerName: "Root Folder",
             width: 250,
             filterable: true,
             renderCell: (params) => {
-                const _path =   (params.row.profileNameOrAbsPath === params.row.fileDumpFolder) ? params.row.fileDumpFolder : `${params.row.profileNameOrAbsPath} - ${params.row.fileDumpFolder}` + `/${params.row.gDriveRootFolder}`;
+                const _path = (params.row.profileNameOrAbsPath === params.row.fileDumpFolder) ? params.row.fileDumpFolder : `${params.row.profileNameOrAbsPath} - ${params.row.fileDumpFolder}` + `/${params.row.gDriveRootFolder}`;
                 return (
                     <div className="flex items-center">
                         <IconButton onClick={() => handleCopyLink(_path)} className="ml-2">
@@ -207,7 +208,7 @@ const GDriveDownloadListing: React.FC = () => {
                         </IconButton>
                         {_path}
                     </div>
-                );  
+                );
             },
         },
         {
@@ -262,9 +263,7 @@ const GDriveDownloadListing: React.FC = () => {
                     <Button
                         variant="contained"
                         color="primary"
-                        onClick={() => handleApiCall(params.row.googleDriveLink,
-                            params.row.profileNameOrAbsPath,
-                            params.row.downloadType, params.row._id)}
+                        onClick={() => handleGDriveDwnldVerification(params.row._id)}
                         disabled={apiLoading}
                     >
                         {apiLoading ? <CircularProgress size={24} /> : "Verify"}
@@ -274,7 +273,7 @@ const GDriveDownloadListing: React.FC = () => {
                         color="primary"
                         sx={{ ml: 1 }}
                         onClick={() => handleRedownload(params.row._id)}
-                        disabled={apiLoading || params.row.verify !== true}
+                        disabled={apiLoading || (params.row.verify === undefined || params.row.verify === true)}
                     >
                         {apiLoading ? <CircularProgress size={24} /> : "Re-D/L"}
                     </Button>
