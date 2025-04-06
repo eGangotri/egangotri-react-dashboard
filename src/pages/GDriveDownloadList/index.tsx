@@ -155,7 +155,7 @@ const GDriveDownloadListing: React.FC = () => {
         }
     }
 
-    const handleApiCall2 = async (id: string) => {
+    const handleRedownload = async (id: string) => {
         setApiLoading(true)
         setApiError(null)
         try {
@@ -175,6 +175,7 @@ const GDriveDownloadListing: React.FC = () => {
     const handleCopyLink = (link: string) => {
         navigator.clipboard.writeText(link);
     };
+
     const columns: GridColDef[] = [
         {
             field: "googleDriveLink",
@@ -194,14 +195,20 @@ const GDriveDownloadListing: React.FC = () => {
         },
         {
             field: "gDriveRootFolder",
-            headerName: "Root Folder", width: 250,
+            headerName: "Root Folder", 
+            width: 250,
             filterable: true,
-            renderCell: (params) => (
-                <div>
-                    {params.row.profileNameOrAbsPath === params.row.fileDumpFolder ? params.row.fileDumpFolder : `${params.row.profileNameOrAbsPath} - ${params.row.fileDumpFolder}`}
-                    /{params.row.gDriveRootFolder}
-                </div>
-            ),
+            renderCell: (params) => {
+                const _path =   (params.row.profileNameOrAbsPath === params.row.fileDumpFolder) ? params.row.fileDumpFolder : `${params.row.profileNameOrAbsPath} - ${params.row.fileDumpFolder}` + `/${params.row.gDriveRootFolder}`;
+                return (
+                    <div className="flex items-center">
+                        <IconButton onClick={() => handleCopyLink(_path)} className="ml-2">
+                            <FaCopy />
+                        </IconButton>
+                        {_path}
+                    </div>
+                );  
+            },
         },
         {
             field: "status",
@@ -248,7 +255,7 @@ const GDriveDownloadListing: React.FC = () => {
         {
             field: "apiCall",
             headerName: "API Action",
-            width: 150,
+            width: 200,
             filterable: false,
             renderCell: (params) => (
                 <>
@@ -265,8 +272,9 @@ const GDriveDownloadListing: React.FC = () => {
                     <Button
                         variant="contained"
                         color="primary"
-                        onClick={() => handleApiCall2(params.row._id)}
-                        disabled={apiLoading || params.row.verify}
+                        sx={{ ml: 1 }}
+                        onClick={() => handleRedownload(params.row._id)}
+                        disabled={apiLoading || params.row.verify !== true}
                     >
                         {apiLoading ? <CircularProgress size={24} /> : "Re-D/L"}
                     </Button>
