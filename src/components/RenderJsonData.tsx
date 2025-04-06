@@ -13,12 +13,30 @@ const MAX_DISPLAYABLE = 150;
 const RenderJsonData: React.FC<ApiResponse> = ({ response }) => {
   /* eslint-disable  @typescript-eslint/no-explicit-any */
   const renderJson = (json: any) => {
+    // Special handling for error responses
+    if (typeof json === 'object' && json !== null && json.response?.status === 'failed') {
+      return (
+        <Box sx={{ color: ERROR_RED }}>
+          <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mb: 1 }}>
+            Error Response:
+          </Typography>
+          <ul>
+            {Object.entries(json.response).map(([key, value]) => (
+              <li key={key}>
+                <strong>{key}:</strong> {value?.toString()}
+              </li>
+            ))}
+          </ul>
+        </Box>
+      );
+    }
+
     if (Array.isArray(json)) {
       return (
         <ul>
           {json.map((item, index) => (
             <li key={index}>{renderJson(item)}</li>
-          ))}
+          ))}        
         </ul>
       );
     } else if (typeof json === 'object' && json !== null) {
