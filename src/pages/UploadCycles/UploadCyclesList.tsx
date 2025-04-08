@@ -65,9 +65,9 @@ const UploadCyclesList: React.FC = () => {
     }
 
     const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const value = event.target.value.toLowerCase()
+        const value = event.target.value;
         setFilterValue(value)
-        applyFilters(value, verifiedFilter)
+        applyFilters(value.toLowerCase(), verifiedFilter)
     }
 
     const handleVerifiedFilterChange = (event: SelectChangeEvent<VerifiedFilter>) => {
