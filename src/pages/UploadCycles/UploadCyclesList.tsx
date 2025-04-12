@@ -2,29 +2,43 @@
 
 import type React from "react"
 import { useEffect, useState, useCallback } from "react"
-import { DataGrid, type GridColDef, type GridRenderCellParams } from "@mui/x-data-grid"
+import { DataGrid, type GridColDef, type GridRenderCellParams, type GridRowId } from "@mui/x-data-grid"
+import { FaTrash, FaTimes } from 'react-icons/fa';
 import { Typography, Box, Link, TextField, Select, MenuItem, FormControl, InputLabel, Button, SelectChangeEvent } from "@mui/material"
 import type { UploadCycleTableData, UploadCycleTableDataDictionary } from "mirror/types"
-import { deleteUploadCycleById, getDataForUploadCycle } from "service/BackendFetchService"
+import { deleteUploadCycleById, getDataForUploadCycle, makePostCallWithErrorHandling } from "service/BackendFetchService"
 import { MAX_ITEMS_LISTABLE } from "utils/constants"
 import { createBackgroundForRow } from "./utils"
 import { ColorCodeInformationPanel } from "./ColorCodedInformationPanel"
-import { FaTrash } from "react-icons/fa"
 import ConfirmDialog from "../../widgets/ConfirmDialog"
 import { NestedTable } from "./UploadCycleListNestedTable"
 import { ActionButtons } from "./UploadCycleListActionButton"
 import { ResultDisplayPopover } from "../../widgets/ResultDisplayPopover"
 import { launchUploader } from "service/launchGradle"
 import { UPLOADS_USHERED_PATH } from "Routes/constants"
+import { makeGetCall } from "service/ApiInterceptor";
 
 type VerifiedFilter = "all" | "true" | "false" | "null"
 
 const UploadCyclesList: React.FC = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [data, setData] = useState<UploadCycleTableData[]>([])
+    const [selectedRows, setSelectedRows] = useState<GridRowId[]>([]);
     const [filteredData, setFilteredData] = useState<UploadCycleTableData[]>([])
     const [openDialog, setOpenDialog] = useState(false)
     const [deletableUploadCycleId, setDeletableUploadCycleId] = useState<string>("")
+
+    const closeAllChrome = async () => {
+        if (window.confirm('Are you sure you want to close all Chrome instances?')) {
+            try {
+                const resp = await makeGetCall('/launchCmd/closeAllChrome')
+                console.log(`resp from fetchAggregates: ${JSON.stringify(resp)}`);
+
+            } catch (error) {
+                console.error('Error closing Chrome:', error);
+            }
+        }
+    }
     const [popoverAnchor, setPopoverAnchor] = useState<HTMLButtonElement | null>(null)
     const [popoverContent, setPopoverContent] = useState<string>("")
     const [popoverTitle, setPopoverTitle] = useState<string>("")
@@ -238,12 +252,22 @@ const UploadCyclesList: React.FC = () => {
         setVerifiedFilter("all")
         setProfilesCsv("")
         setExtraDescription("")
-
     }
+
     return (
         <>
             <ColorCodeInformationPanel />
-            <Box sx={{ height: 600, width: "100%" }}>
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
+                <Button
+                    variant="contained"
+                    color="error"
+                    onClick={closeAllChrome}
+                    startIcon={<FaTimes />}
+                >
+                    Close All Chrome
+                </Button>
+            </Box>
+            <Box sx={{ height: 400, width: '100%' }}>
                 <Typography variant="h4" component="h1" gutterBottom>
                     Upload Cycles
                 </Typography>
@@ -293,8 +317,8 @@ const UploadCyclesList: React.FC = () => {
                     </FormControl>
                     <Button variant="contained"
                         color="primary"
-                        sx={{ my: 1 ,pt:1}}
                         onClick={() => reset()}
+                        sx={{ my: 1 }}
                         disabled={isLoading}>
                         Reset
                     </Button>
