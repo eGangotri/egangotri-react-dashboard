@@ -32,9 +32,10 @@ const UploadCyclesList: React.FC = () => {
         if (window.confirm('Are you sure you want to close all Chrome instances?')) {
             try {
                 const resp = await makeGetCall('/launchCmd/closeAllChrome')
-                console.log(`resp from fetchAggregates: ${JSON.stringify(resp)}`);
+                alert("Chrome instances closed successfully.")
 
             } catch (error) {
+                alert("Error closing Chrome.")
                 console.error('Error closing Chrome:', error);
             }
         }

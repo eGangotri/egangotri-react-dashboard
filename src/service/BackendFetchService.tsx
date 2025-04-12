@@ -47,7 +47,9 @@ export const originalMakePostCall = async (body: Record<string, unknown>, resour
 
 export const originalMakeGetCall = async (resource: string) => {
   try {
-    const response = await fetch(getBackendServer() + resource);
+    const _resourceTrimmed = resource.startsWith("/") ? resource.substring(1, resource.length) : resource;
+    const response = await fetch(getBackendServer() + _resourceTrimmed);
+    console.log(`_resourceTrimmed ${_resourceTrimmed} getBackendServer() = ${getBackendServer()}`);
     console.log(`response ${JSON.stringify(response)}`);
     if (response.ok) {
       const data = await response.json();
