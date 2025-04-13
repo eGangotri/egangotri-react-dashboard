@@ -70,6 +70,10 @@ export enum ExecType {
   VERIFY_G_DRIVE_ZIP_DOWNLOAD = 702,
   VERIFY_G_DRIVE_ALL_DOWNLOAD = 703,
 
+  VERIFY_G_DRIVE_PDF_DOWNLOAD_SIZE_ONLY = 704,
+  VERIFY_G_DRIVE_ZIP_DOWNLOAD_SIZE_ONLY = 705,
+  VERIFY_G_DRIVE_ALL_DOWNLOAD_SIZE_ONLY = 706,
+
   DownloadFilesFromExcel_Via_Front_End = 61,
   DirectoryCompare = 62,
 
@@ -293,15 +297,24 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       case ExecType.VERIFY_G_DRIVE_PDF_DOWNLOAD:
         _resp = await verifyGDriveDwnldSuccessFoldersByLink(dataUserInput, dataUserInput2Mandatory, PDF_TYPE);
         break;
-
+      case ExecType.VERIFY_G_DRIVE_PDF_DOWNLOAD_SIZE_ONLY:
+        _resp = await verifyGDriveDwnldSuccessFoldersByLink(dataUserInput, dataUserInput2Mandatory, PDF_TYPE, true);
+        break;
       case ExecType.VERIFY_G_DRIVE_ZIP_DOWNLOAD:
         _resp = await verifyGDriveDwnldSuccessFoldersByLink(dataUserInput, dataUserInput2Mandatory, ZIP_TYPE);
         break;
 
+      case ExecType.VERIFY_G_DRIVE_ZIP_DOWNLOAD_SIZE_ONLY:
+        _resp = await verifyGDriveDwnldSuccessFoldersByLink(dataUserInput, dataUserInput2Mandatory, ZIP_TYPE, true);
+        break;
       case ExecType.VERIFY_G_DRIVE_ALL_DOWNLOAD:
         _resp = await verifyGDriveDwnldSuccessFoldersByLink(dataUserInput, dataUserInput2Mandatory, ALL_TYPE);
         break;
 
+      case ExecType.VERIFY_G_DRIVE_ALL_DOWNLOAD_SIZE_ONLY:
+        _resp = await verifyGDriveDwnldSuccessFoldersByLink(dataUserInput, dataUserInput2Mandatory, ALL_TYPE, true);
+        break;
+        
       case ExecType.UNZIP_ALL_FILES:
         _resp = await unzipFolders(dataUserInput);
         break;

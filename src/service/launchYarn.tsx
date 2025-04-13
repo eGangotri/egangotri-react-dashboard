@@ -122,11 +122,13 @@ export async function verifyGDriveDwnldSuccessFolders(id: string): Promise<ExecR
 }
 export async function verifyGDriveDwnldSuccessFoldersByLink(googleDriveLink: string,
      profile: string,
-     fileType:string): Promise<ExecResponseDetails> {
+     fileType:string,
+     verifyBySizeOnly = false): Promise<ExecResponseDetails> {
     const jsonData = await makePostCallWithErrorHandling({
         googleDriveLink,
         profile,
-        fileType
+        fileType,
+        verifyBySizeOnly
     }, `gDrive/verifyLocalDownloadSameAsGDrive`)
 
     console.log(`result ${JSON.stringify(jsonData)}`)

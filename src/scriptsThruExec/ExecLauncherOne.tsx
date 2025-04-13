@@ -3,7 +3,7 @@ import ExecComponent from './ExecComponent';
 import Box from '@mui/material/Box';
 import { ExecType } from './ExecLauncherUtil';
 import * as XLSX from 'xlsx';
-import { Button, FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material';
+import { Button, Checkbox, FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material';
 import { ALL_NOT_JUST_PDF_SUFFIX, GDRIVE_EXCEL_NAME_LOCAL_STORAGE_KEY, LOCAL_LISTING_EXCEL_LOCAL_STORAGE_KEY } from 'service/consts';
 
 
@@ -12,6 +12,7 @@ const ExecLauncherOne: React.FC = () => {
     const [gDriveFileType, setGDriveFileType] = React.useState<number>(ExecType.DWNLD_PDFS_ONLY_FROM_GOOGLE_DRIVE);
     const [label, setLabel] = React.useState<string>("");
     const [verfiyGDrive, setVerifyGDrive] = React.useState<number>(ExecType.VERIFY_G_DRIVE_PDF_DOWNLOAD);
+    const [verifyGDriveFileType, setVerifyGDriveFileType] = React.useState<number>(1);
 
     const chooseGDriveExcelType = (event: ChangeEvent<HTMLInputElement>) => {
         const _val = event.target.value;
@@ -61,22 +62,36 @@ const ExecLauncherOne: React.FC = () => {
         }
     };
 
+
+    const [verifyBySizeOnly, setVerifyBySizeOnly] = useState(false);
+
+    const handleVerifyBySizeOnly = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setVerifyBySizeOnly(event.target.checked);
+        _setVerifyGDriveFileTypeAndSizeOnlyflag(String(verfiyGDrive));
+    };
+
     const chooseVerifyGDriveFileType = (event: ChangeEvent<HTMLInputElement>) => {
         const _val = event.target.value;
         console.log("_val", _val)
+        _setVerifyGDriveFileTypeAndSizeOnlyflag(_val);
+        setVerifyGDriveFileType(Number(_val));
+    };
+
+    const _setVerifyGDriveFileTypeAndSizeOnlyflag = (_verfiyGDriveFileType: string) => {
         let _verifyFileType;
-        switch (Number(_val)) {
-            case ExecType.VERIFY_G_DRIVE_PDF_DOWNLOAD:
-                _verifyFileType = ExecType.VERIFY_G_DRIVE_PDF_DOWNLOAD;
+        switch (Number(_verfiyGDriveFileType)) {
+            case 1:
+                _verifyFileType = verifyBySizeOnly ? ExecType.VERIFY_G_DRIVE_PDF_DOWNLOAD_SIZE_ONLY : ExecType.VERIFY_G_DRIVE_PDF_DOWNLOAD;
                 break;
-            case ExecType.VERIFY_G_DRIVE_ZIP_DOWNLOAD:
-                _verifyFileType = ExecType.VERIFY_G_DRIVE_ZIP_DOWNLOAD;
+            case 2:
+                _verifyFileType = verifyBySizeOnly ? ExecType.VERIFY_G_DRIVE_ZIP_DOWNLOAD_SIZE_ONLY : ExecType.VERIFY_G_DRIVE_ZIP_DOWNLOAD;
                 break;
-            case ExecType.VERIFY_G_DRIVE_ALL_DOWNLOAD:
-                _verifyFileType = ExecType.VERIFY_G_DRIVE_ALL_DOWNLOAD;
+            case 3:
+                _verifyFileType = verifyBySizeOnly ? ExecType.VERIFY_G_DRIVE_ALL_DOWNLOAD_SIZE_ONLY : ExecType.VERIFY_G_DRIVE_ALL_DOWNLOAD;
                 break;
         }
         console.log("_dwnldFileType", _verifyFileType);
+        setVerifyGDrive(_verifyFileType || ExecType.VERIFY_G_DRIVE_PDF_DOWNLOAD);
     };
 
     const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -157,6 +172,7 @@ const ExecLauncherOne: React.FC = () => {
         }
     };
 
+
     return (
         <Box display="flex" gap={4} mb={2} flexDirection="row">
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
@@ -189,11 +205,20 @@ const ExecLauncherOne: React.FC = () => {
                     placeholder='Enter Google Drive Link(s)/Identifiers as csv'
                     secondTextBoxPlaceHolder='Enter Profile or File Abs Path'
                     reactComponent={<>
-                        <RadioGroup aria-label="verfiyGDrive" name="verfiyGDrive" value={verfiyGDrive} onChange={chooseVerifyGDriveFileType} row>
-                            <FormControlLabel value={ExecType.VERIFY_G_DRIVE_PDF_DOWNLOAD} control={<Radio />} label="PDF-Only" />
-                            <FormControlLabel value={ExecType.VERIFY_G_DRIVE_ZIP_DOWNLOAD} control={<Radio />} label="ZIP-ONLY" />
-                            <FormControlLabel value={ExecType.VERIFY_G_DRIVE_ALL_DOWNLOAD} control={<Radio />} label="ALL" />
+                        <Box>
+                            <FormControlLabel
+                                control={<Checkbox checked={verifyBySizeOnly} onChange={handleVerifyBySizeOnly} />}
+                                label="Verify by Size Only"
+                            />
+                        </Box>
+                        <RadioGroup aria-label="verifyGDriveFileType" name="verifyGDriveFileType"
+                            value={verifyGDriveFileType}
+                            onChange={chooseVerifyGDriveFileType} row>
+                            <FormControlLabel value={1} control={<Radio />} label="PDF-Only" />
+                            <FormControlLabel value={2} control={<Radio />} label="ZIP-ONLY" />
+                            <FormControlLabel value={3} control={<Radio />} label="ALL" />
                         </RadioGroup></>}
+
                 />
             </Box>
 
