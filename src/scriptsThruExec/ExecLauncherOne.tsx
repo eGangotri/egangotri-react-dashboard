@@ -64,12 +64,10 @@ const ExecLauncherOne: React.FC = () => {
 
 
     const [verifyBySizeOnly, setVerifyBySizeOnly] = useState(false);
-
     const handleVerifyBySizeOnly = (event: React.ChangeEvent<HTMLInputElement>) => {
         setVerifyBySizeOnly(event.target.checked);
-        _setVerifyGDriveFileTypeAndSizeOnlyflag(String(verfiyGDrive));
+        _setVerifyGDriveFileTypeAndSizeOnlyflag(String(verifyGDriveFileType));
     };
-
     const chooseVerifyGDriveFileType = (event: ChangeEvent<HTMLInputElement>) => {
         const _val = event.target.value;
         console.log("_val", _val)
