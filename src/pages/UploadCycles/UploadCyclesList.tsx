@@ -257,72 +257,73 @@ const UploadCyclesList: React.FC = () => {
 
     return (
         <>
-            <ColorCodeInformationPanel />
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
-                <Button
-                    variant="contained"
-                    color="error"
-                    onClick={closeAllChrome}
-                    startIcon={<FaTimes />}
-                >
-                    Close All Chrome
-                </Button>
-            </Box>
             <Box sx={{ height: 400, width: '100%' }}>
                 <Typography variant="h4" component="h1" gutterBottom>
                     Upload Cycles
                 </Typography>
-                <Box sx={{ mt: 4 }}>
-                    <TextField
-                        id="profiles-csv"
-                        label="Profiles as CSV"
-                        value={profilesCsv}
-                        onChange={(e) => setProfilesCsv(e.target.value)}
-                        sx={{ mb: 2, mr: 2 }}
-                    />
-                    <TextField
-                        label="Optional Extra Subject/Description"
-                        value={extraDescription}
-                        onChange={(e) => setExtraDescription(e.target.value)}
-                        sx={{ mb: 2, mr: 2 }}
-                    />
-                    <Button variant="contained"
-                        color="primary" onClick={uploadToArchive}
-                        sx={{ mt: 1 }}
-                        disabled={isLoading}>
-                        Upload PDFs to Archive for profile
-                    </Button>
-                </Box>
+                <Box sx={{ display: 'flex', gap: 4, mt: 4 }}>
+                    <Box>
+                        <Box sx={{ flex: 1 }}>
+                            <TextField
+                                id="profiles-csv"
+                                label="Profiles as CSV"
+                                value={profilesCsv}
+                                onChange={(e) => setProfilesCsv(e.target.value)}
+                                sx={{ mb: 2, mr: 2 }}
+                            />
+                            <TextField
+                                label="Optional Extra Subject/Description"
+                                value={extraDescription}
+                                onChange={(e) => setExtraDescription(e.target.value)}
+                                sx={{ mb: 2, mr: 2 }}
+                            />
+                            <Button variant="contained"
+                                color="primary" onClick={uploadToArchive}
+                                sx={{ mt: 1 }}
+                                disabled={isLoading}>
+                                Upload PDFs to Archive for profile
+                            </Button>
+                        </Box>
 
-                <Box sx={{ display: "flex", gap: 2, mb: 2, mr: 2 }}>
-                    <TextField
-                        label="Filter by Archive Profile or Upload Cycle ID"
-                        variant="outlined"
-                        value={filterValue}
-                        sx={{ mb: 2, mr: 2 }}
-                        onChange={handleFilterChange}
-                    />
-                    <FormControl variant="outlined" sx={{ minWidth: 200, mb: 2, mr: 2 }}>
-                        <InputLabel id="verified-filter-label">All Upload Verified</InputLabel>
-                        <Select
-                            labelId="verified-filter-label"
-                            value={verifiedFilter}
-                            onChange={handleVerifiedFilterChange}
-                            label="All Upload Verified"
+                        <Box sx={{ display: "flex", gap: 2, mb: 2, mr: 2 }}>
+                            <TextField
+                                label="Filter by Archive Profile or Upload Cycle ID"
+                                variant="outlined"
+                                value={filterValue}
+                                sx={{ mb: 2, mr: 2 }}
+                                onChange={handleFilterChange}
+                            />
+                            <FormControl variant="outlined" sx={{ minWidth: 200, mb: 2, mr: 2 }}>
+                                <InputLabel id="verified-filter-label">All Upload Verified</InputLabel>
+                                <Select
+                                    labelId="verified-filter-label"
+                                    value={verifiedFilter}
+                                    onChange={handleVerifiedFilterChange}
+                                    label="All Upload Verified"
+                                >
+                                    <MenuItem value="all">All</MenuItem>
+                                    <MenuItem value="true">Verified</MenuItem>
+                                    <MenuItem value="false">Not Verified</MenuItem>
+                                    <MenuItem value="null">N/A</MenuItem>
+                                </Select>
+                            </FormControl>
+                            <Button variant="contained"
+                                color="primary"
+                                onClick={() => reset()}
+                                sx={{ my: 1 }}
+                                disabled={isLoading}>
+                                Reset
+                            </Button>
+                        </Box>
+                    </Box>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, minWidth: 'fit-content' }}>
+                        <Button variant="contained" color="error" onClick={closeAllChrome} startIcon={<FaTimes />}
+                            sx={{ width: 200, height: 40 }}
                         >
-                            <MenuItem value="all">All</MenuItem>
-                            <MenuItem value="true">Verified</MenuItem>
-                            <MenuItem value="false">Not Verified</MenuItem>
-                            <MenuItem value="null">N/A</MenuItem>
-                        </Select>
-                    </FormControl>
-                    <Button variant="contained"
-                        color="primary"
-                        onClick={() => reset()}
-                        sx={{ my: 1 }}
-                        disabled={isLoading}>
-                        Reset
-                    </Button>
+                            Close All Chrome
+                        </Button>
+                        <ColorCodeInformationPanel />
+                    </Box>
                 </Box>
                 <DataGrid
                     rows={filteredData}
@@ -348,8 +349,7 @@ const UploadCyclesList: React.FC = () => {
                 invokeFuncOnClick2={handleConfirm}
             />
         </>
-    )
+    );
 }
 
-export default UploadCyclesList
-
+export default UploadCyclesList;
