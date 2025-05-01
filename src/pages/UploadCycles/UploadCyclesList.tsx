@@ -61,17 +61,16 @@ const UploadCyclesList: React.FC = () => {
         const _uploadCycleId = deletableUploadCycleId
         setDeletableUploadCycleId("")
         console.log("Delete clicked ", _uploadCycleId)
-        setIsLoading(true)
+        setIsLoading(true);
+        setPopoverTitle("Delete Results")
         try {
             const _resp = await deleteUploadCycleById(_uploadCycleId)
             console.log(`result ${JSON.stringify(_resp)}`)
             setPopoverContent(JSON.stringify(_resp, null, 2))
-            setPopoverTitle("Delete Results")
             setPopoverAnchor(document.getElementById(`delete-button-${_uploadCycleId}`) as HTMLButtonElement)
         } catch (error) {
             console.error("Error deleting upload cycle:", error)
             setPopoverContent(`Error deleting upload cycle: ${error}`)
-            setPopoverTitle("Delete Results")
             setPopoverAnchor(document.getElementById(`delete-button-${_uploadCycleId}`) as HTMLButtonElement)
         } finally {
             setIsLoading(false)
@@ -173,7 +172,7 @@ const UploadCyclesList: React.FC = () => {
                             popoverAnchor={popoverAnchor}
                             setPopoverAnchor={setPopoverAnchor}
                             popoverContent={popoverContent}
-                            actionType={"Delete Results"}
+                            actionType={popoverTitle}
                         />
                     </>
                 )

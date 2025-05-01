@@ -50,16 +50,24 @@ export const originalMakeGetCall = async (resource: string) => {
     const _resourceTrimmed = resource.startsWith("/") ? resource.substring(1, resource.length) : resource;
     const response = await fetch(getBackendServer() + _resourceTrimmed);
     console.log(`_resourceTrimmed ${_resourceTrimmed} getBackendServer() = ${getBackendServer()}`);
-    console.log(`response ${JSON.stringify(response)}`);
     if (response.ok) {
       const data = await response.json();
       return data;
     }
     else {
       console.log(`response not ok ${response.statusText}`)
+      let data;
+      try {
+        data = await response.json();
+      }
+      catch (e) {
+        console.error(`error `, e)
+        data = {success:false}
+      }
+      
       return {
-        success: false,
-        error: response.statusText
+        error: response.statusText,
+        ...data 
       };
     }
   }

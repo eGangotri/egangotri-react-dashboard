@@ -64,9 +64,9 @@ export async function launchGradle(profiles: string, gradleTask: string, optiona
     const _url = `execLauncher/${gradleTask}?profiles=${profiles}&${params}`
     console.log(`_url ${_url}`);
     const jsonResp = await makeGetCall(_url);
+    console.log(`jsonResp ${JSON.stringify(jsonResp)}`);
     return jsonResp;
 }
-
 export async function _launchGradle(argFirst: string, gradleTask: string) {
     const _url = `execLauncher/${gradleTask}?argFirst=${argFirst}`
     console.log(`_url ${_url}`);

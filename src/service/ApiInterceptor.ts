@@ -6,23 +6,9 @@ const makeCall = async (callFunction: Function, ...args: any[]) => {
     const result = await callFunction(...args);
     const endTime = performance.now();
     const timeTaken = endTime - startTime;
-    console.log(`timeTaken for ${args[1] || args[0]} ${formatTime(timeTaken)}`);
+    console.log(`timeTaken for ${args[1] || args[0]} ${formatTime(timeTaken)}
+     ${JSON.stringify(result)}`);
 
-    if (result.response) {
-        if (!Array.isArray(result.response)) {
-            const origResp = result.response;
-            return {
-                response: {
-                    timeTaken: formatTime(timeTaken),
-                    ...origResp,
-                }
-            }
-        }
-        return {
-            timeTaken: formatTime(timeTaken),
-            ...result,
-        }
-    }
     return {
         timeTaken: formatTime(timeTaken),
         ...result
