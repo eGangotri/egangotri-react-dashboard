@@ -19,6 +19,8 @@ import {
     ListItem,
     ListItemText,
     Pagination,
+    FormControlLabel,
+    Checkbox,
 } from "@mui/material"
 import { makeGetCall, makePostCall } from 'service/ApiInterceptor';
 import { IconButton, Tooltip } from "@mui/material";
@@ -295,6 +297,14 @@ export default function FileTransferList() {
         ...item,
     }))
 
+    const [overrideNonEmptyFlag, setOverrideNonEmptyFlag] = useState(false);
+    const handleOverrideNonEmptyFlag = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setOverrideNonEmptyFlag(event.target.checked);
+        setMoveFolderContentsExecType(event.target.checked ? ExecType.MoveFolderContentsOverrideNonEmptyFlag : ExecType.MoveFolderContents);
+    };
+
+    const [moveFolderContentsExecType, setMoveFolderContentsExecType] = useState(ExecType.MoveFolderContents);
+
     return (
         <Box sx={{ height: 600, width: "100%" }}>
             <Box display="flex" alignItems="center" gap={4} mb={2} flexDirection="column">
@@ -302,9 +312,17 @@ export default function FileTransferList() {
                     buttonText="Move Folder Contents"
                     placeholder='Src Path for Moving QA-Passed-to-Pipeline'
                     secondTextBoxPlaceHolder="Profile Name or Absolute Path"
-                    execType={ExecType.MoveFolderContents}
+                    execType={moveFolderContentsExecType}
                     css={{ minWidth: "350vw" }}
                     css2={{ minWidth: "350vw" }}
+                    reactComponent={<>
+                        <Box>
+                            <FormControlLabel
+                                control={<Checkbox checked={overrideNonEmptyFlag} onChange={handleOverrideNonEmptyFlag} />}
+                                label="Override Non Empty Flag"
+                            />
+                        </Box>
+                    </>}
                 />
             </Box>
             <Typography variant="h4" component="h1" gutterBottom>

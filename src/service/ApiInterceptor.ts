@@ -6,8 +6,7 @@ const makeCall = async (callFunction: Function, ...args: any[]) => {
     const result = await callFunction(...args);
     const endTime = performance.now();
     const timeTaken = endTime - startTime;
-    console.log(`timeTaken for ${args[1] || args[0]} ${formatTime(timeTaken)}
-     ${JSON.stringify(result)}`);
+    console.log(`timeTaken for ${args[1] || args[0]} ${formatTime(timeTaken)}`);
 
     return {
         timeTaken: formatTime(timeTaken),

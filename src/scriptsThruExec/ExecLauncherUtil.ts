@@ -38,6 +38,7 @@ export enum ExecType {
   UploadPdfsViaExcelV3 = 112,
   UploadPdfsViaAbsPath = 113,
   MoveFolderContents = 2,
+  MoveFolderContentsOverrideNonEmptyFlag = 22,
   MoveMultipleFilesAsCSVtoFolderOrProfile = 21,
   ReverseMove = 31,
   SNAP_TO_HTML = 32,
@@ -256,7 +257,17 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         _resp = await launchYarnQaToDestFileMover({
           qaPath: dataUserInput,
           "dest": data.userInputSecond || "",
-          flatten: true
+          flatten: true,
+          override: false
+        });
+        break;
+
+      case ExecType.MoveFolderContentsOverrideNonEmptyFlag:
+        _resp = await launchYarnQaToDestFileMover({
+          qaPath: dataUserInput,
+          "dest": data.userInputSecond || "",
+          flatten: true,
+          override: true
         });
         break;
 

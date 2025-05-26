@@ -29,12 +29,26 @@ export const originalMakePostCall = async (body: Record<string, unknown>, resour
     }
     else {
       console.log(`response not ok ${response.statusText}`)
-      return {
-        success: false,
-        error: response.statusText
+      try{
+        const anyResponse = await response.json();
+        return {
+          success: false,
+          error: response.statusText,
+          ...response,
+          ...anyResponse
+        };
+      }
+      catch (e) {
+        console.error(`error `, e)
+        return {
+          success: false,
+          error: response.statusText,
+          ...response,
+          er  : e
       };
     }
   }
+}
   catch (error) {
     const err = error as Error;
     console.log(`catch err ${err.message}`)

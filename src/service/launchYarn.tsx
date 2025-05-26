@@ -150,7 +150,12 @@ export async function launchYarnQaToDestFileMover(
 
     const result = await makePostCall(postParams,
         resource);
-    return result.response as ExecResponseDetails
+        console.log(`result ${JSON.stringify(result)}`)
+   // return result.response as ExecResponseDetails
+    return {
+        ...result,
+        ...result.response
+    } as ExecResponseDetails;
 }
 
 export async function launchYarnMoveToFreeze(
