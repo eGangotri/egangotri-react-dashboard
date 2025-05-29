@@ -1,13 +1,11 @@
-import { Box } from '@mui/material';
+import { Box, CircularProgress } from '@mui/material';
 
 const Spinner = () => {
   return (
-    <Box className="flex justify-center items-center">
-      <Box className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-gray-900"></Box>
+    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '10px' }}>
+      <CircularProgress size={30} thickness={4} color="primary" />
+      <Box sx={{ ml: 2, fontWeight: 'bold', color: '#3f51b5' }}>Processing...</Box>
     </Box>
-  //    <Box className="fixed inset-0 flex justify-center items-center z-50">
-  //    <Box className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-gray-900"></Box>
-  //  </Box>
   );
 };
 

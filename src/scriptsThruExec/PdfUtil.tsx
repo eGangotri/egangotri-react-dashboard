@@ -19,7 +19,7 @@ const PdfUtil: React.FC = () => {
     });
 
     return (
-        <Box display="flex" gap={4} mb={2} flexDirection="row">
+        <>        <Box display="flex" gap={4} mb={2} flexDirection="row">
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
                 <ExecComponent
                     buttonText="Merge PDF"
@@ -32,6 +32,18 @@ const PdfUtil: React.FC = () => {
                 />
             </Box>
         </Box>
+
+            <Box display="flex" gap={4} mb={2} flexDirection="row">
+                <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
+                    <ExecComponent
+                        buttonText="Check for Corrupt PDFs"
+                        placeholder='Folder or Profile'
+                        execType={ExecType.CORRUPTION_CHECK}
+                        css={{ minWidth: "453vw" }}
+                    />
+                </Box>
+            </Box>
+        </>
 
     );
 }

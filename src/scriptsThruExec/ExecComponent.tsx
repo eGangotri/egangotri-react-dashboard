@@ -33,7 +33,6 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
   textBoxTwoValue = "",
   multiline1stTf = false,
   multiline2ndTf = false,
-  fullWidth = false,
   rows1stTf = 1,
   rows2ndTf = 1,
   onInputChange
@@ -54,7 +53,7 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
 
   const formatResponse = (resp: any): string => {
     const date = new Date().toLocaleString();
-    let result = 'Backend Resp.\n\n';
+    let result = 'Backend Resp ' + execType + '\n\n';
     result += `date: ${date}\n`;
 
     const formatObject = (obj: any, indent: string = ''): string => {
@@ -89,7 +88,7 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
     console.log(`_resp ${JSON.stringify(_resp)}`);
     setIsLoading(false);
     setBackendResp(_resp);
-    setExecLogsForPopover(<ExecResponsePanel response={_resp} />);
+    setExecLogsForPopover(<ExecResponsePanel response={_resp} execType={execType}/>);
     setAnchorEl(currentTarget as HTMLButtonElement);
   }
   const id = open ? 'simple-popover' : undefined;
@@ -153,40 +152,7 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
               width: '80%', // Reduce width by 20%
               height: '10%', // Reduce height by 20%
             }}>
-              <Button
-                variant="contained"
-                onClick={async (e: React.MouseEvent<HTMLButtonElement>) => {
-                  try {
-                    await navigator.clipboard.writeText(JSON.stringify(backendResp, null, 2));
-                    console.log('Text copied to clipboard');
-                  } catch (err) {
-                    console.error('Failed to copy text: ', err);
-                  }
-                }
-                }
-                size="small"
-                sx={{ color: "#f38484", width: "200px", marginTop: "10px", marginRight: "10px" }}
-                disabled={isLoading}
-              >
-                Copy JSON
-              </Button>
-              <Button
-                variant="contained"
-                onClick={async (e: React.MouseEvent<HTMLButtonElement>) => {
-                  try {
-                    await navigator.clipboard.writeText(formatResponse(backendResp));
-                    console.log('Formatted text copied to clipboard');
-                  } catch (err) {
-                    console.error('Failed to copy text: ', err);
-                  }
-                }
-                }
-                size="small"
-                sx={{ color: "#f38484", width: "200px", marginTop: "10px" }}
-                disabled={isLoading}
-              >
-                Copy Formatted
-              </Button>
+            <Typography sx={{ p: 2 }}>{execLogsForPopover}</Typography>
               <IconButton
                 aria-label="close"
                 onClick={handleClose}
@@ -199,7 +165,6 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
                 <CloseIcon />
               </IconButton>
             </Box>
-            <Typography sx={{ p: 2 }}>{execLogsForPopover}</Typography>
           </Popover>
 
           {secondTextBoxPlaceHolder?.length > 0 ?
