@@ -19,27 +19,29 @@ const PdfUtil: React.FC = () => {
     });
 
     return (
-        <>        <Box display="flex" gap={4} mb={2} flexDirection="row">
+        <>      
+          <Box display="flex" gap={4} mb={2} flexDirection="row">
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
                 <ExecComponent
                     buttonText="Merge PDF"
                     placeholder='Absolute Path to Pdf-1'
-                    secondTextBoxPlaceHolder='Absolute Path to Pdf-1'
+                    secondTextBoxPlaceHolder='Absolute Path to Pdf-2'
                     thirdTextBoxPlaceHolder='Optional Abs Path to 3rd Pdf if exists'
                     execType={ExecType.MERGE_PDFS_PYTHON}
-                    css={{ minWidth: "453vw" }}
-                    css2={{ minWidth: "453vw" }}
+                    css={{ minWidth: "53vw" }}
+                    css2={{ minWidth: "53vw" }}
+                    css3={{ minWidth: "53vw" }}
                 />
             </Box>
         </Box>
 
-            <Box display="flex" gap={4} mb={2} flexDirection="row">
-                <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
-                    <ExecComponent
-                        buttonText="Check for Corrupt PDFs"
-                        placeholder='Folder or Profile'
+        <Box display="flex" gap={4} mb={2} flexDirection="row">
+            <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
+                <ExecComponent
+                    buttonText="Check for Corrupt PDFs"
+                    placeholder='Folder or Profile'
                         execType={ExecType.CORRUPTION_CHECK}
-                        css={{ minWidth: "453vw" }}
+                        css={{ minWidth: "53vw" }}
                     />
                 </Box>
             </Box>
