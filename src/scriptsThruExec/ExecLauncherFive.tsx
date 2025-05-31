@@ -92,8 +92,8 @@ const ExecLauncherFive: React.FC = () => {
 
                     reactComponent={<>
                         <RadioGroup aria-label="fileType" name="fileType" value={excelGDrive} onChange={chooseGDriveExcelType} row>
-                            <FormControlLabel value={ExecType.GenExcelOfGoogleDriveLinkPdfOnly} control={<Radio />} label="ALL" />
-                            <FormControlLabel value={ExecType.GenExcelOfGoogleDriveLinkForReduced} control={<Radio />} label="REDUCED" />
+                            <FormControlLabel value={ExecType.GenExcelOfGoogleDriveLinkPdfOnly} control={<Radio />} label="ALL PDFs" />
+                            <FormControlLabel value={ExecType.GenExcelOfGoogleDriveLinkForReduced} control={<Radio />} label="REDUCED PDFs" />
                         </RadioGroup>
                     </>}
                 />
