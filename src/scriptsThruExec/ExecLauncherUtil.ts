@@ -18,7 +18,6 @@ import {
   launchYarnMoveToFreeze,
   launchYarnMoveToFreezeByUploadId,
   launchYarnQaToDestFileMover,
-  makePostCallToPath,
   unzipFolders,
   verifyGDriveDwnldSuccessFoldersByLink,
   verifyUnzipFolders
