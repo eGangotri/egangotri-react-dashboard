@@ -34,6 +34,7 @@ export interface UploadCycleTableData {
     dateTimeQueueUploadStarted?: Date;
     allUploadVerified ?:boolean;
     moveToFreeze ?:boolean;
+    uploadCenter:?string;
 }
 
 export interface UploadCycleTableDataDictionary {

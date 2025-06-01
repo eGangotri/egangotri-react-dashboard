@@ -188,6 +188,14 @@ const UploadCyclesList: React.FC = () => {
                 return <Typography>{params.value === null ? "N/A" : params.value.toString()}</Typography>
             },
         },
+        {
+            field: "uploadCenter",
+            headerName: "Upload Center",
+            width: 150,
+            renderCell: (params: GridRenderCellParams<UploadCycleTableData>) => {
+                return <Typography>{params.row.uploadCenter === null ? "N/A" : params.row.uploadCenter?.toString()}</Typography>
+            },
+        }
     ]
 
     const fetchUploadCycles = useCallback(async () => {
