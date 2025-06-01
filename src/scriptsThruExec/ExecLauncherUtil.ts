@@ -125,7 +125,8 @@ export enum ExecType {
 
   GET_FIRST_N_PAGES_PYTHON = 200,
   MERGE_PDFS_PYTHON = 200499,
-  CORRUPTION_CHECK = 2004500,
+  CORRUPTION_CHECK_QUICK = 2004500, 
+  CORRUPTION_CHECK_DEEP = 2004501,
   COPY_ALL_PDFS_PYTHON = 200300,
   GET_FIRST_N_PAGES_GRADLE = 200200,
   COMBINE_GDRIVE_AND_REDUCED_PDF_DRIVE_EXCELS = 201,
@@ -502,12 +503,18 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         }, `pythonScripts/mergePdfs`);
         break;
              
-      case ExecType.CORRUPTION_CHECK:
+      case ExecType.CORRUPTION_CHECK_QUICK:
         _resp = await makePostCallWithErrorHandling({
           folderOrProfile: dataUserInput,
         }, `fileUtil/corruptPdfCheck`);
         break;
         
+      case ExecType.CORRUPTION_CHECK_DEEP:
+        _resp = await makePostCallWithErrorHandling({
+          folderOrProfile: dataUserInput,
+          deepCheck: true,
+        }, `fileUtil/corruptPdfCheck`);
+        break;
       case ExecType.COPY_ALL_PDFS_PYTHON:
         _resp = await makePostCallWithErrorHandling({
           srcFolders: dataUserInput,
