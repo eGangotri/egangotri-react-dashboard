@@ -52,7 +52,8 @@ import {
     GDRIVE_DWNL_LISTING,
     UPLOADS_USHERED_OLD_PATH,
     LANDING_PAGE_OLD_PATH,
-    PDF_UTIL
+    PDF_UTIL,
+    IMG_TO_PDF_LISTING
   } from './constants';
 import GDriveItemAggregates from 'components/gDriveListing/gDriveAggregatesByProfile';
 import ArchiveItemList from 'components/archiveListing';
@@ -63,6 +64,7 @@ import GDriveDownloadListing from 'pages/GDriveDownloadList';
 import UploadsOld from 'pages/upload/indexOld';
 import UploadCyclesList from 'pages/UploadCycles/UploadCyclesList';
 import PdfUtil from 'scriptsThruExec/PdfUtil';
+import ImgToPdfListing from 'pages/ImgToPdfList';
 const DashboardRoutes: React.FC = () => {
     const isLocalhost = true; //window.location.hostname === 'localhost';
     const allFrags = (
@@ -85,6 +87,7 @@ const DashboardRoutes: React.FC = () => {
             {<Route path={FILE_MOVER_PATH} element={<FileMover />} />}
             {<Route path={FILE_TRANSFER_LISTING} element={<FileTransferList />} />}
             {<Route path={GDRIVE_DWNL_LISTING} element={<GDriveDownloadListing />} />}
+            {<Route path={IMG_TO_PDF_LISTING} element={<ImgToPdfListing />} />}
             
             {<Route path={SEARCH_ARCHIVE_DB_PATH} element={<SearchArchiveDB />} />}
             {<Route path={SEARCH_G_DRIVE_DB_PATH} element={<SearchGDriveDB />} />}
