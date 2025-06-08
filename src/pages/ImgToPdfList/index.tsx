@@ -6,59 +6,124 @@ import {
     type GridPaginationModel,
     type GridFilterModel,
     GridToolbar,
+    type GridRenderCellParams,
 } from "@mui/x-data-grid"
 import { Button, Dialog, DialogTitle, DialogContent, Chip, IconButton, Box, RadioGroup, FormControlLabel, Typography, Radio, CircularProgress } from "@mui/material"
-import { makeGetCall } from 'service/ApiInterceptor';
+import { makeGetCall, makePostCall } from 'service/ApiInterceptor';
 import { FaCopy } from "react-icons/fa";
 import ExecComponent from "scriptsThruExec/ExecComponent";
 import { ExecType } from "scriptsThruExec/ExecLauncherUtil";
 import { redownloadFromGDrive, verifyGDriveDwnldSuccessFolders } from "service/launchYarn";
+import { FOLDER_OF_UNZIPPED_IMGS } from "service/consts";
+import { IMG_TYPE_CR2, IMG_TYPE_JPG, IMG_TYPE_PNG, IMG_TYPE_TIF } from "scriptsThruExec/constants";
 
-// Types
-interface ICompositeDocument {
-    id: string
-    fileName: string
-    filePath: string
-    status: "queued" | "in-progress" | "completed" | "failed"
-    msg: string
+// Interface for folder info
+interface IFolderInfo {
+    folder_path: string;
+    has_images: boolean;
+    image_count: number;
+    pdf_generated: boolean;
+    pdf_path: string;
+    pdf_page_count: number;
+    pages_match_images: boolean;
+    folderErrors: string[];
+    error_count: number;
+    status: string;
 }
 
-export interface QuickStatus {
-    status?: string
-    success_count?: number | string
-    error_count?: number | string
-    dl_wrong_size_count?: string
-    totalPdfsToDownload?: number | string
-    error?: string
+// Interface for memory stats
+interface IMemoryStats {
+    initial_mb: number;
+    peak_mb: number;
+    final_mb: number;
+    net_change_mb: number;
 }
 
-interface IGDriveDownload {
-    _id: string
-    status: "queued" | "in-progress" | "completed" | "failed"
-    createdAt: Date
-    updatedAt: Date
-    msg: string
-    googleDriveLink: string
-    profileNameOrAbsPath: string
-    fileDumpFolder: string
-    gDriveRootFolder?: string
-    downloadType: string
-    files: ICompositeDocument[]
-    quickStatus: QuickStatus
+// Interface for paths
+interface IPaths {
+    source: string;
+    destination: string;
+}
+
+// Interface for summary
+interface ISummary {
+    folders_with_images: number;
+    pdfs_created: number;
+    pdfs_skipped: number;
+    error_count: number;
+    failed_images_count: number;
+    successful_images_count: number;
+    time_taken_seconds: number;
+}
+
+// Main interface for the Image to PDF History document
+export interface IImageToPdfHistory {
+    total_folders: number;
+    folders_detail: IFolderInfo[];
+    summary: ISummary;
+    memory_stats: IMemoryStats;
+    mongo_doc_id?: string;
+    paths: IPaths;
+    createdAt?: Date;
+    updatedAt?: Date;
+    _id?: string;
 }
 
 interface FetchResponse {
-    data: IGDriveDownload[]
+    entries: IImageToPdfHistory[]
     totalItems: number
 }
 
 
-const ImgToPdfListing: React.FC = () => {
+const columns: GridColDef[] = [
+    { field: 'total_folders', headerName: 'Total Folders', width: 130, type: 'number' },
+    {
+        field: 'summary',
+        headerName: 'Summary',
+        width: 200,
+        renderCell: (params: GridRenderCellParams<IImageToPdfHistory>) => (
+            <div>
+                <div>PDFs Created: {params.row.summary.pdfs_created}</div>
+                <div>Errors: {params.row.summary.error_count}</div>
+                <div>Time: {params.row.summary.time_taken_seconds}s</div>
+            </div>
+        )
+    },
+    {
+        field: 'paths',
+        headerName: 'Paths',
+        width: 300,
+        renderCell: (params: GridRenderCellParams<IImageToPdfHistory>) => (
+            <div>
+                <div>Source: {params.row.paths.source}</div>
+                <div>Dest: {params.row.paths.destination}</div>
+            </div>
+        )
+    },
+    {
+        field: 'memory_stats',
+        headerName: 'Memory (MB)',
+        width: 200,
+        renderCell: (params: GridRenderCellParams<IImageToPdfHistory>) => (
+            <div>
+                <div>Peak: {params.row.memory_stats.peak_mb}</div>
+                <div>Net Change: {params.row.memory_stats.net_change_mb}</div>
+            </div>
+        )
+    },
+    {
+        field: 'createdAt',
+        headerName: 'Created',
+        width: 180,
+        valueFormatter: (params: { value: Date | undefined }) => params.value ? new Date(params.value).toLocaleString() : ''
+    }
+];
 
-    const [gDriveFileType, setGDriveFileType] = React.useState<number>(ExecType.DWNLD_PDFS_ONLY_FROM_GOOGLE_DRIVE);
-    const [label, setLabel] = React.useState<string>("");
-    const [downloads, setDownloads] = useState<IGDriveDownload[]>([])
-    const [selectedFiles, setSelectedFiles] = useState<ICompositeDocument[]>([])
+const ImgToPdfListing: React.FC = () => {
+    const [folderOfUnzippedImgs, setFolderOfUnzippedImgs] = useState<string>("");
+
+    const [downloads, setDownloads] = useState<IImageToPdfHistory[]>([])
+    // const [selectedFiles, setSelectedFiles] = useState<ICompositeDocument[]>([])
     const [openDialog, setOpenDialog] = useState(false)
     const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
         page: 0,
@@ -82,279 +147,83 @@ const ImgToPdfListing: React.FC = () => {
         pageSize: 5,
     })
 
-    const chooseGDriveFileType = (event: ChangeEvent<HTMLInputElement>) => {
-        const _val = event.target.value;
-        console.log("_val", _val)
-        let _dwnldFileType;
-        switch (Number(_val)) {
-            case ExecType.DWNLD_PDFS_ONLY_FROM_GOOGLE_DRIVE:
-                _dwnldFileType = ExecType.DWNLD_PDFS_ONLY_FROM_GOOGLE_DRIVE;
-                break;
-            case ExecType.DWNLD_ZIPS_ONLY_FROM_GOOGLE_DRIVE:
-                _dwnldFileType = ExecType.DWNLD_ZIPS_ONLY_FROM_GOOGLE_DRIVE;
-                break;
-            case ExecType.DWNLD_ALL_FROM_GOOGLE_DRIVE:
-                _dwnldFileType = ExecType.DWNLD_ALL_FROM_GOOGLE_DRIVE;
-                break;
-        }
-        console.log("_dwnldFileType", _dwnldFileType);
-        setGDriveFileType(_dwnldFileType || ExecType.DWNLD_PDFS_ONLY_FROM_GOOGLE_DRIVE);
-        if (_dwnldFileType === ExecType.DWNLD_PDFS_ONLY_FROM_GOOGLE_DRIVE) {
-            setLabel("PDFs");
-        } else if (_dwnldFileType === ExecType.DWNLD_ZIPS_ONLY_FROM_GOOGLE_DRIVE) {
-            setLabel("Zips");
-        } else if (_dwnldFileType === ExecType.DWNLD_ALL_FROM_GOOGLE_DRIVE) {
-            setLabel("All");
-        }
-    };
-    const fetchGDriveDownloads = async (page: number, pageSize: number): Promise<FetchResponse> => {
-        const response = await makeGetCall(`gDriveDownloadRoute/getGDriveDownloads?page=${page}&limit=${pageSize}`)
-        console.log(`resp from fetchAggregates: ${JSON.stringify(response)}`)
+    const fetchImgFilesToPdf = async (page: number, pageSize: number): Promise<FetchResponse> => {
+        const response = await makePostCall({ page, pageSize }, `imgToPdf/getAllImgToPdfEntries`)
+        console.log(`resp from fetchImgFilesToPdf: ${JSON.stringify(response)}`)
         return response
     }
 
     useEffect(() => {
-        const loadDownloads = async () => {
+        const loadImgToPdfHistories = async () => {
             try {
-                const { data, totalItems } = await fetchGDriveDownloads(paginationModel.page + 1, paginationModel.pageSize)
-                if (data) {
-                    setDownloads(data)
+                const { entries, totalItems } = await fetchImgFilesToPdf(paginationModel.page + 1, paginationModel.pageSize)
+                if (entries) {
+                    setDownloads(entries)
                     setTotalItems(totalItems)
                 }
             } catch (error) {
                 console.error("Error fetching GDrive downloads:", error)
             }
         }
-        loadDownloads()
+        loadImgToPdfHistories()
     }, [paginationModel.page, paginationModel.pageSize]) // Added fetchGDriveDownloads to dependencies
 
-    const handleOpenFiles = (files: ICompositeDocument[]) => {
-        setSelectedFiles(files.map((file, index) => ({ ...file, id: index.toString() })))
-        setOpenDialog(true)
-    }
+    // const handleOpenFiles = (files: ICompositeDocument[]) => {
+    //     setSelectedFiles(files.map((file, index) => ({ ...file, id: index.toString() })))
+    //     setOpenDialog(true)
+    // }
 
     const handleOpenMsg = (msg: string) => {
         setSelectedMsg(msg)
         setOpenMsgDialog(true)
     }
 
-    const handleGDriveDwnldVerification = async (id: string = "") => {
-        setApiLoading(true)
-        setApiError(null)
-        try {
-            const response = await verifyGDriveDwnldSuccessFolders(id);
-            setApiResult(response)
-            setOpenApiResultDialog(true)
-        } catch (error) {
-            console.error("Error calling API:", error)
-            setApiError(error instanceof Error ? error.message : "Unknown error occurred")
-            setApiResult(null)
-            setOpenApiResultDialog(true)
-        } finally {
-            setApiLoading(false)
-        }
-    }
-
-    const handleRedownload = async (id: string ) => {
-
-        setApiLoading(true)
-        setApiError(null)
-        try {
-            const response = await redownloadFromGDrive(id);
-            setApiResult(response)
-            setOpenApiResultDialog(true)
-        } catch (error) {
-            console.error("Error calling API:", error)
-            setApiError(error instanceof Error ? error.message : "Unknown error occurred")
-            setApiResult(null)
-            setOpenApiResultDialog(true)
-        } finally {
-            setApiLoading(false)
-        }
-    }
-
     const handleCopyLink = (link: string) => {
         navigator.clipboard.writeText(link);
     };
 
-    const columns: GridColDef[] = [
-        {
-            field: "googleDriveLink",
-            headerName: "Google Drive Link",
-            width: 200,
-            filterable: true,
-            renderCell: (params) => (
-                <div className="flex items-center">
-                    <IconButton onClick={() => handleCopyLink(params.value)} className="ml-2">
-                        <FaCopy />
-                    </IconButton>
-                    <a href={params.value} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">
-                        {params.value}
-                    </a>
-                </div>
-            ),
-        },
-        {
-            field: "gDriveRootFolder",
-            headerName: "Root Folder",
-            width: 250,
-            filterable: true,
-            renderCell: (params) => {
-                const _path = (params.row.profileNameOrAbsPath === params.row.fileDumpFolder) ? params.row.fileDumpFolder : `${params.row.profileNameOrAbsPath} - ${params.row.fileDumpFolder}` + `/${params.row.gDriveRootFolder}`;
-                return (
-                    <div className="flex items-center">
-                        <IconButton onClick={() => handleCopyLink(_path)} className="ml-2">
-                            <FaCopy />
-                        </IconButton>
-                        {_path}
-                    </div>
-                );
-            },
-        },
-        {
-            field: "status",
-            headerName: "Status",
-            width: 100,
-            filterable: true,
-            renderCell: (params) => (
-                <Chip
-                    label={params.value}
-                    color={
-                        params.value === "completed"
-                            ? "success"
-                            : params.value === "failed"
-                                ? "error"
-                                : params.value === "in-progress"
-                                    ? "warning"
-                                    : "default"
-                    }
-                />
-            ),
-        },
-        {
-            field: "msg",
-            headerName: "Msg",
-            width: 150,
-            filterable: true,
-            renderCell: (params) => (
-                <Button variant="contained" onClick={() => handleOpenMsg(params.value)}>
-                    View Msg ({params?.value?.split(",").length})
-                </Button>
-            ),
-        },
-        {
-            field: "files",
-            headerName: "Files",
-            width: 150,
-            filterable: false,
-            renderCell: (params) => (
-                <Button variant="contained" onClick={() => handleOpenFiles(params.value)}>
-                    View Files ({params.value.length})
-                </Button>
-            ),
-        },
-        {
-            field: "apiCall",
-            headerName: "API Action",
-            width: 200,
-            filterable: false,
-            renderCell: (params) => (
-                <>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={() => handleGDriveDwnldVerification(params.row._id)}
-                        disabled={apiLoading}
-                    >
-                        {apiLoading ? <CircularProgress size={24} /> : "Verify"}
-                    </Button>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        sx={{ ml: 1 }}
-                        onClick={() => handleRedownload(params.row._id)}
-                        disabled={apiLoading || (params.row.verify === undefined || params.row.verify === true)}
-                    >
-                        {apiLoading ? <CircularProgress size={24} /> : "Re-D/L"}
-                    </Button>
-                </>
+    const [imgType, setImgType] = useState(ExecType.ANY_IMG_TYPE_TO_PDF);
 
-            ),
-        },
-        {
-            field: "quickStatus",
-            headerName: "Quick Status",
-            description: "Quick Status(Success-Count/ErrorCount/Total)",
-            width: 100,
-            filterable: false,
-            renderCell: (params) => {
-                const { success_count = 0, error_count = 0, totalPdfsToDownload = 0 } = params.value || {}
-                return (
-                    <div>
-                        {success_count}/<span className="text-red-500">{error_count}</span>/{totalPdfsToDownload}
-                    </div>
-                )
-            },
-        },
-        {
-            field: "createdAt",
-            headerName: "Created At",
-            width: 200,
-            filterable: true,
-            renderCell: (params) => new Date(params?.value)?.toLocaleString(),
-        },
-        {
-            field: "downloadType",
-            headerName: "Type",
-            width: 50,
-            filterable: true,
-            renderCell: (params) => params?.value?.toString()?.toUpperCase(),
-        },
-    ]
+    const loadFolderOfUnzippedImgFilesFromLocalStorage = () => {
+        let storedValue = localStorage.getItem(FOLDER_OF_UNZIPPED_IMGS);
 
-    const fileColumns: GridColDef[] = [
-        { field: "fileName", headerName: "File Name", width: 200, filterable: true },
-        { field: "filePath", headerName: "File Path", width: 300, filterable: true },
-        {
-            field: "status",
-            headerName: "Status",
-            width: 120,
-            filterable: true,
-            renderCell: (params) => (
-                <Chip
-                    label={params.value}
-                    color={
-                        params.value === "completed"
-                            ? "success"
-                            : params.value === "failed"
-                                ? "error"
-                                : params.value === "in-progress"
-                                    ? "warning"
-                                    : "default"
-                    }
-                />
-            ),
-        },
-        { field: "msg", headerName: "Message", width: 200, filterable: true },
-    ]
+        console.log(`loadFromLocalStorage called ${storedValue}`)
+        if (storedValue) {
+            setFolderOfUnzippedImgs(storedValue);
+        }
+    }
 
+    const handleChangeImgFilesToPdf = (event: ChangeEvent<HTMLInputElement>) => {
+        const _val = event.target.value;
+        console.log("ImgType: ", _val);
+        setImgType(Number(_val));
+    };
     return (
         <div className="h-[400px] w-full">
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
+
                 <ExecComponent
-                    buttonText={`D/l ${label} from GDrive`}
-                    placeholder='Enter Google Drive Link(s)/Identifiers as csv'
-                    secondTextBoxPlaceHolder='Enter Profile or File Abs Path'
-                    execType={gDriveFileType}
-                    css={{ backgroundColor: "lightgreen", width: "450px" }}
-                    css2={{ backgroundColor: "lightgreen", width: "450px" }}
+                    buttonText="Img Files(any/jpg/png/tiff) to pdf"
+                    placeholder='Folder Abs Path'
+                    execType={imgType}
+                    secondTextBoxPlaceHolder='Dest Folder Abs Path'
                     reactComponent={<>
-                        <RadioGroup aria-label="gDriveFileType" name="gDriveFileType" value={gDriveFileType} onChange={chooseGDriveFileType} row>
-                            <FormControlLabel value={ExecType.DWNLD_PDFS_ONLY_FROM_GOOGLE_DRIVE} control={<Radio />} label="PDF-Only" />
-                            <FormControlLabel value={ExecType.DWNLD_ZIPS_ONLY_FROM_GOOGLE_DRIVE} control={<Radio />} label="ZIP-ONLY" />
-                            <FormControlLabel value={ExecType.DWNLD_ALL_FROM_GOOGLE_DRIVE} control={<Radio />} label="ALL" />
+                        <RadioGroup aria-label="fileType" name="fileType" value={imgType} onChange={handleChangeImgFilesToPdf} row>
+                            <FormControlLabel value={ExecType.ANY_IMG_TYPE_TO_PDF} control={<Radio />} label="ANY" />
+                            <FormControlLabel value={ExecType.JPG_TO_PDF} control={<Radio />} label={IMG_TYPE_JPG} />
+                            <FormControlLabel value={ExecType.PNG_TO_PDF} control={<Radio />} label={IMG_TYPE_PNG} />
+                            <FormControlLabel value={ExecType.TIFF_TO_PDF} control={<Radio />} label={IMG_TYPE_TIF} />
+                            <FormControlLabel value={ExecType.CR2_TO_PDF} control={<Radio />} label={IMG_TYPE_CR2} />
                         </RadioGroup>
                     </>}
+                    thirdButton={<Button
+                        variant="contained"
+                        color="primary"
+                        onClick={loadFolderOfUnzippedImgFilesFromLocalStorage}
+                        sx={{ marginRight: "10px", marginBottom: "10px" }}>Load From Local Storage</Button>}
+                    textBoxOneValue={folderOfUnzippedImgs}
+                    css={{ backgroundColor: "violet", width: "450px" }}
+                    css2={{ backgroundColor: "violet", width: "450px" }}
                 />
             </Box>
             <DataGrid
@@ -373,67 +242,19 @@ const ImgToPdfListing: React.FC = () => {
                 slots={{
                     toolbar: GridToolbar,
                 }}
-                getRowClassName={(params) => {
-                    const { success_count = 0, totalPdfsToDownload = 0 } = params.row.quickStatus || {}
-                    if (params.row.verify === false) {
-                        return "bg-red-500"
-                    }
-                    if (params.row.verify === true) {
-                        return "bg-green-500"
-                    }
-                    if (success_count === 0 && totalPdfsToDownload === 0) return "bg-yellow-100"
-                    return success_count === totalPdfsToDownload ? "bg-green-100" : "bg-red-100"
-                }}
+                // getRowClassName={(params) => {
+                //     const { success_count = 0, totalPdfsToDownload = 0 } = params.row.quickStatus || {}
+                //     if (params.row.verify === false) {
+                //         return "bg-red-500"
+                //     }
+                //     if (params.row.verify === true) {
+                //         return "bg-green-500"
+                //     }
+                //     if (success_count === 0 && totalPdfsToDownload === 0) return "bg-yellow-100"
+                //     return success_count === totalPdfsToDownload ? "bg-green-100" : "bg-red-100"
+                // }}
             />
-            <Dialog open={openDialog} onClose={() => setOpenDialog(false)} maxWidth="md" fullWidth>
-                <DialogTitle>Files</DialogTitle>
-                <DialogContent>
-                    <div className="h-[400px] w-full">
-                        <DataGrid
-                            rows={selectedFiles}
-                            columns={fileColumns}
-                            paginationModel={filesPaginationModel}
-                            onPaginationModelChange={setFilesPaginationModel}
-                            pageSizeOptions={[5, 10, 20]}
-                            pagination
-                            slots={{
-                                toolbar: GridToolbar,
-                            }}
-                        />
-                    </div>
-                </DialogContent>
-            </Dialog>
-            <Dialog open={openMsgDialog} onClose={() => setOpenMsgDialog(false)}>
-                <DialogTitle>Message</DialogTitle>
-                <DialogContent className="max-h-96 overflow-y-auto">
-                    {selectedMsg.split(",").map((line, index) => (
-                        <p key={index}>{index + 1}). {line.trim()}</p>
-                    ))}
-                </DialogContent>
-            </Dialog>
-
-            {/* New Dialog for API Result */}
-            <Dialog open={openApiResultDialog} onClose={() => setOpenApiResultDialog(false)} maxWidth="md" fullWidth>
-                <DialogTitle>API Result</DialogTitle>
-                <DialogContent className="max-h-96 overflow-y-auto">
-                    {apiLoading ? (
-                        <Box display="flex" justifyContent="center" alignItems="center" height="200px">
-                            <CircularProgress />
-                        </Box>
-                    ) : apiError ? (
-                        <Typography color="error">{apiError}</Typography>
-                    ) : apiResult ? (
-                        <Box>
-                            <Typography variant="h6" gutterBottom>Result:</Typography>
-                            <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
-                                {JSON.stringify(apiResult, null, 2)}
-                            </pre>
-                        </Box>
-                    ) : (
-                        <Typography>No result available</Typography>
-                    )}
-                </DialogContent>
-            </Dialog>
+         
         </div>
     )
 }
