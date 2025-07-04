@@ -43,8 +43,12 @@ export enum ExecType {
   SNAP_TO_HTML = 32,
   FILE_NAME_LENGTH = 33,
   FILE_NAME_LENGTH_INCLUDING_PATH = 34,
-  DUPLICATES_BY_FILE_SIZE = 35,
-  DISJOINT_SET_BY_FILE_SIZE = 351,
+  DUPLICATES_BY_FILE_SIZE_SUFFIX = 35,
+  DUPLICATES_BY_FILE_SIZE = 3510,
+  DISJOINT_SET_BY_FILE_SIZE = 3520,
+  DUPLICATES_BY_FILE_SIZE_MOVE_ITEMS = 3511,
+  DISJOINT_SET_BY_FILE_SIZE_MOVE_ITEMS = 3521,
+
   RENAME_NON_ASCII_FILE_NAMES_IN_FOLDER = 36,
   JPG_TO_PDF = 37,
   PNG_TO_PDF = 38,
@@ -554,19 +558,41 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         _resp = await makePostCallWithErrorHandling({
           folder1: dataUserInput,
           folder2: dataUserInput2Mandatory,
-          findDisjoint: false
+          findDisjoint: false,
+          moveItems: false
         },
           `fileUtil/findByFileSize`);
         break;
 
+        case ExecType.DUPLICATES_BY_FILE_SIZE_MOVE_ITEMS:
+          _resp = await makePostCallWithErrorHandling({
+            folder1: dataUserInput,
+            folder2: dataUserInput2Mandatory,
+            findDisjoint: false,
+            moveItems: true
+          },
+            `fileUtil/findByFileSize`);
+          break;
+  
       case ExecType.DISJOINT_SET_BY_FILE_SIZE:
         _resp = await makePostCallWithErrorHandling({
           folder1: dataUserInput,
           folder2: dataUserInput2Mandatory,
-          findDisjoint: true
+          findDisjoint: true,
+          moveItems: false
         },
           `fileUtil/findByFileSize`);
         break;
+
+        case ExecType.DISJOINT_SET_BY_FILE_SIZE_MOVE_ITEMS:
+          _resp = await makePostCallWithErrorHandling({
+            folder1: dataUserInput,
+            folder2: dataUserInput2Mandatory,
+            findDisjoint: true,
+            moveItems: true
+          },
+            `fileUtil/findByFileSize`);
+          break;
 
       case ExecType.RENAME_NON_ASCII_FILE_NAMES_IN_FOLDER:
         _resp = await makePostCallWithErrorHandling({

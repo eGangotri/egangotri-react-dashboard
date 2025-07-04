@@ -2,15 +2,18 @@ import React, { useState } from 'react';
 import ExecComponent from './ExecComponent';
 import Box from '@mui/material/Box';
 import { ExecType } from './ExecLauncherUtil';
-import { Radio, RadioGroup, FormControlLabel, TextField } from '@mui/material';
+import { Radio, RadioGroup, FormControlLabel, TextField, Checkbox, Typography } from '@mui/material';
 import { ChangeEvent } from 'react';
 import { ExecComponentFormData } from './types';
 import { useForm } from 'react-hook-form';
 import { IMG_TYPE_ANY, IMG_TYPE_CR2, IMG_TYPE_JPG, IMG_TYPE_PNG, IMG_TYPE_TIF } from './constants';
+import { CheckBox } from '@mui/icons-material';
 
 const ExecLauncherFour: React.FC = () => {
     const [imgType, setImgType] = useState(ExecType.JPG_TO_PDF);
     const [findBySizeType, setFindBySizeType] = useState(ExecType.DUPLICATES_BY_FILE_SIZE);
+    const [duplicatesBySizeType, setDuplicatesBySizeType] = useState("1"); // or "2"
+    const [moveItems, setMoveItems] = useState(false);
     const { register } = useForm<ExecComponentFormData>();
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -21,8 +24,20 @@ const ExecLauncherFour: React.FC = () => {
 
     const handleFindBySizeChange = (event: ChangeEvent<HTMLInputElement>) => {
         const _val = event.target.value;
+        setDuplicatesBySizeType(_val);
         console.log("bySizeType: ", _val);
-        setFindBySizeType(Number(_val));
+        setFindBySizeType(Number(`${ExecType.DUPLICATES_BY_FILE_SIZE_SUFFIX}${_val}${moveItems ? 1 : 0}`));
+    };
+
+    const handleMoveItemsChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const _checked = event.target.checked;
+        console.log("moveItems: ", _checked);
+        setMoveItems(_checked);
+        setFindBySizeType(Number(`${ExecType.DUPLICATES_BY_FILE_SIZE_SUFFIX}${duplicatesBySizeType}${_checked ? 1 : 0}`));
+    };
+
+    const getLabelForFileBySizeType = () => {
+        return findBySizeType.toString().includes(`${ExecType.DUPLICATES_BY_FILE_SIZE_SUFFIX}1`) ? "Duplicates" : "Disjoint Set";
     };
 
     return (
@@ -63,16 +78,20 @@ const ExecLauncherFour: React.FC = () => {
 
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
                 <ExecComponent
-                    buttonText={`Find ${findBySizeType == ExecType.DUPLICATES_BY_FILE_SIZE ? "Duplicates" : "Disjoint Set"} by File Size`}
+                    buttonText={`Find ${getLabelForFileBySizeType()} by File Size`}
                     placeholder='Folder Abs Path'
                     secondTextBoxPlaceHolder='Folder Abs Path'
                     execType={findBySizeType}
                     css={{ width: "550px" }}
                     css2={{ width: "550px" }}
                     reactComponent={<>
-                        <RadioGroup aria-label="findBySizeType" name="findBySizeType" value={findBySizeType} onChange={handleFindBySizeChange} row>
-                            <FormControlLabel value={ExecType.DUPLICATES_BY_FILE_SIZE} control={<Radio />} label="Duplicates" />
-                            <FormControlLabel value={ExecType.DISJOINT_SET_BY_FILE_SIZE} control={<Radio />} label="Disjoint-Set" />
+                        <Box display="flex" alignItems="center" gap={1}>
+                            <Checkbox checked={moveItems} onChange={(e) => handleMoveItemsChange(e)} />
+                            <Typography>Move {getLabelForFileBySizeType()} in Src</Typography>
+                        </Box>
+                        <RadioGroup aria-label="duplicatesBySizeType" name="duplicatesBySizeType" value={duplicatesBySizeType} onChange={handleFindBySizeChange} row>
+                            <FormControlLabel value={"1"} control={<Radio />} label="Duplicates" />
+                            <FormControlLabel value={"2"} control={<Radio />} label="Disjoint-Set" />
                         </RadioGroup>
                     </>} />
 
