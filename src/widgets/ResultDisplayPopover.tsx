@@ -10,6 +10,7 @@ import {
 import { FaCopy, FaTimes } from "react-icons/fa"
 import moment from "moment"
 import { DD_MM_YYYY_WITH_TIME_FORMAT } from "utils/utils"
+import Spinner from "../widgets/Spinner"
 
 export const ResultDisplayPopover: React.FC<{
     popoverAnchor: HTMLButtonElement | null,
@@ -17,10 +18,10 @@ export const ResultDisplayPopover: React.FC<{
     popoverContent: string,
     actionType: string,
     reactComponent?: JSX.Element,
-    setReactComponent?: (component: JSX.Element) => void
-
+    setReactComponent?: (component: JSX.Element) => void,
+    loading?: boolean
 }> = ({ popoverAnchor, setPopoverAnchor,
-    popoverContent, actionType, reactComponent, setReactComponent }) => {
+    popoverContent, actionType, reactComponent, setReactComponent, loading = false }) => {
 
         const handleCopyContent = () => {
             navigator.clipboard.writeText(popoverContent)
@@ -67,7 +68,7 @@ export const ResultDisplayPopover: React.FC<{
                 <div className="max-h-96 overflow-auto">
                     <pre className="whitespace-pre-wrap break-words">
                         <Typography variant="body2">Res. at {moment().format(DD_MM_YYYY_WITH_TIME_FORMAT)}:</Typography>
-                        {popoverContent}
+                        {loading ? <Box sx={{ display: 'flex', justifyContent: 'center', my: 2 }}><Spinner /></Box> : popoverContent}
                     </pre>
                 </div>
             </Paper>

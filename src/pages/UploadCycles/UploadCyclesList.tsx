@@ -264,7 +264,7 @@ const UploadCyclesList: React.FC = () => {
 
     return (
         <>
-            <Box sx={{ height: 400, width: '100%' }}>
+            <Box sx={{ height: 1000, width: '100%' }}>
                 <Typography variant="h4" component="h1" gutterBottom>
                     Upload Cycles
                 </Typography>
@@ -337,10 +337,10 @@ const UploadCyclesList: React.FC = () => {
                     columns={columns}
                     initialState={{
                         pagination: {
-                            paginationModel: { page: 0, pageSize: 5 },
+                            paginationModel: { page: 0, pageSize: 25 },
                         },
                     }}
-                    pageSizeOptions={[8, 10, 25]}
+                    pageSizeOptions={[ 25, 50, 100]}
                     checkboxSelection
                     disableRowSelectionOnClick
                     loading={isLoading}

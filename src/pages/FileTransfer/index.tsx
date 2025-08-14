@@ -313,8 +313,8 @@ export default function FileTransferList() {
                     placeholder='Src Path for Moving QA-Passed-to-Pipeline'
                     secondTextBoxPlaceHolder="Profile Name or Absolute Path"
                     execType={moveFolderContentsExecType}
-                    css={{ minWidth: "350vw" }}
-                    css2={{ minWidth: "350vw" }}
+                    css={{ minWidth: "35vw" }}
+                    css2={{ minWidth: "35vw" }}
                     reactComponent={<>
                         <Box>
                             <FormControlLabel

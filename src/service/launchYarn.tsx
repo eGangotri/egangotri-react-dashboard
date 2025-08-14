@@ -5,6 +5,8 @@ import { IMG_TYPE_JPG } from 'scriptsThruExec/constants';
 import { ALL_TYPE, PDF_TYPE, ZIP_TYPE } from 'mirror/CommonConstants';
 import { makePostCall } from './ApiInterceptor';
 
+export const GDRIVE_DEFAULT_IGNORE_FOLDER = "proc";
+
 export async function launchVanitizeModule(
     profile: string, suffix: string = ""): Promise<ExecResponseDetails> {
     const resource = `yarn/vanitizePdfs`;
@@ -19,7 +21,7 @@ export async function launchGoogleDriveDownload(googleDriveLink: string,
     const result = await makePostCallWithErrorHandling({
         "googleDriveLink": googleDriveLink,
         "profile": profile,
-        ignoreFolder: "proc"
+        ignoreFolder: GDRIVE_DEFAULT_IGNORE_FOLDER
     }, `gDrive/downloadFromGoogleDrive`)
     return result;
 }
@@ -30,7 +32,7 @@ export async function launchAllFromGoogleDriveDownload(googleDriveLink: string,
     const result = await makePostCallWithErrorHandling({
         "googleDriveLink": googleDriveLink,
         "profile": profile,
-        ignoreFolder: "proc",
+        ignoreFolder: GDRIVE_DEFAULT_IGNORE_FOLDER,
         fileType: ALL_TYPE
     }, `gDrive/downloadFromGoogleDrive`)
     return result;
@@ -40,7 +42,7 @@ export async function launchGoogleDriveZipDownload(googleDriveLink: string,
     const jsonData = await makePostCallWithErrorHandling({
         "googleDriveLink": googleDriveLink,
         "profile": profile,
-        ignoreFolder: "proc",
+        ignoreFolder: GDRIVE_DEFAULT_IGNORE_FOLDER,
         fileType: ZIP_TYPE
     }, `gDrive/downloadFromGoogleDrive`)
 
@@ -80,7 +82,7 @@ export async function verifyImgToPdfSuccessOld(folder: string,
 export async function unzipFolders(folder: string): Promise<ExecResponseDetails> {
     const jsonData = await makePostCallWithErrorHandling({
         "folder": folder,
-        ignoreFolder: "proc"
+        ignoreFolder: GDRIVE_DEFAULT_IGNORE_FOLDER
     }, `yarn/unzipAllFolders`)
 
     console.log(`result ${JSON.stringify(jsonData)}`)
@@ -105,7 +107,7 @@ export async function unzipFolders(folder: string): Promise<ExecResponseDetails>
 export async function verifyUnzipFolders(folder: string): Promise<ExecResponseDetails> {
     const jsonData = await makePostCallWithErrorHandling({
         "folder": folder,
-        ignoreFolder: "proc"
+        ignoreFolder: GDRIVE_DEFAULT_IGNORE_FOLDER
     }, `yarn/verifyUnzipAllFolders`)
 
     console.log(`result ${JSON.stringify(jsonData)}`)

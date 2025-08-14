@@ -20,11 +20,13 @@ import { ERROR_RED } from "constants/colors"
 import { DD_MM_YYYY_WITH_TIME_FORMAT } from "utils/utils"
 import moment from "moment"
 import { ResultDisplayPopover } from "../../widgets/ResultDisplayPopover"
+import Spinner from "widgets/Spinner"
 
 const TASK_TYPE_ENUM = {
     VERIFY_UPLOAD_STATUS: "Verify Upload Status",
     FIND_MISSING: "Find Missing",
     REUPLOAD_FAILED: "Reupload of Failed-Items",
+    REUPLOAD_MISSED: "Reupload of Missed-Items",
     MOVE_TO_FREEZE: "Move to Freeze",
 }
 
@@ -36,12 +38,13 @@ interface ActionButtonsProps {
     fetchData: () => void
 }
 
-export const ActionButtons: React.FC<ActionButtonsProps> = ({ uploadCycleId, row,isLoading, setIsLoading,fetchData }) => {
+export const ActionButtons: React.FC<ActionButtonsProps> = ({ uploadCycleId, row, isLoading, setIsLoading, fetchData }) => {
     const [openDialog, setOpenDialog] = useState(false)
     const [actionType, setActionType] = useState("")
     const [popoverAnchor, setPopoverAnchor] = useState<HTMLButtonElement | null>(null)
     const [popoverContent, setPopoverContent] = useState<string>("")
     const [reactComponent, setReactComponent] = useState<JSX.Element>(<></>)
+    const [loading2, setLoading2] = useState(false);
 
     const calcRowUploadFailures = (row: UploadCycleTableData) => {
         const rowSucess = row.archiveProfileAndCount.reduce((acc, curr) => acc + (curr?.uploadSuccessCount || 0), 0)
@@ -64,15 +67,14 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({ uploadCycleId, row
     };
 
     const launchReuploadMissed = async (uploadCycleId: string) => {
-        setIsLoading(true);
+        setLoading2(true);
         const _res = await _launchGradlev2({
             uploadCycleId: uploadCycleId,
         }, "reuploadMissedViaUploadCycleId")
         console.log(`_res ${JSON.stringify(_res)}`)
-        setIsLoading(false);
+        setLoading2(false);
         setPopoverContent(JSON.stringify(_res, null, 2))
         setPopoverAnchor(document.getElementById('find-missing-button') as HTMLButtonElement)
-
     }
 
     const _findMissing = async () => {
@@ -87,10 +89,10 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({ uploadCycleId, row
                         <Box sx={{ paddingBottom: "30px" }}>
                             <Button
                                 variant="contained"
-                                onClick={() => launchReuploadMissed(uploadCycleId)}
+                                onClick={() => confirm(TASK_TYPE_ENUM.REUPLOAD_MISSED)}
                                 size="small"
                                 sx={{ width: "200px", marginTop: "20px" }}
-                                disabled={isLoading}>Reupload Missing ({(row.countIntended || 0) - (row?.totalQueueCount || 0)}/{row.countIntended})
+                                disabled={loading2}>Reupload Missing ({(row.countIntended || 0) - (row?.totalQueueCount || 0)}/{row.countIntended})
                             </Button>
                         </Box>
                         {
@@ -153,17 +155,39 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({ uploadCycleId, row
     const handleConfirm = async () => {
         console.log(`Confirmed: ${actionType} for Upload Cycle ID: ${uploadCycleId}`)
         setOpenDialog(false)
-        if (actionType === TASK_TYPE_ENUM.VERIFY_UPLOAD_STATUS) {
-            await _verifyUploadStatus();
-            fetchData();
-        } else if (actionType === TASK_TYPE_ENUM.FIND_MISSING) {
-            await _findMissing();
-        } else if (actionType === TASK_TYPE_ENUM.REUPLOAD_FAILED) {
-            await _reuploadFailed();
-            fetchData();
-        } else if (actionType === TASK_TYPE_ENUM.MOVE_TO_FREEZE) {
-            await _moveToFreeze();
-            fetchData();
+        
+        // Set appropriate loading state immediately based on action type
+        if (actionType === TASK_TYPE_ENUM.REUPLOAD_MISSED) {
+            setLoading2(true);
+        } else {
+            setIsLoading(true);
+        }
+        
+        try {
+            if (actionType === TASK_TYPE_ENUM.VERIFY_UPLOAD_STATUS) {
+                await _verifyUploadStatus();
+                fetchData();
+            } else if (actionType === TASK_TYPE_ENUM.FIND_MISSING) {
+                await _findMissing();
+            } else if (actionType === TASK_TYPE_ENUM.REUPLOAD_FAILED) {
+                await _reuploadFailed();
+                fetchData();
+            } else if (actionType === TASK_TYPE_ENUM.REUPLOAD_MISSED) {
+                await launchReuploadMissed(uploadCycleId);
+                fetchData();
+            } else if (actionType === TASK_TYPE_ENUM.MOVE_TO_FREEZE) {
+                await _moveToFreeze();
+                fetchData();
+            }
+        } catch (error) {
+            console.error(`Error executing ${actionType}:`, error);
+        } finally {
+            // Reset loading states in case they weren't reset in the individual functions
+            if (actionType === TASK_TYPE_ENUM.REUPLOAD_MISSED) {
+                setLoading2(false);
+            } else {
+                setIsLoading(false);
+            }
         }
     }
 
@@ -215,7 +239,16 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({ uploadCycleId, row
                 setOpenDialog={setOpenDialog}
                 invokeFuncOnClick={handleConfirm}
             />
-            <ResultDisplayPopover popoverAnchor={popoverAnchor} setPopoverAnchor={setPopoverAnchor} popoverContent={popoverContent} actionType={actionType} reactComponent={reactComponent} setReactComponent={setReactComponent} />
+            <ResultDisplayPopover 
+                popoverAnchor={popoverAnchor} 
+                setPopoverAnchor={setPopoverAnchor} 
+                popoverContent={popoverContent} 
+                actionType={actionType} 
+                reactComponent={reactComponent} 
+                setReactComponent={setReactComponent}
+                loading={loading2}
+            />
+
         </>
     )
 }
