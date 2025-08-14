@@ -25,6 +25,7 @@ import {
     ARCHIVE_ITEM_AGGREGATES_BY_SOURCES_PATH,
     FILE_TRANSFER_LISTING,
     GDRIVE_DWNL_LISTING,
+    IMG_TO_PDF_LISTING,
     UPLOADS_USHERED_OLD_PATH,
     LANDING_PAGE_OLD_PATH,
     PDF_UTIL
@@ -69,6 +70,10 @@ export const TOP_PANEL_MENU: TopPanelMenu[] = [{
         {
             path: GDRIVE_DWNL_LISTING,
             label: 'G-Drive Download List',
+        },
+        {
+            path: IMG_TO_PDF_LISTING,
+            label: 'Img to Pdf Conversion List',
         }]
 },
 {

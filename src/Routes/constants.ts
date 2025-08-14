@@ -32,6 +32,7 @@ export const RENAME_PDFS = "/renamePdfsPath";
 export const TIFF_2_PDF = "/tiff2pdfPath";
 export const FILE_TRANSFER_LISTING = "/fileTransferListingPath";
 export const GDRIVE_DWNL_LISTING = "/gDriveDwnldListingPath";
+export const IMG_TO_PDF_LISTING = "/imgToPdfListingPath";
 
 export const AI_TEXT_IDENTIFIER = "/aiPath";
 export const PDF_UTIL = "/pdfMerge";
