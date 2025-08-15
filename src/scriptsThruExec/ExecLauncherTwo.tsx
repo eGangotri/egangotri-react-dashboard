@@ -46,8 +46,8 @@ const ExecLauncherTwo: React.FC = () => {
                     execType={ExecType.UploadPdfsViaExcelV1}
                     textBoxOneValue={uploadableExcelV1Profiles}
                     textBoxTwoValue={uploadablesExcelV1}
-                    userInputOneInfo="Excel File Format: Col1. Abs Path. Col2. Suject. Col 3. Description Col 4. Creator"
-                    userInputThreeInfoNonMandatory="Range of Whole Numbers. Ex 1-10 (Optional).inclusive"
+                    userInputOneInfo="Excel File Format: Col1. Abs Path. Col2. Suject. Col 3. Description Col 4. Creator. Headers best not included in Excel"
+                    userInputThreeInfoNonMandatory="Range of Whole Numbers. Ex 1-10 (Optional).inclusive. 0-based unless have headers"
                     css={{ width: "250px" }}
                     css2={{ width: "450px" }}
                     thirdButton={<Button variant="contained" color="primary" onClick={loadFromLocalStorageForV1} sx={{ marginRight: "10px", marginBottom: "10px" }}>Load From Local Storage</Button>}
