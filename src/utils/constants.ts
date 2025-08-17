@@ -21,6 +21,6 @@ export function getBackendServer(): string {
   return BACKEND_SERVER;
 }
 
-export const MAX_ITEMS_LISTABLE = 250;
+export const MAX_ITEMS_LISTABLE = 5250;
 
 export const WIDTH_OF_WIDGETS = 250;
