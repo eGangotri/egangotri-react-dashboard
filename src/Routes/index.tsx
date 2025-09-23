@@ -29,6 +29,7 @@ import {
     LANDING_PAGE_PATH,
     EXEC_LAUNCHER_TWO_PATH,
     EXEC_LAUNCH_FOUR_B_PATH,
+    EXEC_LAUNCH_AI_RENAMER_PATH,
     TIFF_2_PDF,
     AI_TEXT_IDENTIFIER,
     EXEC_LAUNCHER_THREE_PATH,
@@ -65,6 +66,7 @@ import UploadsOld from 'pages/upload/indexOld';
 import UploadCyclesList from 'pages/UploadCycles/UploadCyclesList';
 import PdfUtil from 'scriptsThruExec/PdfUtil';
 import ImgToPdfListing from 'pages/ImgToPdfList';
+import ExecLauncherAIRenamer from 'scriptsThruExec/ExecLauncherAIRenamer';
 const DashboardRoutes: React.FC = () => {
     const isLocalhost = true; //window.location.hostname === 'localhost';
     const allFrags = (
@@ -82,6 +84,7 @@ const DashboardRoutes: React.FC = () => {
             {<Route path={EXEC_LAUNCHER_THREE_PATH} element={<ExecLauncherThree />} />}
             {<Route path={EXEC_LAUNCHER_FOUR_PATH} element={<ExecLauncherFour />} />}
             {<Route path={EXEC_LAUNCH_FOUR_B_PATH} element={<ExecLauncher4B />} />}
+            {<Route path={EXEC_LAUNCH_AI_RENAMER_PATH} element={<ExecLauncherAIRenamer />} />}
             {<Route path={TIFF_2_PDF} element={<Tiff2Pdf />} />}
             {<Route path={AI_TEXT_IDENTIFIER} element={<AITextIdentifier />} />}
             {<Route path={FILE_MOVER_PATH} element={<FileMover />} />}

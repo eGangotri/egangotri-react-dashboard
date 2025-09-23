@@ -24,7 +24,7 @@ import {
 } from "service/launchYarn";
 
 import { ExecComponentFormData, ExecResponseDetails } from "./types";
-import { makePostCallForCombineGDriveAndReducedPdfExcels, makePostCallForCreateUploadableExcelV1, makePostCallForCreateUploadableExcelV3, makePostCallForGDriveExcelTrack, makePostCallForGenExcelForGDrive, makePostCallForTopN, makePostCallWithErrorHandling, verifyUploadStatusForUploadCycleId } from "service/BackendFetchService";
+import { makePostCallForCombineGDriveAndReducedPdfExcels, makePostCallForCreateUploadableExcelV1, makePostCallForCreateUploadableExcelV3, makePostCallForGDriveExcelTrack, makePostCallForGenExcelForGDrive, makePostCallForTopN, makePostCallWithErrorHandling, makePostCallWithErrorHandlingForPdfReductionForAiRenamer, verifyUploadStatusForUploadCycleId } from "service/BackendFetchService";
 import { downloadFromExcelUsingFrontEnd } from "service/launchFrontEnd";
 import { replaceQuotes } from "mirror/utils";
 import { handleYarnListingGeneration } from "./Utils";
@@ -127,8 +127,9 @@ export enum ExecType {
   RENAME_FIES_VIA_EXCEL = 101,
 
   GET_FIRST_N_PAGES_PYTHON = 200,
+  GET_FIRST_N_PAGES_PYTHON_FOR_AI_RENAMER = 2002,
   MERGE_PDFS_PYTHON = 200499,
-  CORRUPTION_CHECK_QUICK = 2004500, 
+  CORRUPTION_CHECK_QUICK = 2004500,
   CORRUPTION_CHECK_DEEP = 2004501,
   COPY_ALL_PDFS_PYTHON = 200300,
   GET_FIRST_N_PAGES_GRADLE = 200200,
@@ -149,7 +150,10 @@ export enum ExecType {
   UPLOAD_MISSED_TO_GDRIVE = 213,
   BL_EAP_WORK = 214,
 
+  //discard
   AI_TEXT_IDENTIFIER = 215,
+
+  AI_RENAMER = 2151,
 
   CONVERT_MULTIPLE_TXT_FILE_SCRIPTS = 216,
   CONVERT_TEXT_SCRIPT = 217
@@ -330,7 +334,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       case ExecType.VERIFY_G_DRIVE_ALL_DOWNLOAD_SIZE_ONLY:
         _resp = await verifyGDriveDwnldSuccessFoldersByLink(dataUserInput, dataUserInput2Mandatory, ALL_TYPE, true);
         break;
-        
+
       case ExecType.UNZIP_ALL_FILES:
         _resp = await unzipFolders(dataUserInput);
         break;
@@ -497,7 +501,9 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
           nPages: dataUserInput3NonMandatory,
         }, `pythonScripts/getFirstAndLastNPages`);
         break;
-        
+
+
+
       case ExecType.MERGE_PDFS_PYTHON:
         _resp = await makePostCallWithErrorHandling({
           first_pdf_path: dataUserInput,
@@ -505,13 +511,13 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
           third_pdf_path: dataUserInput3NonMandatory,
         }, `pythonScripts/mergePdfs`);
         break;
-             
+
       case ExecType.CORRUPTION_CHECK_QUICK:
         _resp = await makePostCallWithErrorHandling({
           folderOrProfile: dataUserInput,
         }, `fileUtil/corruptPdfCheck`);
         break;
-        
+
       case ExecType.CORRUPTION_CHECK_DEEP:
         _resp = await makePostCallWithErrorHandling({
           folderOrProfile: dataUserInput,
@@ -564,16 +570,16 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
           `fileUtil/findByFileSize`);
         break;
 
-        case ExecType.DUPLICATES_BY_FILE_SIZE_MOVE_ITEMS:
-          _resp = await makePostCallWithErrorHandling({
-            folder1: dataUserInput,
-            folder2: dataUserInput2Mandatory,
-            findDisjoint: false,
-            moveItems: true
-          },
-            `fileUtil/findByFileSize`);
-          break;
-  
+      case ExecType.DUPLICATES_BY_FILE_SIZE_MOVE_ITEMS:
+        _resp = await makePostCallWithErrorHandling({
+          folder1: dataUserInput,
+          folder2: dataUserInput2Mandatory,
+          findDisjoint: false,
+          moveItems: true
+        },
+          `fileUtil/findByFileSize`);
+        break;
+
       case ExecType.DISJOINT_SET_BY_FILE_SIZE:
         _resp = await makePostCallWithErrorHandling({
           folder1: dataUserInput,
@@ -584,15 +590,15 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
           `fileUtil/findByFileSize`);
         break;
 
-        case ExecType.DISJOINT_SET_BY_FILE_SIZE_MOVE_ITEMS:
-          _resp = await makePostCallWithErrorHandling({
-            folder1: dataUserInput,
-            folder2: dataUserInput2Mandatory,
-            findDisjoint: true,
-            moveItems: true
-          },
-            `fileUtil/findByFileSize`);
-          break;
+      case ExecType.DISJOINT_SET_BY_FILE_SIZE_MOVE_ITEMS:
+        _resp = await makePostCallWithErrorHandling({
+          folder1: dataUserInput,
+          folder2: dataUserInput2Mandatory,
+          findDisjoint: true,
+          moveItems: true
+        },
+          `fileUtil/findByFileSize`);
+        break;
 
       case ExecType.RENAME_NON_ASCII_FILE_NAMES_IN_FOLDER:
         _resp = await makePostCallWithErrorHandling({
@@ -753,12 +759,20 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
           `yarnArchive/generateEapExcelV1`);
         break;
 
-      case ExecType.AI_TEXT_IDENTIFIER:
+      case ExecType.GET_FIRST_N_PAGES_PYTHON_FOR_AI_RENAMER:
+        _resp = await makePostCallWithErrorHandlingForPdfReductionForAiRenamer({
+          srcFolders: dataUserInput,
+          destRootFolder: dataUserInput2Mandatory,
+          nPages: dataUserInput3NonMandatory,
+        }, `pythonScripts/getFirstAndLastNPages`);
+        break;
+
+      case ExecType.AI_RENAMER:
         _resp = await makePostCallWithErrorHandling({
-          profileName: dataUserInput,
-          folderPath: dataUserInput2Mandatory,
+          srcFolder: dataUserInput,
+          reducedFolder: dataUserInput2Mandatory,
         },
-          `ai/renamePdfsWithAI`);
+          `ai/aiRenamer`);
         break;
 
       case ExecType.CONVERT_MULTIPLE_TXT_FILE_SCRIPTS:

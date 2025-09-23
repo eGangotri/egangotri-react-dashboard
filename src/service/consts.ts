@@ -17,6 +17,10 @@ export const FOLDER_OF_UNZIPPED_IMGS = "folderOfUnzippedImgs";
 
 export const COMBINATION_EXCEL_PATH_LOCAL_STORAGE_KEY = "combinationExcelPath";
 
+export const AI_RENAMER_ABS_PATH_LOCAL_STORAGE_KEY = "aiRenamerAbsPath";
+export const AI_RENAMER_REDUCED_PATH_LOCAL_STORAGE_KEY = "aiRenamerReducedPath";
+
+
 
 
 

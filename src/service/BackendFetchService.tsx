@@ -2,7 +2,7 @@ import { AI_SERVER, getBackendServer, MAX_ITEMS_LISTABLE } from "utils/constants
 import * as _ from 'lodash';
 import { SelectedUploadItem } from "mirror/types"
 import { ExecResponseDetails } from "scriptsThruExec/types";
-import { ALL_NOT_JUST_PDF_SUFFIX, COMBINATION_EXCEL_PATH_LOCAL_STORAGE_KEY, GDRIVE_EXCEL_NAME_LOCAL_STORAGE_KEY, LOCAL_LISTING_EXCEL_LOCAL_STORAGE_KEY, REDUCED_SUFFIX, TOP_N_FILE_LOCAL_STORAGE_KEY, UPLOADABLE_EXCELS_V1, UPLOADABLE_EXCELS_V1_PROFILES, UPLOADABLE_EXCELS_V3, UPLOADABLE_EXCELS_V3_PROFILES } from "./consts";
+import { AI_RENAMER_ABS_PATH_LOCAL_STORAGE_KEY, AI_RENAMER_REDUCED_PATH_LOCAL_STORAGE_KEY, ALL_NOT_JUST_PDF_SUFFIX, COMBINATION_EXCEL_PATH_LOCAL_STORAGE_KEY, GDRIVE_EXCEL_NAME_LOCAL_STORAGE_KEY, LOCAL_LISTING_EXCEL_LOCAL_STORAGE_KEY, REDUCED_SUFFIX, TOP_N_FILE_LOCAL_STORAGE_KEY, UPLOADABLE_EXCELS_V1, UPLOADABLE_EXCELS_V1_PROFILES, UPLOADABLE_EXCELS_V3, UPLOADABLE_EXCELS_V3_PROFILES } from "./consts";
 import { makeGetCall, makePostCall } from "./ApiInterceptor";
 
 const QUEUE_API_PREFIX = "itemsQueued";
@@ -29,7 +29,7 @@ export const originalMakePostCall = async (body: Record<string, unknown>, resour
     }
     else {
       console.log(`response not ok ${response.statusText}`)
-      try{
+      try {
         const anyResponse = await response.json();
         return {
           success: false,
@@ -44,11 +44,11 @@ export const originalMakePostCall = async (body: Record<string, unknown>, resour
           success: false,
           error: response.statusText,
           ...response,
-          er  : e
-      };
+          er: e
+        };
+      }
     }
   }
-}
   catch (error) {
     const err = error as Error;
     console.log(`catch err ${err.message}`)
@@ -76,12 +76,12 @@ export const originalMakeGetCall = async (resource: string) => {
       }
       catch (e) {
         console.error(`error `, e)
-        data = {success:false}
+        data = { success: false }
       }
-      
+
       return {
         error: response.statusText,
-        ...data 
+        ...data
       };
     }
   }
@@ -99,6 +99,24 @@ export const originalMakeGetCall = async (resource: string) => {
 export const makePostCallWithErrorHandling = async (body: Record<string, unknown>, resource: string) => {
   const result = await makePostCall(body, resource)
   console.log(`result.response ${JSON.stringify(result.response)}`)
+
+  return {
+    ...result
+  } as ExecResponseDetails;
+}
+
+export const makePostCallWithErrorHandlingForPdfReductionForAiRenamer = async (body: Record<string, unknown>, resource: string) => {
+  const result = await makePostCall(body, resource)
+  console.log(`result.response ${JSON.stringify(result.response)}`)
+
+  let aiRenameAbsPath = AI_RENAMER_ABS_PATH_LOCAL_STORAGE_KEY;
+  let aiRenmaeReducedPath = AI_RENAMER_REDUCED_PATH_LOCAL_STORAGE_KEY
+
+  localStorage.setItem(aiRenameAbsPath, body.srcFolder as string);
+  localStorage.setItem(aiRenmaeReducedPath, body.reducedFolder as string);
+
+  // Retrieve value
+  console.log(`gDriveExcelName: ${JSON.stringify(result.response)}`);
 
   return {
     ...result

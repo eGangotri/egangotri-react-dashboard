@@ -28,7 +28,8 @@ import {
     IMG_TO_PDF_LISTING,
     UPLOADS_USHERED_OLD_PATH,
     LANDING_PAGE_OLD_PATH,
-    PDF_UTIL
+    PDF_UTIL,
+    EXEC_LAUNCH_AI_RENAMER_PATH
 } from 'Routes/constants';
 
 export const TOP_PANEL_MENU: TopPanelMenu[] = [{
@@ -103,6 +104,10 @@ export const TOP_PANEL_MENU: TopPanelMenu[] = [{
         {
             path: EXEC_LAUNCHER_FOUR_PATH,
             label: 'Refine File Data-1',
+        },
+        {
+            path: EXEC_LAUNCH_AI_RENAMER_PATH,
+            label: 'File AI Renaming',
         },
         {
             path: EXEC_LAUNCH_FOUR_B_PATH,
