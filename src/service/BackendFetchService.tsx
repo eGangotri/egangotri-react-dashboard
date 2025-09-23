@@ -107,16 +107,25 @@ export const makePostCallWithErrorHandling = async (body: Record<string, unknown
 
 export const makePostCallWithErrorHandlingForPdfReductionForAiRenamer = async (body: Record<string, unknown>, resource: string) => {
   const result = await makePostCall(body, resource)
-  console.log(`result.response ${JSON.stringify(result.response)}`)
+  const response = result.response
+  console.log(`makePostCallWithErrorHandlingForPdfReductionForAiRenamer ${JSON.stringify(response)}`)
 
-  let aiRenameAbsPath = AI_RENAMER_ABS_PATH_LOCAL_STORAGE_KEY;
-  let aiRenmaeReducedPath = AI_RENAMER_REDUCED_PATH_LOCAL_STORAGE_KEY
+  console.log(`makePostCallWithErrorHandlingForPdfReductionForAiRenamer: 1
+    ${JSON.stringify( response?.["0"]?.srcFolder)}
+     ${JSON.stringify( response?.["0"]?.destRootDump)} ===
+     ${localStorage.getItem(AI_RENAMER_ABS_PATH_LOCAL_STORAGE_KEY)}
+     ${localStorage.getItem(AI_RENAMER_REDUCED_PATH_LOCAL_STORAGE_KEY)}
+     `);
 
-  localStorage.setItem(aiRenameAbsPath, body.srcFolder as string);
-  localStorage.setItem(aiRenmaeReducedPath, body.reducedFolder as string);
+  localStorage.setItem(AI_RENAMER_ABS_PATH_LOCAL_STORAGE_KEY, response?.["0"]?.srcFolder as string);
+  localStorage.setItem(AI_RENAMER_REDUCED_PATH_LOCAL_STORAGE_KEY, response?.["0"]?.destRootDump as string);
 
-  // Retrieve value
-  console.log(`gDriveExcelName: ${JSON.stringify(result.response)}`);
+  console.log(`makePostCallWithErrorHandlingForPdfReductionForAiRenamer: 
+    ${JSON.stringify( response?.["0"]?.srcFolder)}
+     ${JSON.stringify( response?.["0"]?.destRootDump)} ===
+     ${localStorage.getItem(AI_RENAMER_ABS_PATH_LOCAL_STORAGE_KEY)}
+     ${localStorage.getItem(AI_RENAMER_REDUCED_PATH_LOCAL_STORAGE_KEY)}
+     `);
 
   return {
     ...result

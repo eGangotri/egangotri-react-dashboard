@@ -13,7 +13,6 @@ import { makeGetCall, makePostCall } from 'service/ApiInterceptor';
 import { FaCopy } from "react-icons/fa";
 import ExecComponent from "scriptsThruExec/ExecComponent";
 import { ExecType } from "scriptsThruExec/ExecLauncherUtil";
-import { redownloadFromGDrive, verifyGDriveDwnldSuccessFolders } from "service/launchYarn";
 import { FOLDER_OF_UNZIPPED_IMGS } from "service/consts";
 import { IMG_TYPE_CR2, IMG_TYPE_JPG, IMG_TYPE_PNG, IMG_TYPE_TIF } from "scriptsThruExec/constants";
 

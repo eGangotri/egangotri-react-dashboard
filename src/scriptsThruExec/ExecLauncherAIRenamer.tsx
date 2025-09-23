@@ -3,9 +3,12 @@ import ExecComponent from './ExecComponent';
 import Box from '@mui/material/Box';
 import { ExecType } from './ExecLauncherUtil';
 import { Button, Link, Typography } from '@mui/material';
+import { AI_RENAMER_ABS_PATH_LOCAL_STORAGE_KEY, AI_RENAMER_REDUCED_PATH_LOCAL_STORAGE_KEY } from 'service/consts';
 
 const ExecLauncherAIRenamer: React.FC = () => {
     const [filePath, setFilePath] = useState('');
+    const [absPathForAiRenamer, setAbsPathForAiRenamer] = useState('');
+    const [reducedPathForAiRenamer, setReducedPathForAiRenamer] = useState('');
 
     const [validationCss, setValidationCss] = React.useState({
         backgroundColor: "lightgreen",
@@ -20,6 +23,20 @@ const ExecLauncherAIRenamer: React.FC = () => {
         }
     };
 
+    const loadSrcAndReducedPDFNamesFromLocalStorage = () => {
+
+        let storedValue = localStorage.getItem(AI_RENAMER_ABS_PATH_LOCAL_STORAGE_KEY);
+        let storedReducedValue = localStorage.getItem(AI_RENAMER_REDUCED_PATH_LOCAL_STORAGE_KEY);
+
+        console.log(`loadFromLocalStorage called ${storedValue} ${storedReducedValue}`)
+        if (storedValue) {
+            setAbsPathForAiRenamer(storedValue)
+        }
+        if (storedReducedValue) {
+            setReducedPathForAiRenamer(storedReducedValue)
+        }
+    }
+
     return (
         <Box display="flex" gap={4} mb={2} flexDirection="row">
             <Box display="flex" alignItems="center" gap={4} mb={2} flexDirection="column">
@@ -30,7 +47,7 @@ const ExecLauncherAIRenamer: React.FC = () => {
                     thirdTextBoxPlaceHolder='N Pages. Ex. 10 or 10-20'
                     userInputThreeInfoNonMandatory='N Pages. Use - to specify diff. First and Last Values Ex. 10-20'
                     thirdTextBoxDefaultValue={"10"}
-                    execType={ExecType.GET_FIRST_N_PAGES_PYTHON}
+                    execType={ExecType.GET_FIRST_N_PAGES_PYTHON_FOR_AI_RENAMER}
                     css={{ minWidth: "35vw" }}
                     css2={{ minWidth: "35vw" }}
                     css3={{ marginTop: "30px", minWidth: "23vw" }}
@@ -54,12 +71,20 @@ const ExecLauncherAIRenamer: React.FC = () => {
                     buttonText="AI Renamer"
                     placeholder='Absolute Path to PDFs Folder(s) as CSV'
                     secondTextBoxPlaceHolder='Absolute Path to Reduced PDFs Folder(s) as CSV'
+                    thirdTextBoxPlaceHolder='Absolute Path of Renamed Pdfs Folder as CSV'
                     execType={ExecType.AI_RENAMER}
                     css={{ minWidth: "35vw" }}
                     css2={{ minWidth: "35vw" }}
-                    textBoxOneValue={filePath}
+                    css3={{ marginTop: "30px", minWidth: "23vw" }}
+                    textBoxOneValue={absPathForAiRenamer}
                     multiline1stTf
                     rows1stTf={4}
+                    textBoxTwoValue={reducedPathForAiRenamer}
+                    thirdButton={<Button
+                        variant="contained"
+                        color="primary"
+                        onClick={loadSrcAndReducedPDFNamesFromLocalStorage}
+                        sx={{ marginRight: "10px", marginBottom: "10px" }}>Load From Local Storage</Button>}
                 />
             </Box>
         </Box >
