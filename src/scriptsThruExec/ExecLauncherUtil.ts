@@ -763,7 +763,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         _resp = await makePostCallWithErrorHandlingForPdfReductionForAiRenamer({
           srcFolders: dataUserInput,
           destRootFolder: dataUserInput2Mandatory,
-          nPages: dataUserInput3NonMandatory,
+          outputFolder: dataUserInput3NonMandatory,
         }, `pythonScripts/getFirstAndLastNPages`);
         break;
 
