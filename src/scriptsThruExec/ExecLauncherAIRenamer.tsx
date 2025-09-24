@@ -3,12 +3,13 @@ import ExecComponent from './ExecComponent';
 import Box from '@mui/material/Box';
 import { ExecType } from './ExecLauncherUtil';
 import { Button, Link, Typography } from '@mui/material';
-import { AI_RENAMER_ABS_PATH_LOCAL_STORAGE_KEY, AI_RENAMER_REDUCED_PATH_LOCAL_STORAGE_KEY } from 'service/consts';
+import { AI_RENAMER_ABS_PATH_LOCAL_STORAGE_KEY, AI_RENAMER_REDUCED_PATH_LOCAL_STORAGE_KEY, AI_RENAMER_RENAMER_PATH_LOCAL_STORAGE_KEY } from 'service/consts';
 
 const ExecLauncherAIRenamer: React.FC = () => {
     const [filePath, setFilePath] = useState('');
     const [absPathForAiRenamer, setAbsPathForAiRenamer] = useState('');
     const [reducedPathForAiRenamer, setReducedPathForAiRenamer] = useState('');
+    const [renamerPathForAiRenamer, setRenamerPathForAiRenamer] = useState('');
 
     const [validationCss, setValidationCss] = React.useState({
         backgroundColor: "lightgreen",
@@ -27,13 +28,17 @@ const ExecLauncherAIRenamer: React.FC = () => {
 
         let storedValue = localStorage.getItem(AI_RENAMER_ABS_PATH_LOCAL_STORAGE_KEY);
         let storedReducedValue = localStorage.getItem(AI_RENAMER_REDUCED_PATH_LOCAL_STORAGE_KEY);
+        let storedRenamerValue = localStorage.getItem(AI_RENAMER_RENAMER_PATH_LOCAL_STORAGE_KEY);
 
-        console.log(`loadFromLocalStorage called ${storedValue} ${storedReducedValue}`)
+        console.log(`loadFromLocalStorage called ${storedValue} ${storedReducedValue} ${storedRenamerValue}`)
         if (storedValue) {
             setAbsPathForAiRenamer(storedValue)
         }
         if (storedReducedValue) {
             setReducedPathForAiRenamer(storedReducedValue)
+        }
+        if (storedRenamerValue) {
+            setRenamerPathForAiRenamer(storedRenamerValue)
         }
     }
 
@@ -80,6 +85,7 @@ const ExecLauncherAIRenamer: React.FC = () => {
                     multiline1stTf
                     rows1stTf={4}
                     textBoxTwoValue={reducedPathForAiRenamer}
+                    textBoxThreeValue={renamerPathForAiRenamer}
                     thirdButton={<Button
                         variant="contained"
                         color="primary"

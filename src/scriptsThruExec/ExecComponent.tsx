@@ -31,10 +31,13 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
   secondComponentRequired = true,
   textBoxOneValue = "",
   textBoxTwoValue = "",
+  textBoxThreeValue = "",
   multiline1stTf = false,
   multiline2ndTf = false,
+  multiline3rdTf = false,
   rows1stTf = 1,
   rows2ndTf = 1,
+  rows3rdTf = 1,
   onInputChange
 
 }) => {
@@ -102,6 +105,10 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
     setValue('userInputSecond', textBoxTwoValue);
   }, [textBoxTwoValue, setValue]);
 
+  useEffect(() => {
+    setValue('userInputThird', textBoxThreeValue);
+  }, [textBoxThreeValue, setValue]);
+  
   const onSubmit = async (data: ExecComponentFormData) => {
     setOpenDialog(true);
     setFormData(data)

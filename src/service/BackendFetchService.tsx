@@ -2,8 +2,9 @@ import { AI_SERVER, getBackendServer, MAX_ITEMS_LISTABLE } from "utils/constants
 import * as _ from 'lodash';
 import { SelectedUploadItem } from "mirror/types"
 import { ExecResponseDetails } from "scriptsThruExec/types";
-import { AI_RENAMER_ABS_PATH_LOCAL_STORAGE_KEY, AI_RENAMER_REDUCED_PATH_LOCAL_STORAGE_KEY, ALL_NOT_JUST_PDF_SUFFIX, COMBINATION_EXCEL_PATH_LOCAL_STORAGE_KEY, GDRIVE_EXCEL_NAME_LOCAL_STORAGE_KEY, LOCAL_LISTING_EXCEL_LOCAL_STORAGE_KEY, REDUCED_SUFFIX, TOP_N_FILE_LOCAL_STORAGE_KEY, UPLOADABLE_EXCELS_V1, UPLOADABLE_EXCELS_V1_PROFILES, UPLOADABLE_EXCELS_V3, UPLOADABLE_EXCELS_V3_PROFILES } from "./consts";
+import { AI_RENAMER_ABS_PATH_LOCAL_STORAGE_KEY, AI_RENAMER_REDUCED_PATH_LOCAL_STORAGE_KEY, AI_RENAMER_RENAMER_PATH_LOCAL_STORAGE_KEY, ALL_NOT_JUST_PDF_SUFFIX, COMBINATION_EXCEL_PATH_LOCAL_STORAGE_KEY, GDRIVE_EXCEL_NAME_LOCAL_STORAGE_KEY, LOCAL_LISTING_EXCEL_LOCAL_STORAGE_KEY, REDUCED_SUFFIX, TOP_N_FILE_LOCAL_STORAGE_KEY, UPLOADABLE_EXCELS_V1, UPLOADABLE_EXCELS_V1_PROFILES, UPLOADABLE_EXCELS_V3, UPLOADABLE_EXCELS_V3_PROFILES } from "./consts";
 import { makeGetCall, makePostCall } from "./ApiInterceptor";
+import path from "path";
 
 const QUEUE_API_PREFIX = "itemsQueued";
 const USHERED_API_PREFIX = "itemsushered";
@@ -111,18 +112,23 @@ export const makePostCallWithErrorHandlingForPdfReductionForAiRenamer = async (b
   console.log(`makePostCallWithErrorHandlingForPdfReductionForAiRenamer ${JSON.stringify(response)}`)
 
   console.log(`makePostCallWithErrorHandlingForPdfReductionForAiRenamer: 1
-    ${JSON.stringify( response?.["0"]?.srcFolder)}
-     ${JSON.stringify( response?.["0"]?.destRootDump)} ===
+    ${JSON.stringify(response?.["0"]?.srcFolder)}
+     ${JSON.stringify(response?.["0"]?.destRootDump)} ===
      ${localStorage.getItem(AI_RENAMER_ABS_PATH_LOCAL_STORAGE_KEY)}
      ${localStorage.getItem(AI_RENAMER_REDUCED_PATH_LOCAL_STORAGE_KEY)}
      `);
 
-  localStorage.setItem(AI_RENAMER_ABS_PATH_LOCAL_STORAGE_KEY, response?.["0"]?.srcFolder as string);
-  localStorage.setItem(AI_RENAMER_REDUCED_PATH_LOCAL_STORAGE_KEY, response?.["0"]?.destRootDump as string);
+  const srcFolder = response?.["0"]?.srcFolder as string
+  const parent = path.dirname(srcFolder);
+  const renamerFolder = path.join(parent, "renamer");
+
+  localStorage.setItem(AI_RENAMER_ABS_PATH_LOCAL_STORAGE_KEY, srcFolder);
+  localStorage.setItem(AI_RENAMER_REDUCED_PATH_LOCAL_STORAGE_KEY, response?.["0"]?.destRootDump));
+  localStorage.setItem(AI_RENAMER_RENAMER_PATH_LOCAL_STORAGE_KEY, renamerFolder);
 
   console.log(`makePostCallWithErrorHandlingForPdfReductionForAiRenamer: 
-    ${JSON.stringify( response?.["0"]?.srcFolder)}
-     ${JSON.stringify( response?.["0"]?.destRootDump)} ===
+    ${JSON.stringify(response?.["0"]?.srcFolder)}
+     ${JSON.stringify(response?.["0"]?.destRootDump)} ===
      ${localStorage.getItem(AI_RENAMER_ABS_PATH_LOCAL_STORAGE_KEY)}
      ${localStorage.getItem(AI_RENAMER_REDUCED_PATH_LOCAL_STORAGE_KEY)}
      `);
