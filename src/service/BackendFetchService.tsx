@@ -123,7 +123,7 @@ export const makePostCallWithErrorHandlingForPdfReductionForAiRenamer = async (b
   const renamerFolder = path.join(parent, "renamer");
 
   localStorage.setItem(AI_RENAMER_ABS_PATH_LOCAL_STORAGE_KEY, srcFolder);
-  localStorage.setItem(AI_RENAMER_REDUCED_PATH_LOCAL_STORAGE_KEY, response?.["0"]?.destRootDump));
+  localStorage.setItem(AI_RENAMER_REDUCED_PATH_LOCAL_STORAGE_KEY, response?.["0"]?.destRootDump as string);
   localStorage.setItem(AI_RENAMER_RENAMER_PATH_LOCAL_STORAGE_KEY, renamerFolder);
 
   console.log(`makePostCallWithErrorHandlingForPdfReductionForAiRenamer: 

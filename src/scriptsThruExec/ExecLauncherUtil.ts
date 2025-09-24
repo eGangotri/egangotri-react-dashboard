@@ -771,6 +771,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         _resp = await makePostCallWithErrorHandling({
           srcFolder: dataUserInput,
           reducedFolder: dataUserInput2Mandatory,
+          outputFolder: dataUserInput3NonMandatory,
         },
           `ai/aiRenamer`);
         break;
