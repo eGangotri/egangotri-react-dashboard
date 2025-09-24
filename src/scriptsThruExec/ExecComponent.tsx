@@ -37,7 +37,6 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
   multiline3rdTf = false,
   rows1stTf = 1,
   rows2ndTf = 1,
-  rows3rdTf = 1,
   onInputChange
 
 }) => {
@@ -108,7 +107,7 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
   useEffect(() => {
     setValue('userInputThird', textBoxThreeValue);
   }, [textBoxThreeValue, setValue]);
-  
+
   const onSubmit = async (data: ExecComponentFormData) => {
     setOpenDialog(true);
     setFormData(data)
