@@ -78,9 +78,9 @@ const ExecLauncherAIRenamer: React.FC = () => {
                     secondTextBoxPlaceHolder='Absolute Path to Reduced PDFs Folder(s) as CSV'
                     thirdTextBoxPlaceHolder='Absolute Path of Renamed Pdfs Folder as CSV'
                     execType={ExecType.AI_RENAMER}
-                    css={{ minWidth: "35vw" }}
-                    css2={{ minWidth: "35vw" }}
-                    css3={{ marginTop: "30px", minWidth: "35vw" }}
+                    css={{ minWidth: "50vw" }}
+                    css2={{ minWidth: "50vw" }}
+                    css3={{ marginTop: "30px", minWidth: "50vw" }}
                     textBoxOneValue={absPathForAiRenamer}
                     multiline1stTf
                     rows1stTf={4}
