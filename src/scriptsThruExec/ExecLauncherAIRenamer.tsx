@@ -80,7 +80,7 @@ const ExecLauncherAIRenamer: React.FC = () => {
                     execType={ExecType.AI_RENAMER}
                     css={{ minWidth: "35vw" }}
                     css2={{ minWidth: "35vw" }}
-                    css3={{ marginTop: "30px", minWidth: "23vw" }}
+                    css3={{ marginTop: "30px", minWidth: "35vw" }}
                     textBoxOneValue={absPathForAiRenamer}
                     multiline1stTf
                     rows1stTf={4}
