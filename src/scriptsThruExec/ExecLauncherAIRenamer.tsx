@@ -51,7 +51,7 @@ const ExecLauncherAIRenamer: React.FC = () => {
                     secondTextBoxPlaceHolder='"reduced", unless stated otherwise'
                     thirdTextBoxPlaceHolder='N Pages. Ex. 10 or 10-20'
                     userInputThreeInfoNonMandatory='N Pages. Use - to specify diff. First and Last Values Ex. 10-20'
-                    thirdTextBoxDefaultValue={"10"}
+                    thirdTextBoxDefaultValue={"15-7"}
                     execType={ExecType.GET_FIRST_N_PAGES_PYTHON_FOR_AI_RENAMER}
                     css={{ minWidth: "35vw" }}
                     css2={{ minWidth: "35vw" }}
@@ -76,7 +76,7 @@ const ExecLauncherAIRenamer: React.FC = () => {
                     buttonText="AI Renamer"
                     placeholder='Absolute Path to PDFs Folder(s) as CSV'
                     secondTextBoxPlaceHolder='Absolute Path to Reduced PDFs Folder(s) as CSV'
-                    thirdTextBoxPlaceHolder='Absolute Path of Renamed Pdfs Folder as CSV'
+                    thirdTextBoxPlaceHolder='Suffix for Output Folder (Default -renamer if left blank).'
                     execType={ExecType.AI_RENAMER}
                     css={{ minWidth: "50vw" }}
                     css2={{ minWidth: "50vw" }}
