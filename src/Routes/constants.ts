@@ -13,8 +13,11 @@ export const EXEC_LAUNCHER_TWO_B_PATH = "/execLauncher2bPath";
 export const EXEC_LAUNCHER_TWO_C_PATH = "/execLauncher2cPath";
 export const EXEC_LAUNCHER_THREE_PATH = "/execLauncher3Path";
 export const EXEC_LAUNCHER_FOUR_PATH = "/execLauncher4aPath";
-export const EXEC_LAUNCH_FOUR_B_PATH = "/execLauncher4bPath";
-export const EXEC_LAUNCH_AI_RENAMER_PATH = "/execAIRenamer";
+export const EXEC_LAUNCHER_FOUR_B_PATH = "/execLauncher4bPath";
+export const LAUNCH_AI_RENAMER_PATH = "/aiRenamer";
+export const AI_TITLE_RENAMER_HISTORY_PATH = "/aiTitleRenamerHistory";
+export const AI_TITLE_PDF_RENAMER_HISTORY_PATH = "/aiTitlePdfRenamerHistory";
+
 export const FILE_MOVER_PATH = "/fileMoverPath";
 export const SEARCH_ARCHIVE_DB_PATH = "/searchArchiveDBPath";
 export const SEARCH_G_DRIVE_DB_PATH = "/searchGDriveDBPath";

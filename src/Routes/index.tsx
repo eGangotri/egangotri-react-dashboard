@@ -28,8 +28,8 @@ import {
     UPLOADS_USHERED_PATH,
     LANDING_PAGE_PATH,
     EXEC_LAUNCHER_TWO_PATH,
-    EXEC_LAUNCH_FOUR_B_PATH,
-    EXEC_LAUNCH_AI_RENAMER_PATH,
+    AI_TITLE_RENAMER_HISTORY_PATH,
+    LAUNCH_AI_RENAMER_PATH,
     TIFF_2_PDF,
     AI_TEXT_IDENTIFIER,
     EXEC_LAUNCHER_THREE_PATH,
@@ -54,7 +54,9 @@ import {
     UPLOADS_USHERED_OLD_PATH,
     LANDING_PAGE_OLD_PATH,
     PDF_UTIL,
-    IMG_TO_PDF_LISTING
+    IMG_TO_PDF_LISTING,
+    EXEC_LAUNCHER_FOUR_B_PATH,
+    AI_TITLE_PDF_RENAMER_HISTORY_PATH
   } from './constants';
 import GDriveItemAggregates from 'components/gDriveListing/gDriveAggregatesByProfile';
 import ArchiveItemList from 'components/archiveListing';
@@ -66,7 +68,8 @@ import UploadsOld from 'pages/upload/indexOld';
 import UploadCyclesList from 'pages/UploadCycles/UploadCyclesList';
 import PdfUtil from 'scriptsThruExec/PdfUtil';
 import ImgToPdfListing from 'pages/ImgToPdfList';
-import ExecLauncherAIRenamer from 'scriptsThruExec/ExecLauncherAIRenamer';
+import LauncherAIRenamer from 'scriptsThruExec/ExecLauncherAIRenamer';
+import AITitleRenamerHistory from 'scriptsThruExec/AiTitleRenamerHistory';
 const DashboardRoutes: React.FC = () => {
     const isLocalhost = true; //window.location.hostname === 'localhost';
     const allFrags = (
@@ -83,8 +86,10 @@ const DashboardRoutes: React.FC = () => {
             {<Route path={EXEC_LAUNCHER_TWO_C_PATH} element={<ExecLauncherTwoC />} />}
             {<Route path={EXEC_LAUNCHER_THREE_PATH} element={<ExecLauncherThree />} />}
             {<Route path={EXEC_LAUNCHER_FOUR_PATH} element={<ExecLauncherFour />} />}
-            {<Route path={EXEC_LAUNCH_FOUR_B_PATH} element={<ExecLauncher4B />} />}
-            {<Route path={EXEC_LAUNCH_AI_RENAMER_PATH} element={<ExecLauncherAIRenamer />} />}
+            {<Route path={EXEC_LAUNCHER_FOUR_B_PATH} element={<ExecLauncher4B />} />}
+            {<Route path={LAUNCH_AI_RENAMER_PATH} element={<LauncherAIRenamer />} />}
+            {<Route path={AI_TITLE_RENAMER_HISTORY_PATH} element={<AITitleRenamerHistory />} />}
+            {<Route path={AI_TITLE_PDF_RENAMER_HISTORY_PATH} element={<AITitleRenamerHistory />} />}
             {<Route path={TIFF_2_PDF} element={<Tiff2Pdf />} />}
             {<Route path={AI_TEXT_IDENTIFIER} element={<AITextIdentifier />} />}
             {<Route path={FILE_MOVER_PATH} element={<FileMover />} />}

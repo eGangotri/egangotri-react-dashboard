@@ -5,7 +5,7 @@ import { ExecType } from './ExecLauncherUtil';
 import { Button, Link, Typography } from '@mui/material';
 import { AI_RENAMER_ABS_PATH_LOCAL_STORAGE_KEY, AI_RENAMER_REDUCED_PATH_LOCAL_STORAGE_KEY, AI_RENAMER_RENAMER_PATH_LOCAL_STORAGE_KEY } from 'service/consts';
 
-const ExecLauncherAIRenamer: React.FC = () => {
+const LauncherAIRenamer: React.FC = () => {
     const [filePath, setFilePath] = useState('');
     const [absPathForAiRenamer, setAbsPathForAiRenamer] = useState('');
     const [reducedPathForAiRenamer, setReducedPathForAiRenamer] = useState('');
@@ -98,4 +98,4 @@ const ExecLauncherAIRenamer: React.FC = () => {
     );
 }
 
-export default ExecLauncherAIRenamer;
+export default LauncherAIRenamer;

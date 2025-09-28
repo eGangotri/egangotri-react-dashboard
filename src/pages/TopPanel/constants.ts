@@ -5,7 +5,7 @@ import {
     UPLOADS_USHERED_PATH,
     LANDING_PAGE_PATH,
     EXEC_LAUNCHER_TWO_PATH,
-    EXEC_LAUNCH_FOUR_B_PATH,
+    AI_TITLE_RENAMER_HISTORY_PATH,
     TIFF_2_PDF,
     AI_TEXT_IDENTIFIER,
     EXEC_LAUNCHER_THREE_PATH,
@@ -29,7 +29,9 @@ import {
     UPLOADS_USHERED_OLD_PATH,
     LANDING_PAGE_OLD_PATH,
     PDF_UTIL,
-    EXEC_LAUNCH_AI_RENAMER_PATH
+    LAUNCH_AI_RENAMER_PATH,
+    EXEC_LAUNCHER_FOUR_B_PATH,
+    AI_TITLE_PDF_RENAMER_HISTORY_PATH
 } from 'Routes/constants';
 
 export const TOP_PANEL_MENU: TopPanelMenu[] = [{
@@ -106,12 +108,20 @@ export const TOP_PANEL_MENU: TopPanelMenu[] = [{
             label: 'Refine File Data-1',
         },
         {
-            path: EXEC_LAUNCH_AI_RENAMER_PATH,
+            path: LAUNCH_AI_RENAMER_PATH,
             label: 'File AI Renaming',
         },
         {
-            path: EXEC_LAUNCH_FOUR_B_PATH,
-            label: 'File-Renaming via Excel',
+            path: EXEC_LAUNCHER_FOUR_B_PATH,
+            label: 'Excel Renamer',
+        },
+        {
+            path: AI_TITLE_RENAMER_HISTORY_PATH,
+            label: 'AL File Renaming History',
+        },
+        {
+            path: AI_TITLE_PDF_RENAMER_HISTORY_PATH,
+            label: 'AL Title & PDF Renaming History',
         },
         {
             path: TIFF_2_PDF,
