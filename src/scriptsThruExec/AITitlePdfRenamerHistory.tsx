@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import Box from '@mui/material/Box';
 import { Button, CircularProgress, Dialog, DialogContent, DialogTitle, IconButton, Typography } from '@mui/material';
-import { DataGrid, GridColDef, GridToolbar } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridFilterModel, GridPaginationModel, GridToolbar } from '@mui/x-data-grid';
 import { FaCopy } from 'react-icons/fa';
 import { makeGetCall } from 'service/ApiInterceptor';
 
@@ -53,19 +53,40 @@ const AITitlePdfRenamerHistory: React.FC = () => {
   const [selectedRun, setSelectedRun] = useState<RunRow | null>(null);
   const [detailKey, setDetailKey] = useState<DetailKey>('pairedBatches');
   const [reloadKey, setReloadKey] = useState<number>(0);
+  // Pagination state
+  const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
+    page: 0,
+    pageSize: 10,
+  });
+
+  // Detail view pagination
+  const [detailPaginationModel, setDetailPaginationModel] = useState<GridPaginationModel>({
+    page: 0,
+    pageSize: 10,
+  });
+
+  // Filter model
+  const [filterModel, setFilterModel] = useState<GridFilterModel>({
+    items: [],
+  });
+
+  // Filter model for detail view
+  const [detailFilterModel, setDetailFilterModel] = useState<GridFilterModel>({
+    items: [],
+  });
 
   const copy = (t: any) => navigator.clipboard.writeText(String(t ?? ''));
 
   useEffect(() => {
-    const load = async () => {
+    const load = async (page: number, pageSize: number) => {
       setLoading(true);
       setError(null);
       try {
         // Call backend directly to avoid concatenation with app base URL
-        const res = await makeGetCall('ai/getAllTitlePdfRenamedViaAIList');
+        const res = await makeGetCall(`ai/getAllTitlePdfRenamedViaAIList?page=${page}&limit=${pageSize}`);
         console.log(`Response from fetchGroupedRenameData: ${JSON.stringify(res)}`);
         const _data = res.data;
-        const normalized: RunRow[] = _data.map((r: fvany) => ({
+        const normalized: RunRow[] = _data.map((r: any) => ({
           ...r,
           _id: r._id ?? r._id?.$oid ?? `${r.runId}`,
           createdAt: r.createdAt ?? r.createdAt?.$date ?? new Date().toISOString(),
@@ -84,35 +105,45 @@ const AITitlePdfRenamerHistory: React.FC = () => {
         setLoading(false);
       }
     };
-    load();
-  }, [reloadKey]);
+    load(paginationModel.page + 1, paginationModel.pageSize);
+  }, [reloadKey, paginationModel.page, paginationModel.pageSize]);
 
   const columns: GridColDef<RunRow>[] = useMemo(() => ([
-    { field: 'runId', headerName: 'Run ID', width: 340, renderCell: (p) => (
-      <div className="flex items-center">
-        <IconButton onClick={() => copy(p.value)} size="small"><FaCopy /></IconButton>
-        <span>{p.value}</span>
-      </div>
-    ) },
+    {
+      field: 'runId', headerName: 'Run ID', width: 340, renderCell: (p) => (
+        <div className="flex items-center">
+          <IconButton onClick={() => copy(p.value)} size="small"><FaCopy /></IconButton>
+          <span>{p.value}</span>
+        </div>
+      )
+    },
     { field: 'processedCount', headerName: 'Processed', width: 110 },
     { field: 'successCount', headerName: 'Success', width: 100 },
     { field: 'failedCount', headerName: 'Failed', width: 100 },
     { field: 'renamedCount', headerName: 'Renamed', width: 110 },
     { field: 'success', headerName: 'Overall', width: 100, renderCell: (p) => <span className={p.value ? 'text-green-700' : 'text-red-700'}>{String(p.value)}</span> },
-    { field: 'pairedBatches', headerName: 'Paired Batches', width: 160, renderCell: (p) => (
-      <Button size="small" variant="outlined" onClick={() => { setSelectedRun(p.row); setDetailKey('pairedBatches'); setOpen(true); }}>{p.row.pairedBatches?.length ?? 0}</Button>
-    ) },
-    { field: 'renamingResults', headerName: 'Renaming Results', width: 170, renderCell: (p) => (
-      <Button size="small" variant="outlined" onClick={() => { setSelectedRun(p.row); setDetailKey('renamingResults'); setOpen(true); }}>{p.row.renamingResults?.length ?? 0}</Button>
-    ) },
-    { field: 'metaDataAggregated', headerName: 'MetaData Aggregated', width: 190, renderCell: (p) => (
-      <Button size="small" variant="outlined" onClick={() => { setSelectedRun(p.row); setDetailKey('metaDataAggregated'); setOpen(true); }}>{p.row.metaDataAggregated?.length ?? 0}</Button>
-    ) },
-    { field: 'createdAt', headerName: 'Created At', width: 190, renderCell: (p) => {
-      const v: any = p.row.createdAt as any;
-      const iso = typeof v === 'string' ? v : v?.$date;
-      return new Date(iso).toLocaleString();
-    } },
+    {
+      field: 'pairedBatches', headerName: 'Paired Batches', width: 160, renderCell: (p) => (
+        <Button size="small" variant="outlined" onClick={() => { setSelectedRun(p.row); setDetailKey('pairedBatches'); setOpen(true); }}>{p.row.pairedBatches?.length ?? 0}</Button>
+      )
+    },
+    {
+      field: 'renamingResults', headerName: 'Renaming Results', width: 170, renderCell: (p) => (
+        <Button size="small" variant="outlined" onClick={() => { setSelectedRun(p.row); setDetailKey('renamingResults'); setOpen(true); }}>{p.row.renamingResults?.length ?? 0}</Button>
+      )
+    },
+    {
+      field: 'metaDataAggregated', headerName: 'MetaData Aggregated', width: 190, renderCell: (p) => (
+        <Button size="small" variant="outlined" onClick={() => { setSelectedRun(p.row); setDetailKey('metaDataAggregated'); setOpen(true); }}>{p.row.metaDataAggregated?.length ?? 0}</Button>
+      )
+    },
+    {
+      field: 'createdAt', headerName: 'Created At', width: 190, renderCell: (p) => {
+        const v: any = p.row.createdAt as any;
+        const iso = typeof v === 'string' ? v : v?.$date;
+        return new Date(iso).toLocaleString();
+      }
+    },
   ]), []);
 
   const detailColumns: GridColDef<any>[] = useMemo(() => {
@@ -186,10 +217,11 @@ const AITitlePdfRenamerHistory: React.FC = () => {
           },
           {
             field: 'newFileName', headerName: 'New File Name', width: 250,
-            valueGetter: (p: any) => {
+            valueGetter: (p: any = {}) => {
               // Prefer explicit newFileName; else derive from newFilePath
-              const n = (p.row as RenamingResult).newFileName;
-              const np = (p.row as RenamingResult).newFilePath;
+              const row = (p?.row as RenamingResult) ?? ({} as RenamingResult);
+              const n = row?.newFileName;
+              const np = row?.newFilePath;
               if (n) return n;
               if (np) {
                 const parts = String(np).split(/\\|\//);
@@ -201,7 +233,10 @@ const AITitlePdfRenamerHistory: React.FC = () => {
           { field: 'extractedMetadata', headerName: 'Extracted Metadata', width: 300 },
           {
             field: 'outputPath', headerName: 'Output Path', width: 340,
-            valueGetter: (p: any) => (p.row as RenamingResult).outputFilePath || (p.row as RenamingResult).newFilePath || '',
+            valueGetter: (p: any = {}) => {
+              const row = (p?.row as RenamingResult) ?? ({} as RenamingResult);
+              return row.outputFilePath || row.newFilePath || '';
+            },
             renderCell: (p) => (
               <div className="flex items-center">
                 <IconButton onClick={() => copy(p.value)} className="ml-2" size="small"><FaCopy /></IconButton>
@@ -245,7 +280,7 @@ const AITitlePdfRenamerHistory: React.FC = () => {
           getRowId={(r) => (typeof r._id === 'string' ? r._id : (r._id as any)?.$oid || r.runId)}
           columns={columns}
           pagination
-          pageSizeOptions={[5,10,20]}
+          pageSizeOptions={[5, 10, 20]}
           loading={loading}
           slots={{ toolbar: GridToolbar }}
         />
@@ -267,7 +302,7 @@ const AITitlePdfRenamerHistory: React.FC = () => {
             </Box>
           )}
           <div className="h-[520px] w-full">
-            <DataGrid rows={detailRows} columns={detailColumns} getRowId={(r) => r.id} pageSizeOptions={[5,10,20]} pagination slots={{ toolbar: GridToolbar }} />
+            <DataGrid rows={detailRows} columns={detailColumns} getRowId={(r) => r.id} pageSizeOptions={[5, 10, 20]} pagination slots={{ toolbar: GridToolbar }} />
           </div>
         </DialogContent>
       </Dialog>
