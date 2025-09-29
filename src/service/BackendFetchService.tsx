@@ -119,10 +119,12 @@ export const makePostCallWithErrorHandlingForPdfReductionForAiRenamer = async (b
      `);
 
   const srcFolder = response?.["0"]?.srcFolder as string
-
+  const destRootFolder = response?.["0"]?.destRootDump as string;
+  const renamer = path.basename(destRootFolder)
+  
   localStorage.setItem(AI_RENAMER_ABS_PATH_LOCAL_STORAGE_KEY, srcFolder);
-  localStorage.setItem(AI_RENAMER_REDUCED_PATH_LOCAL_STORAGE_KEY, response?.["0"]?.destRootDump as string);
-  localStorage.setItem(AI_RENAMER_RENAMER_PATH_LOCAL_STORAGE_KEY, "-renamer");
+  localStorage.setItem(AI_RENAMER_REDUCED_PATH_LOCAL_STORAGE_KEY, destRootFolder);
+  localStorage.setItem(AI_RENAMER_RENAMER_PATH_LOCAL_STORAGE_KEY, `-renamer-${renamer}`);
 
   console.log(`makePostCallWithErrorHandlingForPdfReductionForAiRenamer: 
     ${JSON.stringify(response?.["0"]?.srcFolder)}

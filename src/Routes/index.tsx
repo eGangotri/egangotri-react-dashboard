@@ -70,6 +70,7 @@ import PdfUtil from 'scriptsThruExec/PdfUtil';
 import ImgToPdfListing from 'pages/ImgToPdfList';
 import LauncherAIRenamer from 'scriptsThruExec/ExecLauncherAIRenamer';
 import AITitleRenamerHistory from 'scriptsThruExec/AiTitleRenamerHistory';
+import AITitlePdfRenamerHistory from 'scriptsThruExec/AITitlePdfRenamerHistory';
 const DashboardRoutes: React.FC = () => {
     const isLocalhost = true; //window.location.hostname === 'localhost';
     const allFrags = (
@@ -89,7 +90,7 @@ const DashboardRoutes: React.FC = () => {
             {<Route path={EXEC_LAUNCHER_FOUR_B_PATH} element={<ExecLauncher4B />} />}
             {<Route path={LAUNCH_AI_RENAMER_PATH} element={<LauncherAIRenamer />} />}
             {<Route path={AI_TITLE_RENAMER_HISTORY_PATH} element={<AITitleRenamerHistory />} />}
-            {<Route path={AI_TITLE_PDF_RENAMER_HISTORY_PATH} element={<AITitleRenamerHistory />} />}
+            {<Route path={AI_TITLE_PDF_RENAMER_HISTORY_PATH} element={<AITitlePdfRenamerHistory />} />}
             {<Route path={TIFF_2_PDF} element={<Tiff2Pdf />} />}
             {<Route path={AI_TEXT_IDENTIFIER} element={<AITextIdentifier />} />}
             {<Route path={FILE_MOVER_PATH} element={<FileMover />} />}

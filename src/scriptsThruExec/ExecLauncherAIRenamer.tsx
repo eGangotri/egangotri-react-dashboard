@@ -52,6 +52,7 @@ const LauncherAIRenamer: React.FC = () => {
                     thirdTextBoxPlaceHolder='N Pages. Ex. 10 or 10-20'
                     userInputThreeInfoNonMandatory='N Pages. Use - to specify diff. First and Last Values Ex. 10-20'
                     thirdTextBoxDefaultValue={"15-7"}
+                    textBoxThreeValue={"15-7"}
                     execType={ExecType.GET_FIRST_N_PAGES_PYTHON_FOR_AI_RENAMER}
                     css={{ minWidth: "35vw" }}
                     css2={{ minWidth: "35vw" }}
