@@ -133,6 +133,7 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
                 helperText={errors.userInput?.message}
                 rows={rows1stTf}
                 multiline={multiline1stTf}
+                onChange={handleInputChange}
               />
               {userInputOneInfo && <InfoIconWithTooltip input={userInputOneInfo} />
               }

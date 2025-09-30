@@ -12,16 +12,12 @@ type IsoDate = { $date: string } | string;
 type PairedBatch = { index: number; pdfs: string[]; reducedPdfs: string[] };
 // Schema for renamingResults
 type RenamingResult = {
-  batchIndex?: number;
-  indexInBatch?: number;
   originalFilePath?: string;
   reducedFilePath?: string;
   // Backend returns newFilePath; keep backward-compat props too
-  outputFilePath?: string; // old shape support
-  newFileName?: string; // old shape support
-  newFilePath?: string; // backend shape
+  newFilePath?: string; 
   extractedMetadata?: string;
-  success?: boolean;
+  success: boolean;
   error?: string;
 };
 type MetaDataRow = { originalFilePath: string; fileName: string; extractedMetadata: string; error?: string };
@@ -195,8 +191,6 @@ const AITitlePdfRenamerHistory: React.FC = () => {
         ];
       case 'renamingResults':
         return [
-          { field: 'batchIndex', headerName: 'Batch', width: 80 },
-          { field: 'indexInBatch', headerName: 'Index', width: 80 },
           {
             field: 'originalFilePath', headerName: 'Original Path', width: 320,
             renderCell: (p) => (
@@ -207,7 +201,7 @@ const AITitlePdfRenamerHistory: React.FC = () => {
             ),
           },
           {
-            field: 'reducedFilePath', headerName: 'Reduced Path', width: 320,
+            field: 'reducedFilePath', headerName: 'Reduced Path', width: 120,
             renderCell: (p) => (
               <div className="flex items-center">
                 <IconButton onClick={() => copy(p.value)} className="ml-2" size="small"><FaCopy /></IconButton>
@@ -215,27 +209,13 @@ const AITitlePdfRenamerHistory: React.FC = () => {
               </div>
             ),
           },
-          {
-            field: 'newFileName', headerName: 'New File Name', width: 250,
-            valueGetter: (p: any = {}) => {
-              // Prefer explicit newFileName; else derive from newFilePath
-              const row = (p?.row as RenamingResult) ?? ({} as RenamingResult);
-              const n = row?.newFileName;
-              const np = row?.newFilePath;
-              if (n) return n;
-              if (np) {
-                const parts = String(np).split(/\\|\//);
-                return parts[parts.length - 1];
-              }
-              return '';
-            }
-          },
+
           { field: 'extractedMetadata', headerName: 'Extracted Metadata', width: 300 },
           {
-            field: 'outputPath', headerName: 'Output Path', width: 340,
+            field: 'newFilePath', headerName: 'New File Path', width: 340,
             valueGetter: (p: any = {}) => {
               const row = (p?.row as RenamingResult) ?? ({} as RenamingResult);
-              return row.outputFilePath || row.newFilePath || '';
+              return row.newFilePath;
             },
             renderCell: (p) => (
               <div className="flex items-center">
@@ -246,9 +226,11 @@ const AITitlePdfRenamerHistory: React.FC = () => {
           },
           {
             field: 'success', headerName: 'Success', width: 90,
-            renderCell: (p) => <span className={p.value ? 'text-green-700' : 'text-red-700'}>{String(!!p.value)}</span>,
+            renderCell: (p) => <span className={p.value ? 'text-green-700' : 'text-red-700'}>{p.value ? 'Yes' : 'No'}</span>,
           },
-          { field: 'error', headerName: 'Error', width: 260 },
+          { field: 'error', headerName: 'Error', width: 260,
+            renderCell: (p) => <span className={'text-red-700'}>{String(p.value || "")}</span>,
+           },
         ];
       default:
         return [];
@@ -283,6 +265,10 @@ const AITitlePdfRenamerHistory: React.FC = () => {
           pageSizeOptions={[5, 10, 20]}
           loading={loading}
           slots={{ toolbar: GridToolbar }}
+          getRowClassName={(params) => {
+            const err = (params.row as any)?.error;
+            return err ? 'bg-red-100' : 'bg-green-100';
+          }}
         />
       </div>
 
@@ -302,7 +288,18 @@ const AITitlePdfRenamerHistory: React.FC = () => {
             </Box>
           )}
           <div className="h-[520px] w-full">
-            <DataGrid rows={detailRows} columns={detailColumns} getRowId={(r) => r.id} pageSizeOptions={[5, 10, 20]} pagination slots={{ toolbar: GridToolbar }} />
+            <DataGrid
+              rows={detailRows}
+              columns={detailColumns}
+              getRowId={(r) => r.id}
+              pageSizeOptions={[5, 10, 20]}
+              pagination
+              slots={{ toolbar: GridToolbar }}
+              getRowClassName={(params) => {
+                const err = (params.row as any)?.error;
+                return err ? 'bg-red-100' : 'bg-green-100';
+              }}
+            />
           </div>
         </DialogContent>
       </Dialog>

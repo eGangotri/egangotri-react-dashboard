@@ -5,8 +5,11 @@ import { ExecType } from './ExecLauncherUtil';
 import { Button, Link, Typography } from '@mui/material';
 import { AI_RENAMER_ABS_PATH_LOCAL_STORAGE_KEY, AI_RENAMER_REDUCED_PATH_LOCAL_STORAGE_KEY, AI_RENAMER_RENAMER_PATH_LOCAL_STORAGE_KEY } from 'service/consts';
 
+const REFUCED_FILE_PATH_SUFFIX = "red"
+
 const LauncherAIRenamer: React.FC = () => {
     const [filePath, setFilePath] = useState('');
+    const [filePathForReducedPdfs, setFilePathForReducedPdfs] = useState('');
     const [absPathForAiRenamer, setAbsPathForAiRenamer] = useState('');
     const [reducedPathForAiRenamer, setReducedPathForAiRenamer] = useState('');
     const [renamerPathForAiRenamer, setRenamerPathForAiRenamer] = useState('');
@@ -15,6 +18,7 @@ const LauncherAIRenamer: React.FC = () => {
         backgroundColor: "lightgreen",
         width: "450px"
     });
+    
     const handleInputChange = (inputValue: string) => {
         console.log("inputValue", inputValue, `inputValue.includes("ab") ${inputValue.includes("ab")}`);
         if (inputValue.includes("/") || inputValue.includes("\\")) {
@@ -22,7 +26,21 @@ const LauncherAIRenamer: React.FC = () => {
         } else {
             setValidationCss({ backgroundColor: "lightgreen", width: "450px" });
         }
+        // Keep local state in sync so the Generate button has the latest value
+        setFilePath(inputValue);
     };
+    const generateReducedPfdFolders = () => {
+        if (filePath.includes(",")) {
+            const redPaths:string[] = []
+            filePath.split(",").forEach((path) => {
+                redPaths.push(`${path}-${REFUCED_FILE_PATH_SUFFIX}`);
+            })
+            setFilePathForReducedPdfs(redPaths.join(","));
+        }
+        else {
+            setFilePathForReducedPdfs(`${filePath}-${REFUCED_FILE_PATH_SUFFIX}`);
+        }
+    }
 
     const loadSrcAndReducedPDFNamesFromLocalStorage = () => {
 
@@ -58,8 +76,15 @@ const LauncherAIRenamer: React.FC = () => {
                     css2={{ minWidth: "35vw" }}
                     css3={{ marginTop: "30px", minWidth: "23vw" }}
                     textBoxOneValue={filePath}
+                    textBoxTwoValue={filePathForReducedPdfs}
                     multiline1stTf
                     rows1stTf={4}
+                    onInputChange={handleInputChange}
+                    thirdButton={<Button
+                        variant="contained"
+                        color="primary"
+                        onClick={generateReducedPfdFolders}
+                        sx={{ marginRight: "10px", marginBottom: "10px" }}>Generate Reduced PDF Folders</Button>}
                 />
 
                 <Box>
