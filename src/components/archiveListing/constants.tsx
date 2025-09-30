@@ -52,13 +52,17 @@ export const archiveItemAggregateColumns: GridColDef[] = [
     field: 'emailUsers',
     headerName: 'Email Users',
     width: 250,
-    valueGetter: (params: any) => params.row.emailUsers.join(', '),
+    renderCell: (params: any) => (
+      <Typography>{params.row.emailUsers.join(', ')}</Typography>
+    ),
   },
   {
     field: 'sources',
     headerName: 'Sources',
     width: 150,
-    valueGetter: (params: any) => params.row.sources.join(', '),
+    renderCell: (params: any) => (
+      <Typography>{params.row.sources.join(', ')}</Typography>
+    ),
   },
   { field: 'firstLowestDate', headerName: 'First Lowest Date', width: 150 },
 ];

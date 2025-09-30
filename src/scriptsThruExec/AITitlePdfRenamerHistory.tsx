@@ -213,10 +213,6 @@ const AITitlePdfRenamerHistory: React.FC = () => {
           { field: 'extractedMetadata', headerName: 'Extracted Metadata', width: 300 },
           {
             field: 'newFilePath', headerName: 'New File Path', width: 340,
-            valueGetter: (p: any = {}) => {
-              const row = (p?.row as RenamingResult) ?? ({} as RenamingResult);
-              return row.newFilePath;
-            },
             renderCell: (p) => (
               <div className="flex items-center">
                 <IconButton onClick={() => copy(p.value)} className="ml-2" size="small"><FaCopy /></IconButton>
