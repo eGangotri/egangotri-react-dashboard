@@ -114,28 +114,29 @@ export const makePostCallWithErrorHandlingForPdfReductionForAiRenamer = async (b
 
   // Extract only numeric keys
   const numericKeys = Object.keys(response).filter(key => /^\d+$/.test(key));
-  let srcFolder = [];
-  let destRootFolder = [];
-  let renamer = [];
+  let srcFolders = [];
+  let reducedFolders = [];
+  let renamerFolders = [];
 
   // Loop over the numeric keys
   for (const key of numericKeys) {
-    srcFolder.push(response[key]?.srcFolder as string)
+    const srcFolder = response[key]?.srcFolder as string
+    srcFolders.push(srcFolder)
     const _destFolder = response[key]?.destRootDump as string
-    destRootFolder.push(_destFolder);
-    renamer.push(`-renamer-${path.basename(_destFolder)}`)
+    reducedFolders.push(_destFolder);
+    renamerFolders.push(`-renamer-${path.basename(srcFolder)}`)
     console.log(`Key: ${key}`);
   }
 
   
-  localStorage.setItem(AI_RENAMER_ABS_PATH_LOCAL_STORAGE_KEY, srcFolder.join(","));
-  localStorage.setItem(AI_RENAMER_REDUCED_PATH_LOCAL_STORAGE_KEY, destRootFolder.join(","));
-  localStorage.setItem(AI_RENAMER_RENAMER_PATH_LOCAL_STORAGE_KEY, renamer.join(","));
+  localStorage.setItem(AI_RENAMER_ABS_PATH_LOCAL_STORAGE_KEY, srcFolders.join(","));
+  localStorage.setItem(AI_RENAMER_REDUCED_PATH_LOCAL_STORAGE_KEY, reducedFolders.join(","));
+  localStorage.setItem(AI_RENAMER_RENAMER_PATH_LOCAL_STORAGE_KEY, renamerFolders.join(","));
 
 
   console.log(`makePostCallWithErrorHandlingForPdfReductionForAiRenamer: 1
-    ${srcFolder.join(",")}
-     ${destRootFolder.join(",")} ===
+    ${srcFolders.join(",")}
+     ${reducedFolders.join(",")} ===
      ${localStorage.getItem(AI_RENAMER_ABS_PATH_LOCAL_STORAGE_KEY)}
      ${localStorage.getItem(AI_RENAMER_REDUCED_PATH_LOCAL_STORAGE_KEY)}
      `);
