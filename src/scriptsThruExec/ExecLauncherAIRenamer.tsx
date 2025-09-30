@@ -4,6 +4,7 @@ import Box from '@mui/material/Box';
 import { ExecType } from './ExecLauncherUtil';
 import { Button, Link, Typography } from '@mui/material';
 import { AI_RENAMER_ABS_PATH_LOCAL_STORAGE_KEY, AI_RENAMER_REDUCED_PATH_LOCAL_STORAGE_KEY, AI_RENAMER_RENAMER_PATH_LOCAL_STORAGE_KEY } from 'service/consts';
+import { replaceQuotes } from 'mirror/utils';
 
 const REFUCED_FILE_PATH_SUFFIX = "red"
 
@@ -18,7 +19,7 @@ const LauncherAIRenamer: React.FC = () => {
         backgroundColor: "lightgreen",
         width: "450px"
     });
-    
+
     const handleInputChange = (inputValue: string) => {
         console.log("inputValue", inputValue, `inputValue.includes("ab") ${inputValue.includes("ab")}`);
         if (inputValue.includes("/") || inputValue.includes("\\")) {
@@ -30,9 +31,10 @@ const LauncherAIRenamer: React.FC = () => {
         setFilePath(inputValue);
     };
     const generateReducedPfdFolders = () => {
-        if (filePath.includes(",")) {
+        const _filePath = replaceQuotes(filePath);
+        if (_filePath.includes(",")) {
             const redPaths:string[] = []
-            filePath.split(",").forEach((path) => {
+            _filePath.split(",").forEach((path) => {
                 redPaths.push(`${path}-${REFUCED_FILE_PATH_SUFFIX}`);
             })
             setFilePathForReducedPdfs(redPaths.join(","));
@@ -78,7 +80,9 @@ const LauncherAIRenamer: React.FC = () => {
                     textBoxOneValue={filePath}
                     textBoxTwoValue={filePathForReducedPdfs}
                     multiline1stTf
+                    multiline2ndTf
                     rows1stTf={4}
+                    rows2ndTf={4}
                     onInputChange={handleInputChange}
                     thirdButton={<Button
                         variant="contained"
@@ -109,7 +113,10 @@ const LauncherAIRenamer: React.FC = () => {
                     css3={{ marginTop: "30px", minWidth: "50vw" }}
                     textBoxOneValue={absPathForAiRenamer}
                     multiline1stTf
+                    multiline2ndTf
+                    multiline3rdTf
                     rows1stTf={4}
+                    rows2ndTf={4}
                     textBoxTwoValue={reducedPathForAiRenamer}
                     textBoxThreeValue={renamerPathForAiRenamer}
                     thirdButton={<Button

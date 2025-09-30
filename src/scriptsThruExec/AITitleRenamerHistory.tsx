@@ -36,9 +36,7 @@ interface PdfTitleRename {
 interface GroupedRenameData {
   runId: string;
   count: number;
-  srcFolder: string;
-  reducedFolder: string;
-  outputFolder: string;
+  _id: string;
   createdAt: string;
 }
 
@@ -91,7 +89,7 @@ const AITitleRenamerHistory: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await makeGetCall(`ai/getAllTitleRenamedViaAIList?page=${page}&limit=${pageSize}`);
+      const response = await makeGetCall(`ai/getAllTitleRenamedViaAIListGroupedByRunId?page=${page}&limit=${pageSize}`);
       console.log(`Response from fetchGroupedRenameData: ${JSON.stringify(response)}`);
       return response;
     } catch (error) {
@@ -107,7 +105,7 @@ const AITitleRenamerHistory: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await makeGetCall(`api/pdfTitleRenamer/getRenameDetails?runId=${runId}&page=${page}&limit=${pageSize}`);
+      const response = await makeGetCall(`ai/getAllTitleRenamedViaAIList/${runId}?page=${page}&limit=${pageSize}`);
       console.log(`Response from fetchRunDetails: ${JSON.stringify(response)}`);
       return response;
     } catch (error) {
@@ -132,12 +130,19 @@ const AITitleRenamerHistory: React.FC = () => {
         console.error('Error loading grouped data:', error);
       }
     };
-
-    setTotalItems(2);
-
     loadGroupedData();
   }, [paginationModel.page, paginationModel.pageSize]);
 
+
+  useEffect(() => {
+    const loadRunDetails = async () => {
+      const response = await fetchRunDetails(selectedRunId, detailPaginationModel.page + 1, detailPaginationModel.pageSize)
+      setDetailData(response.data)
+      setTotalDetailItems(response.totalItems)
+    }
+    loadRunDetails();
+  }, [selectedRunId])
+//, detailPaginationModel.page, detailPaginationModel.pageSize
 
   // Handle opening detail view
   const handleOpenDetails = (runId: string) => {
@@ -184,48 +189,6 @@ const AITitleRenamerHistory: React.FC = () => {
       headerName: 'Files',
       width: 100,
       filterable: true,
-    },
-    {
-      field: 'srcFolder',
-      headerName: 'Source Folder',
-      width: 250,
-      filterable: true,
-      renderCell: (params) => (
-        <div className="flex items-center">
-          <IconButton onClick={() => handleCopyText(params.value)} className="ml-2">
-            <FaCopy />
-          </IconButton>
-          <span>{params.value}</span>
-        </div>
-      ),
-    },
-    {
-      field: 'reducedFolder',
-      headerName: 'Reduced Folder',
-      width: 250,
-      filterable: true,
-      renderCell: (params) => (
-        <div className="flex items-center">
-          <IconButton onClick={() => handleCopyText(params.value)} className="ml-2">
-            <FaCopy />
-          </IconButton>
-          <span>{params.value}</span>
-        </div>
-      ),
-    },
-    {
-      field: 'outputFolder',
-      headerName: 'Output Folder',
-      width: 250,
-      filterable: true,
-      renderCell: (params) => (
-        <div className="flex items-center">
-          <IconButton onClick={() => handleCopyText(params.value)} className="ml-2">
-            <FaCopy />
-          </IconButton>
-          <span>{params.value}</span>
-        </div>
-      ),
     },
     {
       field: 'createdAt',
@@ -321,7 +284,7 @@ const AITitleRenamerHistory: React.FC = () => {
       pageSize: paginationModel.pageSize
     });
 
-   
+
     setTotalItems(2);
   };
 
@@ -353,7 +316,7 @@ const AITitleRenamerHistory: React.FC = () => {
         <DataGrid
           rows={groupedData}
           columns={groupedColumns}
-          getRowId={(row) => row.runId}
+          getRowId={(row) => row._id}
           paginationModel={paginationModel}
           onPaginationModelChange={setPaginationModel}
           pageSizeOptions={[5, 10, 20]}
@@ -379,11 +342,7 @@ const AITitleRenamerHistory: React.FC = () => {
               <Button
                 variant="outlined"
                 onClick={() => {
-                  // Refresh the details data
-                  if (selectedRunId) {
-                    // This would normally call the API, but for demo we're using sample data
-                    // loadDetailData();
-                  }
+                  console.log(`selectedRunId: ${selectedRunId}`);
                 }}
                 startIcon={loading ? <CircularProgress size={20} color="inherit" /> : null}
                 disabled={loading}
@@ -421,7 +380,7 @@ const AITitleRenamerHistory: React.FC = () => {
             <DataGrid
               rows={detailData}
               columns={detailColumns}
-              getRowId={(row) => row._id.$oid}
+              getRowId={(row) => row._id + Math.random()}
               paginationModel={detailPaginationModel}
               onPaginationModelChange={setDetailPaginationModel}
               pageSizeOptions={[5, 10, 20]}

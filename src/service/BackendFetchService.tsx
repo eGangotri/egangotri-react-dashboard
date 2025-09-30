@@ -111,24 +111,31 @@ export const makePostCallWithErrorHandlingForPdfReductionForAiRenamer = async (b
   const response = result.response
   console.log(`makePostCallWithErrorHandlingForPdfReductionForAiRenamer ${JSON.stringify(response)}`)
 
-  console.log(`makePostCallWithErrorHandlingForPdfReductionForAiRenamer: 1
-    ${JSON.stringify(response?.["0"]?.srcFolder)}
-     ${JSON.stringify(response?.["0"]?.destRootDump)} ===
-     ${localStorage.getItem(AI_RENAMER_ABS_PATH_LOCAL_STORAGE_KEY)}
-     ${localStorage.getItem(AI_RENAMER_REDUCED_PATH_LOCAL_STORAGE_KEY)}
-     `);
 
-  const srcFolder = response?.["0"]?.srcFolder as string
-  const destRootFolder = response?.["0"]?.destRootDump as string;
-  const renamer = path.basename(destRootFolder)
+  // Extract only numeric keys
+  const numericKeys = Object.keys(response).filter(key => /^\d+$/.test(key));
+  let srcFolder = [];
+  let destRootFolder = [];
+  let renamer = [];
+
+  // Loop over the numeric keys
+  for (const key of numericKeys) {
+    srcFolder.push(response[key]?.srcFolder as string)
+    const _destFolder = response[key]?.destRootDump as string
+    destRootFolder.push(_destFolder);
+    renamer.push(`-renamer-${path.basename(_destFolder)}`)
+    console.log(`Key: ${key}`);
+  }
+
   
-  localStorage.setItem(AI_RENAMER_ABS_PATH_LOCAL_STORAGE_KEY, srcFolder);
-  localStorage.setItem(AI_RENAMER_REDUCED_PATH_LOCAL_STORAGE_KEY, destRootFolder);
-  localStorage.setItem(AI_RENAMER_RENAMER_PATH_LOCAL_STORAGE_KEY, `-renamer-${renamer}`);
+  localStorage.setItem(AI_RENAMER_ABS_PATH_LOCAL_STORAGE_KEY, srcFolder.join(","));
+  localStorage.setItem(AI_RENAMER_REDUCED_PATH_LOCAL_STORAGE_KEY, destRootFolder.join(","));
+  localStorage.setItem(AI_RENAMER_RENAMER_PATH_LOCAL_STORAGE_KEY, renamer.join(","));
 
-  console.log(`makePostCallWithErrorHandlingForPdfReductionForAiRenamer: 
-    ${JSON.stringify(response?.["0"]?.srcFolder)}
-     ${JSON.stringify(response?.["0"]?.destRootDump)} ===
+
+  console.log(`makePostCallWithErrorHandlingForPdfReductionForAiRenamer: 1
+    ${srcFolder.join(",")}
+     ${destRootFolder.join(",")} ===
      ${localStorage.getItem(AI_RENAMER_ABS_PATH_LOCAL_STORAGE_KEY)}
      ${localStorage.getItem(AI_RENAMER_REDUCED_PATH_LOCAL_STORAGE_KEY)}
      `);

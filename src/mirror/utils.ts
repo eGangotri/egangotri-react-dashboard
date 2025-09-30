@@ -1,6 +1,6 @@
 export const replaceQuotes = (replaceable: string) => {
   //console.log(`replaceable ${JSON.stringify(replaceable)}`)
-  return replaceable?.replace(/"|'/g, "")
+  return (replaceable ?? "").replace(/["'\r\n]+/g, "").trim()
 }
 
 export function formatMem(heapSize: number) {
@@ -11,14 +11,14 @@ export function formatMem(heapSize: number) {
 
 export function formatTime(timeLapseinMS: number) {
   const timeLapseInSecs = timeLapseinMS / 1000
-  const timeLapseInMins = timeLapseInSecs/60
-  const timeLapseInHrs = timeLapseInMins/60
+  const timeLapseInMins = timeLapseInSecs / 60
+  const timeLapseInHrs = timeLapseInMins / 60
   let timeLapse = `${timeLapseInSecs.toFixed(2)} sec(s)`
   if (timeLapseInHrs > 1) {
-       timeLapse = `${(timeLapseInMins/60).toFixed(2)} hour(s)`
+    timeLapse = `${(timeLapseInMins / 60).toFixed(2)} hour(s)`
   }
   else if (timeLapseInMins > 1) {
-       timeLapse = `${timeLapseInMins.toFixed(2)} min(s)`
+    timeLapse = `${timeLapseInMins.toFixed(2)} min(s)`
   }
   return timeLapse
 }

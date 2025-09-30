@@ -185,7 +185,6 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
                 rows={rows2ndTf}
                 multiline={multiline2ndTf}
                 fullWidth
-                onChange={handleInputChange} // Call the callback function on input change
               />
 
               {userInputTwoInfo && <InfoIconWithTooltip input={userInputTwoInfo} />}
