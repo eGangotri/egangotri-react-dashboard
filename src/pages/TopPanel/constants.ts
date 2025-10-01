@@ -31,7 +31,8 @@ import {
     PDF_UTIL,
     LAUNCH_AI_RENAMER_PATH,
     EXEC_LAUNCHER_FOUR_B_PATH,
-    AI_TITLE_PDF_RENAMER_HISTORY_PATH
+    AI_TITLE_PDF_RENAMER_HISTORY_PATH,
+    PDF_MERGE_HISTORY_TRACKER_PATH
 } from 'Routes/constants';
 
 export const TOP_PANEL_MENU: TopPanelMenu[] = [{
@@ -108,12 +109,21 @@ export const TOP_PANEL_MENU: TopPanelMenu[] = [{
             label: 'Refine File Data-1',
         },
         {
-            path: LAUNCH_AI_RENAMER_PATH,
-            label: 'File AI Renaming',
+            path: TIFF_2_PDF,
+            label: 'Tiff 2 Pdf',
         },
         {
-            path: EXEC_LAUNCHER_FOUR_B_PATH,
-            label: 'Excel Renamer',
+            path: FILE_TRANSFER_LISTING,
+            label: 'File Transfer List',
+        }
+    ]
+}, {
+    menuLabel: "AI",
+    submenu: [
+
+        {
+            path: LAUNCH_AI_RENAMER_PATH,
+            label: 'File AI Renaming',
         },
         {
             path: AI_TITLE_RENAMER_HISTORY_PATH,
@@ -124,13 +134,13 @@ export const TOP_PANEL_MENU: TopPanelMenu[] = [{
             label: 'AL Title & PDF Renaming History',
         },
         {
-            path: TIFF_2_PDF,
-            label: 'Tiff 2 Pdf',
+            path: PDF_MERGE_HISTORY_TRACKER_PATH,
+            label: 'PDF Merge History Tracker',
         },
         {
-            path: FILE_TRANSFER_LISTING,
-            label: 'File Transfer List',
-        }
+            path: EXEC_LAUNCHER_FOUR_B_PATH,
+            label: 'Excel Renamer',
+        },
     ]
 },
 {

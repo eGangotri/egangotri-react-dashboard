@@ -16,6 +16,7 @@ export const EXEC_LAUNCHER_FOUR_PATH = "/execLauncher4aPath";
 export const EXEC_LAUNCHER_FOUR_B_PATH = "/execLauncher4bPath";
 export const LAUNCH_AI_RENAMER_PATH = "/aiRenamer";
 export const AI_TITLE_RENAMER_HISTORY_PATH = "/aiTitleRenamerHistory";
+export const PDF_MERGE_HISTORY_TRACKER_PATH = "/pdfMergeHistoryTracker";
 export const AI_TITLE_PDF_RENAMER_HISTORY_PATH = "/aiTitlePdfRenamerHistory";
 
 export const FILE_MOVER_PATH = "/fileMoverPath";

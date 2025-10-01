@@ -56,7 +56,8 @@ import {
     PDF_UTIL,
     IMG_TO_PDF_LISTING,
     EXEC_LAUNCHER_FOUR_B_PATH,
-    AI_TITLE_PDF_RENAMER_HISTORY_PATH
+    AI_TITLE_PDF_RENAMER_HISTORY_PATH,
+    PDF_MERGE_HISTORY_TRACKER_PATH
   } from './constants';
 import GDriveItemAggregates from 'components/gDriveListing/gDriveAggregatesByProfile';
 import ArchiveItemList from 'components/archiveListing';
@@ -69,8 +70,10 @@ import UploadCyclesList from 'pages/UploadCycles/UploadCyclesList';
 import PdfUtil from 'scriptsThruExec/PdfUtil';
 import ImgToPdfListing from 'pages/ImgToPdfList';
 import LauncherAIRenamer from 'scriptsThruExec/ExecLauncherAIRenamer';
-import AITitleRenamerHistory from 'scriptsThruExec/AiTitleRenamerHistory';
+import AITitleRenamerHistory from 'scriptsThruExec/AITitleRenamerHistory';
+import PdfMergeHistoryTracker from 'scriptsThruExec/PdfMergeHistoryTracker';
 import AITitlePdfRenamerHistory from 'scriptsThruExec/AITitlePdfRenamerHistory';
+
 const DashboardRoutes: React.FC = () => {
     const isLocalhost = true; //window.location.hostname === 'localhost';
     const allFrags = (
@@ -91,6 +94,7 @@ const DashboardRoutes: React.FC = () => {
             {<Route path={LAUNCH_AI_RENAMER_PATH} element={<LauncherAIRenamer />} />}
             {<Route path={AI_TITLE_RENAMER_HISTORY_PATH} element={<AITitleRenamerHistory />} />}
             {<Route path={AI_TITLE_PDF_RENAMER_HISTORY_PATH} element={<AITitlePdfRenamerHistory />} />}
+            {<Route path={PDF_MERGE_HISTORY_TRACKER_PATH} element={<PdfMergeHistoryTracker />} />}
             {<Route path={TIFF_2_PDF} element={<Tiff2Pdf />} />}
             {<Route path={AI_TEXT_IDENTIFIER} element={<AITextIdentifier />} />}
             {<Route path={FILE_MOVER_PATH} element={<FileMover />} />}
