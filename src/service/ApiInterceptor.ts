@@ -9,6 +9,7 @@ const makeCall = async (callFunction: Function, ...args: any[]) => {
     console.log(`timeTaken for ${args[1] || args[0]} ${formatTime(timeTaken)}`);
 
     return {
+        date: new Date().toISOString(),
         timeTaken: formatTime(timeTaken),
         ...result
     };

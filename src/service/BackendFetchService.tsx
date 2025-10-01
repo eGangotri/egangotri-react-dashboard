@@ -124,7 +124,7 @@ export const makePostCallWithErrorHandlingForPdfReductionForAiRenamer = async (b
     srcFolders.push(srcFolder)
     const _destFolder = response[key]?.destRootDump as string
     reducedFolders.push(_destFolder);
-    renamerFolders.push(`-renamer-${path.basename(srcFolder)}`)
+    renamerFolders.push(`${path.basename(srcFolder)}-renamer`)
     console.log(`Key: ${key}`);
   }
 

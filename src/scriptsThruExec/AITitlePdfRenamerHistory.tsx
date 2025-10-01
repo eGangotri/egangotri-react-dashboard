@@ -25,6 +25,7 @@ type MetaDataRow = { originalFilePath: string; fileName: string; extractedMetada
 type RunRow = {
   _id: Oid;
   runId: string;
+  commonRunId: string;
   processedCount: number;
   successCount: number;
   failedCount: number;
@@ -52,7 +53,7 @@ const AITitlePdfRenamerHistory: React.FC = () => {
   // Pagination state
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
     page: 0,
-    pageSize: 10,
+    pageSize: 20,
   });
 
   // Detail view pagination
@@ -105,6 +106,8 @@ const AITitlePdfRenamerHistory: React.FC = () => {
   }, [reloadKey, paginationModel.page, paginationModel.pageSize]);
 
   const columns: GridColDef<RunRow>[] = useMemo(() => ([
+    { field: 'commonRunId', headerName: 'common Run Id', width: 110 },
+
     {
       field: 'runId', headerName: 'Run ID', width: 340, renderCell: (p) => (
         <div className="flex items-center">
@@ -258,7 +261,7 @@ const AITitlePdfRenamerHistory: React.FC = () => {
           getRowId={(r) => (typeof r._id === 'string' ? r._id : (r._id as any)?.$oid || r.runId)}
           columns={columns}
           pagination
-          pageSizeOptions={[5, 10, 20]}
+          pageSizeOptions={[10, 20, 50]}
           loading={loading}
           slots={{ toolbar: GridToolbar }}
           getRowClassName={(params) => {
@@ -288,7 +291,7 @@ const AITitlePdfRenamerHistory: React.FC = () => {
               rows={detailRows}
               columns={detailColumns}
               getRowId={(r) => r.id}
-              pageSizeOptions={[5, 10, 20]}
+              pageSizeOptions={[10, 20, 50]}
               pagination
               slots={{ toolbar: GridToolbar }}
               getRowClassName={(params) => {

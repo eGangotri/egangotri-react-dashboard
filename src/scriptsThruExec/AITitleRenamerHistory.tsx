@@ -34,6 +34,7 @@ interface PdfTitleRename {
 }
 
 interface GroupedRenameData {
+  commonRunId: string;
   runId: string;
   count: number;
   _id: string;
@@ -142,7 +143,7 @@ const AITitleRenamerHistory: React.FC = () => {
     }
     loadRunDetails();
   }, [selectedRunId])
-//, detailPaginationModel.page, detailPaginationModel.pageSize
+  //, detailPaginationModel.page, detailPaginationModel.pageSize
 
   // Handle opening detail view
   const handleOpenDetails = (runId: string) => {
@@ -185,6 +186,12 @@ const AITitleRenamerHistory: React.FC = () => {
       ),
     },
     {
+      field: 'commonRunId',
+      headerName: 'Common Run Id',
+      width: 100,
+      filterable: true,
+    },
+    {
       field: 'count',
       headerName: 'Files',
       width: 100,
@@ -201,17 +208,26 @@ const AITitleRenamerHistory: React.FC = () => {
 
   // Define columns for the detail view DataGrid
   const detailColumns: GridColDef[] = [
-    {
-      field: 'runId',
-      headerName: 'Run ID',
-      width: 250,
-      filterable: true,
-    },
+
     {
       field: 'fileName',
       headerName: 'File Name',
       width: 200,
       filterable: true,
+    },
+    {
+      field: 'extractedMetadata',
+      headerName: 'Extracted Metadata',
+      width: 400,
+      filterable: true,
+      renderCell: (params) => (
+        <div className="flex items-center">
+          <IconButton onClick={() => handleCopyText(params.value)} className="ml-2">
+            <FaCopy />
+          </IconButton>
+          <span>{params.value}</span>
+        </div>
+      ),
     },
     {
       field: 'batchIndex',
@@ -254,39 +270,15 @@ const AITitleRenamerHistory: React.FC = () => {
       ),
     },
     {
-      field: 'extractedMetadata',
-      headerName: 'Extracted Metadata',
-      width: 400,
-      filterable: true,
-      renderCell: (params) => (
-        <div className="flex items-center">
-          <IconButton onClick={() => handleCopyText(params.value)} className="ml-2">
-            <FaCopy />
-          </IconButton>
-          <span>{params.value}</span>
-        </div>
-      ),
-    },
-    {
       field: 'createdAt',
       headerName: 'Created At',
       width: 200,
       filterable: true,
-      renderCell: (params) => new Date(params.row.createdAt?.$date).toLocaleString(),
+      renderCell: (params) => {
+        return new Date(params.row.createdAt).toLocaleString()
+      }
     },
   ];
-
-  // Function to manually refresh the data
-  const handleRefresh = () => {
-    // Reset pagination to first page
-    setPaginationModel({
-      page: 0,
-      pageSize: paginationModel.pageSize
-    });
-
-
-    setTotalItems(2);
-  };
 
   return (
     <div className="h-[600px] w-full">
@@ -294,14 +286,6 @@ const AITitleRenamerHistory: React.FC = () => {
         <Typography variant="h5" component="h2">
           AI PDF Title Renamer History
         </Typography>
-        <Button
-          variant="contained"
-          onClick={handleRefresh}
-          startIcon={loading ? <CircularProgress size={20} color="inherit" /> : null}
-          disabled={loading}
-        >
-          Refresh
-        </Button>
       </Box>
 
       {/* Error message display */}
