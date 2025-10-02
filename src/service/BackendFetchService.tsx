@@ -111,24 +111,21 @@ export const makePostCallWithErrorHandlingForPdfReductionForAiRenamer = async (b
   const response = result.response
   console.log(`makePostCallWithErrorHandlingForPdfReductionForAiRenamer ${JSON.stringify(response)}`)
 
-
+  const combinedResults = response?.combinedResults ?? [];
   // Extract only numeric keys
-  const numericKeys = Object.keys(response).filter(key => /^\d+$/.test(key));
   let srcFolders = [];
   let reducedFolders = [];
   let renamerFolders = [];
 
-  // Loop over the numeric keys
-  for (const key of numericKeys) {
-    const srcFolder = response[key]?.srcFolder as string
+  for (const item of combinedResults) {
+    const srcFolder = item?.srcFolder as string ?? "";
+    const destFolder = item?.destRootDump as string ?? "";
     srcFolders.push(srcFolder)
-    const _destFolder = response[key]?.destRootDump as string
-    reducedFolders.push(_destFolder);
+    reducedFolders.push(destFolder);
     renamerFolders.push(`${path.basename(srcFolder)}-renamer`)
-    console.log(`Key: ${key}`);
   }
 
-  
+
   localStorage.setItem(AI_RENAMER_ABS_PATH_LOCAL_STORAGE_KEY, srcFolders.join(","));
   localStorage.setItem(AI_RENAMER_REDUCED_PATH_LOCAL_STORAGE_KEY, reducedFolders.join(","));
   localStorage.setItem(AI_RENAMER_RENAMER_PATH_LOCAL_STORAGE_KEY, renamerFolders.join(","));
