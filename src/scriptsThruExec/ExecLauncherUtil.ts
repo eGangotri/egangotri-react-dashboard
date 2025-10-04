@@ -154,6 +154,7 @@ export enum ExecType {
   AI_TEXT_IDENTIFIER = 215,
 
   AI_RENAMER = 2151,
+  AI_CP_RENAMER = 2152,
 
   CONVERT_MULTIPLE_TXT_FILE_SCRIPTS = 216,
   CONVERT_TEXT_SCRIPT = 217
@@ -774,6 +775,14 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
           outputSuffix: dataUserInput3NonMandatory,
         },
           `ai/aiRenamer`);
+        break;
+
+      case ExecType.AI_CP_RENAMER:
+        _resp = await makePostCallWithErrorHandling({
+          googleDriveLink: dataUserInput,
+          reducedFolder: dataUserInput2Mandatory,
+        },
+          `ai/renameGDriveCPs`);
         break;
 
       case ExecType.CONVERT_MULTIPLE_TXT_FILE_SCRIPTS:

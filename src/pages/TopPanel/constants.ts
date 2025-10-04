@@ -32,7 +32,8 @@ import {
     LAUNCH_AI_RENAMER_PATH,
     EXEC_LAUNCHER_FOUR_B_PATH,
     AI_TITLE_PDF_RENAMER_HISTORY_PATH,
-    PDF_MERGE_HISTORY_TRACKER_PATH
+    PDF_MERGE_HISTORY_TRACKER_PATH,
+    LAUNCH_AI_GDRIVE_CP_RENAMER_PATH
 } from 'Routes/constants';
 
 export const TOP_PANEL_MENU: TopPanelMenu[] = [{
@@ -126,12 +127,17 @@ export const TOP_PANEL_MENU: TopPanelMenu[] = [{
             label: 'File AI Renaming',
         },
         {
+            path: LAUNCH_AI_GDRIVE_CP_RENAMER_PATH,
+            label: 'GDrive CP AI Renaming',
+        },
+        
+        {
             path: AI_TITLE_RENAMER_HISTORY_PATH,
-            label: 'AL File Renaming History',
+            label: 'AI File Renaming History',
         },
         {
             path: AI_TITLE_PDF_RENAMER_HISTORY_PATH,
-            label: 'AL Title & PDF Renaming History',
+            label: 'AI Title & PDF Renaming History',
         },
         {
             path: PDF_MERGE_HISTORY_TRACKER_PATH,
