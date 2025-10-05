@@ -212,6 +212,13 @@ const GDriveDownloadListing: React.FC = () => {
             },
         },
         {
+            field: "runId",
+            headerName: "Run ID",
+            width: 150,
+            filterable: true,
+            renderCell: (params) => params?.value?.toString() || "-",
+        },
+        {
             field: "status",
             headerName: "Status",
             width: 100,
