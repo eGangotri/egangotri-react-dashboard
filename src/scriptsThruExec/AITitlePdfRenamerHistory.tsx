@@ -133,6 +133,16 @@ const AITitlePdfRenamerHistory: React.FC = () => {
     { field: 'renamedCount', headerName: 'Renamed', width: 110 },
     { field: 'success', headerName: 'Overall', width: 100, renderCell: (p) => <span className={(p.row.failedCount > 0) ? 'text-red-700' : 'text-green-700'}>{String(p.row.failedCount > 0 ? 'Failed' : 'Success')}</span> },
     {
+      field: 'actions', headerName: 'Actions', width: 160,
+      renderCell: (p) => (
+        (p.row.failedCount > 0 || p.row.success === false) ? (
+          <Button size="small" color="error" variant="contained" onClick={() => alert(`IN Construction: runId=${p.row.runId}`)}>
+            REDO Failed
+          </Button>
+        ) : null
+      )
+    },
+    {
       field: 'pairedBatches', headerName: 'Paired Batches', width: 160, renderCell: (p) => (
         <Button size="small" variant="outlined" onClick={() => { setSelectedRun(p.row); setDetailKey('pairedBatches'); setOpen(true); }}>{p.row.pairedBatches?.length ?? 0}</Button>
       )
@@ -308,7 +318,7 @@ const AITitlePdfRenamerHistory: React.FC = () => {
               pagination
               slots={{ toolbar: GridToolbar }}
               getRowClassName={(params) => {
-                return params.row.failedCount > 0 ? 'bg-red-100' : 'bg-green-100';
+                return params.row.success ? 'bg-green-100' : 'bg-red-100';
               }}
             />
           </div>
