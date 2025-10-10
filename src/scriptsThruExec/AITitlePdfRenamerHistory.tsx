@@ -15,7 +15,7 @@ type RenamingResult = {
   originalFilePath?: string;
   reducedFilePath?: string;
   // Backend returns newFilePath; keep backward-compat props too
-  newFilePath?: string; 
+  newFilePath?: string;
   extractedMetadata?: string;
   success: boolean;
   error?: string;
@@ -74,6 +74,17 @@ const AITitlePdfRenamerHistory: React.FC = () => {
 
   const copy = (t: any) => navigator.clipboard.writeText(String(t ?? ''));
 
+  const displayRenamingResults = (row: RunRow) => {
+     return (
+      <>
+        <span className="text-green-700">{row.successCount}+</span>
+        <span className="text-red-700">{row.failedCount}</span>
+        <span className={row.failedCount > 0 ? 'text-red-700' : 'text-green-700'}>
+          ={row.renamingResults?.length}
+        </span>
+      </>
+    );
+  };
   useEffect(() => {
     const load = async (page: number, pageSize: number) => {
       setLoading(true);
@@ -120,15 +131,17 @@ const AITitlePdfRenamerHistory: React.FC = () => {
     { field: 'successCount', headerName: 'Success', width: 100 },
     { field: 'failedCount', headerName: 'Failed', width: 100 },
     { field: 'renamedCount', headerName: 'Renamed', width: 110 },
-    { field: 'success', headerName: 'Overall', width: 100, renderCell: (p) => <span className={p.value ? 'text-green-700' : 'text-red-700'}>{String(p.value)}</span> },
+    { field: 'success', headerName: 'Overall', width: 100, renderCell: (p) => <span className={(p.row.failedCount > 0) ? 'text-red-700' : 'text-green-700'}>{String(p.row.failedCount > 0 ? 'Failed' : 'Success')}</span> },
     {
       field: 'pairedBatches', headerName: 'Paired Batches', width: 160, renderCell: (p) => (
         <Button size="small" variant="outlined" onClick={() => { setSelectedRun(p.row); setDetailKey('pairedBatches'); setOpen(true); }}>{p.row.pairedBatches?.length ?? 0}</Button>
       )
     },
     {
-      field: 'renamingResults', headerName: 'Renaming Results', width: 170, renderCell: (p) => (
-        <Button size="small" variant="outlined" onClick={() => { setSelectedRun(p.row); setDetailKey('renamingResults'); setOpen(true); }}>{p.row.renamingResults?.length ?? 0}</Button>
+      field: 'renamingResults', headerName: 'Renaming Results(S/F/T)', width: 170, renderCell: (p) => (
+        <Button size="small" variant="outlined" onClick={() => { setSelectedRun(p.row); setDetailKey('renamingResults'); setOpen(true); }}>
+          {displayRenamingResults(p.row)}
+        </Button>
       )
     },
     {
@@ -227,9 +240,10 @@ const AITitlePdfRenamerHistory: React.FC = () => {
             field: 'success', headerName: 'Success', width: 90,
             renderCell: (p) => <span className={p.value ? 'text-green-700' : 'text-red-700'}>{p.value ? 'Yes' : 'No'}</span>,
           },
-          { field: 'error', headerName: 'Error', width: 260,
+          {
+            field: 'error', headerName: 'Error', width: 260,
             renderCell: (p) => <span className={'text-red-700'}>{String(p.value || "")}</span>,
-           },
+          },
         ];
       default:
         return [];
@@ -265,8 +279,7 @@ const AITitlePdfRenamerHistory: React.FC = () => {
           loading={loading}
           slots={{ toolbar: GridToolbar }}
           getRowClassName={(params) => {
-            const err = (params.row as any)?.error;
-            return err ? 'bg-red-100' : 'bg-green-100';
+            return (params.row.failedCount > 0) ? 'bg-red-100' : 'bg-green-100';
           }}
         />
       </div>
@@ -295,8 +308,7 @@ const AITitlePdfRenamerHistory: React.FC = () => {
               pagination
               slots={{ toolbar: GridToolbar }}
               getRowClassName={(params) => {
-                const err = (params.row as any)?.error;
-                return err ? 'bg-red-100' : 'bg-green-100';
+                return params.row.failedCount > 0 ? 'bg-red-100' : 'bg-green-100';
               }}
             />
           </div>
