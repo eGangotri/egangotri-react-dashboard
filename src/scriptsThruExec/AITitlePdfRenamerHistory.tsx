@@ -142,16 +142,21 @@ const AITitlePdfRenamerHistory: React.FC = () => {
     { field: 'renamedCount', headerName: 'Renamed', width: 110 },
     { field: 'success', headerName: 'Overall', width: 100, renderCell: (p) => <span className={(p.row.failedCount > 0) ? 'text-red-700' : 'text-green-700'}>{String(p.row.failedCount > 0 ? 'Failed' : 'Success')}</span> },
     {
-      field: 'actions', headerName: 'Actions', width: 160,
+      field: 'actions', headerName: 'Actions', width: 200,
       renderCell: (p) => (
         (p.row.failedCount > 0 || p.row.success === false) ? (
-          <Button size="small" color="error" variant="contained" disabled={!!redoLoading[p.row.runId]} onClick={async () => {
+          <Button
+            size="small"
+            color="error"
+            variant="contained"
+            startIcon={redoLoading[p.row.runId] ? <CircularProgress size={16} color="inherit" /> : null}
+            disabled={!!redoLoading[p.row.runId]}
+            onClick={async () => {
             try {
               setRedoLoading((m) => ({ ...m, [p.row.runId]: true }));
               const res = await makePostCall({}, `ai/aiRenamer/${p.row.runId}`);
-              const body = typeof res?.data === 'object' ? JSON.stringify(res.data, null, 2) : String(res?.data ?? res);
               setRedoTitle(`REDO Failed triggered for runId=${p.row.runId}`);
-              setRedoBody(body);
+              setRedoBody(JSON.stringify(res.data, null, 2));
               setRedoOpen(true);
               setReloadKey((k) => k + 1);
             } catch (e: any) {
@@ -161,7 +166,8 @@ const AITitlePdfRenamerHistory: React.FC = () => {
             } finally {
               setRedoLoading((m) => ({ ...m, [p.row.runId]: false }));
             }
-          }}>
+          }}
+          >
             {redoLoading[p.row.runId] ? (
               <>
                 <CircularProgress size={16} color="inherit" style={{ marginRight: 6 }} />

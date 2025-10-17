@@ -5,7 +5,7 @@ import { ExecType } from './ExecLauncherUtil';
 import { Button, Dialog, DialogTitle, DialogContent, Chip, IconButton, Typography, CircularProgress } from '@mui/material';
 import { AI_RENAMER_ABS_PATH_LOCAL_STORAGE_KEY, AI_RENAMER_REDUCED_PATH_LOCAL_STORAGE_KEY, AI_RENAMER_RENAMER_PATH_LOCAL_STORAGE_KEY } from 'service/consts';
 import { DataGrid, GridColDef, GridFilterModel, GridPaginationModel, GridToolbar } from '@mui/x-data-grid';
-import { makeGetCall } from 'service/ApiInterceptor';
+import { makeGetCall, makePostCall } from 'service/ApiInterceptor';
 import { FaCopy } from 'react-icons/fa';
 // No need for path module
 
@@ -59,6 +59,10 @@ const AITitleRenamerHistory: React.FC = () => {
   const [totalItems, setTotalItems] = useState<number>(0);
   const [totalDetailItems, setTotalDetailItems] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
+  const [actionLoading, setActionLoading] = useState<Record<string, boolean>>({});
+  const [resultOpen, setResultOpen] = useState<boolean>(false);
+  const [resultTitle, setResultTitle] = useState<string>('');
+  const [resultBody, setResultBody] = useState<string>('');
 
   // Pagination state
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
@@ -175,7 +179,7 @@ const AITitleRenamerHistory: React.FC = () => {
       width: 300,
       filterable: true,
       renderCell: (params) => (
-        <div className="flex items-center">
+        <div className="flex items-center gap-2">
           <IconButton onClick={() => handleCopyText(params.value)} className="ml-2">
             <FaCopy />
           </IconButton>
@@ -203,6 +207,48 @@ const AITitleRenamerHistory: React.FC = () => {
       width: 200,
       filterable: true,
       renderCell: (params) => new Date(params.value).toLocaleString(),
+    },
+    {
+      field: 'action',
+      headerName: 'Action',
+      width: 340,
+      filterable: false,
+      sortable: false,
+      renderCell: (params) => (
+        <Button
+          size="small"
+          variant="contained"
+          disabled={!!actionLoading[params.row.runId]}
+          onClick={async () => {
+            const runId = params.row.runId;
+            try {
+              setActionLoading((m) => ({ ...m, [runId]: true }));
+              const res = await makePostCall({}, `ai/copyMetadataToOriginalFiles/${runId}`);
+              console.log('Trigger response:', res);
+              const body = typeof res?.data === 'object' ? JSON.stringify(res.data, null, 2) : String(res?.data ?? res);
+              setResultTitle(`Copy Metadata triggered for runId=${runId}`);
+              setResultBody(body);
+              setResultOpen(true);
+            } catch (e) {
+              console.error(e);
+              setResultTitle('Copy Metadata error');
+              setResultBody(e instanceof Error ? e.message : 'Unknown error');
+              setResultOpen(true);
+            } finally {
+              setActionLoading((m) => ({ ...m, [runId]: false }));
+            }
+          }}
+        >
+          {actionLoading[params.row.runId] ? (
+            <>
+              <CircularProgress size={16} color="inherit" style={{ marginRight: 6 }} />
+              Running...
+            </>
+          ) : (
+            'Copy Metadata to Original Folder'
+          )}
+        </Button>
+      ),
     },
   ];
 
@@ -346,7 +392,7 @@ const AITitleRenamerHistory: React.FC = () => {
           )}
 
           {/* Summary info */}
-          {detailData.length > 0 && (
+          {detailData?.length > 0 && (
             <Box sx={{ mb: 2, p: 1, bgcolor: '#f5f5f5', borderRadius: 1 }}>
               <Typography variant="subtitle1">
                 Source Folder: {detailData[0].srcFolder}
@@ -380,6 +426,19 @@ const AITitleRenamerHistory: React.FC = () => {
               }}
             />
           </div>
+        </DialogContent>
+      </Dialog>
+      <Dialog open={resultOpen} onClose={() => setResultOpen(false)} maxWidth="md" fullWidth>
+        <DialogTitle>
+          <Box display="flex" justifyContent="space-between" alignItems="center">
+            <Typography variant="h6">{resultTitle || 'Result'}</Typography>
+            <Button variant="outlined" onClick={() => setResultOpen(false)}>Close</Button>
+          </Box>
+        </DialogTitle>
+        <DialogContent>
+          <Box sx={{ whiteSpace: 'pre-wrap', fontFamily: 'monospace', fontSize: 12 }}>
+            {resultBody}
+          </Box>
         </DialogContent>
       </Dialog>
     </div>
