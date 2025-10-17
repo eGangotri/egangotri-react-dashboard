@@ -9,7 +9,7 @@ import { ALL_NOT_JUST_PDF_SUFFIX, GDRIVE_EXCEL_NAME_LOCAL_STORAGE_KEY, LOCAL_LIS
 const ExecLauncherSix: React.FC = () => {
     const [gDriveExcelName, setGDriveExcelName] = useState('');
     const [localListingExcelName, setLocalListingExcelName] = useState('');
-    const [gDriveIntegrityCheckExcel, setGDriveIntegrityCheckExcel] = useState(''); 
+    const [gDriveIntegrityCheckExcel, setGDriveIntegrityCheckExcel] = useState('');
 
     const [includeFilePath, setIncludeFilePath] = useState(false);
     const [fileNameLongerCheck, setFileNameLongerCheck] = useState(ExecType.FILE_NAME_LENGTH);
@@ -65,10 +65,13 @@ const ExecLauncherSix: React.FC = () => {
                     secondTextBoxPlaceHolder='Enter Folder Name (not path)'
                     execType={ExecType.GenExcelOfGoogleDriveLinkForAll}
                     userInputOneInfo='All Mime Types in G-Drive for All Mime Types'
-                    css={{ minWidth: "23vw" }}    css2={validationCss}
+                    css={{
+                        width: "450px"
+                    }}
+                    css2={validationCss}
                     onInputChange={handleInputChange}
                     userInputTwoInfoNonMandatory="Only Folder Name not Path"
-                  
+
                 />
 
                 <Box>

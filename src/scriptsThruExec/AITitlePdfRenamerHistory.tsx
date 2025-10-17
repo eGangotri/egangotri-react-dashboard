@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import { Button, CircularProgress, Dialog, DialogContent, DialogTitle, IconButton, Typography } from '@mui/material';
 import { DataGrid, GridColDef, GridFilterModel, GridPaginationModel, GridToolbar } from '@mui/x-data-grid';
 import { FaCopy } from 'react-icons/fa';
-import { makeGetCall } from 'service/ApiInterceptor';
+import { makeGetCall, makePostCall } from 'service/ApiInterceptor';
 
 // Backend can send either Mongo-style wrappers or plain strings
 type Oid = { $oid: string } | string;
@@ -72,6 +72,12 @@ const AITitlePdfRenamerHistory: React.FC = () => {
     items: [],
   });
 
+  // Popup for REDO result
+  const [redoOpen, setRedoOpen] = useState(false);
+  const [redoTitle, setRedoTitle] = useState<string>('');
+  const [redoBody, setRedoBody] = useState<string>('');
+  const [redoLoading, setRedoLoading] = useState<Record<string, boolean>>({});
+
   const copy = (t: any) => navigator.clipboard.writeText(String(t ?? ''));
 
   const displayRenamingResults = (row: RunRow) => {
@@ -128,6 +134,9 @@ const AITitlePdfRenamerHistory: React.FC = () => {
       )
     },
     { field: 'processedCount', headerName: 'Processed', width: 110 },
+    { field: 'sfp', headerName: 'Success/Failed/Processed', width: 200,
+      renderCell: (p) => displayRenamingResults(p.row)
+     },
     { field: 'successCount', headerName: 'Success', width: 100 },
     { field: 'failedCount', headerName: 'Failed', width: 100 },
     { field: 'renamedCount', headerName: 'Renamed', width: 110 },
@@ -136,8 +145,31 @@ const AITitlePdfRenamerHistory: React.FC = () => {
       field: 'actions', headerName: 'Actions', width: 160,
       renderCell: (p) => (
         (p.row.failedCount > 0 || p.row.success === false) ? (
-          <Button size="small" color="error" variant="contained" onClick={() => alert(`IN Construction: runId=${p.row.runId}`)}>
-            REDO Failed
+          <Button size="small" color="error" variant="contained" disabled={!!redoLoading[p.row.runId]} onClick={async () => {
+            try {
+              setRedoLoading((m) => ({ ...m, [p.row.runId]: true }));
+              const res = await makePostCall({}, `ai/aiRenamer/${p.row.runId}`);
+              const body = typeof res?.data === 'object' ? JSON.stringify(res.data, null, 2) : String(res?.data ?? res);
+              setRedoTitle(`REDO Failed triggered for runId=${p.row.runId}`);
+              setRedoBody(body);
+              setRedoOpen(true);
+              setReloadKey((k) => k + 1);
+            } catch (e: any) {
+              setRedoTitle('REDO Failed error');
+              setRedoBody(e?.message ? String(e.message) : 'Unknown error');
+              setRedoOpen(true);
+            } finally {
+              setRedoLoading((m) => ({ ...m, [p.row.runId]: false }));
+            }
+          }}>
+            {redoLoading[p.row.runId] ? (
+              <>
+                <CircularProgress size={16} color="inherit" style={{ marginRight: 6 }} />
+                Redoing...
+              </>
+            ) : (
+              'REDO Failed'
+            )}
           </Button>
         ) : null
       )
@@ -316,12 +348,32 @@ const AITitlePdfRenamerHistory: React.FC = () => {
               getRowId={(r) => r.id}
               pageSizeOptions={[10, 20, 50]}
               pagination
+              initialState={{
+                sorting: {
+                  sortModel: detailKey === 'renamingResults' ? [{ field: 'success', sort: 'asc' }] : [],
+                },
+              }}
               slots={{ toolbar: GridToolbar }}
               getRowClassName={(params) => {
                 return params.row.success ? 'bg-green-100' : 'bg-red-100';
               }}
             />
           </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Popup to display REDO result */}
+      <Dialog open={redoOpen} onClose={() => setRedoOpen(false)} maxWidth="md" fullWidth>
+        <DialogTitle>
+          <Box display="flex" justifyContent="space-between" alignItems="center">
+            <Typography variant="h6">{redoTitle || 'REDO Result'}</Typography>
+            <Button variant="outlined" onClick={() => setRedoOpen(false)}>Close</Button>
+          </Box>
+        </DialogTitle>
+        <DialogContent>
+          <Box sx={{ whiteSpace: 'pre-wrap', fontFamily: 'monospace', fontSize: 12 }}>
+            {redoBody}
+          </Box>
         </DialogContent>
       </Dialog>
     </div>
