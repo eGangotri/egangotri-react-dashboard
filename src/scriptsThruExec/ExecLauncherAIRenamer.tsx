@@ -7,6 +7,7 @@ import TextField from '@mui/material/TextField';
 import { AI_RENAMER_ABS_PATH_LOCAL_STORAGE_KEY, AI_RENAMER_REDUCED_PATH_LOCAL_STORAGE_KEY, AI_RENAMER_RENAMER_PATH_LOCAL_STORAGE_KEY } from 'service/consts';
 import { replaceQuotes } from 'mirror/utils';
 import { makePostCall } from 'service/ApiInterceptor';
+import { csvize } from './Utils';
 
 const REFUCED_FILE_PATH_SUFFIX = "red"
 
@@ -46,36 +47,7 @@ const LauncherAIRenamer: React.FC = () => {
             setFilePathForReducedPdfs(`${filePath}-${REFUCED_FILE_PATH_SUFFIX}`);
         }
     }
-    const csvize = (rawInput: string): string => {
-        const raw = rawInput || '';
-
-        // 1) Prefer extracting quoted groups if present: "..." "..."
-        const quotedMatches = Array.from(raw.matchAll(/"([^\"]+)"/g)).map(m => m[1]);
-
-        let parts: string[];
-        if (quotedMatches.length > 0) {
-            parts = quotedMatches;
-        } 
-        else if (raw.includes(",")) {
-            parts = raw.split(",");
-        }
-        else {
-            // Newline or space separated
-            parts = raw.split(/\s+/);
-        }
-
-        const cleaned = parts
-            .map(s => s.trim())
-            .filter(Boolean)
-            .map(s => s.replace(/^"+|"+$/g, ''));
-
-        if (cleaned.length === 0) return '';
-
-        const result = cleaned.map(p => `${p}`).join(",\n");
-        console.log("csvize result", result);
-        return result;
-    }
-
+ 
     const handleAiRenamerAbsPathChange = (inputValue: string) => {
         setAbsPathForAiRenamer(inputValue);
     }

@@ -31,6 +31,7 @@ import { set } from "lodash"
 import { ResultDisplayPopover } from "widgets/ResultDisplayPopover"
 import { ExecType } from "scriptsThruExec/ExecLauncherUtil";
 import ExecComponent from "scriptsThruExec/ExecComponent";
+import { csvize } from "scriptsThruExec/Utils";
 
 interface JsonData {
     _id: string
@@ -94,7 +95,7 @@ export default function FileTransferList() {
     const [idForReverse, setIdForReverse] = useState<string>("")
     const [popoverAnchor, setPopoverAnchor] = useState<HTMLButtonElement | null>(null)
     const [popoverContent, setPopoverContent] = useState<string>("")
-
+    const [filePath, setFilePath] = useState('');
     const columns: GridColDef[] = [
         {
             field: "filesMoved",
@@ -305,6 +306,10 @@ export default function FileTransferList() {
 
     const [moveFolderContentsExecType, setMoveFolderContentsExecType] = useState(ExecType.MoveFolderContents);
 
+    const handleInputChange = (inputValue: string) => {
+        setFilePath(inputValue);
+    };
+
     return (
         <Box sx={{ height: 600, width: "100%" }}>
             <Box display="flex" alignItems="center" gap={4} mb={2} flexDirection="column">
@@ -312,9 +317,16 @@ export default function FileTransferList() {
                     buttonText="Move Folder Contents"
                     placeholder='Src Path for Moving QA-Passed-to-Pipeline'
                     secondTextBoxPlaceHolder="Profile Name or Absolute Path"
+                    textBoxOneValue={filePath}
+                    onInputChange={handleInputChange}
+                    thirdButton={<Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => setFilePath(csvize(filePath))}
+                        sx={{ marginRight: "10px", marginBottom: "10px" }}>CSVize</Button>}
                     execType={moveFolderContentsExecType}
-                    css={{ minWidth: "35vw" }}
-                    css2={{ minWidth: "35vw" }}
+                    css={{ minWidth: "100vw" }}
+                    css2={{ minWidth: "100vw" }}
                     reactComponent={<>
                         <Box>
                             <FormControlLabel

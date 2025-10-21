@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import ExecComponent from './ExecComponent';
 import Box from '@mui/material/Box';
 import { ExecType } from './ExecLauncherUtil';
@@ -172,17 +172,42 @@ const AITitleRenamerHistory: React.FC = () => {
   };
 
   // Deterministic color for a given key to visually distinguish different IDs
-  const colorForKey = (key: string): { bg: string; color: string } => {
+  const colorForKey = (key: string): { bg: string; color: string; border: string } => {
+    // 32-bit hash
     let hash = 0;
     for (let i = 0; i < key.length; i++) {
       hash = ((hash << 5) - hash) + key.charCodeAt(i);
       hash |= 0;
     }
-    const hue = ((hash % 360) + 360) % 360;
-    const bg = `hsl(${hue}, 85%, 90%)`;
-    const color = `hsl(${hue}, 70%, 25%)`;
-    return { bg, color };
+    const abs = Math.abs(hash);
+    // Golden-angle hue dispersion to minimize collisions
+    const hue = (abs * 137.508) % 360;
+    // Vary saturation/lightness bands with different hash bits
+    const sat = 65 + (abs % 25);        // 65–89%
+    const light = 78 + ((abs >> 7) % 14); // 78–92%
+    const bg = `hsl(${hue.toFixed(2)}, ${sat}%, ${light}%)`;
+    // Darker text hue for readability
+    const color = `hsl(${hue.toFixed(2)}, 60%, 20%)`;
+    // Slightly darker border for extra distinction
+    const border = `hsl(${hue.toFixed(2)}, 70%, 35%)`;
+    return { bg, color, border };
   };
+
+  // Map each visible commonRunId to a unique color to avoid collisions within the dataset
+  const commonRunIdColorMap = useMemo(() => {
+    const ids = Array.from(new Set((groupedData || []).map((g) => String(g.commonRunId ?? ''))));
+    const map: Record<string, { bg: string; color: string; border: string }> = {};
+    ids.forEach((id, idx) => {
+      const hue = (idx * 137.508) % 360; // golden-angle step across current set
+      const sat = 70; // fixed for consistency
+      const light = 85 - (idx % 3) * 5; // cycle lightness bands for separation
+      const bg = `hsl(${hue.toFixed(2)}, ${sat}%, ${light}%)`;
+      const color = `hsl(${hue.toFixed(2)}, 60%, 20%)`;
+      const border = `hsl(${hue.toFixed(2)}, 70%, 35%)`;
+      map[id] = { bg, color, border };
+    });
+    return map;
+  }, [groupedData]);
 
   // Define columns for the grouped data DataGrid
   const groupedColumns: GridColDef[] = [
@@ -209,12 +234,12 @@ const AITitleRenamerHistory: React.FC = () => {
       filterable: true,
       renderCell: (params) => {
         const v = String(params.value ?? '');
-        const { bg, color } = colorForKey(v);
+        const { bg, color, border } = commonRunIdColorMap[v] || colorForKey(v);
         return (
           <Chip
             label={v}
             size="small"
-            sx={{ bgcolor: bg, color, fontWeight: 600 }}
+            sx={{ bgcolor: bg, color, fontWeight: 600, border: `1px solid ${border}` }}
           />
         );
       }
