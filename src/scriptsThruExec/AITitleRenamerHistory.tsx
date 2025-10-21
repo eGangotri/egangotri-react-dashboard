@@ -171,6 +171,19 @@ const AITitleRenamerHistory: React.FC = () => {
     return parts[parts.length - 1];
   };
 
+  // Deterministic color for a given key to visually distinguish different IDs
+  const colorForKey = (key: string): { bg: string; color: string } => {
+    let hash = 0;
+    for (let i = 0; i < key.length; i++) {
+      hash = ((hash << 5) - hash) + key.charCodeAt(i);
+      hash |= 0;
+    }
+    const hue = ((hash % 360) + 360) % 360;
+    const bg = `hsl(${hue}, 85%, 90%)`;
+    const color = `hsl(${hue}, 70%, 25%)`;
+    return { bg, color };
+  };
+
   // Define columns for the grouped data DataGrid
   const groupedColumns: GridColDef[] = [
     {
@@ -194,6 +207,17 @@ const AITitleRenamerHistory: React.FC = () => {
       headerName: 'Common Run Id',
       width: 100,
       filterable: true,
+      renderCell: (params) => {
+        const v = String(params.value ?? '');
+        const { bg, color } = colorForKey(v);
+        return (
+          <Chip
+            label={v}
+            size="small"
+            sx={{ bgcolor: bg, color, fontWeight: 600 }}
+          />
+        );
+      }
     },
     {
       field: 'count',
@@ -210,8 +234,8 @@ const AITitleRenamerHistory: React.FC = () => {
     },
     {
       field: 'action',
-      headerName: 'Action',
-      width: 340,
+      headerName: 'Apply Metadata to Original Files',
+      width: 230,
       filterable: false,
       sortable: false,
       renderCell: (params) => (
@@ -221,6 +245,8 @@ const AITitleRenamerHistory: React.FC = () => {
           disabled={!!actionLoading[params.row.runId]}
           onClick={async () => {
             const runId = params.row.runId;
+            const ok = window.confirm(`Are you sure you want to apply metadata to original files for runId=${runId}?`);
+            if (!ok) return;
             try {
               setActionLoading((m) => ({ ...m, [runId]: true }));
               const res = await makePostCall({}, `ai/copyMetadataToOriginalFiles/${runId}`);
@@ -245,7 +271,51 @@ const AITitleRenamerHistory: React.FC = () => {
               Running...
             </>
           ) : (
-            'Copy Metadata to Original Folder'
+            'Apply'
+          )}
+        </Button>
+      ),
+    },
+    {
+      field: 'cleanup',
+      headerName: 'Cleanup Reduced/Renamer Folders',
+      width: 340,
+      filterable: false,
+      sortable: false,
+      renderCell: (params) => (
+        <Button
+          size="small"
+          variant="contained"
+          disabled={!!actionLoading[params.row.runId]}
+          onClick={async () => {
+            const runId = params.row.runId;
+            const ok = window.confirm(`Are you sure you want to cleanup Reduced/Renamer folders for runId=${runId}?`);
+            if (!ok) return;
+            try {
+              setActionLoading((m) => ({ ...m, [runId]: true }));
+              const res = await makePostCall({}, `ai/cleanupRedRenamerFilers/${runId}`);
+              console.log('Trigger response:', res);
+              const body = typeof res?.data === 'object' ? JSON.stringify(res.data, null, 2) : String(res?.data ?? res);
+              setResultTitle(`Cleanup triggered for runId=${runId}`);
+              setResultBody(body);
+              setResultOpen(true);
+            } catch (e) {
+              console.error(e);
+              setResultTitle('Cleanup error');
+              setResultBody(e instanceof Error ? e.message : 'Unknown error');
+              setResultOpen(true);
+            } finally {
+              setActionLoading((m) => ({ ...m, [runId]: false }));
+            }
+          }}
+        >
+          {actionLoading[params.row.runId] ? (
+            <>
+              <CircularProgress size={16} color="inherit" style={{ marginRight: 6 }} />
+              Running...
+            </>
+          ) : (
+            'Cleanup'
           )}
         </Button>
       ),
