@@ -353,8 +353,8 @@ const GDriveDownloadListing: React.FC = () => {
                     placeholder='Enter Google Drive Link(s)/Identifiers as csv'
                     secondTextBoxPlaceHolder='Enter Profile or File Abs Path'
                     execType={gDriveFileType}
-                    css={{ backgroundColor: "lightgreen", width: "450px" }}
-                    css2={{ backgroundColor: "lightgreen", width: "450px" }}
+                    css={{ backgroundColor: "lightgreen", width: "90vw" }}
+                    css2={{ backgroundColor: "lightgreen", width: "90vw" }}
                     reactComponent={<>
                         <RadioGroup aria-label="gDriveFileType" name="gDriveFileType" value={gDriveFileType} onChange={chooseGDriveFileType} row>
                             <FormControlLabel value={ExecType.DWNLD_PDFS_ONLY_FROM_GOOGLE_DRIVE} control={<Radio />} label="PDF-Only" />
