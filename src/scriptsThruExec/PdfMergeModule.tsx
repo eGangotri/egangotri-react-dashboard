@@ -144,7 +144,7 @@ const PdfMergeModule: React.FC = () => {
                 </Box>
             </Box>
             
-            <Box>
+            <Box sx={{ minWidth: '50vw' }}>
                 <PdfMergeHistoryTracker/>
             </Box>
         </Box >
