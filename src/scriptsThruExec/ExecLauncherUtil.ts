@@ -782,7 +782,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
           googleDriveLink: dataUserInput,
           reducedFolder: dataUserInput2Mandatory,
         },
-          `ai/renameGDriveCPs`);
+          `ai/gDrive/renameGDriveCPs`);
         break;
 
       case ExecType.CONVERT_MULTIPLE_TXT_FILE_SCRIPTS:

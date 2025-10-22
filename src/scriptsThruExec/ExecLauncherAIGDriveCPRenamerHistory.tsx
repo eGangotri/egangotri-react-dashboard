@@ -105,7 +105,7 @@ const LauncherAIGDriveCPRenamerHistory: React.FC = () => {
         setLoading(true);
         setError(null);
         try {
-            const res = await makeGetCall(`ai/gDriveRenamingHistoryGroupedByRunId?page=${page}&limit=${limit}`) as GroupFetchResponse;
+            const res = await makeGetCall(`ai/gDrive/gDriveRenamingHistoryGroupedByRunId?page=${page}&limit=${limit}`) as GroupFetchResponse;
             setRows(res?.data ?? []);
             setRowCount(res?.totalItems ?? (res?.data?.length ?? 0));
         } catch (e: any) {
@@ -121,7 +121,7 @@ const LauncherAIGDriveCPRenamerHistory: React.FC = () => {
         setLoading(true);
         setError(null);
         try {
-            const res = await makeGetCall(`ai/gDriveRenamingHistory/${runId}?page=${page}&limit=${limit}`) as DetailFetchResponse;
+            const res = await makeGetCall(`ai/gDrive/gDriveRenamingHistory/${runId}?page=${page}&limit=${limit}`) as DetailFetchResponse;
             const ordered = [...(res?.data ?? [])].sort((a, b) => Number(a.success) - Number(b.success)); // errors (false) first
             setDetailRows(ordered);
             setDetailRowCount(res?.totalItems ?? (res?.data?.length ?? 0));
