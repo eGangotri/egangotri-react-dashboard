@@ -160,6 +160,17 @@ const PdfMergeHistoryTracker: React.FC = () => {
   const detailColumns: GridColDef<DetailRow>[] = [
     { field: 'runId', headerName: 'Run ID', width: 280 },
     {
+      field: 'mergedPdfPath', headerName: 'Merged PDF', width: 360,
+      renderCell: (p) => {
+        const val = p.row.operationResult?.data?.details?.merged_pdf?.path ?? '';
+        return (
+          <div className="flex items-center">
+            <IconButton onClick={() => copy(val)} className="ml-2" size="small"><FaCopy /></IconButton>
+            <span>{val}</span>
+          </div>
+        );
+      }
+    },{
       field: 'first_pdf_path', headerName: 'First PDF', width: 360,
       renderCell: (p) => (
         <div className="flex items-center">
@@ -186,18 +197,7 @@ const PdfMergeHistoryTracker: React.FC = () => {
         </div>
       )
     },
-    {
-      field: 'mergedPdfPath', headerName: 'Merged PDF', width: 360,
-      renderCell: (p) => {
-        const val = p.row.operationResult?.data?.details?.merged_pdf?.path ?? '';
-        return (
-          <div className="flex items-center">
-            <IconButton onClick={() => copy(val)} className="ml-2" size="small"><FaCopy /></IconButton>
-            <span>{val}</span>
-          </div>
-        );
-      }
-    },
+    
     {
       field: 'operationResult', headerName: 'Operation Result', width: 180,
       renderCell: (p) => (
