@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import Box from '@mui/material/Box';
-import { Button, CircularProgress, Dialog, DialogContent, DialogTitle, IconButton, Typography } from '@mui/material';
+import { Button, CircularProgress, Dialog, DialogContent, DialogTitle, IconButton, Typography, Backdrop } from '@mui/material';
 import { DataGrid, GridColDef, GridFilterModel, GridPaginationModel, GridToolbar } from '@mui/x-data-grid';
 import { FaCopy } from 'react-icons/fa';
 import { makeGetCall, makePostCall } from 'service/ApiInterceptor';
@@ -77,6 +77,7 @@ const AITitlePdfRenamerHistory: React.FC = () => {
   const [redoTitle, setRedoTitle] = useState<string>('');
   const [redoBody, setRedoBody] = useState<string>('');
   const [redoLoading, setRedoLoading] = useState<Record<string, boolean>>({});
+  const [redoGlobalLoading, setRedoGlobalLoading] = useState<boolean>(false);
 
   const copy = (t: any) => navigator.clipboard.writeText(String(t ?? ''));
 
@@ -150,9 +151,12 @@ const AITitlePdfRenamerHistory: React.FC = () => {
             color="error"
             variant="contained"
             startIcon={redoLoading[p.row.runId] ? <CircularProgress size={16} color="inherit" /> : null}
-            disabled={!!redoLoading[p.row.runId]}
+            disabled={redoGlobalLoading || !!redoLoading[p.row.runId]}
             onClick={async () => {
+            const ok = window.confirm(`Are you sure you want to REDO Failed for runId=${p.row.runId}?`);
+            if (!ok) return;
             try {
+              setRedoGlobalLoading(true);
               setRedoLoading((m) => ({ ...m, [p.row.runId]: true }));
               const res = await makePostCall({}, `ai/aiRenamer/${p.row.runId}`);
               setRedoTitle(`REDO Failed triggered for runId=${p.row.runId}`);
@@ -165,6 +169,7 @@ const AITitlePdfRenamerHistory: React.FC = () => {
               setRedoOpen(true);
             } finally {
               setRedoLoading((m) => ({ ...m, [p.row.runId]: false }));
+              setRedoGlobalLoading(false);
             }
           }}
           >
@@ -368,6 +373,14 @@ const AITitlePdfRenamerHistory: React.FC = () => {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Full-screen spinner overlay during REDO processing */}
+      <Backdrop open={redoGlobalLoading} sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.modal + 1 }}>
+        <Box display="flex" alignItems="center" gap={2}>
+          <CircularProgress color="inherit" />
+          <Typography variant="subtitle1">Redoing failed items...</Typography>
+        </Box>
+      </Backdrop>
 
       {/* Popup to display REDO result */}
       <Dialog open={redoOpen} onClose={() => setRedoOpen(false)} maxWidth="md" fullWidth>
