@@ -275,10 +275,9 @@ const AITitleRenamerHistory: React.FC = () => {
             try {
               setActionLoading((m) => ({ ...m, [runId]: true }));
               const res = await makePostCall({}, `ai/copyMetadataToOriginalFiles/${runId}`);
-              console.log('Trigger response:', res);
-              const body = typeof res?.data === 'object' ? JSON.stringify(res.data, null, 2) : String(res?.data ?? res);
+              console.log('Trigger response:', JSON.stringify(res));
               setResultTitle(`Copy Metadata triggered for runId=${runId}`);
-              setResultBody(body);
+              setResultBody(JSON.stringify(res));
               setResultOpen(true);
             } catch (e) {
               console.error(e);
@@ -320,9 +319,8 @@ const AITitleRenamerHistory: React.FC = () => {
               setActionLoading((m) => ({ ...m, [runId]: true }));
               const res = await makePostCall({}, `ai/cleanupRedRenamerFilers/${runId}`);
               console.log('Trigger response:', res);
-              const body = typeof res?.data === 'object' ? JSON.stringify(res.data, null, 2) : String(res?.data ?? res);
               setResultTitle(`Cleanup triggered for runId=${runId}`);
-              setResultBody(body);
+              setResultBody(JSON.stringify(res));
               setResultOpen(true);
             } catch (e) {
               console.error(e);
