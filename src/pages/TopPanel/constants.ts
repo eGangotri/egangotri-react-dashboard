@@ -117,7 +117,20 @@ export const TOP_PANEL_MENU: TopPanelMenu[] = [{
         {
             path: FILE_TRANSFER_LISTING,
             label: 'File Transfer List',
-        }
+        },
+        {
+            path: PDF_MERGE_MODULE,
+            label: 'Pdf Merge Module',
+        },
+        {
+            path: EXEC_LAUNCHER_FOUR_B_PATH,
+            label: 'Excel Renamer',
+        },
+        {
+            path: PDF_UTIL,
+            label: 'Pdf Util',
+        },
+
     ]
 }, {
     menuLabel: "AI",
@@ -139,15 +152,7 @@ export const TOP_PANEL_MENU: TopPanelMenu[] = [{
         {
             path: AI_TITLE_PDF_RENAMER_HISTORY_PATH,
             label: 'AI Title & PDF Renaming History',
-        },
-        {
-            path: PDF_MERGE_MODULE,
-            label: 'Pdf Merge Module',
-        },
-        {
-            path: EXEC_LAUNCHER_FOUR_B_PATH,
-            label: 'Excel Renamer',
-        },
+        }
     ]
 },
 {

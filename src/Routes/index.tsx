@@ -97,6 +97,7 @@ const DashboardRoutes: React.FC = () => {
             {<Route path={EXEC_LAUNCHER_FOUR_B_PATH} element={<ExecLauncher4B />} />}
             {<Route path={LAUNCH_AI_RENAMER_PATH} element={<LauncherAIRenamer />} />}
             {<Route path={PDF_MERGE_MODULE} element={<PdfMergeModule />} />}
+            {<Route path={PDF_UTIL} element={<PdfUtil />} />}
             {<Route path={LAUNCH_AI_GDRIVE_CP_RENAMER_HISTORY_PATH} element={<LauncherAIGDriveCPRenamerHistory />} />}
             {<Route path={AI_TITLE_RENAMER_HISTORY_PATH} element={<AITitleRenamerHistory />} />}
             {<Route path={AI_TITLE_PDF_RENAMER_HISTORY_PATH} element={<AITitlePdfRenamerHistory />} />}
