@@ -1,20 +1,11 @@
 import React, { useRef, useState } from 'react';
-import ExecComponent from './ExecComponent';
 import Box from '@mui/material/Box';
-import { ExecType } from './ExecLauncherUtil';
 import { Button, Typography, CircularProgress } from '@mui/material';
 import TextField from '@mui/material/TextField';
-import { AI_RENAMER_ABS_PATH_LOCAL_STORAGE_KEY, AI_RENAMER_REDUCED_PATH_LOCAL_STORAGE_KEY, AI_RENAMER_RENAMER_PATH_LOCAL_STORAGE_KEY } from 'service/consts';
-import { replaceQuotes } from 'mirror/utils';
 import { makePostCall } from 'service/ApiInterceptor';
+import PdfMergeHistoryTracker from './PdfMergeHistoryTracker';
 
-const REFUCED_FILE_PATH_SUFFIX = "red"
-
-const LauncherAIGDriveCPRenamer: React.FC = () => {
-    const [absPathForAiRenamer, setAbsPathForAiRenamer] = useState('');
-    const [reducedPathForAiRenamer, setReducedPathForAiRenamer] = useState('');
-    const [renamerPathForAiRenamer, setRenamerPathForAiRenamer] = useState('');
-
+const PdfMergeModule: React.FC = () => {
     // Dynamic text areas for combining PDFs
     const DynamicTextAreas: React.FC = () => {
         const [values, setValues] = useState<string[]>(['']);
@@ -143,20 +134,10 @@ const LauncherAIGDriveCPRenamer: React.FC = () => {
 
     return (
         <Box display="flex" gap={4} mb={2} flexDirection="row">
-
-            <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
-                <ExecComponent
-                    buttonText="AI GDrive CP Renamer"
-                    placeholder='Enter Google Drive Link(s)/Identifiers as CSV'
-                    execType={ExecType.AI_CP_RENAMER}
-                    css={{ minWidth: "40vw" }}
-                    textBoxOneValue={absPathForAiRenamer}
-                    multiline1stTf
-                    rows1stTf={4}
-                    textBoxTwoValue={reducedPathForAiRenamer}
-                />
+            <Box>
+                <PdfMergeHistoryTracker/>
             </Box>
-
+            
             <Box sx={{ minWidth: '50vw' }}>
                 <DynamicTextAreas />
             </Box>
@@ -165,4 +146,4 @@ const LauncherAIGDriveCPRenamer: React.FC = () => {
     );
 }
 
-export default LauncherAIGDriveCPRenamer;
+export default PdfMergeModule;
