@@ -135,7 +135,7 @@ const PdfMergeModule: React.FC = () => {
 
     return (
         <Box display="flex" gap={4} mb={2} flexDirection="row">
-            <Box sx={{ minWidth: '50vw' }}>
+            <Box sx={{ minWidth: '45vw' }}>
                 <Box sx={{ mt: 5 }}>
                     <DynamicTextAreas />
                 </Box>
@@ -144,7 +144,7 @@ const PdfMergeModule: React.FC = () => {
                 </Box>
             </Box>
             
-            <Box sx={{ minWidth: '50vw' }}>
+            <Box sx={{ minWidth: '45vw' }}>
                 <PdfMergeHistoryTracker/>
             </Box>
         </Box >

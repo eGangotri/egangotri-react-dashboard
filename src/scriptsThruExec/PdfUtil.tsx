@@ -21,7 +21,7 @@ const PdfUtil: React.FC = () => {
                         buttonText="Check for Corrupt PDFs"
                         placeholder='Folder or Profile'
                         execType={corruptionCheck}
-                        css={{ minWidth: "50vw" }}
+                        css={{ minWidth: "45vw" }}
                         reactComponent={<>
                             <Box>
                                 <FormControlLabel
