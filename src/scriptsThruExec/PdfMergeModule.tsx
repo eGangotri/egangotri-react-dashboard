@@ -4,6 +4,7 @@ import { Button, Typography, CircularProgress } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import { makePostCall } from 'service/ApiInterceptor';
 import PdfMergeHistoryTracker from './PdfMergeHistoryTracker';
+import PdfUtil from './PdfUtil';
 
 const PdfMergeModule: React.FC = () => {
     // Dynamic text areas for combining PDFs
@@ -134,12 +135,17 @@ const PdfMergeModule: React.FC = () => {
 
     return (
         <Box display="flex" gap={4} mb={2} flexDirection="row">
-            <Box>
-                <PdfMergeHistoryTracker/>
+            <Box sx={{ minWidth: '50vw' }}>
+                <Box sx={{ mt: 5 }}>
+                    <DynamicTextAreas />
+                </Box>
+                <Box sx={{ mt: 5 }}>
+                    <PdfUtil/>
+                </Box>
             </Box>
             
-            <Box sx={{ minWidth: '50vw' }}>
-                <DynamicTextAreas />
+            <Box>
+                <PdfMergeHistoryTracker/>
             </Box>
         </Box >
 

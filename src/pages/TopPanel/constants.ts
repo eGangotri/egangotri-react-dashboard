@@ -28,7 +28,6 @@ import {
     IMG_TO_PDF_LISTING,
     UPLOADS_USHERED_OLD_PATH,
     LANDING_PAGE_OLD_PATH,
-    PDF_UTIL,
     LAUNCH_AI_RENAMER_PATH,
     EXEC_LAUNCHER_FOUR_B_PATH,
     AI_TITLE_PDF_RENAMER_HISTORY_PATH,
@@ -125,12 +124,7 @@ export const TOP_PANEL_MENU: TopPanelMenu[] = [{
         {
             path: EXEC_LAUNCHER_FOUR_B_PATH,
             label: 'Excel Renamer',
-        },
-        {
-            path: PDF_UTIL,
-            label: 'Pdf Util',
-        },
-
+        }
     ]
 }, {
     menuLabel: "AI",
@@ -144,7 +138,7 @@ export const TOP_PANEL_MENU: TopPanelMenu[] = [{
             path: LAUNCH_AI_GDRIVE_CP_RENAMER_HISTORY_PATH,
             label: 'GDrive CP AI Renaming History',
         },
-        
+
         {
             path: AI_TITLE_RENAMER_HISTORY_PATH,
             label: 'AI File Renaming History',
@@ -214,16 +208,7 @@ export const TOP_PANEL_MENU: TopPanelMenu[] = [{
             label: 'Rename Pdfs',
         }
     ],
-},
-{
-    menuLabel: "Pdf Utils",
-    submenu: [
-        {
-            path: PDF_UTIL,
-            label: 'Pdf Utils',
-        }
-    ],
-},
+}
 ];
 export interface Submenu {
     path: string;

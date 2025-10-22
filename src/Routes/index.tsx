@@ -53,7 +53,6 @@ import {
     GDRIVE_DWNL_LISTING,
     UPLOADS_USHERED_OLD_PATH,
     LANDING_PAGE_OLD_PATH,
-    PDF_UTIL,
     IMG_TO_PDF_LISTING,
     EXEC_LAUNCHER_FOUR_B_PATH,
     AI_TITLE_PDF_RENAMER_HISTORY_PATH,
@@ -97,7 +96,6 @@ const DashboardRoutes: React.FC = () => {
             {<Route path={EXEC_LAUNCHER_FOUR_B_PATH} element={<ExecLauncher4B />} />}
             {<Route path={LAUNCH_AI_RENAMER_PATH} element={<LauncherAIRenamer />} />}
             {<Route path={PDF_MERGE_MODULE} element={<PdfMergeModule />} />}
-            {<Route path={PDF_UTIL} element={<PdfUtil />} />}
             {<Route path={LAUNCH_AI_GDRIVE_CP_RENAMER_HISTORY_PATH} element={<LauncherAIGDriveCPRenamerHistory />} />}
             {<Route path={AI_TITLE_RENAMER_HISTORY_PATH} element={<AITitleRenamerHistory />} />}
             {<Route path={AI_TITLE_PDF_RENAMER_HISTORY_PATH} element={<AITitlePdfRenamerHistory />} />}
@@ -122,7 +120,6 @@ const DashboardRoutes: React.FC = () => {
             {<Route path={ARCHIVE_ITEM_AGGREGATES_PATH} element={<ArchiveItemAggregates />} />}
             
             {<Route path={RENAME_PDFS} element={<RenamePdfs />} />}
-            {<Route path={PDF_UTIL} element={<PdfUtil />} />}
         </>
     );
 

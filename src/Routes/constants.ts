@@ -42,5 +42,4 @@ export const GDRIVE_DWNL_LISTING = "/gDriveDwnldListingPath";
 export const IMG_TO_PDF_LISTING = "/imgToPdfListingPath";
 
 export const AI_TEXT_IDENTIFIER = "/aiPath";
-export const PDF_UTIL = "/pdfMerge";
 
