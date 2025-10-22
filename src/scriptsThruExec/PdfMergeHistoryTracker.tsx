@@ -130,7 +130,7 @@ const PdfMergeHistoryTracker: React.FC = () => {
     {
       field: 'commonRunId',
       headerName: 'Common Run Id',
-      width: 320,
+      width: 220,
       renderCell: (params) => (
         <div className="flex items-center">
           <IconButton onClick={() => copy(params.value)} className="ml-2" size="small">
@@ -141,19 +141,19 @@ const PdfMergeHistoryTracker: React.FC = () => {
       ),
     },
     {
-      field: 'createdAt',
-      headerName: 'Created At',
-      width: 220,
-      renderCell: (params) => new Date(params.value).toLocaleString(),
-    },
-    {
       field: 'pdfPathsToMergeCount',
       headerName: 'PDFs to Merge',
-      width: 160,
+      width: 120,
       renderCell: (params) => {
         const val = params.value as number | null;
         return <span>{val === null || typeof val === 'undefined' ? '-' : String(val)}</span>;
       },
+    },
+    {
+      field: 'createdAt',
+      headerName: 'Created At',
+      width: 100,
+      renderCell: (params) => new Date(params.value).toLocaleString(),
     },
   ];
 
