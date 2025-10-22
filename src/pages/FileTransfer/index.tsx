@@ -325,8 +325,8 @@ export default function FileTransferList() {
                         onClick={() => setFilePath(csvize(filePath))}
                         sx={{ marginRight: "10px", marginBottom: "10px" }}>CSVize</Button>}
                     execType={moveFolderContentsExecType}
-                    css={{ minWidth: "100vw" }}
-                    css2={{ minWidth: "100vw" }}
+                    css={{ minWidth: "80vw" }}
+                    css2={{ minWidth: "80vw" }}
                     reactComponent={<>
                         <Box>
                             <FormControlLabel
