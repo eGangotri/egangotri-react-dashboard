@@ -4,7 +4,7 @@ import type React from "react"
 import { useEffect, useState, useCallback } from "react"
 import { DataGrid, type GridColDef, type GridRenderCellParams, type GridRowId } from "@mui/x-data-grid"
 import { FaTrash, FaTimes } from 'react-icons/fa';
-import { Typography, Box, Link, TextField, Select, MenuItem, FormControl, InputLabel, Button, SelectChangeEvent } from "@mui/material"
+import { Typography, Box, Link, TextField, Select, MenuItem, FormControl, InputLabel, Button, SelectChangeEvent, Stack } from "@mui/material"
 import type { UploadCycleTableData, UploadCycleTableDataDictionary } from "mirror/types"
 import { deleteUploadCycleById, getDataForUploadCycle, makePostCallWithErrorHandling } from "service/BackendFetchService"
 import { MAX_ITEMS_LISTABLE } from "utils/constants"
@@ -37,6 +37,17 @@ const UploadCyclesList: React.FC = () => {
             } catch (error) {
                 alert("Error closing Chrome.")
                 console.error('Error closing Chrome:', error);
+            }
+        }
+    }
+    const updateChromeDriver = async () => {
+        if (window.confirm('Are you sure you want to update Chrome driver?')) {
+            try {
+                const resp = await makeGetCall('/launchCmd/updateChromeDriver')
+                alert("Chrome driver updated successfully.")
+            } catch (error) {
+                alert("Error updating Chrome driver.")
+                console.error('Error updating Chrome driver:', error);
             }
         }
     }
@@ -324,11 +335,18 @@ const UploadCyclesList: React.FC = () => {
                         </Box>
                     </Box>
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, minWidth: 'fit-content' }}>
-                        <Button variant="contained" color="error" onClick={closeAllChrome} startIcon={<FaTimes />}
-                            sx={{ width: 200, height: 40 }}
-                        >
-                            Close All Chrome
-                        </Button>
+                        <Stack sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
+                            <Button variant="contained" color="error" onClick={closeAllChrome} startIcon={<FaTimes />}
+                                sx={{ width: 200, height: 40 }}
+                            >
+                                Close All Chrome
+                            </Button>
+                            <Button variant="contained" color="primary" onClick={updateChromeDriver}
+                                sx={{ width: 220, height: 40 }}
+                            >
+                                Update Chrome Driver
+                            </Button>
+                        </Stack>
                         <ColorCodeInformationPanel />
                     </Box>
                 </Box>
@@ -340,7 +358,7 @@ const UploadCyclesList: React.FC = () => {
                             paginationModel: { page: 0, pageSize: 25 },
                         },
                     }}
-                    pageSizeOptions={[ 25, 50, 100]}
+                    pageSizeOptions={[25, 50, 100]}
                     checkboxSelection
                     disableRowSelectionOnClick
                     loading={isLoading}
