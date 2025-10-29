@@ -3,6 +3,7 @@ import ExecComponent from './ExecComponent';
 import Box from '@mui/material/Box';
 import { ExecType } from './ExecLauncherUtil';
 import { Button, Dialog, DialogTitle, DialogContent, Chip, IconButton, Typography, CircularProgress } from '@mui/material';
+import { buildDeterministicColorMap, colorForKey } from '../utils/color';
 import { AI_RENAMER_ABS_PATH_LOCAL_STORAGE_KEY, AI_RENAMER_REDUCED_PATH_LOCAL_STORAGE_KEY, AI_RENAMER_RENAMER_PATH_LOCAL_STORAGE_KEY } from 'service/consts';
 import { DataGrid, GridColDef, GridFilterModel, GridPaginationModel, GridToolbar } from '@mui/x-data-grid';
 import { makeGetCall, makePostCall } from 'service/ApiInterceptor';
@@ -172,41 +173,11 @@ const AITitleRenamerHistory: React.FC = () => {
   };
 
   // Deterministic color for a given key to visually distinguish different IDs
-  const colorForKey = (key: string): { bg: string; color: string; border: string } => {
-    // 32-bit hash
-    let hash = 0;
-    for (let i = 0; i < key.length; i++) {
-      hash = ((hash << 5) - hash) + key.charCodeAt(i);
-      hash |= 0;
-    }
-    const abs = Math.abs(hash);
-    // Golden-angle hue dispersion to minimize collisions
-    const hue = (abs * 137.508) % 360;
-    // Vary saturation/lightness bands with different hash bits
-    const sat = 65 + (abs % 25);        // 65–89%
-    const light = 78 + ((abs >> 7) % 14); // 78–92%
-    const bg = `hsl(${hue.toFixed(2)}, ${sat}%, ${light}%)`;
-    // Darker text hue for readability
-    const color = `hsl(${hue.toFixed(2)}, 60%, 20%)`;
-    // Slightly darker border for extra distinction
-    const border = `hsl(${hue.toFixed(2)}, 70%, 35%)`;
-    return { bg, color, border };
-  };
 
   // Map each visible commonRunId to a unique color to avoid collisions within the dataset
   const commonRunIdColorMap = useMemo(() => {
     const ids = Array.from(new Set((groupedData || []).map((g) => String(g.commonRunId ?? ''))));
-    const map: Record<string, { bg: string; color: string; border: string }> = {};
-    ids.forEach((id, idx) => {
-      const hue = (idx * 137.508) % 360; // golden-angle step across current set
-      const sat = 70; // fixed for consistency
-      const light = 85 - (idx % 3) * 5; // cycle lightness bands for separation
-      const bg = `hsl(${hue.toFixed(2)}, ${sat}%, ${light}%)`;
-      const color = `hsl(${hue.toFixed(2)}, 60%, 20%)`;
-      const border = `hsl(${hue.toFixed(2)}, 70%, 35%)`;
-      map[id] = { bg, color, border };
-    });
-    return map;
+    return buildDeterministicColorMap(ids);
   }, [groupedData]);
 
   // Define columns for the grouped data DataGrid

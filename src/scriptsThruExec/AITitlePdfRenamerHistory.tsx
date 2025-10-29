@@ -1,9 +1,10 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import Box from '@mui/material/Box';
-import { Button, CircularProgress, Dialog, DialogContent, DialogTitle, IconButton, Typography, Backdrop } from '@mui/material';
+import { Button, CircularProgress, Dialog, DialogContent, DialogTitle, IconButton, Typography, Backdrop, Chip } from '@mui/material';
 import { DataGrid, GridColDef, GridFilterModel, GridPaginationModel, GridToolbar } from '@mui/x-data-grid';
 import { FaCopy } from 'react-icons/fa';
 import { makeGetCall, makePostCall } from 'service/ApiInterceptor';
+import { buildDeterministicColorMap, colorForKey } from '../utils/color';
 
 // Backend can send either Mongo-style wrappers or plain strings
 type Oid = { $oid: string } | string;
@@ -81,6 +82,12 @@ const AITitlePdfRenamerHistory: React.FC = () => {
 
   const copy = (t: any) => navigator.clipboard.writeText(String(t ?? ''));
 
+  // Build a deterministic color map for visible commonRunId values
+  const commonRunIdColorMap = useMemo(() => {
+    const ids = Array.from(new Set((rows || []).map((r) => String((r as any)?.commonRunId ?? ''))));
+    return buildDeterministicColorMap(ids);
+  }, [rows]);
+
   const displayRenamingResults = (row: RunRow) => {
      return (
       <>
@@ -101,13 +108,13 @@ const AITitlePdfRenamerHistory: React.FC = () => {
         const res = await makeGetCall(`ai/getAllTitlePdfRenamedViaAIList?page=${page}&limit=${pageSize}`);
         console.log(`Response from fetchGroupedRenameData: ${JSON.stringify(res)}`);
         const _data = res.data;
-        const normalized: RunRow[] = _data.map((r: any) => ({
+        const normalized: RunRow[] = _data?.map((r: any) => ({
           ...r,
           _id: r._id ?? r._id?.$oid ?? `${r.runId}`,
           createdAt: r.createdAt ?? r.createdAt?.$date ?? new Date().toISOString(),
           updatedAt: r.updatedAt ?? r.updatedAt?.$date ?? r.createdAt ?? new Date().toISOString(),
           pairedBatches: r.pairedBatches || [],
-          renamingResults: (r.renamingResults || []).map((x: any) => ({
+          renamingResults: (r.renamingResults || [])?.map((x: any) => ({
             ...x,
             // keep fields as-is; just ensure presence
           })),
@@ -124,8 +131,23 @@ const AITitlePdfRenamerHistory: React.FC = () => {
   }, [reloadKey, paginationModel.page, paginationModel.pageSize]);
 
   const columns: GridColDef<RunRow>[] = useMemo(() => ([
-    { field: 'commonRunId', headerName: 'common Run Id', width: 110 },
-
+  {
+      field: 'commonRunId',
+      headerName: 'Common Run Id',
+      width: 100,
+      filterable: true,
+      renderCell: (params) => {
+        const v = String(params.value ?? '');
+        const { bg, color, border } = commonRunIdColorMap[v] || colorForKey(v);
+        return (
+          <Chip
+            label={v}
+            size="small"
+            sx={{ bgcolor: bg, color, fontWeight: 600, border: `1px solid ${border}` }}
+          />
+        );
+      }
+    },
     {
       field: 'runId', headerName: 'Run ID', width: 340, renderCell: (p) => (
         <div className="flex items-center">
@@ -221,7 +243,7 @@ const AITitlePdfRenamerHistory: React.FC = () => {
             field: 'pdfs', headerName: 'PDFs', width: 420,
             renderCell: (p) => (
               <div className="truncate whitespace-pre-wrap">
-                {(p.row.pdfs || []).map((s: string, i: number) => (
+                {(p.row.pdfs || [])?.map((s: string, i: number) => (
                   <div key={i} className="flex items-center">
                     <IconButton onClick={() => copy(s)} className="ml-2" size="small"><FaCopy /></IconButton>
                     <span>{s}</span>
@@ -234,7 +256,7 @@ const AITitlePdfRenamerHistory: React.FC = () => {
             field: 'reducedPdfs', headerName: 'Reduced PDFs', width: 420,
             renderCell: (p) => (
               <div className="truncate whitespace-pre-wrap">
-                {(p.row.reducedPdfs || []).map((s: string, i: number) => (
+                {(p.row.reducedPdfs || [])?.map((s: string, i: number) => (
                   <div key={i} className="flex items-center">
                     <IconButton onClick={() => copy(s)} className="ml-2" size="small"><FaCopy /></IconButton>
                     <span>{s}</span>
@@ -307,7 +329,7 @@ const AITitlePdfRenamerHistory: React.FC = () => {
   const detailRows = useMemo(() => {
     if (!selectedRun) return [];
     const arr: any[] = (selectedRun as any)[detailKey] || [];
-    return arr.map((r, i) => ({ id: i + 1, ...r }));
+    return arr?.map((r, i) => ({ id: i + 1, ...r }));
   }, [selectedRun, detailKey]);
 
   return (

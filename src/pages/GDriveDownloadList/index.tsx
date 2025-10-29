@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from "react"
+import React, { ChangeEvent, useMemo } from "react"
 import { useState, useEffect } from "react"
 import {
     DataGrid,
@@ -13,6 +13,7 @@ import { FaCopy } from "react-icons/fa";
 import ExecComponent from "scriptsThruExec/ExecComponent";
 import { ExecType } from "scriptsThruExec/ExecLauncherUtil";
 import { redownloadFromGDrive, verifyGDriveDwnldSuccessFolders } from "service/launchYarn";
+import { buildDeterministicColorMap, colorForKey } from "utils/color";
 
 // Types
 interface ICompositeDocument {
@@ -155,7 +156,7 @@ const GDriveDownloadListing: React.FC = () => {
         }
     }
 
-    const handleRedownload = async (id: string ) => {
+    const handleRedownload = async (id: string) => {
 
         setApiLoading(true)
         setApiError(null)
@@ -176,6 +177,12 @@ const GDriveDownloadListing: React.FC = () => {
     const handleCopyLink = (link: string) => {
         navigator.clipboard.writeText(link);
     };
+
+    // Build a deterministic color map for visible commonRunId values
+    const commonRunIdColorMap = useMemo(() => {
+        const ids = Array.from(new Set((downloads || []).map((r) => String((r as any)?.commonRunId ?? ''))));
+        return buildDeterministicColorMap(ids);
+    }, [downloads]);
 
     const columns: GridColDef[] = [
         {
@@ -211,6 +218,23 @@ const GDriveDownloadListing: React.FC = () => {
                 );
             },
         },
+         {
+           field: 'commonRunId',
+           headerName: 'Common Run Id',
+           width: 100,
+           filterable: true,
+           renderCell: (params) => {
+             const v = String(params.value ?? '');
+             const { bg, color, border } = commonRunIdColorMap[v] || colorForKey(v);
+             return (
+               <Chip
+                 label={v}
+                 size="small"
+                 sx={{ bgcolor: bg, color, fontWeight: 600, border: `1px solid ${border}` }}
+               />
+             );
+           }
+         },
         {
             field: "runId",
             headerName: "Run ID",
@@ -443,8 +467,8 @@ const GDriveDownloadListing: React.FC = () => {
             </Dialog>
 
             <>
-            <br></br>
-            <br></br>
+                <br></br>
+                <br></br>
             </>
         </div>
     )
