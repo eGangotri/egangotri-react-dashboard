@@ -164,6 +164,13 @@ const LauncherAIGDriveCPRenamerHistory: React.FC = () => {
             }
         },
         {
+            field: 'commonRunId', headerName: 'Common Run Id', width: 180, renderCell: (params) => {
+                const v = String(params.value ?? '');
+                const { bg, color, border } = commonRunIdColorMap[v] || colorForKey(v);
+                return <Chip label={v} size="small" sx={{ bgcolor: bg, color, fontWeight: 600, border: `1px solid ${border}` }} />
+            }
+        },
+        {
             field: 'action', headerName: 'Action', width: 140, sortable: false, filterable: false, renderCell: (params) => (
                 <Button variant="text" onClick={() => { setSelectedRunId(params.row.runId); setDetailOpen(true); }}>
                     View Details
