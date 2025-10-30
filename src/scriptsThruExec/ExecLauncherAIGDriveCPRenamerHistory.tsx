@@ -164,7 +164,7 @@ const LauncherAIGDriveCPRenamerHistory: React.FC = () => {
             }
         },
         {
-            field: 'googleDriveLink', headerName: 'Google Drive Link', width: 250, renderCell: (params) => (
+            field: 'mainGDriveLink', headerName: 'Google Drive Link', width: 250, renderCell: (params) => (
                 <a href={params.value} target="_blank" rel="noreferrer">Open</a>
             )
         },
