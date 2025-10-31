@@ -165,7 +165,7 @@ const LauncherAIGDriveCPRenamerHistory: React.FC = () => {
         },
         {
             field: 'mainGDriveLink', headerName: 'Google Drive Link', width: 250, renderCell: (params) => (
-                <a href={params.value} target="_blank" rel="noreferrer">Open</a>
+                <a href={params.value} target="_blank" rel="noreferrer">{params.value|| "N/A"}</a>
             )
         },
         {
@@ -197,8 +197,8 @@ const LauncherAIGDriveCPRenamerHistory: React.FC = () => {
             )
         },
         {
-            field: 'googleDriveLink', headerName: 'Link', width: 220, renderCell: (p) => (
-                p.value ? <a href={p.value} target="_blank" rel="noreferrer" style={{ color: '#1976d2' }}>Open</a> : <span>-</span>
+            field: 'googleDriveLink', headerName: 'Google Drive Link', width: 250, renderCell: (params) => (
+                <a href={params.value} target="_blank" rel="noreferrer">{params.value }</a>
             )
         },
         { field: 'fileId', headerName: 'File Id', width: 180 },
