@@ -78,13 +78,17 @@ const ExecLauncher4B: React.FC = () => {
                     userInputTwoInfoNonMandatory="Only Folder Name not Path"
 
                 />
-
                 <ExecComponent buttonText="Rename Files via Excel"
                     placeholder='Excel File Path'
                     secondTextBoxPlaceHolder='Profile or Abs Path'
+                    thirdTextBoxPlaceHolder='Dash Separated Column Indices. Fill Only for Non Fixed Model'
                     execType={ExecType.RENAME_FIES_VIA_EXCEL}
-                    css={{ width: "350px" }}
-                    css2={{ width: "350px" }}
+                    userInputTwoInfoNonMandatory="Predefined Columns and Indices. Follow Static Model. Leave below blank"
+                    userInputThreeInfoNonMandatory="Specify Dash Separated Column Indexes with first for Orig Title Second for New Title"
+                    
+                    css={{ width: "400px" }}
+                    css2={{ width: "400px" }}
+                    css3={{ width: "400px" }}
                 />
             </Box>
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">

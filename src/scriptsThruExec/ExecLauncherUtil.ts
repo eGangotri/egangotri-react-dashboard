@@ -150,9 +150,6 @@ export enum ExecType {
   UPLOAD_MISSED_TO_GDRIVE = 213,
   BL_EAP_WORK = 214,
 
-  //discard
-  AI_TEXT_IDENTIFIER = 215,
-
   AI_RENAMER = 2151,
   AI_CP_RENAMER = 2152,
 
@@ -712,10 +709,19 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         break;
 
       case ExecType.RENAME_FIES_VIA_EXCEL:
-        _resp = await makePostCallWithErrorHandling({
-          excelPath: dataUserInput,
-          folderOrProfile: dataUserInput2Mandatory,
-        }, `fileUtil/renameFilesViaExcel`);
+        if (dataUserInput3NonMandatory && (dataUserInput3NonMandatory.length > 0) && dataUserInput3NonMandatory.includes("-")) {
+          _resp = await makePostCallWithErrorHandling({
+            excelPath: dataUserInput,
+            folderOrProfile: dataUserInput2Mandatory,
+            columns: dataUserInput3NonMandatory,
+          }, `fileUtil/renameFilesViaExcelUsingSpecifiedColumns`);
+        }
+        else {
+          _resp = await makePostCallWithErrorHandling({
+            excelPath: dataUserInput,
+            folderOrProfile: dataUserInput2Mandatory,
+          }, `fileUtil/renameFilesViaExcel`);
+        }
         break;
 
       case ExecType.COMPARE_UPLOADS_VIA_EXCEL_V1_WITH_ARCHIVE_ORG:
