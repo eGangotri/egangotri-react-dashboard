@@ -22,6 +22,12 @@ const ExecLauncherOne: React.FC = () => {
             case ExecType.GenExcelOfGoogleDriveLinkPdfOnly:
                 _listingType = ExecType.GenExcelOfGoogleDriveLinkPdfOnly;
                 break;
+            case ExecType.GenExcelOfGoogleDriveLinkPdfOnlyManuVersion:
+                _listingType = ExecType.GenExcelOfGoogleDriveLinkPdfOnlyManuVersion;
+                break;
+            case ExecType.GenExcelOfGoogleDriveLinkPdfOnlyMinimalVersion:
+                _listingType = ExecType.GenExcelOfGoogleDriveLinkPdfOnlyMinimalVersion;
+                break;
             case ExecType.GenExcelOfGoogleDriveLinkForAll:
                 _listingType = ExecType.GenExcelOfGoogleDriveLinkForAll;
                 break;
@@ -232,10 +238,18 @@ const ExecLauncherOne: React.FC = () => {
                     userInputTwoInfoNonMandatory="Only Folder Name not Path"
                     reactComponent={<>
                         <RadioGroup aria-label="excelGDrive" name="excelGDrive" value={excelGDrive} onChange={chooseGDriveExcelType} row>
-                            <FormControlLabel value={ExecType.GenExcelOfGoogleDriveLinkPdfOnly} control={<Radio />} label="PDF-Only" />
-                            <FormControlLabel value={ExecType.GenExcelOfGoogleDriveLinkForAll} control={<Radio />} label="ALL" />
-                            <FormControlLabel value={ExecType.GenExcelOfGoogleDriveLinkForRenameFilesExcel} control={<Radio />} label="Renamer" />
-                            <FormControlLabel value={ExecType.GenExcelOfGoogleDriveLinkForReduced} control={<Radio />} label="REDUCED" />
+                            <Box display="flex" flexDirection="column">
+                                <Typography>PDF-Only</Typography>
+                                <FormControlLabel value={ExecType.GenExcelOfGoogleDriveLinkPdfOnly} control={<Radio />} label="Detailed" />
+                                <FormControlLabel value={ExecType.GenExcelOfGoogleDriveLinkPdfOnlyManuVersion} control={<Radio />} label="Manu Version" />
+                                <FormControlLabel value={ExecType.GenExcelOfGoogleDriveLinkPdfOnlyMinimalVersion} control={<Radio />} label="Minimal Version" />
+                            </Box>
+                            <Box display="flex" flexDirection="column">
+                                <Typography>All</Typography>
+                                <FormControlLabel value={ExecType.GenExcelOfGoogleDriveLinkForAll} control={<Radio />} label="ALL" />
+                                <FormControlLabel value={ExecType.GenExcelOfGoogleDriveLinkForRenameFilesExcel} control={<Radio />} label="Renamer" />
+                                <FormControlLabel value={ExecType.GenExcelOfGoogleDriveLinkForReduced} control={<Radio />} label="REDUCED" />
+                            </Box>
                         </RadioGroup>
                     </>}
                 />

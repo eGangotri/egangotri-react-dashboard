@@ -95,6 +95,9 @@ export enum ExecType {
 
   GenExcelOfGoogleDriveLinkPdfOnly = 811,
   GenExcelOfGoogleDriveLinkForAll = 812,
+  GenExcelOfGoogleDriveLinkPdfOnlyManuVersion = 813,
+  GenExcelOfGoogleDriveLinkPdfOnlyMinimalVersion = 814,
+
   GenExcelOfGoogleDriveLinkForReduced = 82,
   GenExcelOfGoogleDriveLinkForRenameFilesExcel = 83,
   GenListingsofLocalFolderAsPdf = 91,
@@ -413,13 +416,24 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         }, `gDrive/getGoogleDriveListingAsExcel`);
         break;
 
-      case ExecType.GenExcelOfGoogleDriveLinkForAll:
+      case ExecType.GenExcelOfGoogleDriveLinkPdfOnlyManuVersion:
         _resp = await makePostCallForGenExcelForGDrive({
           "googleDriveLink": dataUserInput,
           "folderName": data.userInputSecond || "D:\\",
           "reduced": false,
           "ignoreFolder": "",
           "allNotJustPdfs": true,
+          "manuVersion": true,
+        }, `gDrive/getGoogleDriveListingAsExcel`);
+        break;
+
+      case ExecType.GenExcelOfGoogleDriveLinkPdfOnlyMinimalVersion:
+        _resp = await makePostCallForGenExcelForGDrive({
+          "googleDriveLink": dataUserInput,
+          "folderName": data.userInputSecond || "D:\\",
+          "reduced": false,
+          "allNotJustPdfs": false,
+          "minimalVersion": true,
         }, `gDrive/getGoogleDriveListingAsExcel`);
         break;
 
