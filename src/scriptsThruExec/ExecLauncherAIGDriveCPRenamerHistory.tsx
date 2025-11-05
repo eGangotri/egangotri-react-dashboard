@@ -6,6 +6,7 @@ import { makeGetCall } from 'service/ApiInterceptor';
 import { FaCopy } from 'react-icons/fa';
 import ExecComponent from './ExecComponent';
 import { ExecType } from './ExecLauncherUtil';
+import { buildDeterministicColorMap, colorForKey } from 'utils/color';
 
 interface GroupRow {
     runId: string;
@@ -67,38 +68,43 @@ const LauncherAIGDriveCPRenamerHistory: React.FC = () => {
 
     const handleCopyText = (text: string) => navigator.clipboard.writeText(String(text ?? ''));
 
-    const colorForKey = (key: string): { bg: string; color: string; border: string } => {
-        let hash = 0;
-        for (let i = 0; i < key.length; i++) {
-            hash = ((hash << 5) - hash) + key.charCodeAt(i);
-            hash |= 0;
-        }
-        const abs = Math.abs(hash);
-        const isBlue = (abs % 2) === 0;
-        const hue = isBlue ? 215 : 30;
-        const sat = isBlue ? 70 : 60;
-        const light = 85 - (abs % 3) * 5;
-        const bg = `hsl(${hue}, ${sat}%, ${light}%)`;
-        const color = `hsl(${hue}, 60%, 20%)`;
-        const border = `hsl(${hue}, ${isBlue ? 70 : 65}%, 35%)`;
-        return { bg, color, border };
-    };
+    // const colorForKey = (key: string): { bg: string; color: string; border: string } => {
+    //     let hash = 0;
+    //     for (let i = 0; i < key.length; i++) {
+    //         hash = ((hash << 5) - hash) + key.charCodeAt(i);
+    //         hash |= 0;
+    //     }
+    //     const abs = Math.abs(hash);
+    //     const isBlue = (abs % 2) === 0;
+    //     const hue = isBlue ? 215 : 30;
+    //     const sat = isBlue ? 70 : 60;
+    //     const light = 85 - (abs % 3) * 5;
+    //     const bg = `hsl(${hue}, ${sat}%, ${light}%)`;
+    //     const color = `hsl(${hue}, 60%, 20%)`;
+    //     const border = `hsl(${hue}, ${isBlue ? 70 : 65}%, 35%)`;
+    //     return { bg, color, border };
+    // };
+
+    // const commonRunIdColorMap = useMemo(() => {
+    //     const ids = Array.from(new Set((rows || []).map(r => r.commonRunId || '')));
+    //     const map: Record<string, { bg: string; color: string; border: string }> = {};
+    //     ids.forEach((id, idx) => {
+    //         const isBlue = (idx % 2) === 0;
+    //         const hue = isBlue ? 215 : 30;
+    //         const sat = isBlue ? 70 : 60;
+    //         const light = 85 - (idx % 3) * 5;
+    //         map[id] = {
+    //             bg: `hsl(${hue}, ${sat}%, ${light}%)`,
+    //             color: `hsl(${hue}, 60%, 20%)`,
+    //             border: `hsl(${hue}, ${isBlue ? 70 : 65}%, 35%)`,
+    //         };
+    //     });
+    //     return map;
+    // }, [rows]);
 
     const commonRunIdColorMap = useMemo(() => {
-        const ids = Array.from(new Set((rows || []).map(r => r.commonRunId || '')));
-        const map: Record<string, { bg: string; color: string; border: string }> = {};
-        ids.forEach((id, idx) => {
-            const isBlue = (idx % 2) === 0;
-            const hue = isBlue ? 215 : 30;
-            const sat = isBlue ? 70 : 60;
-            const light = 85 - (idx % 3) * 5;
-            map[id] = {
-                bg: `hsl(${hue}, ${sat}%, ${light}%)`,
-                color: `hsl(${hue}, 60%, 20%)`,
-                border: `hsl(${hue}, ${isBlue ? 70 : 65}%, 35%)`,
-            };
-        });
-        return map;
+        const ids = Array.from(new Set((rows || []).map((g) => String(g.commonRunId ?? ''))));
+        return buildDeterministicColorMap(ids);
     }, [rows]);
 
     const fetchGroups = async (page: number, limit: number) => {
@@ -165,7 +171,7 @@ const LauncherAIGDriveCPRenamerHistory: React.FC = () => {
         },
         {
             field: 'mainGDriveLink', headerName: 'Google Drive Link', width: 250, renderCell: (params) => (
-                <a href={params.value} target="_blank" rel="noreferrer">{params.value|| "N/A"}</a>
+                <a href={params.value} target="_blank" rel="noreferrer">{params.value || "N/A"}</a>
             )
         },
         {
@@ -198,7 +204,7 @@ const LauncherAIGDriveCPRenamerHistory: React.FC = () => {
         },
         {
             field: 'googleDriveLink', headerName: 'Google Drive Link', width: 250, renderCell: (params) => (
-                <a href={params.value} target="_blank" rel="noreferrer">{params.value }</a>
+                <a href={params.value} target="_blank" rel="noreferrer">{params.value}</a>
             )
         },
         { field: 'fileId', headerName: 'File Id', width: 180 },

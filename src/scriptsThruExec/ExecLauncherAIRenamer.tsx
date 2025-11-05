@@ -6,7 +6,6 @@ import { Button, Typography, CircularProgress } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import { AI_RENAMER_ABS_PATH_LOCAL_STORAGE_KEY, AI_RENAMER_REDUCED_PATH_LOCAL_STORAGE_KEY, AI_RENAMER_RENAMER_PATH_LOCAL_STORAGE_KEY } from 'service/consts';
 import { replaceQuotes } from 'mirror/utils';
-import { makePostCall } from 'service/ApiInterceptor';
 import { csvize } from './Utils';
 
 const REFUCED_FILE_PATH_SUFFIX = "red"
@@ -151,7 +150,6 @@ const LauncherAIRenamer: React.FC = () => {
                                 color="primary"
                                 onClick={() => setAbsPathForAiRenamer(csvize(absPathForAiRenamer))}
                                 sx={{ marginRight: "10px", marginBottom: "10px" }}>CSVize</Button>
-
                         </>
                     }
                 />

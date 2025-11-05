@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from "react"
+import React, { ChangeEvent, useMemo } from "react"
 import { useState, useEffect } from "react"
 import {
     DataGrid,
@@ -15,6 +15,8 @@ import ExecComponent from "scriptsThruExec/ExecComponent";
 import { ExecType } from "scriptsThruExec/ExecLauncherUtil";
 import { FOLDER_OF_UNZIPPED_IMGS } from "service/consts";
 import { IMG_TYPE_CR2, IMG_TYPE_JPG, IMG_TYPE_PNG, IMG_TYPE_TIF } from "scriptsThruExec/constants";
+import { csvize } from "scriptsThruExec/Utils";
+import { buildDeterministicColorMap, colorForKey } from "utils/color";
 
 // Interface for folder info
 interface IFolderInfo {
@@ -57,6 +59,7 @@ interface ISummary {
 
 // Main interface for the Image to PDF History document
 export interface IImageToPdfHistory {
+    commonRunId: string;
     total_folders: number;
     folders_detail: IFolderInfo[];
     summary: ISummary;
@@ -118,28 +121,33 @@ const folderDetailsColumns: GridColDef[] = [
     { field: 'error_count', headerName: 'Errors', width: 100, type: 'number' }
 ];
 
-const getColumns = (handleViewDetails: (entry: IImageToPdfHistory) => void): GridColDef[] => [
+const getColumns = (handleViewDetails: (entry: IImageToPdfHistory) => void, commonRunIdColorMap: Record<string, { bg: string; color: string; border: string }>): GridColDef[] => [
 
     {
-        field: 'actions',
-        headerName: 'Actions',
+        field: 'commonRunId',
+        headerName: 'Common Run Id',
         width: 150,
         sortable: false,
         filterable: false,
-        renderCell: (params: GridRenderCellParams<IImageToPdfHistory>) => (
-            <Button
-                variant="contained"
-                color="primary"
-                size="small"
-                onClick={() => handleViewDetails(params.row)}
-            >
-                View Details
-            </Button>
-        )
+        renderCell: (params: GridRenderCellParams<IImageToPdfHistory>) => {
+
+            const v = String(params.value ?? '');
+            const { bg, color, border } = commonRunIdColorMap[v] || colorForKey(v);
+            return (
+                <Chip
+                    label={v}
+                    size="small"
+                    sx={{ bgcolor: bg, color, fontWeight: 600, border: `1px solid ${border}` }}
+                    onClick={() => handleViewDetails(params.row)}
+                />
+            );
+        }
     },
     { field: 'total_folders', headerName: 'Total Folders', width: 200, type: 'number' },
-    { field: 'total_folders_including_empty',
-         headerName: 'Total Folders Including Empty', width: 200, type: 'number' },
+    {
+        field: 'total_folders_including_empty',
+        headerName: 'Total Folders Including Empty', width: 200, type: 'number'
+    },
     {
         field: 'summary',
         headerName: 'Summary',
@@ -190,7 +198,6 @@ const getColumns = (handleViewDetails: (entry: IImageToPdfHistory) => void): Gri
 
 const ImgToPdfListing: React.FC = () => {
     const [folderOfUnzippedImgs, setFolderOfUnzippedImgs] = useState<string>("");
-
     const [downloads, setDownloads] = useState<IImageToPdfHistory[]>([])
     // const [selectedFiles, setSelectedFiles] = useState<ICompositeDocument[]>([])
     const [openDialog, setOpenDialog] = useState(false)
@@ -232,7 +239,6 @@ const ImgToPdfListing: React.FC = () => {
 
     const fetchImgFilesToPdf = async (page: number, pageSize: number): Promise<FetchResponse> => {
         const response = await makePostCall({ page, pageSize }, `imgToPdf/getAllImgToPdfEntries`)
-        console.log(`resp from fetchImgFilesToPdf: ${JSON.stringify(response)}`)
         return response
     }
 
@@ -251,10 +257,7 @@ const ImgToPdfListing: React.FC = () => {
         loadImgToPdfHistories()
     }, [paginationModel.page, paginationModel.pageSize]) // Added fetchGDriveDownloads to dependencies
 
-    // const handleOpenFiles = (files: ICompositeDocument[]) => {
-    //     setSelectedFiles(files.map((file, index) => ({ ...file, id: index.toString() })))
-    //     setOpenDialog(true)
-    // }
+
 
     const handleOpenMsg = (msg: string) => {
         setSelectedMsg(msg)
@@ -281,6 +284,12 @@ const ImgToPdfListing: React.FC = () => {
         console.log("ImgType: ", _val);
         setImgType(Number(_val));
     };
+
+    const commonRunIdColorMap = useMemo(() => {
+        const ids = Array.from(new Set((downloads || []).map((r) => String((r as any)?.commonRunId ?? ''))));
+        return buildDeterministicColorMap(ids);
+    }, [downloads]);
+
     return (
         <div className="h-[400px] w-full">
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
@@ -290,6 +299,7 @@ const ImgToPdfListing: React.FC = () => {
                     placeholder='Folder Abs Path'
                     execType={imgType}
                     secondTextBoxPlaceHolder='Dest Folder Abs Path'
+                    onInputChange={setFolderOfUnzippedImgs}
                     reactComponent={<>
                         <RadioGroup aria-label="fileType" name="fileType" value={imgType} onChange={handleChangeImgFilesToPdf} row>
                             <FormControlLabel value={ExecType.ANY_IMG_TYPE_TO_PDF} control={<Radio />} label="ANY" />
@@ -299,19 +309,29 @@ const ImgToPdfListing: React.FC = () => {
                             <FormControlLabel value={ExecType.CR2_TO_PDF} control={<Radio />} label={IMG_TYPE_CR2} />
                         </RadioGroup>
                     </>}
-                    thirdButton={<Button
-                        variant="contained"
-                        color="primary"
-                        onClick={loadFolderOfUnzippedImgFilesFromLocalStorage}
-                        sx={{ marginRight: "10px", marginBottom: "10px" }}>Load From Local Storage</Button>}
+
+                    thirdButton={
+                        <><Button
+                            variant="contained"
+                            color="primary"
+                            onClick={loadFolderOfUnzippedImgFilesFromLocalStorage}
+                            sx={{ marginRight: "10px", marginBottom: "10px" }}>Load From Local Storage</Button>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={() => setFolderOfUnzippedImgs(csvize(folderOfUnzippedImgs))}
+                                sx={{ marginRight: "10px", marginBottom: "10px" }}>CSVize</Button>
+
+                        </>
+                    }
                     textBoxOneValue={folderOfUnzippedImgs}
-                    css={{ backgroundColor: "violet", width: "450px" }}
+                    css={{ backgroundColor: "violet", width: "800px" }}
                     css2={{ backgroundColor: "violet", width: "450px" }}
                 />
             </Box>
             <DataGrid
                 rows={downloads}
-                columns={getColumns(handleViewDetails)}
+                columns={getColumns(handleViewDetails, commonRunIdColorMap)}
                 paginationModel={paginationModel}
                 onPaginationModelChange={setPaginationModel}
                 pageSizeOptions={[5, 10, 20]}
@@ -325,17 +345,6 @@ const ImgToPdfListing: React.FC = () => {
                 slots={{
                     toolbar: GridToolbar,
                 }}
-            // getRowClassName={(params) => {
-            //     const { success_count = 0, totalPdfsToDownload = 0 } = params.row.quickStatus || {}
-            //     if (params.row.verify === false) {
-            //         return "bg-red-500"
-            //     }
-            //     if (params.row.verify === true) {
-            //         return "bg-green-500"
-            //     }
-            //     if (success_count === 0 && totalPdfsToDownload === 0) return "bg-yellow-100"
-            //     return success_count === totalPdfsToDownload ? "bg-green-100" : "bg-red-100"
-            // }}
             />
 
             {/* Folder Details Dialog */}
