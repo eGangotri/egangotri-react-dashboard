@@ -5,42 +5,14 @@ import { ExecType } from './ExecLauncherUtil';
 import * as XLSX from 'xlsx';
 import { Button, Checkbox, FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material';
 import { ALL_NOT_JUST_PDF_SUFFIX, GDRIVE_EXCEL_NAME_LOCAL_STORAGE_KEY, LOCAL_LISTING_EXCEL_LOCAL_STORAGE_KEY } from 'service/consts';
+import GDriveCatalogerExcelComponent from './GDriveCatalogerExcelComponent';
 
 
 const ExecLauncherOne: React.FC = () => {
-    const [excelGDrive, setExcelGDrive] = React.useState<number>(ExecType.GenExcelOfGoogleDriveLinkPdfOnly);
     const [gDriveFileType, setGDriveFileType] = React.useState<number>(ExecType.DWNLD_PDFS_ONLY_FROM_GOOGLE_DRIVE);
     const [label, setLabel] = React.useState<string>("");
     const [verfiyGDrive, setVerifyGDrive] = React.useState<number>(ExecType.VERIFY_G_DRIVE_PDF_DOWNLOAD);
     const [verifyGDriveFileType, setVerifyGDriveFileType] = React.useState<number>(1);
-
-    const chooseGDriveExcelType = (event: ChangeEvent<HTMLInputElement>) => {
-        const _val = event.target.value;
-        console.log("_val", _val)
-        let _listingType;
-        switch (Number(_val)) {
-            case ExecType.GenExcelOfGoogleDriveLinkPdfOnly:
-                _listingType = ExecType.GenExcelOfGoogleDriveLinkPdfOnly;
-                break;
-            case ExecType.GenExcelOfGoogleDriveLinkPdfOnlyManuVersion:
-                _listingType = ExecType.GenExcelOfGoogleDriveLinkPdfOnlyManuVersion;
-                break;
-            case ExecType.GenExcelOfGoogleDriveLinkPdfOnlyMinimalVersion:
-                _listingType = ExecType.GenExcelOfGoogleDriveLinkPdfOnlyMinimalVersion;
-                break;
-            case ExecType.GenExcelOfGoogleDriveLinkForAll:
-                _listingType = ExecType.GenExcelOfGoogleDriveLinkForAll;
-                break;
-            case ExecType.GenExcelOfGoogleDriveLinkForRenameFilesExcel:
-                _listingType = ExecType.GenExcelOfGoogleDriveLinkForRenameFilesExcel;
-                break;
-            case ExecType.GenExcelOfGoogleDriveLinkForReduced:
-                _listingType = ExecType.GenExcelOfGoogleDriveLinkForReduced;
-                break;
-        }
-        console.log("_listingType", _listingType);
-        setExcelGDrive(_listingType || ExecType.GenExcelOfGoogleDriveLinkPdfOnly);
-    };
 
     const chooseGDriveFileType = (event: ChangeEvent<HTMLInputElement>) => {
         const _val = event.target.value;
@@ -128,12 +100,6 @@ const ExecLauncherOne: React.FC = () => {
         }
     };
 
-    const [validationCss, setValidationCss] = React.useState({
-        backgroundColor: "lightgreen",
-        width: "450px"
-    });
-
-
     const [validationCss2, setValidationCss2] = React.useState({
         backgroundColor: "lightgreen",
         width: "450px"
@@ -158,21 +124,12 @@ const ExecLauncherOne: React.FC = () => {
     }
 
 
-    const handleInputChange = (inputValue: string, num = 1) => {
+    const handleInputChange = (inputValue: string) => {
         console.log("inputValue", inputValue, `inputValue.includes("ab") ${inputValue.includes("ab")}`);
-        if (num === 1) {
-            if (inputValue.includes("/") || inputValue.includes("\\")) {
-                setValidationCss({ backgroundColor: "red", width: "450px" });
-            } else {
-                setValidationCss({ backgroundColor: "lightgreen", width: "450px" });
-            }
-        }
-        else {
-            if (inputValue.includes("/") || inputValue.includes("\\")) {
-                setValidationCss2({ backgroundColor: "red", width: "450px" });
-            } else {
-                setValidationCss2({ backgroundColor: "lightgreen", width: "450px" });
-            }
+        if (inputValue.includes("/") || inputValue.includes("\\")) {
+            setValidationCss2({ backgroundColor: "red", width: "450px" });
+        } else {
+            setValidationCss2({ backgroundColor: "lightgreen", width: "450px" });
         }
     };
 
@@ -227,32 +184,7 @@ const ExecLauncherOne: React.FC = () => {
             </Box>
 
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
-                <ExecComponent
-                    buttonText="Create G-Drive Cataloger Version Excel"
-                    placeholder='Enter Google Drive Link(s)/Identifiers as csv'
-                    secondTextBoxPlaceHolder='Enter Folder Name (not path)'
-                    execType={excelGDrive}
-                    css={{ minWidth: "23vw", width: "450px" }}
-                    css2={validationCss}
-                    onInputChange={handleInputChange}
-                    userInputTwoInfoNonMandatory="Only Folder Name not Path"
-                    reactComponent={<>
-                        <RadioGroup aria-label="excelGDrive" name="excelGDrive" value={excelGDrive} onChange={chooseGDriveExcelType} row>
-                            <Box display="flex" flexDirection="column">
-                                <Typography>PDF-Only</Typography>
-                                <FormControlLabel value={ExecType.GenExcelOfGoogleDriveLinkPdfOnly} control={<Radio />} label="Detailed" />
-                                <FormControlLabel value={ExecType.GenExcelOfGoogleDriveLinkPdfOnlyManuVersion} control={<Radio />} label="Manu Version" />
-                                <FormControlLabel value={ExecType.GenExcelOfGoogleDriveLinkPdfOnlyMinimalVersion} control={<Radio />} label="Minimal Version" />
-                            </Box>
-                            <Box display="flex" flexDirection="column">
-                                <Typography>All</Typography>
-                                <FormControlLabel value={ExecType.GenExcelOfGoogleDriveLinkForAll} control={<Radio />} label="ALL" />
-                                <FormControlLabel value={ExecType.GenExcelOfGoogleDriveLinkForRenameFilesExcel} control={<Radio />} label="Renamer" />
-                                <FormControlLabel value={ExecType.GenExcelOfGoogleDriveLinkForReduced} control={<Radio />} label="REDUCED" />
-                            </Box>
-                        </RadioGroup>
-                    </>}
-                />
+                <GDriveCatalogerExcelComponent />
                 <ExecComponent
                     buttonText="Download from GDrive Excel"
                     placeholder='Enter Excel Path'
@@ -260,7 +192,7 @@ const ExecLauncherOne: React.FC = () => {
                     execType={ExecType.DownloadAllGDriveItemsViaExcel}
                     css={{ width: "450px" }}
                     css2={validationCss2}
-                    onInputChange={(x) => handleInputChange(x, 2)}
+                    onInputChange={handleInputChange}
                     userInputTwoInfoNonMandatory="Only Folder Name not Path"
                 />
 

@@ -8,6 +8,7 @@ import {
     GDRIVE_EXCEL_NAME_LOCAL_STORAGE_KEY,
     REDUCED_SUFFIX, TOP_N_FILE_LOCAL_STORAGE_KEY
 } from 'service/consts';
+import GDriveCatalogerExcelComponent from './GDriveCatalogerExcelComponent';
 
 
 const ExecLauncherFive: React.FC = () => {
@@ -80,23 +81,7 @@ const ExecLauncherFive: React.FC = () => {
         <Box display="flex" gap={4} mb={2} flexDirection="row">
 
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
-                <ExecComponent
-                    buttonText="Create G-Drive Excel"
-                    placeholder='Enter Google Drive Link(s)/Identifiers as csv'
-                    secondTextBoxPlaceHolder='Enter Folder Name (not path)'
-                    execType={excelGDrive}
-                    css={{ minWidth: "23vw" }}
-                    css2={validationCss}
-                    onInputChange={handleInputChange}
-                    userInputTwoInfoNonMandatory="Only Folder Name not Path"
-
-                    reactComponent={<>
-                        <RadioGroup aria-label="fileType" name="fileType" value={excelGDrive} onChange={chooseGDriveExcelType} row>
-                            <FormControlLabel value={ExecType.GenExcelOfGoogleDriveLinkPdfOnly} control={<Radio />} label="ALL PDFs" />
-                            <FormControlLabel value={ExecType.GenExcelOfGoogleDriveLinkForReduced} control={<Radio />} label="REDUCED PDFs" />
-                        </RadioGroup>
-                    </>}
-                />
+                <GDriveCatalogerExcelComponent />
 
                 <Box>
                     <Typography variant="h6" component="div" gutterBottom>

@@ -73,9 +73,73 @@ interface FetchResponse {
     totalItems: number
 }
 
+// Columns for the folder details DataGrid (shown in popup)
+const folderDetailsColumns: GridColDef[] = [
+    { field: 'folder_path', headerName: 'Folder Path', width: 300 },
+    { field: 'image_count', headerName: 'Images', width: 100, type: 'number' },
+    {
+        field: 'pdf_generated',
+        headerName: 'PDF Generated',
+        width: 130,
+        renderCell: (params: GridRenderCellParams<IFolderInfo>) => (
+            <Chip
+                label={params.value ? 'Yes' : 'No'}
+                color={params.value ? 'success' : 'default'}
+                size="small"
+            />
+        )
+    },
+    { field: 'pdf_path', headerName: 'PDF Path', width: 300 },
+    { field: 'pdf_page_count', headerName: 'Pages', width: 100, type: 'number' },
+    {
+        field: 'pages_match_images',
+        headerName: 'Match',
+        width: 100,
+        renderCell: (params: GridRenderCellParams<IFolderInfo>) => (
+            <Chip
+                label={params.value ? 'Yes' : 'No'}
+                color={params.value ? 'success' : 'warning'}
+                size="small"
+            />
+        )
+    },
+    {
+        field: 'status',
+        headerName: 'Status',
+        width: 120,
+        renderCell: (params: GridRenderCellParams<IFolderInfo>) => (
+            <Chip
+                label={params.value}
+                color={params.value === 'success' ? 'success' : 'error'}
+                size="small"
+            />
+        )
+    },
+    { field: 'error_count', headerName: 'Errors', width: 100, type: 'number' }
+];
 
-const columns: GridColDef[] = [
-    { field: 'total_folders', headerName: 'Total Folders', width: 130, type: 'number' },
+const getColumns = (handleViewDetails: (entry: IImageToPdfHistory) => void): GridColDef[] => [
+
+    {
+        field: 'actions',
+        headerName: 'Actions',
+        width: 150,
+        sortable: false,
+        filterable: false,
+        renderCell: (params: GridRenderCellParams<IImageToPdfHistory>) => (
+            <Button
+                variant="contained"
+                color="primary"
+                size="small"
+                onClick={() => handleViewDetails(params.row)}
+            >
+                View Details
+            </Button>
+        )
+    },
+    { field: 'total_folders', headerName: 'Total Folders', width: 200, type: 'number' },
+    { field: 'total_folders_including_empty',
+         headerName: 'Total Folders Including Empty', width: 200, type: 'number' },
     {
         field: 'summary',
         headerName: 'Summary',
@@ -89,14 +153,19 @@ const columns: GridColDef[] = [
         )
     },
     {
-        field: 'paths',
-        headerName: 'Paths',
-        width: 300,
+        field: 'source',
+        headerName: 'Source',
+        width: 200,
         renderCell: (params: GridRenderCellParams<IImageToPdfHistory>) => (
-            <div>
-                <div>Source: {params.row.paths.source}</div>
-                <div>Dest: {params.row.paths.destination}</div>
-            </div>
+            <div>{params.row.paths.source}</div>
+        )
+    },
+    {
+        field: 'destination',
+        headerName: 'Destination',
+        width: 200,
+        renderCell: (params: GridRenderCellParams<IImageToPdfHistory>) => (
+            <div>{params.row.paths.destination}</div>
         )
     },
     {
@@ -114,7 +183,8 @@ const columns: GridColDef[] = [
         field: 'createdAt',
         headerName: 'Created',
         width: 180,
-        valueFormatter: (params: { value: Date | undefined }) => params.value ? new Date(params.value).toLocaleString() : ''
+        renderCell: (params: GridRenderCellParams<IImageToPdfHistory>) =>
+            params.value ? new Date(params.value).toLocaleString() : ''
     }
 ];
 
@@ -145,6 +215,20 @@ const ImgToPdfListing: React.FC = () => {
         page: 0,
         pageSize: 5,
     })
+
+    // State for folder details dialog
+    const [openDetailsDialog, setOpenDetailsDialog] = useState(false)
+    const [selectedEntry, setSelectedEntry] = useState<IImageToPdfHistory | null>(null)
+
+    const handleViewDetails = (entry: IImageToPdfHistory) => {
+        setSelectedEntry(entry)
+        setOpenDetailsDialog(true)
+    }
+
+    const handleCloseDetailsDialog = () => {
+        setOpenDetailsDialog(false)
+        setSelectedEntry(null)
+    }
 
     const fetchImgFilesToPdf = async (page: number, pageSize: number): Promise<FetchResponse> => {
         const response = await makePostCall({ page, pageSize }, `imgToPdf/getAllImgToPdfEntries`)
@@ -227,7 +311,7 @@ const ImgToPdfListing: React.FC = () => {
             </Box>
             <DataGrid
                 rows={downloads}
-                columns={columns}
+                columns={getColumns(handleViewDetails)}
                 paginationModel={paginationModel}
                 onPaginationModelChange={setPaginationModel}
                 pageSizeOptions={[5, 10, 20]}
@@ -241,19 +325,73 @@ const ImgToPdfListing: React.FC = () => {
                 slots={{
                     toolbar: GridToolbar,
                 }}
-                // getRowClassName={(params) => {
-                //     const { success_count = 0, totalPdfsToDownload = 0 } = params.row.quickStatus || {}
-                //     if (params.row.verify === false) {
-                //         return "bg-red-500"
-                //     }
-                //     if (params.row.verify === true) {
-                //         return "bg-green-500"
-                //     }
-                //     if (success_count === 0 && totalPdfsToDownload === 0) return "bg-yellow-100"
-                //     return success_count === totalPdfsToDownload ? "bg-green-100" : "bg-red-100"
-                // }}
+            // getRowClassName={(params) => {
+            //     const { success_count = 0, totalPdfsToDownload = 0 } = params.row.quickStatus || {}
+            //     if (params.row.verify === false) {
+            //         return "bg-red-500"
+            //     }
+            //     if (params.row.verify === true) {
+            //         return "bg-green-500"
+            //     }
+            //     if (success_count === 0 && totalPdfsToDownload === 0) return "bg-yellow-100"
+            //     return success_count === totalPdfsToDownload ? "bg-green-100" : "bg-red-100"
+            // }}
             />
-         
+
+            {/* Folder Details Dialog */}
+            <Dialog
+                open={openDetailsDialog}
+                onClose={handleCloseDetailsDialog}
+                maxWidth="xl"
+                fullWidth
+            >
+                <DialogTitle>
+                    <Box display="flex" justifyContent="space-between" alignItems="center">
+                        <Typography variant="h6">Folder Details</Typography>
+                        <IconButton onClick={handleCloseDetailsDialog}>
+                            ✕
+                        </IconButton>
+                    </Box>
+                    {selectedEntry && (
+                        <Box mt={2}>
+                            <Typography variant="body2" color="textSecondary">
+                                Source: {selectedEntry.paths.source}
+                            </Typography>
+                            <Typography variant="body2" color="textSecondary">
+                                Destination: {selectedEntry.paths.destination}
+                            </Typography>
+                            <Typography variant="body2" color="textSecondary">
+                                Created: {selectedEntry.createdAt ? new Date(selectedEntry.createdAt).toLocaleString() : 'N/A'}
+                            </Typography>
+                        </Box>
+                    )}
+                </DialogTitle>
+                <DialogContent>
+                    {selectedEntry && (
+                        <Box sx={{ height: 500, width: '100%' }}>
+                            <DataGrid
+                                rows={selectedEntry.folders_detail.map((folder, index) => ({
+                                    ...folder,
+                                    id: index
+                                }))}
+                                columns={folderDetailsColumns}
+                                pageSizeOptions={[5, 10, 20]}
+                                pagination
+                                initialState={{
+                                    pagination: { paginationModel: { pageSize: 10 } },
+                                }}
+                                slots={{
+                                    toolbar: GridToolbar,
+                                }}
+                                getRowClassName={(params) =>
+                                    params.row.status === 'success' ? 'bg-green-50' : 'bg-red-50'
+                                }
+                            />
+                        </Box>
+                    )}
+                </DialogContent>
+            </Dialog>
+
         </div>
     )
 }
