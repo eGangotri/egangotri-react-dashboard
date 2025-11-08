@@ -8,12 +8,14 @@ import {
     GridToolbar,
 } from "@mui/x-data-grid"
 import { Button, Dialog, DialogTitle, DialogContent, Chip, IconButton, Box, RadioGroup, FormControlLabel, Typography, Radio, CircularProgress } from "@mui/material"
+import ExecPopover from 'scriptsThruExec/ExecPopover';
 import { makeGetCall } from 'service/ApiInterceptor';
 import { FaCopy } from "react-icons/fa";
 import ExecComponent from "scriptsThruExec/ExecComponent";
 import { ExecType } from "scriptsThruExec/ExecLauncherUtil";
 import { redownloadFromGDrive, verifyGDriveDwnldSuccessFolders } from "service/launchYarn";
 import { buildDeterministicColorMap, colorForKey } from "utils/color";
+import ExecResponsePanel from "scriptsThruExec/ExecResponsePanel";
 
 // Types
 interface ICompositeDocument {
@@ -75,8 +77,7 @@ const GDriveDownloadListing: React.FC = () => {
 
     const [apiResult, setApiResult] = useState<any>(null)
     const [apiLoading, setApiLoading] = useState(false)
-    const [openApiResultDialog, setOpenApiResultDialog] = useState(false)
-    const [apiError, setApiError] = useState<string | null>(null)
+    const [anchorElApi, setAnchorElApi] = useState<HTMLButtonElement | null>(null)
 
     const [filesPaginationModel, setFilesPaginationModel] = useState<GridPaginationModel>({
         page: 0,
@@ -140,36 +141,29 @@ const GDriveDownloadListing: React.FC = () => {
         setOpenMsgDialog(true)
     }
 
-    const handleGDriveDwnldVerification = async (id: string = "") => {
-        setApiLoading(true)
-        setApiError(null)
+    const handleGDriveDwnldVerification = async (e: React.MouseEvent<HTMLButtonElement>, id: string = "") => {
+        setAnchorElApi(e.currentTarget)
         try {
             const response = await verifyGDriveDwnldSuccessFolders(id);
-            setApiResult(response)
-            setOpenApiResultDialog(true)
+            setApiLoading(true)
+            setApiResult(<ExecResponsePanel response={response} execType={gDriveFileType} />);
         } catch (error) {
             console.error("Error calling API:", error)
-            setApiError(error instanceof Error ? error.message : "Unknown error occurred")
             setApiResult(null)
-            setOpenApiResultDialog(true)
         } finally {
             setApiLoading(false)
         }
     }
 
-    const handleRedownload = async (id: string) => {
-
-        setApiLoading(true)
-        setApiError(null)
+    const handleRedownload = async (e: React.MouseEvent<HTMLButtonElement>, id: string) => {
+        setAnchorElApi(e.currentTarget)
         try {
             const response = await redownloadFromGDrive(id);
-            setApiResult(response)
-            setOpenApiResultDialog(true)
+            setApiLoading(true)
+            setApiResult(<ExecResponsePanel response={response} execType={gDriveFileType} />);
         } catch (error) {
             console.error("Error calling API:", error)
-            setApiError(error instanceof Error ? error.message : "Unknown error occurred")
             setApiResult(null)
-            setOpenApiResultDialog(true)
         } finally {
             setApiLoading(false)
         }
@@ -219,23 +213,23 @@ const GDriveDownloadListing: React.FC = () => {
                 );
             },
         },
-         {
-           field: 'commonRunId',
-           headerName: 'Common Run Id',
-           width: 100,
-           filterable: true,
-           renderCell: (params) => {
-             const v = String(params.value ?? '');
-             const { bg, color, border } = commonRunIdColorMap[v] || colorForKey(v);
-             return (
-               <Chip
-                 label={v}
-                 size="small"
-                 sx={{ bgcolor: bg, color, fontWeight: 600, border: `1px solid ${border}` }}
-               />
-             );
-           }
-         },
+        {
+            field: 'commonRunId',
+            headerName: 'Common Run Id',
+            width: 100,
+            filterable: true,
+            renderCell: (params) => {
+                const v = String(params.value ?? '');
+                const { bg, color, border } = commonRunIdColorMap[v] || colorForKey(v);
+                return (
+                    <Chip
+                        label={v}
+                        size="small"
+                        sx={{ bgcolor: bg, color, fontWeight: 600, border: `1px solid ${border}` }}
+                    />
+                );
+            }
+        },
         {
             field: "runId",
             headerName: "Run ID",
@@ -295,7 +289,7 @@ const GDriveDownloadListing: React.FC = () => {
                     <Button
                         variant="contained"
                         color="primary"
-                        onClick={() => handleGDriveDwnldVerification(params.row._id)}
+                        onClick={(e) => handleGDriveDwnldVerification(e, params.row._id)}
                         disabled={apiLoading}
                     >
                         {apiLoading ? <CircularProgress size={24} /> : "Verify"}
@@ -304,7 +298,7 @@ const GDriveDownloadListing: React.FC = () => {
                         variant="contained"
                         color="primary"
                         sx={{ ml: 1 }}
-                        onClick={() => handleRedownload(params.row._id)}
+                        onClick={(e) => handleRedownload(e, params.row._id)}
                         disabled={apiLoading || (params.row.verify === undefined || params.row.verify === true)}
                     >
                         {apiLoading ? <CircularProgress size={24} /> : "Re-D/L"}
@@ -444,28 +438,22 @@ const GDriveDownloadListing: React.FC = () => {
                 </DialogContent>
             </Dialog>
 
-            {/* New Dialog for API Result */}
-            <Dialog open={openApiResultDialog} onClose={() => setOpenApiResultDialog(false)} maxWidth="md" fullWidth>
-                <DialogTitle>API Result</DialogTitle>
-                <DialogContent className="max-h-96 overflow-y-auto">
-                    {apiLoading ? (
-                        <Box display="flex" justifyContent="center" alignItems="center" height="200px">
-                            <CircularProgress />
-                        </Box>
-                    ) : apiError ? (
-                        <Typography color="error">{apiError}</Typography>
-                    ) : apiResult ? (
-                        <Box>
-                            <Typography variant="h6" gutterBottom>Result:</Typography>
-                            <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
-                                {JSON.stringify(apiResult, null, 2)}
-                            </pre>
-                        </Box>
-                    ) : (
-                        <Typography>No result available</Typography>
-                    )}
-                </DialogContent>
-            </Dialog>
+            <ExecPopover
+                id={anchorElApi ? 'api-result-popover' : undefined}
+                open={Boolean(anchorElApi)}
+                anchorEl={anchorElApi}
+                onClose={() => { setAnchorElApi(null); }}
+            >
+                {apiLoading ? (
+                    <Box display="flex" justifyContent="center" alignItems="center" height="200px">
+                        <CircularProgress />
+                    </Box>
+                ) : apiResult ? (
+                    apiResult
+                ) : (
+                    <Typography>No result available</Typography>
+                )}
+            </ExecPopover>
 
             <>
                 <br></br>

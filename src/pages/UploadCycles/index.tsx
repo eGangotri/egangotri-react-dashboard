@@ -23,6 +23,7 @@ import ConfirmDialog from '../../widgets/ConfirmDialog';
 import { launchYarnMoveToFreezeByUploadId } from 'service/launchYarn';
 import ExecResponsePanel from 'scriptsThruExec/ExecResponsePanel';
 import { ExecResponse, ExecResponseDetails } from 'scriptsThruExec/types';
+import ExecPopover from 'scriptsThruExec/ExecPopover';
 import { checkCountEquality, createBackgroundForRow } from './utils';
 import { ProfileAndCount } from './ProfileAndCount';
 import { TableHeaderCellForEqualityCount } from './TableHeaderCellForEqualityCount';
@@ -381,17 +382,9 @@ const UploadCycles = () => {
                             pnpm Move-To-Freeze&nbsp;
                             <InfoIconWithTooltip input="pnpm move Uploaded items to Freeze folder and disable this button" />
                         </Button>
-                        <Popover
-                            id={id4}
-                            open={open4}
-                            anchorEl={anchorEl4}
-                            onClose={handleClose}
-                            anchorOrigin={{
-                                vertical: 'bottom',
-                                horizontal: 'right',
-                            }}
-                        ><Typography sx={{ p: 2 }}>{moveToFreezeRespPopover}</Typography>
-                        </Popover>
+                        <ExecPopover id={id4} open={open4} anchorEl={anchorEl4} onClose={handleClose}>
+                            {moveToFreezeRespPopover}
+                        </ExecPopover>
                     </Typography>
                 </Stack>
             </TableCell >

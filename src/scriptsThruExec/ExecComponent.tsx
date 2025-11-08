@@ -6,12 +6,11 @@ import Box from '@mui/material/Box';
 import { ExecType, invokeFuncBasedOnExecType } from './ExecLauncherUtil';
 import ConfirmDialog from '../widgets/ConfirmDialog';
 import Spinner from '../widgets/Spinner';
-import { Popover, Typography, Stack, Tooltip } from '@mui/material';
+import { Stack, Tooltip } from '@mui/material';
 import ExecResponsePanel from './ExecResponsePanel';
 import { ExecComponentFormData, ExecComponentProps } from './types';
-import IconButton from '@mui/material/IconButton';
-import CloseIcon from '@mui/icons-material/Close';
 import InfoIconWithTooltip from 'widgets/InfoIconWithTooltip';
+import ExecPopover from './ExecPopover';
 
 const ExecComponent: React.FC<ExecComponentProps> = ({
   placeholder = 'Comma Separated Profile Codes',
@@ -140,39 +139,9 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
             </Box>
             {isLoading && <Spinner />}
           </Stack>
-          <Popover
-            id={id}
-            open={open}
-            anchorEl={anchorEl}
-            onClose={handleClose}
-            sx={{
-              width: '80%', // Reduce width by 20%
-              height: '80%', // Reduce height by 20%
-            }}
-            anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'right',
-            }}
-          >
-            <Box sx={{
-              p: 2,
-              width: '80%', // Reduce width by 20%
-              height: '10%', // Reduce height by 20%
-            }}>
-            <Typography sx={{ p: 2 }}>{execLogsForPopover}</Typography>
-              <IconButton
-                aria-label="close"
-                onClick={handleClose}
-                sx={{
-                  position: 'absolute',
-                  right: 8,
-                  top: 8,
-                }}
-              >
-                <CloseIcon />
-              </IconButton>
-            </Box>
-          </Popover>
+          <ExecPopover id={id} open={open} anchorEl={anchorEl} onClose={handleClose}>
+            {execLogsForPopover}
+          </ExecPopover>
 
           {secondTextBoxPlaceHolder?.length > 0 ?
             <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start' }}>

@@ -152,7 +152,7 @@ export const makePostCallForGenExcelForGDrive = async (body: Record<string, unkn
 
   console.log(`makePostCallForGenExcelForGDrive: ${JSON.stringify(result)} 
   _reduced ${_reduced} _allNotJustPdfs ${_allNotJustPdfs}`)
-  let excelName = response?.["0"]?.excelName;
+  let excelName = response?.["0"]?.xlsxFileNameWithPath;
 
   let localStorageKey = GDRIVE_EXCEL_NAME_LOCAL_STORAGE_KEY;
   if (_reduced) {
