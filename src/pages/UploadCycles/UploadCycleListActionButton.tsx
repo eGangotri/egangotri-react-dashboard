@@ -27,6 +27,7 @@ const TASK_TYPE_ENUM = {
     FIND_MISSING: "Find Missing",
     REUPLOAD_FAILED: "Reupload of Failed-Items",
     REUPLOAD_MISSED: "Reupload of Missed-Items",
+    ISOLATE_MISSING: "Isolate Missing",
     MOVE_TO_FREEZE: "Move to Freeze",
 }
 
@@ -77,6 +78,17 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({ uploadCycleId, row
         setPopoverAnchor(document.getElementById('find-missing-button') as HTMLButtonElement)
     }
 
+       const _isolateMissing = async (uploadCycleId: string) => {
+        setLoading2(true);
+        const _res = await _launchGradlev2({
+            uploadCycleId: uploadCycleId,
+        }, "isolateMissingViaUploadCycleId")
+        console.log(`_res ${JSON.stringify(_res)}`)
+        setLoading2(false);
+        setPopoverContent(JSON.stringify(_res, null, 2))
+        setPopoverAnchor(document.getElementById('find-missing-button') as HTMLButtonElement)
+    }
+    
     const _findMissing = async () => {
         setIsLoading(true);
         const missedData = await findMissingTitles();
@@ -93,6 +105,15 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({ uploadCycleId, row
                                 size="small"
                                 sx={{ width: "200px", marginTop: "20px" }}
                                 disabled={loading2}>Reupload Missing ({(row.countIntended || 0) - (row?.totalQueueCount || 0)}/{row.countIntended})
+                            </Button>
+                        </Box>
+                        <Box sx={{ paddingBottom: "30px" }}>
+                            <Button
+                                variant="contained"
+                                onClick={() => confirm(TASK_TYPE_ENUM.ISOLATE_MISSING)}
+                                size="small"
+                                sx={{ width: "200px", marginTop: "20px" }}
+                                disabled={loading2 || row.countIntended === 0}>Isolate Missing ({(row.countIntended || 0) - (row?.totalQueueCount || 0)}/{row.countIntended})
                             </Button>
                         </Box>
                         {
@@ -177,6 +198,9 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({ uploadCycleId, row
                 fetchData();
             } else if (actionType === TASK_TYPE_ENUM.MOVE_TO_FREEZE) {
                 await _moveToFreeze();
+                fetchData();
+            } else if (actionType === TASK_TYPE_ENUM.ISOLATE_MISSING) {
+                await _isolateMissing(uploadCycleId);
                 fetchData();
             }
         } catch (error) {

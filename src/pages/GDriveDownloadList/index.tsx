@@ -130,7 +130,8 @@ const GDriveDownloadListing: React.FC = () => {
     }, [paginationModel.page, paginationModel.pageSize]) // Added fetchGDriveDownloads to dependencies
 
     const handleOpenFiles = (files: ICompositeDocument[]) => {
-        setSelectedFiles(files.map((file, index) => ({ ...file, id: index.toString() })))
+        const sorted = [...files].sort((a, b) => (a.status === "failed" ? 0 : 1) - (b.status === "failed" ? 0 : 1))
+        setSelectedFiles(sorted.map((file, index) => ({ ...file, id: index.toString() })))
         setOpenDialog(true)
     }
 
@@ -322,7 +323,7 @@ const GDriveDownloadListing: React.FC = () => {
                 const { success_count = 0, error_count = 0, totalPdfsToDownload = 0 } = params.value || {}
                 return (
                     <div>
-                        {success_count}/<span className="text-red-500">{error_count}</span>/{totalPdfsToDownload}
+                        {success_count}/<span className="text-red-500">{error_count}</span>/{totalPdfsToDownload} ({params?.row?.downloadType?.toString()?.toUpperCase()})
                     </div>
                 )
             },
