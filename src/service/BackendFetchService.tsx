@@ -144,10 +144,11 @@ export const makePostCallWithErrorHandlingForPdfReductionForAiRenamer = async (b
 }
 
 export const makePostCallForGenExcelForGDrive = async (body: Record<string, unknown>, resource: string) => {
+  const _reduced = body?.reduced === true;
+  const _allNotJustPdfs = body?.allNotJustPdfs === true;
   const result = await makePostCallWithErrorHandling(body, resource)
   const response = result?.response;
-  const _reduced = response?.reduced === "Yes";
-  const _allNotJustPdfs = response?.allNotJustPdfs === "Yes";
+
 
   console.log(`makePostCallForGenExcelForGDrive: ${JSON.stringify(result)} 
   _reduced ${_reduced} _allNotJustPdfs ${_allNotJustPdfs}`)

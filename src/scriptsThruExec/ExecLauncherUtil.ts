@@ -201,13 +201,8 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       useFolderNameAsDesc: execAsString[2] === "1",
     },
       `yarnExcel/createExcelV1OfAbsPathFromProfile`);
-
-    // _resp = await makePostCallForCreateUploadableExcelV1({
-    //   profiles: dataUserInput,
-    //   allNotJustPdfs: true,
-    // },
-    //   `yarnExcel/createExcelV1OfAbsPathFromProfile`);
   }
+
   else {
     switch (execType) {
       case ExecType.UploadPdfs:
@@ -436,6 +431,18 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
           "minimalVersion": true,
         }, `gDrive/getGoogleDriveListingAsExcel`);
         break;
+
+      case ExecType.GenExcelOfGoogleDriveLinkForAll:
+        _resp = await makePostCallForGenExcelForGDrive({
+          "googleDriveLink": dataUserInput,
+          "folderName": data.userInputSecond || "D:\\",
+          "reduced": false,
+          "allNotJustPdfs": true,
+          "minimalVersion": false,
+          "manuVersion": false,
+        }, `gDrive/getGoogleDriveListingAsExcel`);
+        break;
+
 
       case ExecType.GenExcelOfGoogleDriveLinkForReduced:
         _resp = await makePostCallForGenExcelForGDrive({
