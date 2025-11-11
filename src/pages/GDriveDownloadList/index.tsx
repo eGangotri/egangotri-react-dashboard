@@ -7,7 +7,7 @@ import {
     type GridFilterModel,
     GridToolbar,
 } from "@mui/x-data-grid"
-import { Button, Dialog, DialogTitle, DialogContent, Chip, IconButton, Box, RadioGroup, FormControlLabel, Typography, Radio, CircularProgress } from "@mui/material"
+import { Button, Dialog, DialogTitle, DialogContent, Chip, IconButton, Box, RadioGroup, FormControlLabel, Typography, Radio, CircularProgress, DialogActions } from "@mui/material"
 import ExecPopover from 'scriptsThruExec/ExecPopover';
 import { makeGetCall } from 'service/ApiInterceptor';
 import { FaCopy } from "react-icons/fa";
@@ -63,6 +63,8 @@ const GDriveDownloadListing: React.FC = () => {
     const [downloads, setDownloads] = useState<IGDriveDownload[]>([])
     const [selectedFiles, setSelectedFiles] = useState<ICompositeDocument[]>([])
     const [openDialog, setOpenDialog] = useState(false)
+    const [confirmDialogOpen, setConfirmDialogOpen] = useState(false)
+    const [confirmTargetId, setConfirmTargetId] = useState<string>("")
     const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
         page: 0,
         pageSize: 5,
@@ -155,8 +157,12 @@ const GDriveDownloadListing: React.FC = () => {
         }
     }
 
-    const handleRedownload = async (e: React.MouseEvent<HTMLButtonElement>, id: string) => {
-        setAnchorElApi(e.currentTarget)
+
+    const handleConfirm = async (id: string) => {
+        setConfirmDialogOpen(false)
+        handleRedownload(id)
+    }
+    const handleRedownload = async (id: string) => {
         try {
             const response = await redownloadFromGDrive(id);
             setApiLoading(true)
@@ -298,7 +304,7 @@ const GDriveDownloadListing: React.FC = () => {
                         variant="contained"
                         color="primary"
                         sx={{ ml: 1 }}
-                        onClick={(e) => handleRedownload(e, params.row._id)}
+                        onClick={(e) => { setAnchorElApi(e.currentTarget); setConfirmTargetId(params.row._id); setConfirmDialogOpen(true); }}
                         disabled={apiLoading || (params.row.verify === undefined || params.row.verify === true)}
                     >
                         {apiLoading ? <CircularProgress size={24} /> : "Re-D/L"}
@@ -438,6 +444,17 @@ const GDriveDownloadListing: React.FC = () => {
                 </DialogContent>
             </Dialog>
 
+            <Dialog open={confirmDialogOpen} onClose={() => setConfirmDialogOpen(false)}>
+                <DialogTitle>Confirm Re-download</DialogTitle>
+                <DialogContent>
+                    Are you sure you want to re-download this item?
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setConfirmDialogOpen(false)} color="inherit">No</Button>
+                    <Button onClick={() => handleConfirm(confirmTargetId)} color="primary" variant="contained">Yes</Button>
+                </DialogActions>
+            </Dialog>
+
             <ExecPopover
                 id={anchorElApi ? 'api-result-popover' : undefined}
                 open={Boolean(anchorElApi)}
@@ -448,11 +465,7 @@ const GDriveDownloadListing: React.FC = () => {
                     <Box display="flex" justifyContent="center" alignItems="center" height="200px">
                         <CircularProgress />
                     </Box>
-                ) : apiResult ? (
-                    apiResult
-                ) : (
-                    <Typography>No result available</Typography>
-                )}
+                ) : apiResult}
             </ExecPopover>
 
             <>

@@ -327,6 +327,8 @@ export default function FileTransferList() {
                     execType={moveFolderContentsExecType}
                     css={{ minWidth: "80vw" }}
                     css2={{ minWidth: "80vw" }}
+                    userInputOneInfo="Multiple entries as Coma Separated Paths whether absolute or profile name"
+                    userInputTwoInfoNonMandatory="Single Profile Name or Absolute Path"
                     reactComponent={<>
                         <Box>
                             <FormControlLabel
