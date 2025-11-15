@@ -64,6 +64,7 @@ const GDriveDownloadListing: React.FC = () => {
     const [selectedFiles, setSelectedFiles] = useState<ICompositeDocument[]>([])
     const [openDialog, setOpenDialog] = useState(false)
     const [confirmDialogOpen, setConfirmDialogOpen] = useState(false)
+    const [verifyDialogOpen, setVerifyDialogOpen] = useState(false)
     const [confirmTargetId, setConfirmTargetId] = useState<string>("")
     const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
         page: 0,
@@ -143,8 +144,7 @@ const GDriveDownloadListing: React.FC = () => {
         setOpenMsgDialog(true)
     }
 
-    const handleGDriveDwnldVerification = async (e: React.MouseEvent<HTMLButtonElement>, id: string = "") => {
-        setAnchorElApi(e.currentTarget)
+    const handleGDriveDwnldVerification = async (id: string = "") => {
         try {
             const response = await verifyGDriveDwnldSuccessFolders(id);
             setApiLoading(true)
@@ -158,9 +158,18 @@ const GDriveDownloadListing: React.FC = () => {
     }
 
 
-    const handleConfirm = async (id: string) => {
-        setConfirmDialogOpen(false)
-        handleRedownload(id)
+      const handleConfirm = async (e: React.MouseEvent<HTMLButtonElement>, id: string,
+        forVerify: boolean = false) => {
+        setAnchorElApi(e.currentTarget);
+        setConfirmTargetId(id);
+        setApiResult(null)
+        if (forVerify) {
+            setVerifyDialogOpen(false)
+            handleGDriveDwnldVerification(id)
+        } else {
+            setConfirmDialogOpen(false)
+            handleRedownload(id)
+        }
     }
     const handleRedownload = async (id: string) => {
         try {
@@ -295,7 +304,7 @@ const GDriveDownloadListing: React.FC = () => {
                     <Button
                         variant="contained"
                         color="primary"
-                        onClick={(e) => handleGDriveDwnldVerification(e, params.row._id)}
+                        onClick={(e) => { setVerifyDialogOpen(true); setConfirmTargetId(params.row._id)}}
                         disabled={apiLoading}
                     >
                         {apiLoading ? <CircularProgress size={24} /> : "Verify"}
@@ -417,6 +426,7 @@ const GDriveDownloadListing: React.FC = () => {
                     return success_count === totalPdfsToDownload ? "bg-green-100" : "bg-red-100"
                 }}
             />
+
             <Dialog open={openDialog} onClose={() => setOpenDialog(false)} maxWidth="md" fullWidth>
                 <DialogTitle>Files</DialogTitle>
                 <DialogContent>
@@ -435,6 +445,7 @@ const GDriveDownloadListing: React.FC = () => {
                     </div>
                 </DialogContent>
             </Dialog>
+
             <Dialog open={openMsgDialog} onClose={() => setOpenMsgDialog(false)}>
                 <DialogTitle>Message</DialogTitle>
                 <DialogContent className="max-h-96 overflow-y-auto">
@@ -451,7 +462,18 @@ const GDriveDownloadListing: React.FC = () => {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => setConfirmDialogOpen(false)} color="inherit">No</Button>
-                    <Button onClick={() => handleConfirm(confirmTargetId)} color="primary" variant="contained">Yes</Button>
+                    <Button onClick={(e) => handleConfirm(e, confirmTargetId)} color="primary" variant="contained">Yes</Button>
+                </DialogActions>
+            </Dialog>
+
+            <Dialog open={verifyDialogOpen} onClose={() => setVerifyDialogOpen(false)}>
+                <DialogTitle>Confirm Verify </DialogTitle>
+                <DialogContent>
+                    Are you sure you want to verify this item?
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setVerifyDialogOpen(false)} color="inherit">No</Button>
+                    <Button onClick={(e) => handleConfirm(e, confirmTargetId, true)} color="primary" variant="contained">Yes</Button>
                 </DialogActions>
             </Dialog>
 
@@ -461,11 +483,11 @@ const GDriveDownloadListing: React.FC = () => {
                 anchorEl={anchorElApi}
                 onClose={() => { setAnchorElApi(null); }}
             >
-                {apiLoading ? (
+                {apiResult ? apiResult : (
                     <Box display="flex" justifyContent="center" alignItems="center" height="200px">
                         <CircularProgress />
                     </Box>
-                ) : apiResult}
+                )}
             </ExecPopover>
 
             <>

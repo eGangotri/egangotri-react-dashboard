@@ -288,7 +288,7 @@ const AITitleRenamerHistory: React.FC = () => {
             if (!ok) return;
             try {
               setActionLoading((m) => ({ ...m, [runId]: true }));
-              const res = await makePostCall({}, `ai/cleanupRedRenamerFilers/${runId}`);
+              const res = await makePostCall({profile:"NAGITHA"}, `ai/cleanupRedRenamerFilers/${runId}`);
               console.log('Trigger response:', JSON.stringify(res));
               setResultTitle(`Cleanup triggered for runId=${runId}`);
               setResultBody(JSON.stringify(res));
