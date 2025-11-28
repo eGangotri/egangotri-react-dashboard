@@ -17,6 +17,7 @@ import { redownloadFromGDrive, verifyGDriveDwnldSuccessFolders } from "service/l
 import { buildDeterministicColorMap, colorForKey } from "utils/color";
 import ExecResponsePanel from "scriptsThruExec/ExecResponsePanel";
 import Spinner from "widgets/Spinner";
+import { ellipsis } from "widgets/ItemTooltip";
 
 // Types
 interface ICompositeDocument {
@@ -118,19 +119,18 @@ const GDriveDownloadListing: React.FC = () => {
         console.log(`resp from fetchAggregates: ${JSON.stringify(response)}`)
         return response
     }
-
-    useEffect(() => {
-        const loadDownloads = async () => {
-            try {
-                const { data, totalItems } = await fetchGDriveDownloads(paginationModel.page + 1, paginationModel.pageSize)
-                if (data) {
-                    setDownloads(data)
-                    setTotalItems(totalItems)
-                }
-            } catch (error) {
-                console.error("Error fetching GDrive downloads:", error)
+    const loadDownloads = async () => {
+        try {
+            const { data, totalItems } = await fetchGDriveDownloads(paginationModel.page + 1, paginationModel.pageSize)
+            if (data) {
+                setDownloads(data)
+                setTotalItems(totalItems)
             }
+        } catch (error) {
+            console.error("Error fetching GDrive downloads:", error)
         }
+    }
+    useEffect(() => {
         loadDownloads()
     }, [paginationModel.page, paginationModel.pageSize]) // Added fetchGDriveDownloads to dependencies
 
@@ -147,9 +147,10 @@ const GDriveDownloadListing: React.FC = () => {
 
     const handleGDriveDwnldVerification = async (id: string = "") => {
         try {
-            const response = await verifyGDriveDwnldSuccessFolders(id);
             setApiLoading(true)
+            const response = await verifyGDriveDwnldSuccessFolders(id);
             setApiResult(<ExecResponsePanel response={response} execType={gDriveFileType} />);
+            loadDownloads();
         } catch (error) {
             console.error("Error calling API:", error)
             setApiResult(null)
@@ -158,7 +159,7 @@ const GDriveDownloadListing: React.FC = () => {
         }
     }
 
-      const handleConfirm = async (e: React.MouseEvent<HTMLButtonElement>, id: string,
+    const handleConfirm = async (e: React.MouseEvent<HTMLButtonElement>, id: string,
         forVerify: boolean = false) => {
         setAnchorElApi(e.currentTarget);
         setConfirmTargetId(id);
@@ -173,8 +174,8 @@ const GDriveDownloadListing: React.FC = () => {
     }
     const handleRedownload = async (id: string) => {
         try {
-            const response = await redownloadFromGDrive(id);
             setApiLoading(true)
+            const response = await redownloadFromGDrive(id);
             setApiResult(<ExecResponsePanel response={response} execType={gDriveFileType} />);
         } catch (error) {
             console.error("Error calling API:", error)
@@ -248,9 +249,59 @@ const GDriveDownloadListing: React.FC = () => {
         {
             field: "runId",
             headerName: "Run ID",
-            width: 150,
+            width: 80,
             filterable: true,
-            renderCell: (params) => params?.value?.toString() || "-",
+            renderCell: (params) => ellipsis(params?.value?.toString() || "-",5),
+        },
+        {
+            field: "apiCall",
+            headerName: "API Action",
+            width: 200,
+            filterable: false,
+            renderCell: (params) => (
+                <>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={(e) => { setVerifyDialogOpen(true); setConfirmTargetId(params.row._id) }}
+                        disabled={apiLoading}
+                    >
+                        {apiLoading ? <> <Spinner /></> : "Verify"}
+                    </Button>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        sx={{ ml: 1 }}
+                        onClick={(e) => { setConfirmDialogOpen(true); setConfirmTargetId(params.row._id); }}
+                        disabled={apiLoading || (params.row.verify === undefined || params.row.verify === true)}
+                    >
+                        {apiLoading ? <Spinner /> : "Re-D/L"}
+                    </Button>
+                </>
+
+            ),
+        },
+        {
+            field: "quickStatus",
+            headerName: "Quick Status",
+            description: "Quick Status(Success-Count/ErrorCount/Total)",
+            width: 100,
+            filterable: false,
+            renderCell: (params) => {
+                const { success_count = 0, error_count = 0, totalPdfsToDownload = 0 } = params.value || {}
+                return (
+                    <div>
+                        {success_count}/<span className="text-red-500">{error_count}</span>/{totalPdfsToDownload} ({params?.row?.downloadType?.toString()?.toUpperCase()})
+                    </div>
+                )
+            },
+        },
+        {
+            field: "createdAt",
+            headerName: "Created At",
+            width: 200,
+            filterable: true,
+            renderCell: (params) => new Date(params?.value)?.toLocaleString(),
         },
         {
             field: "status",
@@ -293,57 +344,7 @@ const GDriveDownloadListing: React.FC = () => {
                     View Files ({params.value.length})
                 </Button>
             ),
-        },
-        {
-            field: "apiCall",
-            headerName: "API Action",
-            width: 200,
-            filterable: false,
-            renderCell: (params) => (
-                <>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={(e) => { setVerifyDialogOpen(true); setConfirmTargetId(params.row._id)}}
-                        disabled={apiLoading}
-                    >
-                        {apiLoading ? <> <Spinner />XXX</> : "Verify"}
-                    </Button>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        sx={{ ml: 1 }}
-                        onClick={(e) => { setAnchorElApi(e.currentTarget); setConfirmTargetId(params.row._id); setConfirmDialogOpen(true); }}
-                        disabled={apiLoading || (params.row.verify === undefined || params.row.verify === true)}
-                    >
-                        {apiLoading ? <Spinner /> : "Re-D/L"}
-                    </Button>
-                </>
-
-            ),
-        },
-        {
-            field: "quickStatus",
-            headerName: "Quick Status",
-            description: "Quick Status(Success-Count/ErrorCount/Total)",
-            width: 100,
-            filterable: false,
-            renderCell: (params) => {
-                const { success_count = 0, error_count = 0, totalPdfsToDownload = 0 } = params.value || {}
-                return (
-                    <div>
-                        {success_count}/<span className="text-red-500">{error_count}</span>/{totalPdfsToDownload} ({params?.row?.downloadType?.toString()?.toUpperCase()})
-                    </div>
-                )
-            },
-        },
-        {
-            field: "createdAt",
-            headerName: "Created At",
-            width: 200,
-            filterable: true,
-            renderCell: (params) => new Date(params?.value)?.toLocaleString(),
-        },
+        },,
         {
             field: "downloadType",
             headerName: "Type",
@@ -483,11 +484,11 @@ const GDriveDownloadListing: React.FC = () => {
                 anchorEl={anchorElApi}
                 onClose={() => { setAnchorElApi(null); }}
             >
-                {apiResult ? apiResult : (
-                    <Box display="flex" justifyContent="center" alignItems="center" height="200px">
-                        <CircularProgress />
+                {apiResult &&
+                    <Box>
+                        {apiResult}
                     </Box>
-                )}
+                }
             </ExecPopover>
 
             <>
