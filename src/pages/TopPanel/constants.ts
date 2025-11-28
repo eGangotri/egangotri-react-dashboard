@@ -33,7 +33,8 @@ import {
     AI_TITLE_PDF_RENAMER_HISTORY_PATH,
     PDF_MERGE_HISTORY_TRACKER_PATH,
     PDF_MERGE_MODULE,
-    LAUNCH_AI_GDRIVE_CP_RENAMER_HISTORY_PATH
+    LAUNCH_AI_GDRIVE_CP_RENAMER_HISTORY_PATH,
+    PDF_PAGE_EXTRACTION_HISTORY_PATH
 } from 'Routes/constants';
 
 export const TOP_PANEL_MENU: TopPanelMenu[] = [{
@@ -146,6 +147,10 @@ export const TOP_PANEL_MENU: TopPanelMenu[] = [{
         {
             path: AI_TITLE_PDF_RENAMER_HISTORY_PATH,
             label: 'AI Title & PDF Renaming History',
+        },
+        {
+            path: PDF_PAGE_EXTRACTION_HISTORY_PATH,
+            label: 'Pdf Extraction History',
         }
     ]
 },

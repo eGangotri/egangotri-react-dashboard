@@ -20,6 +20,7 @@ export const LAUNCH_AI_GDRIVE_CP_RENAMER_HISTORY_PATH = "/aiGDriveCPRenameHistor
 export const AI_TITLE_RENAMER_HISTORY_PATH = "/aiTitleRenamerHistory";
 export const PDF_MERGE_HISTORY_TRACKER_PATH = "/pdfMergeHistoryTracker";
 export const AI_TITLE_PDF_RENAMER_HISTORY_PATH = "/aiTitlePdfRenamerHistory";
+export const PDF_PAGE_EXTRACTION_HISTORY_PATH= "/pdfPageExtractionHistory"
 
 export const FILE_MOVER_PATH = "/fileMoverPath";
 export const SEARCH_ARCHIVE_DB_PATH = "/searchArchiveDBPath";
