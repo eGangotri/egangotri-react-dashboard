@@ -133,7 +133,9 @@ export enum ExecType {
   GET_FIRST_N_PAGES_PYTHON_FOR_AI_RENAMER = 200912,
   MERGE_PDFS_PYTHON = 200499,
   CORRUPTION_CHECK_QUICK = 2004500,
-  CORRUPTION_CHECK_DEEP = 2004501,
+  CORRUPTION_CHECK_QUICK_ISOLATE = 2004502,
+  CORRUPTION_CHECK_DEEP = 2004503,
+  CORRUPTION_CHECK_DEEP_ISOLATE = 2004504,
   COPY_ALL_PDFS_PYTHON = 200300,
   GET_FIRST_N_PAGES_GRADLE = 200200,
   COMBINE_GDRIVE_AND_REDUCED_PDF_DRIVE_EXCELS = 201,
@@ -534,6 +536,8 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       case ExecType.CORRUPTION_CHECK_QUICK:
         _resp = await makePostCallWithErrorHandling({
           folderOrProfile: dataUserInput,
+          isolate: false,
+          deepCheck: false,
         }, `fileUtil/corruptPdfCheck`);
         break;
 
@@ -541,8 +545,24 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         _resp = await makePostCallWithErrorHandling({
           folderOrProfile: dataUserInput,
           deepCheck: true,
+          isolate: false,
         }, `fileUtil/corruptPdfCheck`);
         break;
+      case ExecType.CORRUPTION_CHECK_QUICK_ISOLATE:
+        _resp = await makePostCallWithErrorHandling({
+          folderOrProfile: dataUserInput,
+          deepCheck: false,
+          isolate: true,
+        }, `fileUtil/corruptPdfCheck`);
+        break;
+      case ExecType.CORRUPTION_CHECK_DEEP_ISOLATE:
+        _resp = await makePostCallWithErrorHandling({
+          folderOrProfile: dataUserInput,
+          deepCheck: true,
+          isolate: true,
+        }, `fileUtil/corruptPdfCheck`);
+        break;
+
       case ExecType.COPY_ALL_PDFS_PYTHON:
         _resp = await makePostCallWithErrorHandling({
           srcFolders: dataUserInput,

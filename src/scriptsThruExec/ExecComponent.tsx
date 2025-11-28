@@ -82,15 +82,21 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
   };
 
   const funcToInvoke = async (event: React.MouseEvent<HTMLButtonElement | HTMLDivElement>) => {
-    const currentTarget = event.currentTarget
-    setOpenDialog(false);
-    setIsLoading(true);
-    const _resp = await invokeFuncBasedOnExecType(execType, formData);
-    console.log(`_resp ${JSON.stringify(_resp)}`);
-    setIsLoading(false);
-    setBackendResp(_resp);
-    setExecLogsForPopover(<ExecResponsePanel response={_resp} execType={execType}/>);
-    setAnchorEl(currentTarget as HTMLButtonElement);
+    try {
+      const currentTarget = event.currentTarget
+      setOpenDialog(false);
+      setIsLoading(true);
+      const _resp = await invokeFuncBasedOnExecType(execType, formData);
+      console.log(`_resp ${JSON.stringify(_resp)}`);
+      setIsLoading(false);
+      setBackendResp(_resp);
+      setExecLogsForPopover(<ExecResponsePanel response={_resp} execType={execType} />);
+      setAnchorEl(currentTarget as HTMLButtonElement);
+    }
+    catch (error) {
+      console.error(error);
+      setIsLoading(false);
+    }
   }
   const id = open ? 'simple-popover' : undefined;
 

@@ -16,6 +16,7 @@ import { ExecType } from "scriptsThruExec/ExecLauncherUtil";
 import { redownloadFromGDrive, verifyGDriveDwnldSuccessFolders } from "service/launchYarn";
 import { buildDeterministicColorMap, colorForKey } from "utils/color";
 import ExecResponsePanel from "scriptsThruExec/ExecResponsePanel";
+import Spinner from "widgets/Spinner";
 
 // Types
 interface ICompositeDocument {
@@ -156,7 +157,6 @@ const GDriveDownloadListing: React.FC = () => {
             setApiLoading(false)
         }
     }
-
 
       const handleConfirm = async (e: React.MouseEvent<HTMLButtonElement>, id: string,
         forVerify: boolean = false) => {
@@ -307,7 +307,7 @@ const GDriveDownloadListing: React.FC = () => {
                         onClick={(e) => { setVerifyDialogOpen(true); setConfirmTargetId(params.row._id)}}
                         disabled={apiLoading}
                     >
-                        {apiLoading ? <CircularProgress size={24} /> : "Verify"}
+                        {apiLoading ? <> <Spinner />XXX</> : "Verify"}
                     </Button>
                     <Button
                         variant="contained"
@@ -316,7 +316,7 @@ const GDriveDownloadListing: React.FC = () => {
                         onClick={(e) => { setAnchorElApi(e.currentTarget); setConfirmTargetId(params.row._id); setConfirmDialogOpen(true); }}
                         disabled={apiLoading || (params.row.verify === undefined || params.row.verify === true)}
                     >
-                        {apiLoading ? <CircularProgress size={24} /> : "Re-D/L"}
+                        {apiLoading ? <Spinner /> : "Re-D/L"}
                     </Button>
                 </>
 
