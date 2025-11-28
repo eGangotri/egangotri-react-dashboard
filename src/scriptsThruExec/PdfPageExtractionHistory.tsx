@@ -5,6 +5,7 @@ import { DataGrid, GridColDef, GridPaginationModel, GridToolbar } from '@mui/x-d
 import { makeGetCall } from 'service/ApiInterceptor';
 import { buildDeterministicColorMap, colorForKey } from '../utils/color';
 import { FaCopy } from 'react-icons/fa';
+import { ellipsis } from 'widgets/ItemTooltip';
 
 interface ExtractNPagesItem {
   _id: string;
@@ -13,6 +14,8 @@ interface ExtractNPagesItem {
   firstNPages: number;
   lastNPages: number;
   reducePdfSizeAlso: boolean;
+  srcFolderCount?: number;
+  success?: boolean;
   commonRunId: string;
   createdAt: string;
   __v: number;
@@ -208,13 +211,18 @@ const PdfPageExtractionHistory: React.FC = () => {
             sx={{ minWidth: 0, padding: 0 }}
           >
             <Chip
-              label={v}
+              label={ellipsis(v, 10)}
               size="small"
               sx={{ bgcolor: bg, color, fontWeight: 600, border: `1px solid ${border}` }}
             />
           </Button>
         );
       },
+    },
+    {
+      field: 'srcFolderCount',
+      headerName: 'Files',
+      width: 90,
     },
     {
       field: '_srcFolders',
@@ -267,6 +275,16 @@ const PdfPageExtractionHistory: React.FC = () => {
       renderCell: (params) => (params.value ? 'Yes' : 'No'),
     },
     {
+      field: 'success',
+      headerName: 'Success',
+      width: 110,
+      renderCell: (params) => (
+        <span className={params.value ? 'text-green-700' : 'text-red-700'}>
+          {params.value ? 'Yes' : 'No'}
+        </span>
+      ),
+    },
+    {
       field: 'createdAt',
       headerName: 'Created At',
       width: 200,
@@ -304,6 +322,9 @@ const PdfPageExtractionHistory: React.FC = () => {
           rowCount={totalItems}
           loading={loading}
           slots={{ toolbar: GridToolbar }}
+          getRowClassName={(params) => {
+            return params.row.success ? 'bg-green-100' : 'bg-red-100';
+          }}
         />
       </div>
 
