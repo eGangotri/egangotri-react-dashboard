@@ -344,7 +344,7 @@ const GDriveDownloadListing: React.FC = () => {
                     View Files ({params.value.length})
                 </Button>
             ),
-        },,
+        },
         {
             field: "downloadType",
             headerName: "Type",
