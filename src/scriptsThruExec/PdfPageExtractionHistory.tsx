@@ -38,6 +38,7 @@ interface ExtractPerItemHistoryRow {
   __v: number;
   success?: boolean;
   errorMsg?: string;
+  logs?: any;
 }
 
 const PdfPageExtractionHistory: React.FC = () => {
@@ -133,6 +134,59 @@ const PdfPageExtractionHistory: React.FC = () => {
     const ids = Array.from(new Set((rows || []).map((r) => String(r.commonRunId ?? ''))));
     return buildDeterministicColorMap(ids);
   }, [rows]);
+
+  const openLogsWindow = (row: ExtractPerItemHistoryRow) => {
+    const logs: any = (row as any)?.logs;
+    if (!logs) return;
+
+    const logMessages: string[] = Array.isArray(logs.log_messages) ? logs.log_messages : [];
+    const details: any[] = Array.isArray(logs.processing_details) ? logs.processing_details : [];
+
+    const lines: string[] = [];
+    lines.push(`Common Run ID: ${row.commonRunId}`);
+    lines.push(`Run ID       : ${row.runId}`);
+    lines.push(`Source Folder: ${row._srcFolder}`);
+    lines.push(`Dest Folder  : ${row._destRootFolder}`);
+    lines.push('');
+    lines.push('Summary:');
+    lines.push(`  Total Files        : ${logs.totalFiles}`);
+    lines.push(`  Processed Files    : ${logs.processedFiles}`);
+    lines.push(`  Errors             : ${logs.errors}`);
+    if (logs.duration_seconds != null) {
+      lines.push(`  Duration (seconds) : ${logs.duration_seconds}`);
+    }
+    if (logs.start_time) {
+      lines.push(`  Start Time         : ${logs.start_time}`);
+    }
+    lines.push('');
+    lines.push('Log Messages:');
+    for (const m of logMessages) {
+      lines.push(String(m));
+    }
+    lines.push('');
+    if (details.length > 0) {
+      lines.push('Processing Details:');
+      for (const d of details) {
+        lines.push(`- File: ${d.file || ''}`);
+        lines.push(`  Status         : ${d.status}`);
+        if (d.original_pages != null) lines.push(`  Original Pages : ${d.original_pages}`);
+        if (d.pages_extracted != null) lines.push(`  Pages Extracted: ${d.pages_extracted}`);
+        if (d.error) lines.push(`  Error          : ${d.error}`);
+        lines.push('');
+      }
+    }
+
+    const text = lines.join('\n');
+    const html = `<!DOCTYPE html><html><head><meta charset="utf-8" /><title>Logs for ${row._srcFolder}</title></head><body><pre style="white-space: pre-wrap; font-family: monospace; font-size: 12px;">${
+      text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    }</pre></body></html>`;
+
+    const win = window.open('', '_blank');
+    if (win) {
+      win.document.write(html);
+      win.document.close();
+    }
+  };
 
   const columns: GridColDef[] = [
     {
@@ -308,6 +362,34 @@ const PdfPageExtractionHistory: React.FC = () => {
                   field: 'errorMsg',
                   headerName: 'Error Message',
                   width: 260,
+                },
+                {
+                  field: 'logsSummary',
+                  headerName: 'Logs (P/T/E)',
+                  width: 160,
+                  renderCell: (p) => {
+                    const logs: any = (p.row as any)?.logs;
+                    if (!logs) return '';
+                    const total = logs.totalFiles ?? logs.total ?? '';
+                    const processed = logs.processedFiles ?? logs.processed ?? '';
+                    const errors = logs.errors ?? '';
+                    return `${processed}/${total}/${errors}`;
+                  },
+                },
+                {
+                  field: 'logsAction',
+                  headerName: 'Logs',
+                  width: 120,
+                  renderCell: (p) => (
+                    <Button
+                      size="small"
+                      variant="outlined"
+                      onClick={() => openLogsWindow(p.row as ExtractPerItemHistoryRow)}
+                      disabled={!(p.row as any)?.logs}
+                    >
+                      View Logs
+                    </Button>
+                  ),
                 },
               ]}
               getRowId={(row) => row._id}
