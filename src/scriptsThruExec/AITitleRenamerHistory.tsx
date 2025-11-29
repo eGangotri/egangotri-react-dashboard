@@ -142,13 +142,21 @@ const AITitleRenamerHistory: React.FC = () => {
 
   useEffect(() => {
     const loadRunDetails = async () => {
-      const response = await fetchRunDetails(selectedRunId, detailPaginationModel.page + 1, detailPaginationModel.pageSize)
-      setDetailData(response.data)
-      setTotalDetailItems(response.totalItems)
+      if (!selectedRunId) {
+        return;
+      }
+
+      const response = await fetchRunDetails(
+        selectedRunId,
+        detailPaginationModel.page + 1,
+        detailPaginationModel.pageSize
+      );
+      setDetailData(response.data);
+      setTotalDetailItems(response.totalItems);
     }
     loadRunDetails();
-  }, [selectedRunId])
-  //, detailPaginationModel.page, detailPaginationModel.pageSize
+  }, [selectedRunId, detailPaginationModel.page, detailPaginationModel.pageSize])
+  // Detail view should refetch when either the selected run or the pagination changes
 
   // Handle opening detail view
   const handleOpenDetails = (runId: string) => {
