@@ -355,7 +355,7 @@ const UploadCycles = () => {
                                 sx={{ color: "#f38484", width: "200px", marginTop: "10px" }}
                                 disabled={isLoading || (row.allUploadVerified === true)}
                             >
-                                Reupload Failed { calcRowUploadFailures(row)}
+                                Reupload FailedX { calcRowUploadFailures(row)}
                                 <InfoIconWithTooltip input="Reupload Failed (Queued/Ushered/But Didnt Make it). Failure Type 2" />
                             </Button>
                             <Popover

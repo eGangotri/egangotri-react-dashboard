@@ -6,7 +6,8 @@ import {
     Typography,
     IconButton,
     Paper,
-    Box
+    Box,
+    Icon
 } from "@mui/material"
 import { makePostCallWithErrorHandling, verifyUploadStatusForUploadCycleId } from "service/BackendFetchService"
 import ConfirmDialog from "../../widgets/ConfirmDialog"
@@ -28,6 +29,7 @@ const TASK_TYPE_ENUM = {
     REUPLOAD_FAILED: "Reupload of Failed-Items",
     REUPLOAD_MISSED: "Reupload of Missed-Items",
     ISOLATE_MISSING: "Isolate Missing",
+    ISOLATE_UPLOAD_FAILED: "Isolate Upload Failed",
     MOVE_TO_FREEZE: "Move to Freeze",
 }
 
@@ -78,7 +80,7 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({ uploadCycleId, row
         setPopoverAnchor(document.getElementById('find-missing-button') as HTMLButtonElement)
     }
 
-       const _isolateMissing = async (uploadCycleId: string) => {
+    const _isolateMissing = async (uploadCycleId: string) => {
         setLoading2(true);
         const _res = await _launchGradlev2({
             uploadCycleId: uploadCycleId,
@@ -88,7 +90,18 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({ uploadCycleId, row
         setPopoverContent(JSON.stringify(_res, null, 2))
         setPopoverAnchor(document.getElementById('find-missing-button') as HTMLButtonElement)
     }
-    
+
+    const _isolateUploadFailed = async (uploadCycleId: string) => {
+        setIsLoading(true);
+        const _res = await _launchGradlev2({
+            uploadCycleId: uploadCycleId,
+        }, "isolateUploadFailedViaUploadCycleId")
+        console.log(`_res ${JSON.stringify(_res)}`)
+        setIsLoading(false);
+        setPopoverContent(JSON.stringify(_res, null, 2))
+        setPopoverAnchor(document.getElementById('isolated-failed-upload-button') as HTMLButtonElement)
+    }
+
     const _findMissing = async () => {
         setIsLoading(true);
         const missedData = await findMissingTitles();
@@ -176,14 +189,14 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({ uploadCycleId, row
     const handleConfirm = async () => {
         console.log(`Confirmed: ${actionType} for Upload Cycle ID: ${uploadCycleId}`)
         setOpenDialog(false)
-        
+
         // Set appropriate loading state immediately based on action type
         if (actionType === TASK_TYPE_ENUM.REUPLOAD_MISSED) {
             setLoading2(true);
         } else {
             setIsLoading(true);
         }
-        
+
         try {
             if (actionType === TASK_TYPE_ENUM.VERIFY_UPLOAD_STATUS) {
                 await _verifyUploadStatus();
@@ -201,6 +214,10 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({ uploadCycleId, row
                 fetchData();
             } else if (actionType === TASK_TYPE_ENUM.ISOLATE_MISSING) {
                 await _isolateMissing(uploadCycleId);
+                fetchData();
+            }
+            else if (actionType === TASK_TYPE_ENUM.ISOLATE_UPLOAD_FAILED) {
+                await _isolateUploadFailed(uploadCycleId);
                 fetchData();
             }
         } catch (error) {
@@ -236,16 +253,30 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({ uploadCycleId, row
                     Find Missing ({(row.countIntended || 0) - (row?.totalQueueCount || 0)}/{row.countIntended})
                     <InfoIconWithTooltip input="Find Missing (Unqueued/Unushered) Failure Type 1" />
                 </Button>
-                <Button
-                    id="reupload-failed-button"
-                    variant="outlined"
-                    size="small"
-                    onClick={(event) => confirm(TASK_TYPE_ENUM.REUPLOAD_FAILED)}
-                    disabled={isLoading || (row.allUploadVerified === true)}
-                >
-                    Reupload Failed {calcRowUploadFailures(row)}
-                    <InfoIconWithTooltip input="Reupload Failed (Queued/Ushered/But Didnt Make it). Failure Type 2" />
-                </Button>
+                <Box sx={{ display: 'flex', gap: 0.5, width: '100%' }}>
+                    <Button
+                        id="reupload-failed-button"
+                        variant="outlined"
+                        size="small"
+                        onClick={(event) => confirm(TASK_TYPE_ENUM.REUPLOAD_FAILED)}
+                        disabled={isLoading || (row.allUploadVerified === true)}
+                        sx={{ flex: 5, height: 32, minHeight: 32, paddingY: 0 }}
+                    >
+                        Reupload Failed {calcRowUploadFailures(row)}
+                        <InfoIconWithTooltip input="Reupload Failed (Queued/Ushered/But Didnt Make it). Failure Type 2" />
+                    </Button>
+                    <Button
+                        id="isolated-failed-upload-button"
+                        variant="outlined"
+                        size="small"
+                        onClick={(event) => confirm(TASK_TYPE_ENUM.ISOLATE_UPLOAD_FAILED)}
+                        disabled={isLoading || (row.allUploadVerified === true)}
+                        sx={{ flex: 1, height: 32, minHeight: 32, paddingY: 0 }}
+
+                    >
+                        <InfoIconWithTooltip input="Isolate Upload Failed" />
+                    </Button>
+                </Box>
                 <Button
                     id="move-to-freeze-button"
                     variant="outlined"
@@ -263,12 +294,12 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({ uploadCycleId, row
                 setOpenDialog={setOpenDialog}
                 invokeFuncOnClick={handleConfirm}
             />
-            <ResultDisplayPopover 
-                popoverAnchor={popoverAnchor} 
-                setPopoverAnchor={setPopoverAnchor} 
-                popoverContent={popoverContent} 
-                actionType={actionType} 
-                reactComponent={reactComponent} 
+            <ResultDisplayPopover
+                popoverAnchor={popoverAnchor}
+                setPopoverAnchor={setPopoverAnchor}
+                popoverContent={popoverContent}
+                actionType={actionType}
+                reactComponent={reactComponent}
                 setReactComponent={setReactComponent}
                 loading={loading2}
             />
