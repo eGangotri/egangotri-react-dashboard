@@ -234,7 +234,7 @@ const GDriveDownloadListing: React.FC = () => {
             setApiLoading(true)
             const response = await makePostCallWithErrorHandling({
                 selectedIds: redownloadEligibleIds,
-            }, `gDrive/redownloadFromGDriveBulk`)
+            }, `gDrive/redownloadFromGDriveMulti`)
             setApiResult(<ExecResponsePanel response={response} execType={gDriveFileType} />);
         } catch (error) {
             console.error("Error calling bulk redownload API:", error)
