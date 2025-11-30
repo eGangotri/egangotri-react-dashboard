@@ -23,7 +23,7 @@ type VerifiedFilter = "all" | "true" | "false" | "null"
 const UploadCyclesList: React.FC = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [data, setData] = useState<UploadCycleTableData[]>([])
-    const [selectedRows, setSelectedRows] = useState<GridRowId[]>([]);
+    const [selectedRows, setSelectedRows] = useState<GridRowId[]>([])
     const [filteredData, setFilteredData] = useState<UploadCycleTableData[]>([])
     const [openDialog, setOpenDialog] = useState(false)
     const [deletableUploadCycleId, setDeletableUploadCycleId] = useState<string>("")
@@ -38,6 +38,29 @@ const UploadCyclesList: React.FC = () => {
                 alert("Error closing Chrome.")
                 console.error('Error closing Chrome:', error);
             }
+        }
+    }
+
+    const handleBulkReuploadFailed = async () => {
+        if (selectedRows.length === 0) return
+
+        const ok = window.confirm(`Are you sure you want to reupload failed items for ${selectedRows.length} selected upload cycle(s)?`)
+        if (!ok) return
+
+        setIsLoading(true)
+        setPopoverTitle("Bulk Reupload Failed Results")
+        try {
+            const uploadCycleIds = selectedRows.map((id) => String(id))
+            const _resp = await makePostCallWithErrorHandling({ uploadCycleIds }, "execLauncher/reuploadFailedMulti")
+            setPopoverContent(JSON.stringify(_resp, null, 2))
+            setPopoverAnchor(document.getElementById("bulk-reupload-failed-button") as HTMLButtonElement)
+        } catch (error) {
+            console.error("Error in bulk reupload failed:", error)
+            setPopoverContent(`Error in bulk reupload failed: ${error}`)
+            setPopoverAnchor(document.getElementById("bulk-reupload-failed-button") as HTMLButtonElement)
+        } finally {
+            setIsLoading(false)
+            fetchData()
         }
     }
     const updateChromeDriver = async () => {
@@ -350,6 +373,19 @@ const UploadCyclesList: React.FC = () => {
                         <ColorCodeInformationPanel />
                     </Box>
                 </Box>
+                {selectedRows.length > 0 && (
+                    <Box sx={{ mb: 1 }}>
+                        <Button
+                            id="bulk-reupload-failed-button"
+                            variant="contained"
+                            color="error"
+                            disabled={isLoading}
+                            onClick={handleBulkReuploadFailed}
+                        >
+                            {`Reupload Failed for Selected (${selectedRows.length})`}
+                        </Button>
+                    </Box>
+                )}
                 <DataGrid
                     rows={filteredData}
                     columns={columns}
@@ -361,6 +397,9 @@ const UploadCyclesList: React.FC = () => {
                     pageSizeOptions={[25, 50, 100]}
                     checkboxSelection
                     disableRowSelectionOnClick
+                    onRowSelectionModelChange={(model) => {
+                        setSelectedRows([...model])
+                    }}
                     loading={isLoading}
                     getRowHeight={() => "auto"}
                     getEstimatedRowHeight={() => 200}
