@@ -79,6 +79,7 @@ const AITitlePdfRenamerHistory: React.FC = () => {
   const [redoBody, setRedoBody] = useState<string>('');
   const [redoLoading, setRedoLoading] = useState<Record<string, boolean>>({});
   const [redoGlobalLoading, setRedoGlobalLoading] = useState<boolean>(false);
+  const [selectedRunIds, setSelectedRunIds] = useState<string[]>([]);
 
   const copy = (t: any) => navigator.clipboard.writeText(String(t ?? ''));
 
@@ -336,7 +337,42 @@ const AITitlePdfRenamerHistory: React.FC = () => {
     <div className="w-full">
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
         <Typography variant="h5">AI Title PDF Renamer History</Typography>
-        <Button variant="contained" onClick={() => setReloadKey((k) => k + 1)} startIcon={loading ? <CircularProgress size={20} color="inherit" /> : null} disabled={loading}>Refresh</Button>
+        <Box display="flex" gap={2} alignItems="center">
+          <Button
+            variant="contained"
+            color="error"
+            disabled={redoGlobalLoading || selectedRunIds.length === 0}
+            onClick={async () => {
+              if (selectedRunIds.length === 0) return;
+              const ok = window.confirm(`Are you sure you want to REDO Failed for ${selectedRunIds.length} selected run(s)?`);
+              if (!ok) return;
+              try {
+                setRedoGlobalLoading(true);
+                const res = await makePostCall({ selectedRunIds }, 'ai/aiRenamerRedo');
+                setRedoTitle(`REDO Failed triggered for ${selectedRunIds.length} selected run(s)`);
+                setRedoBody(JSON.stringify(res, null, 2));
+                setRedoOpen(true);
+                setReloadKey((k) => k + 1);
+              } catch (e: any) {
+                setRedoTitle('REDO Failed error');
+                setRedoBody(e?.message ? String(e.message) : 'Unknown error');
+                setRedoOpen(true);
+              } finally {
+                setRedoGlobalLoading(false);
+              }
+            }}
+          >
+            {`Redo Selected (${selectedRunIds.length})`}
+          </Button>
+          <Button
+            variant="contained"
+            onClick={() => setReloadKey((k) => k + 1)}
+            startIcon={loading ? <CircularProgress size={20} color="inherit" /> : null}
+            disabled={loading}
+          >
+            Refresh
+          </Button>
+        </Box>
       </Box>
 
       {error && (
@@ -353,6 +389,11 @@ const AITitlePdfRenamerHistory: React.FC = () => {
           pagination
           pageSizeOptions={[10, 20, 50]}
           loading={loading}
+          checkboxSelection
+          disableRowSelectionOnClick
+          onRowSelectionModelChange={(newSelection) => {
+            setSelectedRunIds((newSelection as any[]).map((id) => String(id)));
+          }}
           slots={{ toolbar: GridToolbar }}
           getRowClassName={(params) => {
             return (params.row.failedCount > 0) ? 'bg-red-100' : 'bg-green-100';
