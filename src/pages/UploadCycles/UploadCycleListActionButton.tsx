@@ -262,7 +262,7 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({ uploadCycleId, row
                         disabled={isLoading || (row.allUploadVerified === true)}
                         sx={{ flex: 5, height: 32, minHeight: 32, paddingY: 0 }}
                     >
-                        Reupload Failed {calcRowUploadFailures(row)}
+                        Reupload {calcRowUploadFailures(row)}
                         <InfoIconWithTooltip input="Reupload Failed (Queued/Ushered/But Didnt Make it). Failure Type 2" />
                     </Button>
                     <Button
