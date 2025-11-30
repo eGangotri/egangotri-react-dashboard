@@ -376,7 +376,7 @@ const AITitlePdfRenamerHistory: React.FC = () => {
       <div className="h-[500px] w-full">
         <DataGrid
           rows={rows}
-          getRowId={(r) => (typeof r._id === 'string' ? r._id : (r._id as any)?.$oid || r.runId)}
+          getRowId={(r) => r.runId}
           columns={columns}
           pagination
           pageSizeOptions={[10, 20, 50]}
