@@ -6,10 +6,12 @@ import {
     type GridPaginationModel,
     type GridFilterModel,
     GridToolbar,
+    type GridRowId,
 } from "@mui/x-data-grid"
 import { Button, Dialog, DialogTitle, DialogContent, Chip, IconButton, Box, RadioGroup, FormControlLabel, Typography, Radio, CircularProgress, DialogActions } from "@mui/material"
 import ExecPopover from 'scriptsThruExec/ExecPopover';
 import { makeGetCall } from 'service/ApiInterceptor';
+import { makePostCallWithErrorHandling } from "service/BackendFetchService";
 import { FaCopy } from "react-icons/fa";
 import ExecComponent from "scriptsThruExec/ExecComponent";
 import { ExecType } from "scriptsThruExec/ExecLauncherUtil";
@@ -89,6 +91,8 @@ const GDriveDownloadListing: React.FC = () => {
         pageSize: 5,
     })
 
+    const [selectedIds, setSelectedIds] = useState<GridRowId[]>([])
+
     const chooseGDriveFileType = (event: ChangeEvent<HTMLInputElement>) => {
         const _val = event.target.value;
         console.log("_val", _val)
@@ -159,6 +163,43 @@ const GDriveDownloadListing: React.FC = () => {
         }
     }
 
+    const verifyEligibleIds = useMemo(
+        () =>
+            selectedIds
+                .map((id) => downloads.find((d) => d._id === id))
+                .filter((row): row is IGDriveDownload => !!row)
+                .map((row) => row._id),
+        [selectedIds, downloads]
+    )
+
+    const redownloadEligibleIds = useMemo(
+        () =>
+            selectedIds
+                .map((id) => downloads.find((d) => d._id === id))
+                .filter((row) => row && (row as any).verify === false)
+                .map((row) => (row as IGDriveDownload)._id),
+        [selectedIds, downloads]
+    )
+
+    const handleBulkVerify = async (e: React.MouseEvent<HTMLButtonElement>) => {
+        if (verifyEligibleIds.length === 0) return
+        try {
+            setAnchorElApi(e.currentTarget);
+            setApiResult(null)
+            setApiLoading(true)
+            const response = await makePostCallWithErrorHandling({
+                selectedIds: verifyEligibleIds,
+            }, `gDrive/verifyLocalDownloadSameAsGDriveMulti`)
+            setApiResult(<ExecResponsePanel response={response} execType={gDriveFileType} />);
+            loadDownloads();
+        } catch (error) {
+            console.error("Error calling bulk verify API:", error)
+            setApiResult(null)
+        } finally {
+            setApiLoading(false)
+        }
+    }
+
     const handleConfirm = async (e: React.MouseEvent<HTMLButtonElement>, id: string,
         forVerify: boolean = false) => {
         setAnchorElApi(e.currentTarget);
@@ -179,6 +220,24 @@ const GDriveDownloadListing: React.FC = () => {
             setApiResult(<ExecResponsePanel response={response} execType={gDriveFileType} />);
         } catch (error) {
             console.error("Error calling API:", error)
+            setApiResult(null)
+        } finally {
+            setApiLoading(false)
+        }
+    }
+
+    const handleBulkRedownload = async (e: React.MouseEvent<HTMLButtonElement>) => {
+        if (redownloadEligibleIds.length === 0) return
+        try {
+            setAnchorElApi(e.currentTarget);
+            setApiResult(null)
+            setApiLoading(true)
+            const response = await makePostCallWithErrorHandling({
+                selectedIds: redownloadEligibleIds,
+            }, `gDrive/redownloadFromGDriveBulk`)
+            setApiResult(<ExecResponsePanel response={response} execType={gDriveFileType} />);
+        } catch (error) {
+            console.error("Error calling bulk redownload API:", error)
             setApiResult(null)
         } finally {
             setApiLoading(false)
@@ -399,6 +458,26 @@ const GDriveDownloadListing: React.FC = () => {
                     </>}
                 />
             </Box>
+            {selectedIds.length > 0 && (
+                <Box display="flex" gap={2} mb={2}>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        disabled={apiLoading || verifyEligibleIds.length === 0}
+                        onClick={handleBulkVerify}
+                    >
+                        {apiLoading ? <Spinner /> : `Verify (${verifyEligibleIds.length})`}
+                    </Button>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        disabled={apiLoading || redownloadEligibleIds.length === 0}
+                        onClick={handleBulkRedownload}
+                    >
+                        {apiLoading ? <Spinner /> : `Re-DL (${redownloadEligibleIds.length})`}
+                    </Button>
+                </Box>
+            )}
             <DataGrid
                 rows={downloads}
                 columns={columns}
@@ -412,6 +491,11 @@ const GDriveDownloadListing: React.FC = () => {
                 onFilterModelChange={setFilterModel}
                 rowCount={totalItems}
                 getRowId={(row) => row._id}
+                checkboxSelection
+                disableRowSelectionOnClick
+                onRowSelectionModelChange={(model) => {
+                    setSelectedIds([...model])
+                }}
                 slots={{
                     toolbar: GridToolbar,
                 }}
