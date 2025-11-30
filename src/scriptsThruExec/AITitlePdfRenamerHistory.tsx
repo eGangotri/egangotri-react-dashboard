@@ -364,14 +364,6 @@ const AITitlePdfRenamerHistory: React.FC = () => {
           >
             {`Redo Selected (${selectedRunIds.length})`}
           </Button>
-          <Button
-            variant="contained"
-            onClick={() => setReloadKey((k) => k + 1)}
-            startIcon={loading ? <CircularProgress size={20} color="inherit" /> : null}
-            disabled={loading}
-          >
-            Refresh
-          </Button>
         </Box>
       </Box>
 
