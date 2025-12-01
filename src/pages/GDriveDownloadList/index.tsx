@@ -272,18 +272,48 @@ const GDriveDownloadListing: React.FC = () => {
             ),
         },
         {
+            field: "fileDumpFolder",
+            headerName: "Local Folder",
+            width: 150,
+            filterable: true,
+            renderCell: (params) => {
+                return (
+                    <div className="flex items-center">
+                        <IconButton onClick={() => handleCopyLink(params.value)} className="ml-2">
+                            <FaCopy />
+                        </IconButton>
+                        {params.value}
+                    </div>
+                );
+            },
+        },
+
+        {
             field: "gDriveRootFolder",
-            headerName: "Root Folder",
+            headerName: "GDrive Root Folder",
             width: 250,
             filterable: true,
             renderCell: (params) => {
-                const _path = (params.row.profileNameOrAbsPath === params.row.fileDumpFolder) ? params.row.fileDumpFolder : `${params.row.profileNameOrAbsPath} - ${params.row.fileDumpFolder}` + `/${params.row.gDriveRootFolder}`;
+                //  const _path = (params.row.profileNameOrAbsPath === params.row.fileDumpFolder) ? params.row.fileDumpFolder : `${params.row.profileNameOrAbsPath} - ${params.row.fileDumpFolder}` + `/${params.row.gDriveRootFolder}`;
                 return (
                     <div className="flex items-center">
-                        <IconButton onClick={() => handleCopyLink(_path)} className="ml-2">
+                        <IconButton onClick={() => handleCopyLink(params.value)} className="ml-2">
                             <FaCopy />
                         </IconButton>
-                        {_path}
+                        {params.value}
+                    </div>
+                );
+            },
+        },
+        {
+            field: "totalCount",
+            headerName: "Total Items",
+            width: 100,
+            filterable: true,
+            renderCell: (params) => {
+                return (
+                    <div className="flex items-center">
+                        {params.value}
                     </div>
                 );
             },
@@ -310,7 +340,7 @@ const GDriveDownloadListing: React.FC = () => {
             headerName: "Run ID",
             width: 80,
             filterable: true,
-            renderCell: (params) => ellipsis(params?.value?.toString() || "-",5),
+            renderCell: (params) => ellipsis(params?.value?.toString() || "-", 5),
         },
         {
             field: "apiCall",
