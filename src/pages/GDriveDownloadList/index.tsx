@@ -51,7 +51,7 @@ interface IGDriveDownload {
     gDriveRootFolder?: string
     downloadType: string
     files: ICompositeDocument[]
-    quickStatus: QuickStatus
+    quickStatus: QuickStatus | QuickStatus[]
 }
 
 interface FetchResponse {
@@ -92,6 +92,9 @@ const GDriveDownloadListing: React.FC = () => {
     })
 
     const [selectedIds, setSelectedIds] = useState<GridRowId[]>([])
+
+    const [openQuickStatusDialog, setOpenQuickStatusDialog] = useState(false)
+    const [selectedQuickStatus, setSelectedQuickStatus] = useState<QuickStatus[]>([])
 
     const chooseGDriveFileType = (event: ChangeEvent<HTMLInputElement>) => {
         const _val = event.target.value;
@@ -377,11 +380,30 @@ const GDriveDownloadListing: React.FC = () => {
             width: 100,
             filterable: false,
             renderCell: (params) => {
-                const { success_count = 0, error_count = 0, totalPdfsToDownload = 0 } = params.value || {}
+                const qsArray: QuickStatus[] = Array.isArray(params.value)
+                    ? params.value
+                    : params.value
+                        ? [params.value]
+                        : []
+                const latest: QuickStatus | undefined = qsArray.length > 0 ? qsArray[qsArray.length - 1] : undefined
+                const success_count = Number(latest?.success_count ?? 0)
+                const error_count = Number(latest?.error_count ?? 0)
+                const dl_wrong_size_count = Number(latest?.dl_wrong_size_count ?? 0)
+                const totalPdfsToDownload = Number(latest?.totalPdfsToDownload ?? 0)
+                const combinedErrors = error_count + dl_wrong_size_count
                 return (
-                    <div>
-                        {success_count}/<span className="text-red-500">{error_count}</span>/{totalPdfsToDownload} ({params?.row?.downloadType?.toString()?.toUpperCase()})
-                    </div>
+                    <Button
+                        variant="outlined"
+                        size="small"
+                        onClick={() => {
+                            setSelectedQuickStatus(qsArray)
+                            setOpenQuickStatusDialog(true)
+                        }}
+                    >
+                        {success_count}/
+                        <span className="text-red-500">{combinedErrors}</span>/
+                        {totalPdfsToDownload} ({params?.row?.downloadType?.toString()?.toUpperCase()})
+                    </Button>
                 )
             },
         },
@@ -530,7 +552,15 @@ const GDriveDownloadListing: React.FC = () => {
                     toolbar: GridToolbar,
                 }}
                 getRowClassName={(params) => {
-                    const { success_count = 0, totalPdfsToDownload = 0 } = params.row.quickStatus || {}
+                    const qsVal = params.row.quickStatus
+                    const qsArray: QuickStatus[] = Array.isArray(qsVal)
+                        ? qsVal
+                        : qsVal
+                            ? [qsVal]
+                            : []
+                    const latest: QuickStatus | undefined = qsArray.length > 0 ? qsArray[qsArray.length - 1] : undefined
+                    const success_count = Number(latest?.success_count ?? 0)
+                    const totalPdfsToDownload = Number(latest?.totalPdfsToDownload ?? 0)
                     if (params.row.verify === false) {
                         return "bg-red-500"
                     }
@@ -567,6 +597,34 @@ const GDriveDownloadListing: React.FC = () => {
                     {selectedMsg.split(",").map((line, index) => (
                         <p key={index}>{index + 1}). {line.trim()}</p>
                     ))}
+                </DialogContent>
+            </Dialog>
+
+            <Dialog open={openQuickStatusDialog} onClose={() => setOpenQuickStatusDialog(false)} maxWidth="md" fullWidth>
+                <DialogTitle>Quick Status Details</DialogTitle>
+                <DialogContent>
+                    <div className="h-[300px] w-full">
+                        <DataGrid
+                            rows={selectedQuickStatus.map((qs, index) => ({
+                                id: index.toString(),
+                                success_count: qs.success_count ?? 0,
+                                error_count: qs.error_count ?? 0,
+                                dl_wrong_size_count: qs.dl_wrong_size_count ?? 0,
+                                totalPdfsToDownload: qs.totalPdfsToDownload ?? 0,
+                                status: qs.status ?? "",
+                            }))}
+                            columns={[
+                                { field: "id", headerName: "#", width: 60 },
+                                { field: "status", headerName: "Status", width: 200 },
+                                { field: "success_count", headerName: "Success", width: 100 },
+                                { field: "error_count", headerName: "Error", width: 100 },
+                                { field: "dl_wrong_size_count", headerName: "DL Wrong Size", width: 130 },
+                                { field: "totalPdfsToDownload", headerName: "Total PDFs", width: 120 },
+                            ]}
+                            pageSizeOptions={[5, 10]}
+                            pagination
+                        />
+                    </div>
                 </DialogContent>
             </Dialog>
 

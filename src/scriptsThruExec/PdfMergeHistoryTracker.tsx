@@ -4,6 +4,7 @@ import { Button, Dialog, DialogTitle, DialogContent, Typography, CircularProgres
 import { DataGrid, GridColDef, GridToolbar } from '@mui/x-data-grid';
 import { makeGetCall } from 'service/ApiInterceptor';
 import { FaCopy } from 'react-icons/fa';
+import { ellipsis } from 'widgets/ItemTooltip';
 
 // Types for API responses
 interface CommonRunRow {
@@ -136,7 +137,7 @@ const PdfMergeHistoryTracker: React.FC = () => {
           <IconButton onClick={() => copy(params.value)} className="ml-2" size="small">
             <FaCopy />
           </IconButton>
-          <Button variant="text" onClick={() => openDetails(params.value)}>{params.value}</Button>
+          <Button variant="text" onClick={() => openDetails(params.value)}>{ellipsis(params.value, 15)}</Button>
         </div>
       ),
     },
