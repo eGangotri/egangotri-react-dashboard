@@ -8,6 +8,7 @@ import { AI_RENAMER_ABS_PATH_LOCAL_STORAGE_KEY, AI_RENAMER_REDUCED_PATH_LOCAL_ST
 import { DataGrid, GridColDef, GridFilterModel, GridPaginationModel, GridToolbar } from '@mui/x-data-grid';
 import { makeGetCall, makePostCall } from 'service/ApiInterceptor';
 import { FaCopy } from 'react-icons/fa';
+import { ellipsis } from 'widgets/ItemTooltip';
 // No need for path module
 
 // Types
@@ -193,7 +194,7 @@ const AITitleRenamerHistory: React.FC = () => {
     {
       field: 'runId',
       headerName: 'Run ID',
-      width: 300,
+      width: 200,
       filterable: true,
       renderCell: (params) => (
         <div className="flex items-center gap-2">
@@ -201,7 +202,7 @@ const AITitleRenamerHistory: React.FC = () => {
             <FaCopy />
           </IconButton>
           <Button onClick={() => handleOpenDetails(params.value)} variant="text" color="primary">
-            {params.value}
+            {ellipsis(params.value, 15)}
           </Button>
         </div>
       ),
@@ -222,6 +223,12 @@ const AITitleRenamerHistory: React.FC = () => {
           />
         );
       }
+    },
+    {
+      field: 'srcFolder',
+      headerName: 'Source Folder',
+      width: 100,
+      filterable: true,
     },
     {
       field: 'count',
@@ -296,7 +303,7 @@ const AITitleRenamerHistory: React.FC = () => {
             if (!ok) return;
             try {
               setActionLoading((m) => ({ ...m, [runId]: true }));
-              const res = await makePostCall({profile:"NAGITHA"}, `ai/cleanupRedRenamerFilers/${runId}`);
+              const res = await makePostCall({ profile: "NAGITHA" }, `ai/cleanupRedRenamerFilers/${runId}`);
               console.log('Trigger response:', JSON.stringify(res));
               setResultTitle(`Cleanup triggered for runId=${runId}`);
               setResultBody(JSON.stringify(res));
