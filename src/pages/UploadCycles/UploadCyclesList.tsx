@@ -66,10 +66,30 @@ const UploadCyclesList: React.FC = () => {
     const updateChromeDriver = async () => {
         if (window.confirm('Are you sure you want to update Chrome driver?')) {
             try {
-                const resp = await makeGetCall('/launchCmd/updateChromeDriver')
-                alert("Chrome driver updated successfully.")
-            } catch (error) {
-                alert("Error updating Chrome driver.")
+                const resp = await makeGetCall('/uploadCycle/updateChromeDriver')
+                
+                // Check if the response indicates success
+                if (resp && resp.status === 'success') {
+                    alert("Chrome driver updated successfully.")
+                    console.log('Chrome driver update response:', resp);
+                } else if (resp && resp.error) {
+                    // Handle error response from server
+                    alert(`Failed to update Chrome driver: ${resp.error}`)
+                    console.error('Chrome driver update failed:', resp);
+                } else {
+                    // Generic success if no specific status field
+                    alert("Chrome driver updated successfully.")
+                    console.log('Chrome driver update response:', resp);
+                }
+            } catch (error: any) {
+                // Handle 404 and other HTTP errors
+                if (error?.response?.status === 404) {
+                    alert("Error: Chrome driver update endpoint not found (404).")
+                } else if (error?.message) {
+                    alert(`Error updating Chrome driver: ${error.message}`)
+                } else {
+                    alert("Error updating Chrome driver.")
+                }
                 console.error('Error updating Chrome driver:', error);
             }
         }
