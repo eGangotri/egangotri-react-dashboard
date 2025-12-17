@@ -47,7 +47,7 @@ const ExecLauncherThree: React.FC = () => {
             </Box>
 
             <Box display="flex" gap={4} mb={2} flexDirection="column">
-                <ExecComponent buttonText="List Files in Folder as Excel - Yarn(Fast)"
+                <ExecComponent buttonText="List Files in Folder as Excel - Yarn(Slow)"
                     placeholder='Folder Path or Freezed Profile'
                     execType={genListingOfLocalFolderYarn}
                     css={{ width: "40vw" }}
@@ -67,8 +67,8 @@ const ExecLauncherThree: React.FC = () => {
                     </>}
                 />
 
-                <ExecComponent buttonText="List Files in Folder-Gradle(Slow)"
-                    placeholder='Folder Path or Freezed Profile'
+                <ExecComponent buttonText="List Files in Folder-Gradle(Fast)"
+                    placeholder='Folder Path or Freezed Profile AS CSV'
                     execType={genListingOfLocalFolder}
                     css={{ width: "40vw" }}
                     reactComponent={<>

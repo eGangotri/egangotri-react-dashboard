@@ -72,7 +72,7 @@ const GDriveDownloadListing: React.FC = () => {
     const [confirmTargetId, setConfirmTargetId] = useState<string>("")
     const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
         page: 0,
-        pageSize: 5,
+        pageSize: 10,
     })
     const [filterModel, setFilterModel] = useState<GridFilterModel>({
         items: [],
@@ -88,7 +88,7 @@ const GDriveDownloadListing: React.FC = () => {
 
     const [filesPaginationModel, setFilesPaginationModel] = useState<GridPaginationModel>({
         page: 0,
-        pageSize: 5,
+        pageSize: 10
     })
 
     const [selectedIds, setSelectedIds] = useState<GridRowId[]>([])
@@ -492,7 +492,7 @@ const GDriveDownloadListing: React.FC = () => {
     ]
 
     return (
-        <div className="h-[400px] w-full">
+        <div className="h-[800px] w-full">
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
                 <ExecComponent
                     buttonText={`D/l ${label} from GDrive`}
@@ -535,7 +535,7 @@ const GDriveDownloadListing: React.FC = () => {
                 columns={columns}
                 paginationModel={paginationModel}
                 onPaginationModelChange={setPaginationModel}
-                pageSizeOptions={[5, 10, 20]}
+                pageSizeOptions={[10, 15, 20]}
                 pagination
                 paginationMode="server"
                 filterMode="server"

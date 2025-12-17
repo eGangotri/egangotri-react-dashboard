@@ -26,6 +26,8 @@ interface PdfTitleRename {
   reducedFilePath: string;
   fileName: string;
   extractedMetadata: string;
+  applyButtonClicked: boolean;
+  cleanupButtonClicked: boolean;
   __v: number;
   createdAt: {
     $date: string;
@@ -253,7 +255,7 @@ const AITitleRenamerHistory: React.FC = () => {
         <Button
           size="small"
           variant="contained"
-          disabled={!!actionLoading[params.row.runId]}
+          disabled={!!actionLoading[params.row.runId] || params.row.applyButtonClicked}
           onClick={async () => {
             const runId = params.row.runId;
             const ok = window.confirm(`Are you sure you want to apply metadata to original files for runId=${runId}?`);
@@ -296,7 +298,7 @@ const AITitleRenamerHistory: React.FC = () => {
         <Button
           size="small"
           variant="contained"
-          disabled={!!actionLoading[params.row.runId]}
+          disabled={!!actionLoading[params.row.runId] || params.row.cleanupButtonClicked}
           onClick={async () => {
             const runId = params.row.runId;
             const ok = window.confirm(`Are you sure you want to cleanup Reduced/Renamer folders for runId=${runId}?`);

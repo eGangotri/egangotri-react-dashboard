@@ -200,7 +200,7 @@ const ExecLauncherOne: React.FC = () => {
 
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
                 <ExecComponent buttonText="List all Files in Local Folder as Excel - PNPM"
-                    placeholder='Folder Path or Freezed Profile'
+                    placeholder='Folder Path or Freezed Profile as CSV'
                     execType={ExecType.GenListingsofLocalFolderAsAllYarn}
                 />
 

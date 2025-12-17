@@ -1,6 +1,6 @@
 import { ArchiveProfileAndAbsPath } from 'mirror/types';
 
-import { makeGetCall ,makePostCall} from './ApiInterceptor';
+import { makeGetCall, makePostCall } from './ApiInterceptor';
 
 export async function launchUploader(profiles: string, optionalParams: { [key: string]: any } = {}) {
     return launchGradle(profiles, 'launchUploader', optionalParams)
@@ -41,20 +41,58 @@ export async function launchLocalFolderListingForAll(params: string) {
 const extractValue = (text: string, pattern: RegExp): string => {
     const match = text?.match(pattern);
     return match ? match[1] : 'Not found';
-  };
+};
 
 export async function launchLocalFolderListingForPdf(params: string) {
     const jsonResp = await _launchGradlev2({
         "argFirst": params,
         "pdfsOnly": "true"
     }, 'bookTitles')
+    console.log(`jsonResp ${JSON.stringify(jsonResp)}`);
 
-    const totalPages = extractValue(jsonResp?.response.stdout, /Total Pages:\s*([\d,]+)/);
-    const totalFileCount = extractValue(jsonResp?.response.stdout, /Total File Count:\s*(\d+)/);
-    const excelPath = extractValue(jsonResp?.response.stdout, /CSV to Excel :\s*([^\s]+\.xlsx)\b/)?.trim();
-    
+    let totalPages = 0;
+    let totalFileCount = 0;
+    let totalPagesAsArr:string[] = []    ;
+    let totalFileCountAsArr:string[] = [];
+    let excelPaths: string[] = [];
+
+    const processResponseItem = (stdout: string) => {
+        const pages = parseInt(extractValue(stdout, /Total Pages:\s*([\d,]+)/).replace(/,/g, '') || '0', 10);
+        const files = parseInt(extractValue(stdout, /Total File Count:\s*(\d+)/) || '0', 10);
+        const path = extractValue(stdout, /CSV to Excel :\s*([^\s]+\.xlsx)\b/)?.trim();
+
+        totalPages += pages;
+        totalPagesAsArr.push(`${pages}`);
+        totalFileCount += files;
+        totalFileCountAsArr.push(`${files}`);    
+        if (path && path !== 'Not found') {
+            excelPaths.push(path);
+        }
+    };
+
+    if (Array.isArray(jsonResp?.response)) {
+        jsonResp.response.forEach((item: any) => {
+            if (item?.res?.stdout) {
+                processResponseItem(item.res.stdout);
+            }
+        });
+    } else if (jsonResp?.response?.stdout) {
+        processResponseItem(jsonResp.response.stdout);
+    }
+
     console.log(`totalPages ${totalPages}`);
-    return { totalPages, totalFileCount, excelPath, response: jsonResp.response }
+    console.log(`totalFileCount ${totalFileCount}`);
+    console.log(`totalPagesAsArr ${totalPagesAsArr.join("+ ")}`);
+    console.log(`totalFileCountAsArr ${totalFileCountAsArr.join("+")}`);
+    console.log(`excelPaths ${excelPaths}`);
+    return {
+        "Combined Total Pages": totalPages.toLocaleString(),
+        "Combined Total File Count": totalFileCount.toString(),
+        "Combined Excel Path": excelPaths.join(', '),
+        "Total Pages/Folder": totalPagesAsArr.join('+ '),
+        "Total File Count/Folder": totalFileCountAsArr.join('+ '),
+        response: jsonResp.response
+    }
 }
 
 export async function launchGradle(profiles: string, gradleTask: string, optionalParams: { [key: string]: any } = {}) {
