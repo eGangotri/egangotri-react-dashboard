@@ -90,7 +90,7 @@ const AITitlePdfRenamerHistory: React.FC = () => {
   }, [rows]);
 
   const displayRenamingResults = (row: RunRow) => {
-     return (
+    return (
       <>
         <span className="text-green-700">{row.successCount}+</span>
         <span className="text-red-700">{row.failedCount}</span>
@@ -132,7 +132,7 @@ const AITitlePdfRenamerHistory: React.FC = () => {
   }, [reloadKey, paginationModel.page, paginationModel.pageSize]);
 
   const columns: GridColDef<RunRow>[] = useMemo(() => ([
-  {
+    {
       field: 'commonRunId',
       headerName: 'Common Run Id',
       width: 100,
@@ -160,7 +160,7 @@ const AITitlePdfRenamerHistory: React.FC = () => {
     { field: 'processedCount', headerName: 'Processed', width: 110 },
     { field: 'sfp', headerName: 'Success/Failed/Processed', width: 200,
       renderCell: (p) => displayRenamingResults(p.row)
-     },
+    },
     { field: 'successCount', headerName: 'Success', width: 100 },
     { field: 'failedCount', headerName: 'Failed', width: 100 },
     { field: 'renamedCount', headerName: 'Renamed', width: 110 },
@@ -176,25 +176,25 @@ const AITitlePdfRenamerHistory: React.FC = () => {
             startIcon={redoLoading[p.row.runId] ? <CircularProgress size={16} color="inherit" /> : null}
             disabled={redoGlobalLoading || !!redoLoading[p.row.runId]}
             onClick={async () => {
-            const ok = window.confirm(`Are you sure you want to REDO Failed for runId=${p.row.runId}?`);
-            if (!ok) return;
-            try {
-              setRedoGlobalLoading(true);
-              setRedoLoading((m) => ({ ...m, [p.row.runId]: true }));
-              const res = await makePostCall({}, `ai/aiRenamer/${p.row.runId}`);
-              setRedoTitle(`REDO Failed triggered for runId=${p.row.runId}`);
-              setRedoBody(JSON.stringify(res.data, null, 2));
-              setRedoOpen(true);
-              setReloadKey((k) => k + 1);
-            } catch (e: any) {
-              setRedoTitle('REDO Failed error');
-              setRedoBody(e?.message ? String(e.message) : 'Unknown error');
-              setRedoOpen(true);
-            } finally {
-              setRedoLoading((m) => ({ ...m, [p.row.runId]: false }));
-              setRedoGlobalLoading(false);
-            }
-          }}
+              const ok = window.confirm(`Are you sure you want to REDO Failed for runId=${p.row.runId}?`);
+              if (!ok) return;
+              try {
+                setRedoGlobalLoading(true);
+                setRedoLoading((m) => ({ ...m, [p.row.runId]: true }));
+                const res = await makePostCall({}, `ai/aiRenamer/${p.row.runId}`);
+                setRedoTitle(`REDO Failed triggered for runId=${p.row.runId}`);
+                setRedoBody(JSON.stringify(res.data, null, 2));
+                setRedoOpen(true);
+                setReloadKey((k) => k + 1);
+              } catch (e: any) {
+                setRedoTitle('REDO Failed error');
+                setRedoBody(e?.message ? String(e.message) : 'Unknown error');
+                setRedoOpen(true);
+              } finally {
+                setRedoLoading((m) => ({ ...m, [p.row.runId]: false }));
+                setRedoGlobalLoading(false);
+              }
+            }}
           >
             {redoLoading[p.row.runId] ? (
               <>
@@ -215,7 +215,7 @@ const AITitlePdfRenamerHistory: React.FC = () => {
         </Button>
       )
     },
-    
+
     {
       field: 'pairedBatches', headerName: 'Paired Batches', width: 160, renderCell: (p) => (
         <Button size="small" variant="outlined" onClick={() => { setSelectedRun(p.row); setDetailKey('pairedBatches'); setOpen(true); }}>{p.row.pairedBatches?.length ?? 0}</Button>
@@ -373,7 +373,7 @@ const AITitlePdfRenamerHistory: React.FC = () => {
         </Box>
       )}
 
-      <div className="h-[500px] w-full">
+      <div className="h-[800px] w-full">
         <DataGrid
           rows={rows}
           getRowId={(r) => r.runId}

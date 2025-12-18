@@ -408,7 +408,7 @@ const AITitleRenamerHistory: React.FC = () => {
   ];
 
   return (
-    <div className="h-[600px] w-full">
+    <div className="h-[1200px] w-full">
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
         <Typography variant="h5" component="h2">
           AI PDF Title Renamer History
@@ -423,7 +423,7 @@ const AITitleRenamerHistory: React.FC = () => {
       )}
 
       {/* Main DataGrid showing grouped data by runId */}
-      <div className="h-[400px] w-full mb-4">
+      <div className="h-[800px] w-full mb-4">
         <DataGrid
           rows={groupedData}
           columns={groupedColumns}
