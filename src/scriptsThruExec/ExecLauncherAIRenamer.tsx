@@ -2,20 +2,35 @@ import React, { useRef, useState } from 'react';
 import ExecComponent from './ExecComponent';
 import Box from '@mui/material/Box';
 import { ExecType } from './ExecLauncherUtil';
-import { Button, Typography, CircularProgress } from '@mui/material';
-import TextField from '@mui/material/TextField';
+import { Button, Typography } from '@mui/material';
 import { AI_RENAMER_ABS_PATH_LOCAL_STORAGE_KEY, AI_RENAMER_REDUCED_PATH_LOCAL_STORAGE_KEY, AI_RENAMER_RENAMER_PATH_LOCAL_STORAGE_KEY } from 'service/consts';
 import { replaceQuotes } from 'mirror/utils';
 import { csvize } from './Utils';
 
-const REFUCED_FILE_PATH_SUFFIX = "red"
+const REDUCED_FILE_PATH_SUFFIX = "red"
+const RENAMER_FILE_PATH_SUFFIX = "renamer"
+
+// Universal basename function that works with both Windows and Unix paths
+const getBasename = (filePath: string): string => {
+    // Handle both Windows (\) and Unix (/) path separators
+    const lastBackslash = filePath.lastIndexOf('\\');
+    const lastForwardSlash = filePath.lastIndexOf('/');
+    const lastSeparator = Math.max(lastBackslash, lastForwardSlash);
+
+    if (lastSeparator === -1) {
+        // No path separator found, return the whole string
+        return filePath;
+    }
+
+    return filePath.substring(lastSeparator + 1);
+};
 
 const LauncherAIRenamer: React.FC = () => {
     const [filePath, setFilePath] = useState('');
     const [filePathForReducedPdfs, setFilePathForReducedPdfs] = useState('');
+    const [filePathForRenamerPdfs, setFilePathForRenamerPdfs] = useState('');
     const [absPathForAiRenamer, setAbsPathForAiRenamer] = useState('');
     const [reducedPathForAiRenamer, setReducedPathForAiRenamer] = useState('');
-    const [renamerPathForAiRenamer, setRenamerPathForAiRenamer] = useState('');
 
     const [validationCss, setValidationCss] = React.useState({
         backgroundColor: "lightgreen",
@@ -33,20 +48,40 @@ const LauncherAIRenamer: React.FC = () => {
         setFilePath(inputValue);
         //handleFilePathChange
     };
+
     const generateReducedPfdFolders = () => {
         const _filePath = replaceQuotes(filePath);
         if (_filePath.includes(",")) {
             const redPaths: string[] = []
             _filePath.split(",").forEach((path) => {
-                redPaths.push(`${path}-${REFUCED_FILE_PATH_SUFFIX}`);
+                redPaths.push(`${path}-${REDUCED_FILE_PATH_SUFFIX}`);
             })
             setFilePathForReducedPdfs(redPaths.join(","));
         }
         else {
-            setFilePathForReducedPdfs(`${filePath}-${REFUCED_FILE_PATH_SUFFIX}`);
+            setFilePathForReducedPdfs(`${filePath}-${REDUCED_FILE_PATH_SUFFIX}`);
         }
     }
- 
+
+    const generateRenamerFolders = () => {
+        const _filePath = replaceQuotes(absPathForAiRenamer);
+        console.log("generateRenamerFolders", _filePath);
+        if (_filePath.includes(",")) {
+            const renamerPaths: string[] = []
+            _filePath.split(",").forEach((filePath) => {
+                const filename = getBasename(filePath);
+                console.log(`.filename ${filename}`)
+                renamerPaths.push(`${filename}-${RENAMER_FILE_PATH_SUFFIX}`);
+            })
+            setFilePathForRenamerPdfs(renamerPaths.join(","));
+            console.log("renamerPaths", renamerPaths);
+        }
+        else {
+            const filename = getBasename(_filePath);
+            setFilePathForRenamerPdfs(`${filename}-${RENAMER_FILE_PATH_SUFFIX}`);
+        }
+    }
+
     const handleAiRenamerAbsPathChange = (inputValue: string) => {
         setAbsPathForAiRenamer(inputValue);
     }
@@ -69,7 +104,7 @@ const LauncherAIRenamer: React.FC = () => {
             setReducedPathForAiRenamer(storedReducedValue)
         }
         if (storedRenamerValue) {
-            setRenamerPathForAiRenamer(storedRenamerValue)
+            setReducedPathForAiRenamer(storedRenamerValue)
         }
     }
 
@@ -96,11 +131,11 @@ const LauncherAIRenamer: React.FC = () => {
                     rows2ndTf={4}
                     onInputChange={handleInputChange}
                     thirdButton={<>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={generateReducedPfdFolders}
-                        sx={{ marginRight: "10px", marginBottom: "10px" }}>Generate Reduced PDF Folders</Button>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={generateReducedPfdFolders}
+                            sx={{ marginRight: "10px", marginBottom: "10px" }}>Generate Reduced PDF Folders</Button>
                         <Button
                             variant="contained"
                             color="primary"
@@ -131,25 +166,34 @@ const LauncherAIRenamer: React.FC = () => {
                     css2={{ minWidth: "50vw" }}
                     css3={{ marginTop: "30px", minWidth: "50vw" }}
                     textBoxOneValue={absPathForAiRenamer}
+                    textBoxTwoValue={reducedPathForAiRenamer}
+                    textBoxThreeValue={filePathForRenamerPdfs}
                     onInputChange={handleAiRenamerAbsPathChange}
                     multiline1stTf
                     multiline2ndTf
                     multiline3rdTf
                     rows1stTf={4}
                     rows2ndTf={4}
-                    textBoxTwoValue={reducedPathForAiRenamer}
-                    textBoxThreeValue={renamerPathForAiRenamer}
                     thirdButton={
-                        <><Button
-                            variant="contained"
-                            color="primary"
-                            onClick={loadSrcAndReducedPDFNamesFromLocalStorage}
-                            sx={{ marginRight: "10px", marginBottom: "10px" }}>Load From Local Storage</Button>
+                        <>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={loadSrcAndReducedPDFNamesFromLocalStorage}
+                                sx={{ marginRight: "10px", marginBottom: "10px" }}>Load From Local Storage
+                            </Button>
                             <Button
                                 variant="contained"
                                 color="primary"
                                 onClick={() => setAbsPathForAiRenamer(csvize(absPathForAiRenamer))}
-                                sx={{ marginRight: "10px", marginBottom: "10px" }}>CSVize</Button>
+                                sx={{ marginRight: "10px", marginBottom: "10px" }}>CSVize
+                            </Button>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={() => generateRenamerFolders()}
+                                sx={{ marginRight: "10px", marginBottom: "10px" }}>Generate Renamer Folders
+                            </Button>
                         </>
                     }
                 />
