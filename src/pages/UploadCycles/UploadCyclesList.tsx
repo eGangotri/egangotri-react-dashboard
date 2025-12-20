@@ -40,7 +40,27 @@ const UploadCyclesList: React.FC = () => {
             }
         }
     }
+    const handleBulkVerifyUpload = async () => {
+        if (selectedRows.length === 0) return
 
+        const ok = window.confirm(`Are you sure you want to verify ${selectedRows.length} selected upload cycle(s)?`)
+        if (!ok) return
+
+        setIsLoading(true)
+        setPopoverTitle("Bulk Verify Upload Results")
+        try {
+            const uploadCycleIds = selectedRows.map((id) => String(id))
+            const _resp = await makePostCallWithErrorHandling({ uploadCycleIds }, "itemsUshered/verifyUploadMulti")
+            console.log(`-resp ${JSON.stringify(_resp, null, 2)}`)
+            setPopoverContent(JSON.stringify(_resp, null, 2))
+            setPopoverAnchor(document.getElementById("bulk-verify-upload-button") as HTMLButtonElement)
+        } catch (error) {
+            console.error('Error verifying upload:', error);
+            alert("Error verifying upload.")
+        } finally {
+            setIsLoading(false)
+        }
+    }
     const handleBulkReuploadFailed = async () => {
         if (selectedRows.length === 0) return
 
@@ -67,7 +87,7 @@ const UploadCyclesList: React.FC = () => {
         if (window.confirm('Are you sure you want to update Chrome driver?')) {
             try {
                 const resp = await makeGetCall('/uploadCycle/updateChromeDriver')
-                
+
                 // Check if the response indicates success
                 if (resp && resp.status === 'success') {
                     alert("Chrome driver updated successfully.")
@@ -395,7 +415,7 @@ const UploadCyclesList: React.FC = () => {
                 </Box>
                 {selectedRows.length > 0 && (
                     <Box sx={{ mb: 1 }}>
-                        <Button
+                        <Button sx={{ m: 1 }}
                             id="bulk-reupload-failed-button"
                             variant="contained"
                             color="error"
@@ -403,6 +423,15 @@ const UploadCyclesList: React.FC = () => {
                             onClick={handleBulkReuploadFailed}
                         >
                             {`Reupload Failed for Selected (${selectedRows.length})`}
+                        </Button>
+                        <Button sx={{ m: 1 }}
+                            id="bulk-verify-upload-button"
+                            variant="contained"
+                            color="error"
+                            disabled={isLoading}
+                            onClick={handleBulkVerifyUpload}
+                        >
+                            {`Verify Upload for Selected (${selectedRows.length})`}
                         </Button>
                     </Box>
                 )}
