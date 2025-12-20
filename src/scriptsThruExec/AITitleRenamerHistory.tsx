@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import ExecComponent from './ExecComponent';
+import ExecResponsePanel from './ExecResponsePanel';
 import Box from '@mui/material/Box';
 import { ExecType } from './ExecLauncherUtil';
 import { Button, Dialog, DialogTitle, DialogContent, Chip, IconButton, Typography, CircularProgress, TextField, Tooltip } from '@mui/material';
@@ -67,7 +68,7 @@ const AITitleRenamerHistory: React.FC = () => {
   const [actionLoading, setActionLoading] = useState<Record<string, boolean>>({});
   const [resultOpen, setResultOpen] = useState<boolean>(false);
   const [resultTitle, setResultTitle] = useState<string>('');
-  const [resultBody, setResultBody] = useState<string>('');
+  const [resultBody, setResultBody] = useState<any>(null);
 
   // Pagination state
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
@@ -269,12 +270,12 @@ const AITitleRenamerHistory: React.FC = () => {
               const res = await makePostCall({}, `ai/copyMetadataToOriginalFiles/${runId}`);
               console.log('Trigger response:', JSON.stringify(res));
               setResultTitle(`Copy Metadata triggered for runId=${runId}`);
-              setResultBody(JSON.stringify(res));
+              setResultBody(res);
               setResultOpen(true);
             } catch (e) {
               console.error(e);
               setResultTitle('Copy Metadata error');
-              setResultBody(e instanceof Error ? e.message : 'Unknown error');
+              setResultBody({ error: e instanceof Error ? e.message : 'Unknown error' });
               setResultOpen(true);
             } finally {
               setActionLoading((m) => ({ ...m, [runId]: false }));
@@ -313,12 +314,12 @@ const AITitleRenamerHistory: React.FC = () => {
                 const res = await makePostCall({ profile: cleanupTOFolder }, `ai/cleanupRedRenamerFilers/${runId}`);
                 console.log('Trigger response:', JSON.stringify(res));
                 setResultTitle(`Cleanup triggered for runId=${runId}`);
-                setResultBody(JSON.stringify(res));
+                setResultBody(res);
                 setResultOpen(true);
               } catch (e) {
                 console.error(e);
                 setResultTitle('Cleanup error');
-                setResultBody(e instanceof Error ? e.message : 'Unknown error');
+                setResultBody({ error: e instanceof Error ? e.message : 'Unknown error' });
                 setResultOpen(true);
               } finally {
                 setActionLoading((m) => ({ ...m, [runId]: false }));
@@ -536,9 +537,7 @@ const AITitleRenamerHistory: React.FC = () => {
           </Box>
         </DialogTitle>
         <DialogContent>
-          <Box sx={{ whiteSpace: 'pre-wrap', fontFamily: 'monospace', fontSize: 12 }}>
-            {resultBody}
-          </Box>
+          {resultBody && <ExecResponsePanel response={resultBody} execType={ExecType.AI_RENAMER} />}
         </DialogContent>
       </Dialog>
     </div>

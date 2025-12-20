@@ -52,34 +52,34 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
 
   const [backendResp, setBackendResp] = React.useState({});
 
-  const formatResponse = (resp: any): string => {
-    const date = new Date().toLocaleString();
-    let result = 'Backend Resp ' + execType + '\n\n';
-    result += `date: ${date}\n`;
+  // const formatResponse = (resp: any): string => {
+  //   const date = new Date().toLocaleString();
+  //   let result = 'Backend Resp ' + execType + '\n\n';
+  //   result += `date: ${date}\n`;
 
-    const formatObject = (obj: any, indent: string = ''): string => {
-      let output = '';
-      for (const [key, value] of Object.entries(obj)) {
-        if (Array.isArray(value)) {
-          output += `${indent}${key}:\n`;
-          value.forEach((item) => {
-            if (typeof item === 'object') {
-              output += formatObject(item, indent + '  ');
-            } else {
-              output += `${indent}  ${item}\n`;
-            }
-          });
-        } else if (value && typeof value === 'object') {
-          output += `${indent}${key}:\n${formatObject(value, indent + '  ')}`;
-        } else {
-          output += `${indent}${key}: ${value}\n`;
-        }
-      }
-      return output;
-    };
+  //   const formatObject = (obj: any, indent: string = ''): string => {
+  //     let output = '';
+  //     for (const [key, value] of Object.entries(obj)) {
+  //       if (Array.isArray(value)) {
+  //         output += `${indent}${key}:\n`;
+  //         value.forEach((item) => {
+  //           if (typeof item === 'object') {
+  //             output += formatObject(item, indent + '  ');
+  //           } else {
+  //             output += `${indent}  ${item}\n`;
+  //           }
+  //         });
+  //       } else if (value && typeof value === 'object') {
+  //         output += `${indent}${key}:\n${formatObject(value, indent + '  ')}`;
+  //       } else {
+  //         output += `${indent}${key}: ${value}\n`;
+  //       }
+  //     }
+  //     return output;
+  //   };
 
-    return result + formatObject(resp);
-  };
+  //   return result + formatObject(resp);
+  // };
 
   const funcToInvoke = async (event: React.MouseEvent<HTMLButtonElement | HTMLDivElement>) => {
     try {
