@@ -44,6 +44,7 @@ interface GroupedRenameData {
   count: number;
   _id: string;
   createdAt: string;
+  srcFolder?: string;
 }
 
 interface FetchResponse {
@@ -96,6 +97,9 @@ const AITitleRenamerHistory: React.FC = () => {
 
   // State for cleanup folder textfield
   const [cleanupTOFolder, setCleanupTOFolder] = useState<string>('NAGITHA');
+
+  // State for row selection
+  const [selectedRows, setSelectedRows] = useState<string[]>([]);
 
   // API calls
   const fetchGroupedRenameData = async (page: number, pageSize: number): Promise<FetchResponse> => {
@@ -178,6 +182,69 @@ const AITitleRenamerHistory: React.FC = () => {
   // Handle copying text to clipboard
   const handleCopyText = (text: string) => {
     navigator.clipboard.writeText(text);
+  };
+
+  // Handle copying selected source folders as CSV
+  const handleCopySelectedSrcFolders = () => {
+    const selectedItems = groupedData.filter(item => selectedRows.includes(item._id));
+    const srcFolders = selectedItems.map(item => item.srcFolder || '').join(',');
+    navigator.clipboard.writeText(srcFolders);
+    console.log('Copied source folders:', srcFolders);
+  };
+
+  // Handle applying metadata for selected items
+  const handleApplySelectedItems = async () => {
+    const selectedItems = groupedData.filter(item => selectedRows.includes(item._id));
+    const runIds = selectedItems.map(item => item.runId);
+
+    const ok = window.confirm(`Are you sure you want to apply metadata to original files for ${runIds.length} selected items?`);
+    if (!ok) return;
+
+    try {
+      setLoading(true);
+      const results = [];
+      for (const runId of runIds) {
+        const res = await makePostCall({}, `ai/copyMetadataToOriginalFiles/${runId}`);
+        results.push(res);
+      }
+      setResultTitle(`Copy Metadata triggered for ${runIds.length} items`);
+      setResultBody({ results });
+      setResultOpen(true);
+    } catch (e) {
+      console.error(e);
+      setResultTitle('Copy Metadata error');
+      setResultBody({ error: e instanceof Error ? e.message : 'Unknown error' });
+      setResultOpen(true);
+    } finally {
+      setLoading(false);
+    }
+  };
+  // Handle cleanup for selected items
+  const handleCleanupSelectedItems = async () => {
+    const selectedItems = groupedData.filter(item => selectedRows.includes(item._id));
+    const runIds = selectedItems.map(item => item.runId);
+
+    const ok = window.confirm(`Are you sure you want to cleanup Reduced/Renamer folders for ${runIds.length} selected items?`);
+    if (!ok) return;
+
+    try {
+      setLoading(true);
+      const results = [];
+      for (const runId of runIds) {
+        const res = await makePostCall({ profile: cleanupTOFolder }, `ai/cleanupRedRenamerFilers/${runId}`);
+        results.push(res);
+      }
+      setResultTitle(`Cleanup triggered for ${runIds.length} items`);
+      setResultBody({ results });
+      setResultOpen(true);
+    } catch (e) {
+      console.error(e);
+      setResultTitle('Cleanup error');
+      setResultBody({ error: e instanceof Error ? e.message : 'Unknown error' });
+      setResultOpen(true);
+    } finally {
+      setLoading(false);
+    }
   };
 
   // Get filename from path
@@ -451,6 +518,43 @@ const AITitleRenamerHistory: React.FC = () => {
         </Box>
       )}
 
+      {/* Action Panel - visible when items are selected */}
+      {selectedRows.length > 0 && (
+        <Box sx={{ mb: 2, p: 2, bgcolor: '#e3f2fd', borderRadius: 1, display: 'flex', gap: 2, alignItems: 'center' }}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleCopySelectedSrcFolders}
+          >
+            Copy Src Folders as CSV ({selectedRows.length})
+          </Button>
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={handleApplySelectedItems}
+            disabled={loading}
+          >
+            Apply Metadata ({selectedRows.length})
+          </Button>
+          <Button
+            variant="contained"
+            color="warning"
+            onClick={handleCleanupSelectedItems}
+            disabled={loading}
+          >
+            Cleanup ({selectedRows.length})
+          </Button>
+          <TextField
+            size="small"
+            variant="outlined"
+            placeholder="Cleanup TO Folder"
+            value={cleanupTOFolder}
+            onChange={(e) => setCleanupTOFolder(e.target.value)}
+            sx={{ minWidth: 200 }}
+          />
+        </Box>
+      )}
+
       {/* Main DataGrid showing grouped data by runId */}
       <div className="h-[800px] w-full mb-4">
         <DataGrid
@@ -470,6 +574,9 @@ const AITitleRenamerHistory: React.FC = () => {
           slots={{
             toolbar: GridToolbar,
           }}
+          checkboxSelection
+          rowSelectionModel={selectedRows}
+          onRowSelectionModelChange={(newSelection) => setSelectedRows(newSelection as string[])}
         />
       </div>
 
