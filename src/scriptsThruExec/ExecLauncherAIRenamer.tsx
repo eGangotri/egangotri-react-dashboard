@@ -112,7 +112,7 @@ const LauncherAIRenamer: React.FC = () => {
         <Box display="flex" gap={4} mb={2} flexDirection="row">
             <Box display="flex" alignItems="center" gap={4} mb={2} flexDirection="column">
                 <ExecComponent
-                    buttonText="Get First and Last N Pages-Python"
+                    buttonText={`Get First and Last N Pages-Python (${filePath ? (filePath.split(',').length) : 0})`}
                     placeholder='Absolute Path to PDFs Folder(s) as CSV'
                     secondTextBoxPlaceHolder='"reduced", unless stated otherwise'
                     thirdTextBoxPlaceHolder='N Pages. Ex. 10 or 10-20'
