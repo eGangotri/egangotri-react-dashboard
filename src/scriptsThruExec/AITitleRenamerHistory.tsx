@@ -10,6 +10,7 @@ import { makeGetCall, makePostCall } from 'service/ApiInterceptor';
 import { FaCopy } from 'react-icons/fa';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { ellipsis } from 'widgets/ItemTooltip';
+import { makePostCallWithErrorHandling } from 'service/BackendFetchService';
 // No need for path module
 
 // Types
@@ -202,13 +203,12 @@ const AITitleRenamerHistory: React.FC = () => {
 
     try {
       setLoading(true);
-      const results = [];
-      for (const runId of runIds) {
-        const res = await makePostCall({}, `ai/copyMetadataToOriginalFiles/${runId}`);
-        results.push(res);
-      }
+      const response = await makePostCallWithErrorHandling({
+        runIds: runIds,
+      }, `ai/copyMetadataToOriginalFilesMulti`)
+
       setResultTitle(`Copy Metadata triggered for ${runIds.length} items`);
-      setResultBody({ results });
+      setResultBody(response);
       setResultOpen(true);
     } catch (e) {
       console.error(e);
@@ -229,13 +229,12 @@ const AITitleRenamerHistory: React.FC = () => {
 
     try {
       setLoading(true);
-      const results = [];
-      for (const runId of runIds) {
-        const res = await makePostCall({ profile: cleanupTOFolder }, `ai/cleanupRedRenamerFilers/${runId}`);
-        results.push(res);
-      }
+      const response = await makePostCallWithErrorHandling({
+        runIds: runIds,
+      }, `ai/cleanupRedRenamerFilersMulti`)
+
       setResultTitle(`Cleanup triggered for ${runIds.length} items`);
-      setResultBody({ results });
+      setResultBody(response);
       setResultOpen(true);
     } catch (e) {
       console.error(e);
