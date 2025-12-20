@@ -117,6 +117,7 @@ export const makePostCallWithErrorHandlingForPdfReductionForAiRenamer = async (b
   let reducedFolders = [];
   let renamerFolders = [];
 
+  console.log(`makePostCallWithErrorHandlingForPdfReductionForAiRenamer ${JSON.stringify(combinedResults)}`)
   for (const item of combinedResults) {
     const srcFolder = item?.srcFolder as string ?? "";
     const destFolder = item?.destRootDump as string ?? "";
@@ -124,7 +125,6 @@ export const makePostCallWithErrorHandlingForPdfReductionForAiRenamer = async (b
     reducedFolders.push(destFolder);
     renamerFolders.push(`${path.basename(srcFolder)}-renamer`)
   }
-
 
   localStorage.setItem(AI_RENAMER_ABS_PATH_LOCAL_STORAGE_KEY, srcFolders.join(","));
   localStorage.setItem(AI_RENAMER_REDUCED_PATH_LOCAL_STORAGE_KEY, reducedFolders.join(","));
@@ -136,6 +136,7 @@ export const makePostCallWithErrorHandlingForPdfReductionForAiRenamer = async (b
      ${reducedFolders.join(",")} ===
      ${localStorage.getItem(AI_RENAMER_ABS_PATH_LOCAL_STORAGE_KEY)}
      ${localStorage.getItem(AI_RENAMER_REDUCED_PATH_LOCAL_STORAGE_KEY)}
+     ${localStorage.getItem(AI_RENAMER_RENAMER_PATH_LOCAL_STORAGE_KEY)}
      `);
 
   return {

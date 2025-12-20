@@ -104,7 +104,7 @@ const LauncherAIRenamer: React.FC = () => {
             setReducedPathForAiRenamer(storedReducedValue)
         }
         if (storedRenamerValue) {
-            setReducedPathForAiRenamer(storedRenamerValue)
+            setFilePathForRenamerPdfs(storedRenamerValue)
         }
     }
 

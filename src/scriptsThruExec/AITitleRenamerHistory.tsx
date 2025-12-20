@@ -5,7 +5,6 @@ import Box from '@mui/material/Box';
 import { ExecType } from './ExecLauncherUtil';
 import { Button, Dialog, DialogTitle, DialogContent, Chip, IconButton, Typography, CircularProgress, TextField, Tooltip } from '@mui/material';
 import { buildDeterministicColorMap, colorForKey } from '../utils/color';
-import { AI_RENAMER_ABS_PATH_LOCAL_STORAGE_KEY, AI_RENAMER_REDUCED_PATH_LOCAL_STORAGE_KEY, AI_RENAMER_RENAMER_PATH_LOCAL_STORAGE_KEY } from 'service/consts';
 import { DataGrid, GridColDef, GridFilterModel, GridPaginationModel, GridToolbar } from '@mui/x-data-grid';
 import { makeGetCall, makePostCall } from 'service/ApiInterceptor';
 import { FaCopy } from 'react-icons/fa';
