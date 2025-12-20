@@ -157,7 +157,7 @@ const LauncherAIRenamer: React.FC = () => {
 
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
                 <ExecComponent
-                    buttonText="AI Renamer"
+                    buttonText={`AI Renamer(${absPathForAiRenamer ? (absPathForAiRenamer.split(',').length) : 0})`}
                     placeholder='Absolute Path to PDFs Folder(s) as CSV'
                     secondTextBoxPlaceHolder='Absolute Path to Reduced PDFs Folder(s) as CSV'
                     thirdTextBoxPlaceHolder='Suffix for Output Folder (Default -renamer if left blank).'
