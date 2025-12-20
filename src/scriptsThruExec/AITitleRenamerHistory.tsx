@@ -2,12 +2,13 @@ import React, { useState, useEffect, useMemo } from 'react';
 import ExecComponent from './ExecComponent';
 import Box from '@mui/material/Box';
 import { ExecType } from './ExecLauncherUtil';
-import { Button, Dialog, DialogTitle, DialogContent, Chip, IconButton, Typography, CircularProgress } from '@mui/material';
+import { Button, Dialog, DialogTitle, DialogContent, Chip, IconButton, Typography, CircularProgress, TextField, Tooltip } from '@mui/material';
 import { buildDeterministicColorMap, colorForKey } from '../utils/color';
 import { AI_RENAMER_ABS_PATH_LOCAL_STORAGE_KEY, AI_RENAMER_REDUCED_PATH_LOCAL_STORAGE_KEY, AI_RENAMER_RENAMER_PATH_LOCAL_STORAGE_KEY } from 'service/consts';
 import { DataGrid, GridColDef, GridFilterModel, GridPaginationModel, GridToolbar } from '@mui/x-data-grid';
 import { makeGetCall, makePostCall } from 'service/ApiInterceptor';
 import { FaCopy } from 'react-icons/fa';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { ellipsis } from 'widgets/ItemTooltip';
 // No need for path module
 
@@ -92,6 +93,9 @@ const AITitleRenamerHistory: React.FC = () => {
 
   // State for error messages
   const [error, setError] = useState<string | null>(null);
+
+  // State for cleanup folder textfield
+  const [cleanupTOFolder, setCleanupTOFolder] = useState<string>('NAGITHA');
 
   // API calls
   const fetchGroupedRenameData = async (page: number, pageSize: number): Promise<FetchResponse> => {
@@ -291,44 +295,59 @@ const AITitleRenamerHistory: React.FC = () => {
     {
       field: 'cleanup',
       headerName: 'Cleanup Reduced/Renamer Folders',
-      width: 340,
+      width: 400,
       filterable: false,
       sortable: false,
       renderCell: (params) => (
-        <Button
-          size="small"
-          variant="contained"
-          disabled={!!actionLoading[params.row.runId] || params.row.cleanupButtonClicked}
-          onClick={async () => {
-            const runId = params.row.runId;
-            const ok = window.confirm(`Are you sure you want to cleanup Reduced/Renamer folders for runId=${runId}?`);
-            if (!ok) return;
-            try {
-              setActionLoading((m) => ({ ...m, [runId]: true }));
-              const res = await makePostCall({ profile: "NAGITHA" }, `ai/cleanupRedRenamerFilers/${runId}`);
-              console.log('Trigger response:', JSON.stringify(res));
-              setResultTitle(`Cleanup triggered for runId=${runId}`);
-              setResultBody(JSON.stringify(res));
-              setResultOpen(true);
-            } catch (e) {
-              console.error(e);
-              setResultTitle('Cleanup error');
-              setResultBody(e instanceof Error ? e.message : 'Unknown error');
-              setResultOpen(true);
-            } finally {
-              setActionLoading((m) => ({ ...m, [runId]: false }));
-            }
-          }}
-        >
-          {actionLoading[params.row.runId] ? (
-            <>
-              <CircularProgress size={16} color="inherit" style={{ marginRight: 6 }} />
-              Running...
-            </>
-          ) : (
-            'Cleanup'
-          )}
-        </Button>
+        <>
+          <Button
+            size="small"
+            variant="contained"
+            disabled={!!actionLoading[params.row.runId] || params.row.cleanupButtonClicked}
+            onClick={async () => {
+              const runId = params.row.runId;
+              const ok = window.confirm(`Are you sure you want to cleanup Reduced/Renamer folders for runId=${runId}?`);
+              if (!ok) return;
+              try {
+                setActionLoading((m) => ({ ...m, [runId]: true }));
+                const res = await makePostCall({ profile: cleanupTOFolder }, `ai/cleanupRedRenamerFilers/${runId}`);
+                console.log('Trigger response:', JSON.stringify(res));
+                setResultTitle(`Cleanup triggered for runId=${runId}`);
+                setResultBody(JSON.stringify(res));
+                setResultOpen(true);
+              } catch (e) {
+                console.error(e);
+                setResultTitle('Cleanup error');
+                setResultBody(e instanceof Error ? e.message : 'Unknown error');
+                setResultOpen(true);
+              } finally {
+                setActionLoading((m) => ({ ...m, [runId]: false }));
+              }
+            }}
+          >
+            {actionLoading[params.row.runId] ? (
+              <>
+                <CircularProgress size={16} color="inherit" style={{ marginRight: 6 }} />
+                Running...
+              </>
+            ) : (
+              'Cleanup'
+            )}
+          </Button>
+          <TextField
+            size="small"
+            variant="outlined"
+            placeholder="Cleanup TO Folder"
+            value={cleanupTOFolder}
+            onChange={(e) => setCleanupTOFolder(e.target.value)}
+            sx={{ ml: 1, minWidth: 200 }}
+          />
+          <Tooltip title="Use Folder/Profile for sub-folder under Profile use %PROFILE%/subFolder" arrow>
+            <IconButton size="small" sx={{ ml: 0.5 }}>
+              <InfoOutlinedIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
+        </>
       ),
     },
   ];

@@ -180,9 +180,8 @@ const PdfPageExtractionHistory: React.FC = () => {
     }
 
     const text = lines.join('\n');
-    const html = `<!DOCTYPE html><html><head><meta charset="utf-8" /><title>Logs for ${row._srcFolder}</title></head><body><pre style="white-space: pre-wrap; font-family: monospace; font-size: 12px;">${
-      text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-    }</pre></body></html>`;
+    const html = `<!DOCTYPE html><html><head><meta charset="utf-8" /><title>Logs for ${row._srcFolder}</title></head><body><pre style="white-space: pre-wrap; font-family: monospace; font-size: 12px;">${text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      }</pre></body></html>`;
 
     const win = window.open('', '_blank');
     if (win) {
@@ -195,7 +194,7 @@ const PdfPageExtractionHistory: React.FC = () => {
     {
       field: 'commonRunId',
       headerName: 'Common Run ID',
-      width: 220,
+      width: 120,
       renderCell: (params) => {
         const v = String(params.value ?? '');
         const { bg, color, border } = commonRunIdColorMap[v] || colorForKey(v);
@@ -222,7 +221,7 @@ const PdfPageExtractionHistory: React.FC = () => {
     {
       field: 'srcFolderCount',
       headerName: 'Files',
-      width: 90,
+      width: 50,
     },
     {
       field: '_srcFolders',
@@ -259,22 +258,6 @@ const PdfPageExtractionHistory: React.FC = () => {
       },
     },
     {
-      field: 'firstNPages',
-      headerName: 'First N Pages',
-      width: 130,
-    },
-    {
-      field: 'lastNPages',
-      headerName: 'Last N Pages',
-      width: 120,
-    },
-    {
-      field: 'reducePdfSizeAlso',
-      headerName: 'Reduce Size',
-      width: 120,
-      renderCell: (params) => (params.value ? 'Yes' : 'No'),
-    },
-    {
       field: 'success',
       headerName: 'Success',
       width: 110,
@@ -292,6 +275,18 @@ const PdfPageExtractionHistory: React.FC = () => {
         const v = params.value as string;
         return v ? new Date(v).toLocaleString() : '';
       },
+    },
+    {
+      field: 'composite',
+      headerName: 'First-Last N Pages',
+      width: 130,
+      renderCell: (params) => `${params.row.firstNPages}-${params.row.lastNPages}`,
+    },
+    {
+      field: 'reducePdfSizeAlso',
+      headerName: 'Reduce Size',
+      width: 120,
+      renderCell: (params) => (params.value ? 'Yes' : 'No'),
     },
   ];
 
@@ -359,10 +354,10 @@ const PdfPageExtractionHistory: React.FC = () => {
               columns={[
                 { field: '_srcFolder', headerName: 'Source Folder', width: 260 },
                 { field: '_destRootFolder', headerName: 'Dest Root Folder', width: 260 },
-                { field: 'firstNPages', headerName: 'First N Pages', width: 130 },
-                { field: 'lastNPages', headerName: 'Last N Pages', width: 130 },
-                { field: 'reducePdfSizeAlso', headerName: 'Reduce Size', width: 120, renderCell: (p) => (p.value ? 'Yes' : 'No') },
-                { field: 'runId', headerName: 'Run ID', width: 260 },
+                {
+                  field: 'runId', headerName: 'Run ID', width: 100,
+                  renderCell: (p) => ellipsis(p.value as string, 10),
+                },
                 {
                   field: 'createdAt',
                   headerName: 'Created At',
@@ -412,6 +407,13 @@ const PdfPageExtractionHistory: React.FC = () => {
                     </Button>
                   ),
                 },
+                {
+                  field: 'composite',
+                  headerName: 'First-Last N Pages',
+                  width: 130,
+                  renderCell: (params) => `${params.row.firstNPages}-${params.row.lastNPages}`,
+                },
+                { field: 'reducePdfSizeAlso', headerName: 'Reduce Size', width: 120, renderCell: (p) => (p.value ? 'Yes' : 'No') },
               ]}
               getRowId={(row) => row._id}
               pageSizeOptions={[5, 10, 20]}
