@@ -5,6 +5,7 @@ import { DataGrid, GridColDef, GridFilterModel, GridPaginationModel, GridToolbar
 import { FaCopy } from 'react-icons/fa';
 import { makeGetCall, makePostCall } from 'service/ApiInterceptor';
 import { buildDeterministicColorMap, colorForKey } from '../utils/color';
+import { ellipsis } from 'widgets/ItemTooltip';
 
 // Backend can send either Mongo-style wrappers or plain strings
 type Oid = { $oid: string } | string;
@@ -150,20 +151,20 @@ const AITitlePdfRenamerHistory: React.FC = () => {
       }
     },
     {
-      field: 'runId', headerName: 'Run ID', width: 340, renderCell: (p) => (
+      field: 'runId', headerName: 'Run ID', width: 100, renderCell: (p) => (
         <div className="flex items-center">
           <IconButton onClick={() => copy(p.value)} size="small"><FaCopy /></IconButton>
-          <span>{p.value}</span>
+          <span>{ellipsis(p.value, 10)}</span>
         </div>
       )
     },
-    { field: 'processedCount', headerName: 'Processed', width: 110 },
-    { field: 'sfp', headerName: 'Success/Failed/Processed', width: 200,
+    { field: 'processedCount', headerName: 'Processed', width: 70 },
+    { field: 'sfp', headerName: 'S+F=Processed', width: 70,
       renderCell: (p) => displayRenamingResults(p.row)
     },
-    { field: 'successCount', headerName: 'Success', width: 100 },
-    { field: 'failedCount', headerName: 'Failed', width: 100 },
-    { field: 'renamedCount', headerName: 'Renamed', width: 110 },
+    { field: 'successCount', headerName: 'Success', width: 70 },
+    { field: 'failedCount', headerName: 'Failed', width: 70 },
+    { field: 'renamedCount', headerName: 'Renamed', width: 70 },
     { field: 'success', headerName: 'Overall', width: 100, renderCell: (p) => <span className={(p.row.failedCount > 0) ? 'text-red-700' : 'text-green-700'}>{String(p.row.failedCount > 0 ? 'Failed' : 'Success')}</span> },
     {
       field: 'actions', headerName: 'REDO Failed', width: 120,
@@ -209,7 +210,7 @@ const AITitlePdfRenamerHistory: React.FC = () => {
       )
     },
     {
-      field: 'renamingResults', headerName: 'Renaming Results(S/F/T)', width: 170, renderCell: (p) => (
+      field: 'renamingResults', headerName: 'Renaming Results', width: 90, renderCell: (p) => (
         <Button size="small" variant="outlined" onClick={() => { setSelectedRun(p.row); setDetailKey('renamingResults'); setOpen(true); }}>
           {displayRenamingResults(p.row)}
         </Button>
@@ -217,12 +218,12 @@ const AITitlePdfRenamerHistory: React.FC = () => {
     },
 
     {
-      field: 'pairedBatches', headerName: 'Paired Batches', width: 160, renderCell: (p) => (
+      field: 'pairedBatches', headerName: 'Paired Batches', width: 120, renderCell: (p) => (
         <Button size="small" variant="outlined" onClick={() => { setSelectedRun(p.row); setDetailKey('pairedBatches'); setOpen(true); }}>{p.row.pairedBatches?.length ?? 0}</Button>
       )
     },
     {
-      field: 'metaDataAggregated', headerName: 'MetaData Aggregated', width: 190, renderCell: (p) => (
+      field: 'metaDataAggregated', headerName: 'MetaData Aggregated', width: 150, renderCell: (p) => (
         <Button size="small" variant="outlined" onClick={() => { setSelectedRun(p.row); setDetailKey('metaDataAggregated'); setOpen(true); }}>{p.row.metaDataAggregated?.length ?? 0}</Button>
       )
     },

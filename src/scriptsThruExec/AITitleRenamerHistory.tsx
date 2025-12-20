@@ -201,7 +201,7 @@ const AITitleRenamerHistory: React.FC = () => {
     {
       field: 'runId',
       headerName: 'Run ID',
-      width: 200,
+      width: 100,
       filterable: true,
       renderCell: (params) => (
         <div className="flex items-center gap-2">
@@ -209,7 +209,7 @@ const AITitleRenamerHistory: React.FC = () => {
             <FaCopy />
           </IconButton>
           <Button onClick={() => handleOpenDetails(params.value)} variant="text" color="primary">
-            {ellipsis(params.value, 15)}
+            {ellipsis(params.value, 10)}
           </Button>
         </div>
       ),
@@ -234,7 +234,7 @@ const AITitleRenamerHistory: React.FC = () => {
     {
       field: 'srcFolder',
       headerName: 'Source Folder',
-      width: 100,
+      width: 300,
       filterable: true,
     },
     {
@@ -253,7 +253,7 @@ const AITitleRenamerHistory: React.FC = () => {
     {
       field: 'action',
       headerName: 'Apply Metadata to Original Files',
-      width: 230,
+      width: 130,
       filterable: false,
       sortable: false,
       renderCell: (params) => (
