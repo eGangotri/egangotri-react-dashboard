@@ -235,6 +235,16 @@ const AITitleRenamerHistory: React.FC = () => {
       headerName: 'Source Folder',
       width: 300,
       filterable: true,
+      renderCell: (params) => (
+        <div className="flex items-center gap-2">
+          <IconButton onClick={() => handleCopyText(params.value)} className="ml-2">
+            <FaCopy />
+          </IconButton>
+          <Typography color="primary">
+            {params.value}
+          </Typography>
+        </div>
+      ),
     },
     {
       field: 'count',
