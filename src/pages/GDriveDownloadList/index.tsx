@@ -12,7 +12,7 @@ import { Button, Dialog, DialogTitle, DialogContent, Chip, IconButton, Box, Radi
 import ExecPopover from 'scriptsThruExec/ExecPopover';
 import { makeGetCall } from 'service/ApiInterceptor';
 import { makePostCallWithErrorHandling } from "service/BackendFetchService";
-import { FaCopy } from "react-icons/fa";
+import { FaCopy, FaTrash } from "react-icons/fa";
 import ExecComponent from "scriptsThruExec/ExecComponent";
 import { ExecType } from "scriptsThruExec/ExecLauncherUtil";
 import { redownloadFromGDrive, verifyGDriveDwnldSuccessFolders } from "service/launchYarn";
@@ -68,8 +68,10 @@ const GDriveDownloadListing: React.FC = () => {
     const [selectedFiles, setSelectedFiles] = useState<ICompositeDocument[]>([])
     const [openDialog, setOpenDialog] = useState(false)
     const [confirmDialogOpen, setConfirmDialogOpen] = useState(false)
+    const [deleteConfirmDialogOpen, setDeleteConfirmDialogOpen] = useState(false)
     const [verifyDialogOpen, setVerifyDialogOpen] = useState(false)
     const [confirmTargetId, setConfirmTargetId] = useState<string>("")
+    const [deleteTargetRunId, setDeleteTargetRunId] = useState<string>("")
     const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
         page: 0,
         pageSize: 10,
@@ -251,6 +253,30 @@ const GDriveDownloadListing: React.FC = () => {
         navigator.clipboard.writeText(link);
     };
 
+    const handleDeleteClick = (runId: string) => {
+        setDeleteTargetRunId(runId);
+        setDeleteConfirmDialogOpen(true);
+    };
+
+    const handleDeleteConfirm = async (e: React.MouseEvent<HTMLButtonElement>) => {
+        setAnchorElApi(e.currentTarget);
+        setDeleteConfirmDialogOpen(false);
+        try {
+            setApiLoading(true);
+            const response = await makePostCallWithErrorHandling(
+                { runId: deleteTargetRunId },
+                'gDrive/softDeleteGDriveDownload'
+            );
+            setApiResult(<ExecResponsePanel response={response} execType={gDriveFileType} />);
+            loadDownloads();
+        } catch (error) {
+            console.error("Error calling delete API:", error);
+            setApiResult(null);
+        } finally {
+            setApiLoading(false);
+        }
+    };
+
     // Build a deterministic color map for visible commonRunId values
     const commonRunIdColorMap = useMemo(() => {
         const ids = Array.from(new Set((downloads || []).map((r) => String((r as any)?.commonRunId ?? ''))));
@@ -348,7 +374,7 @@ const GDriveDownloadListing: React.FC = () => {
         {
             field: "apiCall",
             headerName: "API Action",
-            width: 200,
+            width: 250,
             filterable: false,
             renderCell: (params) => (
                 <>
@@ -369,6 +395,14 @@ const GDriveDownloadListing: React.FC = () => {
                     >
                         {apiLoading ? <Spinner /> : "Re-D/L"}
                     </Button>
+                    <IconButton
+                        color="error"
+                        sx={{ ml: 1 }}
+                        onClick={() => handleDeleteClick(params.row.runId)}
+                        disabled={apiLoading}
+                    >
+                        <FaTrash />
+                    </IconButton>
                 </>
 
             ),
@@ -647,6 +681,17 @@ const GDriveDownloadListing: React.FC = () => {
                 <DialogActions>
                     <Button onClick={() => setVerifyDialogOpen(false)} color="inherit">No</Button>
                     <Button onClick={(e) => handleConfirm(e, confirmTargetId, true)} color="primary" variant="contained">Yes</Button>
+                </DialogActions>
+            </Dialog>
+
+            <Dialog open={deleteConfirmDialogOpen} onClose={() => setDeleteConfirmDialogOpen(false)}>
+                <DialogTitle>Confirm Delete</DialogTitle>
+                <DialogContent>
+                    Are you sure you want to delete this run ({deleteTargetRunId})?
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setDeleteConfirmDialogOpen(false)} color="inherit">No</Button>
+                    <Button onClick={(e) => handleDeleteConfirm(e)} color="error" variant="contained">Yes</Button>
                 </DialogActions>
             </Dialog>
 
