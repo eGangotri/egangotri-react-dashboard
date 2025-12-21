@@ -20,6 +20,7 @@ import { buildDeterministicColorMap, colorForKey } from "utils/color";
 import ExecResponsePanel from "scriptsThruExec/ExecResponsePanel";
 import Spinner from "widgets/Spinner";
 import { ellipsis } from "widgets/ItemTooltip";
+import path from "path";
 
 // Types
 interface ICompositeDocument {
@@ -323,13 +324,28 @@ const GDriveDownloadListing: React.FC = () => {
             width: 250,
             filterable: true,
             renderCell: (params) => {
-                //  const _path = (params.row.profileNameOrAbsPath === params.row.fileDumpFolder) ? params.row.fileDumpFolder : `${params.row.profileNameOrAbsPath} - ${params.row.fileDumpFolder}` + `/${params.row.gDriveRootFolder}`;
                 return (
                     <div className="flex items-center">
                         <IconButton onClick={() => handleCopyLink(params.value)} className="ml-2">
                             <FaCopy />
                         </IconButton>
                         {params.value}
+                    </div>
+                );
+            },
+        },
+        {
+            field: "combo",
+            headerName: "Combo",
+            width: 100,
+            filterable: true,
+            renderCell: (params) => {
+                return (
+                    <div className="flex items-center">
+                        <IconButton onClick={() => handleCopyLink(path.join(params.row.fileDumpFolder, params.row.gDriveRootFolder))} className="ml-2">
+                            <FaCopy />
+                        </IconButton>
+                        {path.join(params.row.fileDumpFolder, params.row.gDriveRootFolder)}
                     </div>
                 );
             },
