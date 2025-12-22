@@ -13,7 +13,7 @@ import { createBackgroundForRow, calcRowUploadFailures } from "./utils"
 import { ColorCodeInformationPanel } from "./ColorCodedInformationPanel"
 import ConfirmDialog from "../../widgets/ConfirmDialog"
 import { NestedTable } from "./UploadCycleListNestedTable"
-import { ActionButtons } from "./UploadCycleListActionButton"
+import { ActionButtonsDiscard } from "./UploadCycleListActionButton"
 import { ResultDisplayPopover } from "../../widgets/ResultDisplayPopover"
 import { launchUploader } from "service/launchGradle"
 import { UPLOADS_USHERED_PATH } from "Routes/constants"
@@ -152,7 +152,7 @@ const UploadCyclesList: React.FC = () => {
     const [filterValue, setFilterValue] = useState<string>("")
     const [verifiedFilter, setVerifiedFilter] = useState<VerifiedFilter>("all")
 
-    const confirm = (type: string, id: string, anchorId: string) => {
+    const confirmAction = (type: string, id: string, anchorId: string) => {
         setConfirmActionType(type)
         setConfirmTargetId(id)
         setConfirmAnchorId(anchorId)
@@ -260,7 +260,7 @@ const UploadCyclesList: React.FC = () => {
                 )
             },
         },
-        
+
         {
             field: "apiCall",
             headerName: "API Action",
@@ -272,7 +272,7 @@ const UploadCyclesList: React.FC = () => {
                         <IconButton
                             id={`verify-button-${params.row.uploadCycleId}`}
                             color="primary"
-                            onClick={() => confirm(TASK_TYPE_ENUM.VERIFY_UPLOAD_STATUS, params.row.uploadCycleId, `verify-button-${params.row.uploadCycleId}`)}
+                            onClick={() => confirmAction(TASK_TYPE_ENUM.VERIFY_UPLOAD_STATUS, params.row.uploadCycleId, `verify-button-${params.row.uploadCycleId}`)}
                             disabled={isLoading}
                         >
                             <MdVerified />
@@ -282,7 +282,7 @@ const UploadCyclesList: React.FC = () => {
                         <IconButton
                             id={`find-missing-button-${params.row.uploadCycleId}`}
                             color="primary"
-                            onClick={() => confirm(TASK_TYPE_ENUM.FIND_MISSING, params.row.uploadCycleId, `find-missing-button-${params.row.uploadCycleId}`)}
+                            onClick={() => confirmAction(TASK_TYPE_ENUM.FIND_MISSING, params.row.uploadCycleId, `find-missing-button-${params.row.uploadCycleId}`)}
                             disabled={isLoading}
                         >
                             <MdFindInPage /> ({(params.row.countIntended || 0) - (params.row?.totalQueueCount || 0)}/{params.row.countIntended})
@@ -293,7 +293,7 @@ const UploadCyclesList: React.FC = () => {
                         <IconButton
                             id={`reupload-button-${params.row.uploadCycleId}`}
                             color="primary"
-                            onClick={() => confirm(TASK_TYPE_ENUM.REUPLOAD_FAILED, params.row.uploadCycleId, `reupload-button-${params.row.uploadCycleId}`)}
+                            onClick={() => confirmAction(TASK_TYPE_ENUM.REUPLOAD_FAILED, params.row.uploadCycleId, `reupload-button-${params.row.uploadCycleId}`)}
                             disabled={isLoading}
                         >
                             <MdCloudUpload />{calcRowUploadFailures(params.row)}
@@ -303,7 +303,7 @@ const UploadCyclesList: React.FC = () => {
                         <IconButton
                             id={`isolate-failures-button-${params.row.uploadCycleId}`}
                             color="primary"
-                            onClick={() => confirm(TASK_TYPE_ENUM.ISOLATE_UPLOAD_FAILED, params.row.uploadCycleId, `isolate-failures-button-${params.row.uploadCycleId}`)}
+                            onClick={() => confirmAction(TASK_TYPE_ENUM.ISOLATE_UPLOAD_FAILED, params.row.uploadCycleId, `isolate-failures-button-${params.row.uploadCycleId}`)}
                             disabled={isLoading}
                         >
                             <MdFilterList />
@@ -313,7 +313,7 @@ const UploadCyclesList: React.FC = () => {
                         <IconButton
                             id={`freeze-button-${params.row.uploadCycleId}`}
                             color="primary"
-                            onClick={() => confirm(TASK_TYPE_ENUM.MOVE_TO_FREEZE, params.row.uploadCycleId, `freeze-button-${params.row.uploadCycleId}`)}
+                            onClick={() => confirmAction(TASK_TYPE_ENUM.MOVE_TO_FREEZE, params.row.uploadCycleId, `freeze-button-${params.row.uploadCycleId}`)}
                             disabled={isLoading}
                         >
                             <MdAcUnit />
@@ -322,7 +322,7 @@ const UploadCyclesList: React.FC = () => {
                     <IconButton
                         id={`delete-button-${params.row.uploadCycleId}`}
                         color="error"
-                        onClick={() => confirm("Delete", params.row.uploadCycleId, `delete-button-${params.row.uploadCycleId}`)}
+                        onClick={() => confirmAction("Delete", params.row.uploadCycleId, `delete-button-${params.row.uploadCycleId}`)}
                         disabled={isLoading}
                     >
                         <FaTrash />

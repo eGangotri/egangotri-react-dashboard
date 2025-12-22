@@ -56,7 +56,7 @@ export const useUploadCycleActions = ({
                 uploadCycleId: uploadCycleId,
             }, `uploadCycle/getUploadQueueUploadUsheredMissed`);
             const missedData = missed?.response?.missedData;
-
+            alert(JSON.stringify(missedData || missed, null, 2))
             setPopoverContent(JSON.stringify(missedData || missed, null, 2))
             setPopoverAnchor(document.getElementById(anchorId) as HTMLButtonElement)
 

@@ -24,7 +24,7 @@ interface ActionButtonsProps {
     fetchData: () => void
 }
 
-export const ActionButtons: React.FC<ActionButtonsProps> = ({ uploadCycleId, row, isLoading, setIsLoading, fetchData }) => {
+export const ActionButtonsDiscard: React.FC<ActionButtonsProps> = ({ uploadCycleId, row, isLoading, setIsLoading, fetchData }) => {
     const [openDialog, setOpenDialog] = useState(false)
     const [actionType, setActionType] = useState("")
     const [popoverAnchor, setPopoverAnchor] = useState<HTMLButtonElement | null>(null)
