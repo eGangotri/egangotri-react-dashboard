@@ -34,7 +34,7 @@ import InfoIconWithTooltip from 'widgets/InfoIconWithTooltip';
 import ItemToolTip, { ellipsis } from 'widgets/ItemTooltip';
 
 
-const UploadCycles = () => {
+const UploadCyclesOld1 = () => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [sortedData, setSortedData] = useState<UploadCycleTableData[]>([]);
@@ -57,7 +57,7 @@ const UploadCycles = () => {
     const [chosenProfilesForMove, setChosenProfilesForMove] = useState<[string, string[]]>(["", []]);
     const [reuploadables, setReuploadables] = useState<UploadCycleTableData>();
     const [deletaleUploadCycleId, setDeletableUploadCycleId] = useState<string>("");
-    
+
     const handleTitleClick = (event: React.MouseEvent<HTMLButtonElement>, absolutePaths: string[]) => {
         const _titles = (
             <>
@@ -79,7 +79,7 @@ const UploadCycles = () => {
     };
 
     const calcRowUploadFailures = (row: UploadCycleTableData) => {
-        const rowSucess = row.archiveProfileAndCount.reduce((acc, curr) => acc + (curr?.uploadSuccessCount||0), 0)
+        const rowSucess = row.archiveProfileAndCount.reduce((acc, curr) => acc + (curr?.uploadSuccessCount || 0), 0)
         const rowFailures = row.totalCount - rowSucess;
         return `(${rowFailures}/${row.totalCount})`;
     }
@@ -306,7 +306,7 @@ const UploadCycles = () => {
                             sx={{ width: "200px" }}
                             disabled={isLoading}
                         >
-                            Verify Upload Status
+                            XVerify Upload Status
                         </Button>
                         <Popover
                             id={id3}
@@ -329,7 +329,7 @@ const UploadCycles = () => {
                                 sx={{ color: "#f38484", width: "200px", marginTop: "10px" }}
                                 disabled={isLoading || ((row.countIntended || 0) === (row?.totalQueueCount || 0))}
                             >
-                                Find Missing ({(row.countIntended || 0)-(row?.totalQueueCount || 0)}/{row.countIntended})
+                                XFind Missing ({(row.countIntended || 0) - (row?.totalQueueCount || 0)}/{row.countIntended})
                                 <InfoIconWithTooltip input="Find Missing (Unqueued/Unushered) Failure Type 1" />
                             </Button>
 
@@ -355,7 +355,7 @@ const UploadCycles = () => {
                                 sx={{ color: "#f38484", width: "200px", marginTop: "10px" }}
                                 disabled={isLoading || (row.allUploadVerified === true)}
                             >
-                                Reupload FailedX { calcRowUploadFailures(row)}
+                                Reupload FailedX {calcRowUploadFailures(row)}
                                 <InfoIconWithTooltip input="Reupload Failed (Queued/Ushered/But Didnt Make it). Failure Type 2" />
                             </Button>
                             <Popover
@@ -571,4 +571,4 @@ const UploadCycles = () => {
 };
 
 
-export default UploadCycles;
+export default UploadCyclesOld1;

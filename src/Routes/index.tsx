@@ -1,5 +1,5 @@
 import ProtectedRoute from 'ProtectedRoute';
-import UploadCycles from 'pages/UploadCycles';
+import UploadCyclesOld1 from 'pages/UploadCycles';
 import Uploads from 'pages/upload';
 import FileMover from 'pages/widget/fileMover';
 import ExecLauncher from 'scriptsThruExec/ExecLauncherOne';
@@ -60,7 +60,7 @@ import {
     PDF_MERGE_MODULE,
     LAUNCH_AI_GDRIVE_CP_RENAMER_HISTORY_PATH,
     PDF_PAGE_EXTRACTION_HISTORY_PATH
-  } from './constants';
+} from './constants';
 import GDriveItemAggregates from 'components/gDriveListing/gDriveAggregatesByProfile';
 import ArchiveItemList from 'components/archiveListing';
 import ArchiveItemAggregates from 'components/archiveListing/archiveAgregates';
@@ -85,7 +85,7 @@ const DashboardRoutes: React.FC = () => {
     const allFrags = (
         <>
             {<Route path={LANDING_PAGE_PATH} element={<UploadCyclesList />} />}
-            {<Route path={LANDING_PAGE_OLD_PATH} element={<UploadCycles />} />}
+            {<Route path={LANDING_PAGE_OLD_PATH} element={<UploadCyclesOld1 />} />}
             {<Route path={UPLOADS_USHERED_PATH} element={<Uploads forQueues={false} />} />}
             {<Route path={UPLOADS_USHERED_OLD_PATH} element={<UploadsOld forQueues={false} />} />}
             {<Route path={UPLOADS_QUEUED_PATH} element={<Uploads forQueues={true} />} />}
@@ -110,7 +110,7 @@ const DashboardRoutes: React.FC = () => {
             {<Route path={FILE_TRANSFER_LISTING} element={<FileTransferList />} />}
             {<Route path={GDRIVE_DWNL_LISTING} element={<GDriveDownloadListing />} />}
             {<Route path={IMG_TO_PDF_LISTING} element={<ImgToPdfListing />} />}
-            
+
             {<Route path={SEARCH_ARCHIVE_DB_PATH} element={<SearchArchiveDB />} />}
             {<Route path={SEARCH_G_DRIVE_DB_PATH} element={<SearchGDriveDB />} />}
             {<Route path={G_DRIVE_LISTING_MAKER_PATH} element={<ExecLauncherFive />} />}
@@ -122,7 +122,7 @@ const DashboardRoutes: React.FC = () => {
             {<Route path={ARCHIVE_ITEM_LIST_WITH_FILTER_PATH} element={<ArchiveItemList />} />}
             {<Route path={ARCHIVE_ITEM_AGGREGATES_BY_SOURCES_PATH} element={<AggregatesBySources />} />}
             {<Route path={ARCHIVE_ITEM_AGGREGATES_PATH} element={<ArchiveItemAggregates />} />}
-            
+
             {<Route path={RENAME_PDFS} element={<RenamePdfs />} />}
         </>
     );
@@ -137,7 +137,7 @@ const DashboardRoutes: React.FC = () => {
             ) : (
                 <Route element={<Login />}>
                     {/* <Route element={<ProtectedRoute />}> */}
-                        {allFrags}
+                    {allFrags}
                     {/* </Route> */}
                 </Route>
             )}
