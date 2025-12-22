@@ -19,6 +19,7 @@ import { launchUploader } from "service/launchGradle"
 import { UPLOADS_USHERED_PATH } from "Routes/constants"
 import { makeGetCall } from "service/ApiInterceptor";
 import { useUploadCycleActions, TASK_TYPE_ENUM } from "./useUploadCycleActions"
+import { ellipsis } from "widgets/ItemTooltip";
 
 type VerifiedFilter = "all" | "true" | "false" | "null"
 
@@ -248,57 +249,18 @@ const UploadCyclesList: React.FC = () => {
         {
             field: "uploadCycleId",
             headerName: "Upload Cycle ID",
-            width: 220,
+            width: 120,
             renderCell: (params: GridRenderCellParams<UploadCycleTableData>) => {
                 return (
                     <>
                         <Link href={`${UPLOADS_USHERED_PATH}?uploadCycleId=${params.row.uploadCycleId}`}>
-                            {params.row.uploadCycleId}
+                            {ellipsis(params.row.uploadCycleId, 12)}
                         </Link>
                     </>
                 )
             },
         },
-        {
-            field: "archiveProfileAndCount",
-            headerName: "Archive Profile Details",
-            width: 200,
-            renderCell: (params: GridRenderCellParams<UploadCycleTableData>) => <NestedTable data={params.row || []} />,
-        },
-        {
-            field: "combinedCounts",
-            headerName: "Counts (Queued/Intended/Total)",
-            width: 250,
-            renderCell: (params: GridRenderCellParams<UploadCycleTableData>) => {
-                const totalCount = params.row.totalCount || 0
-                const queueCount = params.row.totalQueueCount || 0
-                const intendedCount = params.row.countIntended || 0
-                return (
-                    <Box sx={{ height: "100%", display: "flex", flexDirection: "column", justifyContent: "center" }}>
-                        <Typography variant="body2" sx={{ mb: 1 }}>{`${queueCount}/${intendedCount}/${totalCount}`}</Typography>
-                        <ActionButtons
-                            uploadCycleId={params.row.uploadCycleId}
-                            row={params.row}
-                            isLoading={isLoading}
-                            setIsLoading={setIsLoading}
-                            fetchData={fetchData}
-                        />
-                    </Box>
-                )
-            },
-        },
-        {
-            field: "totalCount",
-            headerName: "Total Count",
-            width: 100,
-            renderCell: (params: GridRenderCellParams<UploadCycleTableData>) => {
-                return (
-                    <>
-                        {params.value}
-                    </>
-                )
-            },
-        },
+        
         {
             field: "apiCall",
             headerName: "API Action",
@@ -367,6 +329,46 @@ const UploadCyclesList: React.FC = () => {
                     </IconButton>
                 </Box>
             ),
+        },
+        {
+            field: "archiveProfileAndCount",
+            headerName: "Archive Profile Details",
+            width: 200,
+            renderCell: (params: GridRenderCellParams<UploadCycleTableData>) => <NestedTable data={params.row || []} />,
+        },
+        {
+            field: "combinedCounts",
+            headerName: "Counts (Queued/Intended/Total)",
+            width: 250,
+            renderCell: (params: GridRenderCellParams<UploadCycleTableData>) => {
+                const totalCount = params.row.totalCount || 0
+                const queueCount = params.row.totalQueueCount || 0
+                const intendedCount = params.row.countIntended || 0
+                return (
+                    <Box sx={{ height: "100%", display: "flex", flexDirection: "column", justifyContent: "center" }}>
+                        <Typography variant="body2" sx={{ mb: 1 }}>{`${queueCount}/${intendedCount}/${totalCount}`}</Typography>
+                        {/* <ActionButtons
+                            uploadCycleId={params.row.uploadCycleId}
+                            row={params.row}
+                            isLoading={isLoading}
+                            setIsLoading={setIsLoading}
+                            fetchData={fetchData}
+                        /> */}
+                    </Box>
+                )
+            },
+        },
+        {
+            field: "totalCount",
+            headerName: "Total Count",
+            width: 100,
+            renderCell: (params: GridRenderCellParams<UploadCycleTableData>) => {
+                return (
+                    <>
+                        {params.value}
+                    </>
+                )
+            },
         },
         { field: "datetimeUploadStarted", headerName: "Upload Started", width: 180 },
         { field: "mode", headerName: "Mode", width: 100 },
