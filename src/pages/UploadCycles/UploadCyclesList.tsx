@@ -13,8 +13,8 @@ import { createBackgroundForRow, calcRowUploadFailures } from "./utils"
 import { ColorCodeInformationPanel } from "./ColorCodedInformationPanel"
 import ConfirmDialog from "../../widgets/ConfirmDialog"
 import { NestedTable } from "./UploadCycleListNestedTable"
-import { ActionButtonsDiscard } from "./UploadCycleListActionButton"
-import { ResultDisplayPopover } from "../../widgets/ResultDisplayPopover"
+import ExecPopover from 'scriptsThruExec/ExecPopover';
+import ExecResponsePanel from "scriptsThruExec/ExecResponsePanel";
 import { launchUploader } from "service/launchGradle"
 import { UPLOADS_USHERED_PATH } from "Routes/constants"
 import { makeGetCall } from "service/ApiInterceptor";
@@ -31,7 +31,6 @@ const UploadCyclesList: React.FC = () => {
     const [openDialog, setOpenDialog] = useState(false)
     const [confirmActionType, setConfirmActionType] = useState<string>("")
     const [confirmTargetId, setConfirmTargetId] = useState<string>("")
-    const [confirmAnchorId, setConfirmAnchorId] = useState<string>("")
 
     const fetchUploadCycles = useCallback(async () => {
         try {
@@ -84,7 +83,7 @@ const UploadCyclesList: React.FC = () => {
             const uploadCycleIds = selectedRows.map((id) => String(id))
             const _resp = await makePostCallWithErrorHandling({ uploadCycleIds }, "itemsUshered/verifyUploadMulti")
             console.log(`-resp ${JSON.stringify(_resp, null, 2)}`)
-            setPopoverContent(JSON.stringify(_resp, null, 2))
+            setApiResult(<ExecResponsePanel response={_resp} />);
             setPopoverAnchor(document.getElementById("bulk-verify-upload-button") as HTMLButtonElement)
         } catch (error) {
             console.error('Error verifying upload:', error);
@@ -104,11 +103,11 @@ const UploadCyclesList: React.FC = () => {
         try {
             const uploadCycleIds = selectedRows.map((id) => String(id))
             const _resp = await makePostCallWithErrorHandling({ uploadCycleIds }, "execLauncher/reuploadFailedMulti")
-            setPopoverContent(JSON.stringify(_resp, null, 2))
+            setApiResult(<ExecResponsePanel response={_resp} />);
             setPopoverAnchor(document.getElementById("bulk-reupload-failed-button") as HTMLButtonElement)
-        } catch (error) {
+        } catch (error: any) {
             console.error("Error in bulk reupload failed:", error)
-            setPopoverContent(`Error in bulk reupload failed: ${error}`)
+            setApiResult(<ExecResponsePanel response={{ error: error?.message || String(error) }} />);
             setPopoverAnchor(document.getElementById("bulk-reupload-failed-button") as HTMLButtonElement)
         } finally {
             setIsLoading(false)
@@ -147,15 +146,14 @@ const UploadCyclesList: React.FC = () => {
         }
     }
     const [popoverAnchor, setPopoverAnchor] = useState<HTMLButtonElement | null>(null)
-    const [popoverContent, setPopoverContent] = useState<string>("")
+    const [apiResult, setApiResult] = useState<JSX.Element | null>(null)
     const [popoverTitle, setPopoverTitle] = useState<string>("")
     const [filterValue, setFilterValue] = useState<string>("")
     const [verifiedFilter, setVerifiedFilter] = useState<VerifiedFilter>("all")
 
-    const confirmAction = (type: string, id: string, anchorId: string) => {
+    const confirmAction = (type: string, id: string) => {
         setConfirmActionType(type)
         setConfirmTargetId(id)
-        setConfirmAnchorId(anchorId)
         setOpenDialog(true)
     }
 
@@ -163,20 +161,20 @@ const UploadCyclesList: React.FC = () => {
         setOpenDialog(false)
         const type = confirmActionType
         const id = confirmTargetId
-        const anchorId = confirmAnchorId
 
         if (type === "Delete") {
+            const anchorId = `delete-button-${id}`
             await handleDelete(id, anchorId)
         } else if (type === TASK_TYPE_ENUM.VERIFY_UPLOAD_STATUS) {
-            await handleVerifyUploadStatus(id, anchorId)
+            await handleVerifyUploadStatus(id)
         } else if (type === TASK_TYPE_ENUM.FIND_MISSING) {
-            await handleFindMissing(id, anchorId)
+            await handleFindMissing(id)
         } else if (type === TASK_TYPE_ENUM.REUPLOAD_FAILED) {
-            await handleReupload(id, anchorId)
+            await handleReupload(id)
         } else if (type === TASK_TYPE_ENUM.ISOLATE_UPLOAD_FAILED) {
-            await handleIsolateUploadFailures(id, anchorId)
+            await handleIsolateUploadFailures(id)
         } else if (type === TASK_TYPE_ENUM.MOVE_TO_FREEZE) {
-            await handleMoveToFreeze(id, anchorId)
+            await handleMoveToFreeze(id)
         }
     }
 
@@ -187,11 +185,11 @@ const UploadCyclesList: React.FC = () => {
         try {
             const _resp = await deleteUploadCycleById(id)
             console.log(`result ${JSON.stringify(_resp)}`)
-            setPopoverContent(JSON.stringify(_resp, null, 2))
+            setApiResult(<ExecResponsePanel response={_resp} />);
             setPopoverAnchor(document.getElementById(anchorId) as HTMLButtonElement)
-        } catch (error) {
+        } catch (error: any) {
             console.error("Error deleting upload cycle:", error)
-            setPopoverContent(`Error deleting upload cycle: ${error}`)
+            setApiResult(<ExecResponsePanel response={{ error: error?.message || String(error) }} />);
             setPopoverAnchor(document.getElementById(anchorId) as HTMLButtonElement)
         } finally {
             setIsLoading(false)
@@ -240,7 +238,7 @@ const UploadCyclesList: React.FC = () => {
     } = useUploadCycleActions({
         setIsLoading,
         setPopoverTitle,
-        setPopoverContent,
+        setApiResult,
         setPopoverAnchor,
         fetchData
     });
@@ -272,7 +270,7 @@ const UploadCyclesList: React.FC = () => {
                         <IconButton
                             id={`verify-button-${params.row.uploadCycleId}`}
                             color="primary"
-                            onClick={() => confirmAction(TASK_TYPE_ENUM.VERIFY_UPLOAD_STATUS, params.row.uploadCycleId, `verify-button-${params.row.uploadCycleId}`)}
+                            onClick={() => confirmAction(TASK_TYPE_ENUM.VERIFY_UPLOAD_STATUS, params.row.uploadCycleId)}
                             disabled={isLoading}
                         >
                             <MdVerified />
@@ -282,7 +280,7 @@ const UploadCyclesList: React.FC = () => {
                         <IconButton
                             id={`find-missing-button-${params.row.uploadCycleId}`}
                             color="primary"
-                            onClick={() => confirmAction(TASK_TYPE_ENUM.FIND_MISSING, params.row.uploadCycleId, `find-missing-button-${params.row.uploadCycleId}`)}
+                            onClick={() => confirmAction(TASK_TYPE_ENUM.FIND_MISSING, params.row.uploadCycleId)}
                             disabled={isLoading}
                         >
                             <MdFindInPage /> ({(params.row.countIntended || 0) - (params.row?.totalQueueCount || 0)}/{params.row.countIntended})
@@ -293,7 +291,7 @@ const UploadCyclesList: React.FC = () => {
                         <IconButton
                             id={`reupload-button-${params.row.uploadCycleId}`}
                             color="primary"
-                            onClick={() => confirmAction(TASK_TYPE_ENUM.REUPLOAD_FAILED, params.row.uploadCycleId, `reupload-button-${params.row.uploadCycleId}`)}
+                            onClick={() => confirmAction(TASK_TYPE_ENUM.REUPLOAD_FAILED, params.row.uploadCycleId)}
                             disabled={isLoading}
                         >
                             <MdCloudUpload />{calcRowUploadFailures(params.row)}
@@ -303,7 +301,7 @@ const UploadCyclesList: React.FC = () => {
                         <IconButton
                             id={`isolate-failures-button-${params.row.uploadCycleId}`}
                             color="primary"
-                            onClick={() => confirmAction(TASK_TYPE_ENUM.ISOLATE_UPLOAD_FAILED, params.row.uploadCycleId, `isolate-failures-button-${params.row.uploadCycleId}`)}
+                            onClick={() => confirmAction(TASK_TYPE_ENUM.ISOLATE_UPLOAD_FAILED, params.row.uploadCycleId)}
                             disabled={isLoading}
                         >
                             <MdFilterList />
@@ -313,7 +311,7 @@ const UploadCyclesList: React.FC = () => {
                         <IconButton
                             id={`freeze-button-${params.row.uploadCycleId}`}
                             color="primary"
-                            onClick={() => confirmAction(TASK_TYPE_ENUM.MOVE_TO_FREEZE, params.row.uploadCycleId, `freeze-button-${params.row.uploadCycleId}`)}
+                            onClick={() => confirmAction(TASK_TYPE_ENUM.MOVE_TO_FREEZE, params.row.uploadCycleId)}
                             disabled={isLoading}
                         >
                             <MdAcUnit />
@@ -322,7 +320,7 @@ const UploadCyclesList: React.FC = () => {
                     <IconButton
                         id={`delete-button-${params.row.uploadCycleId}`}
                         color="error"
-                        onClick={() => confirmAction("Delete", params.row.uploadCycleId, `delete-button-${params.row.uploadCycleId}`)}
+                        onClick={() => confirmAction("Delete", params.row.uploadCycleId)}
                         disabled={isLoading}
                     >
                         <FaTrash />
@@ -403,12 +401,12 @@ const UploadCyclesList: React.FC = () => {
         try {
             const _resp = await launchUploader(profilesCsv, optionalParams);
             console.log(`result ${JSON.stringify(_resp)}`)
-            setPopoverContent(JSON.stringify(_resp, null, 2))
+            setApiResult(<ExecResponsePanel response={_resp} />);
             setPopoverAnchor(document.getElementById("profiles-csv") as HTMLButtonElement)
             setPopoverTitle("Upload Results")
-        } catch (error) {
+        } catch (error: any) {
             console.error("Error uploading:", error)
-            setPopoverContent(`Error uploading: ${error}`)
+            setApiResult(<ExecResponsePanel response={{ error: error?.message || String(error) }} />);
             setPopoverAnchor(document.getElementById("profiles-csv") as HTMLButtonElement)
             setPopoverTitle("Upload Results")
         } finally {
@@ -553,12 +551,18 @@ const UploadCyclesList: React.FC = () => {
                 setOpenDialog={setOpenDialog}
                 invokeFuncOnClick2={handleConfirm}
             />
-            <ResultDisplayPopover
-                popoverAnchor={popoverAnchor}
-                setPopoverAnchor={setPopoverAnchor}
-                popoverContent={popoverContent}
-                actionType={popoverTitle}
-            />
+            <ExecPopover
+                open={Boolean(popoverAnchor)}
+                anchorEl={popoverAnchor}
+                onClose={() => setPopoverAnchor(null)}
+            >
+                {apiResult && (
+                    <Box>
+                        <Typography variant="h6" sx={{ mb: 2 }}>{popoverTitle}</Typography>
+                        {apiResult}
+                    </Box>
+                )}
+            </ExecPopover>
         </>
     );
 }

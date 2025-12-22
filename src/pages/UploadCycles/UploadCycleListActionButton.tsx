@@ -15,6 +15,8 @@ import InfoIconWithTooltip from "widgets/InfoIconWithTooltip"
 import { ResultDisplayPopover } from "../../widgets/ResultDisplayPopover"
 import { useUploadCycleActions, TASK_TYPE_ENUM } from "./useUploadCycleActions"
 import { calcRowUploadFailures } from "./utils"
+import ExecPopover from 'scriptsThruExec/ExecPopover';
+import ExecResponsePanel from "scriptsThruExec/ExecResponsePanel";
 
 interface ActionButtonsProps {
     uploadCycleId: string,
@@ -28,9 +30,13 @@ export const ActionButtonsDiscard: React.FC<ActionButtonsProps> = ({ uploadCycle
     const [openDialog, setOpenDialog] = useState(false)
     const [actionType, setActionType] = useState("")
     const [popoverAnchor, setPopoverAnchor] = useState<HTMLButtonElement | null>(null)
-    const [popoverContent, setPopoverContent] = useState<string>("")
-    const [reactComponent, setReactComponent] = useState<JSX.Element>(<></>)
+    const [apiResult, setApiResult] = useState<JSX.Element | null>(null)
     const [loading2, setLoading2] = useState(false);
+
+    const confirm = (type: string) => {
+        setActionType(type)
+        setOpenDialog(true)
+    }
 
     const {
         handleVerifyUploadStatus,
@@ -43,9 +49,8 @@ export const ActionButtonsDiscard: React.FC<ActionButtonsProps> = ({ uploadCycle
     } = useUploadCycleActions({
         setIsLoading,
         setPopoverTitle: setActionType,
-        setPopoverContent,
+        setApiResult,
         setPopoverAnchor,
-        setReactComponent,
         fetchData
     });
 
@@ -55,19 +60,19 @@ export const ActionButtonsDiscard: React.FC<ActionButtonsProps> = ({ uploadCycle
 
         try {
             if (actionType === TASK_TYPE_ENUM.VERIFY_UPLOAD_STATUS) {
-                await handleVerifyUploadStatus(uploadCycleId, `verify-upload-status-button-${uploadCycleId}`);
+                await handleVerifyUploadStatus(uploadCycleId);
             } else if (actionType === TASK_TYPE_ENUM.FIND_MISSING) {
-                await handleFindMissing(uploadCycleId, `find-missing-button-${uploadCycleId}`);
+                await handleFindMissing(uploadCycleId);
             } else if (actionType === TASK_TYPE_ENUM.REUPLOAD_FAILED) {
-                await handleReupload(uploadCycleId, `reupload-failed-button-${uploadCycleId}`);
+                await handleReupload(uploadCycleId);
             } else if (actionType === TASK_TYPE_ENUM.REUPLOAD_MISSED) {
-                await handleLaunchReuploadMissed(uploadCycleId, `find-missing-button-${uploadCycleId}`);
+                await handleLaunchReuploadMissed(uploadCycleId);
             } else if (actionType === TASK_TYPE_ENUM.MOVE_TO_FREEZE) {
-                await handleMoveToFreeze(uploadCycleId, `move-to-freeze-button-${uploadCycleId}`);
+                await handleMoveToFreeze(uploadCycleId);
             } else if (actionType === TASK_TYPE_ENUM.ISOLATE_MISSING) {
-                await handleIsolateMissing(uploadCycleId, `find-missing-button-${uploadCycleId}`);
+                await handleIsolateMissing(uploadCycleId);
             } else if (actionType === TASK_TYPE_ENUM.ISOLATE_UPLOAD_FAILED) {
-                await handleIsolateUploadFailures(uploadCycleId, `isolated-failed-upload-button-${uploadCycleId}`);
+                await handleIsolateUploadFailures(uploadCycleId);
             }
         } catch (error) {
             console.error(`Error executing ${actionType}:`, error);
@@ -78,7 +83,7 @@ export const ActionButtonsDiscard: React.FC<ActionButtonsProps> = ({ uploadCycle
         <>
             <Stack spacing={0.5}>
                 <Button
-                    id={`verify-upload-status-button-${uploadCycleId}`}
+                    id={`verify-button-${uploadCycleId}`}
                     variant="outlined"
                     size="small"
                     onClick={(event) => confirm(TASK_TYPE_ENUM.VERIFY_UPLOAD_STATUS)}
@@ -97,7 +102,7 @@ export const ActionButtonsDiscard: React.FC<ActionButtonsProps> = ({ uploadCycle
                 </Button>
                 <Box sx={{ display: 'flex', gap: 0.5, width: '100%' }}>
                     <Button
-                        id={`reupload-failed-button-${uploadCycleId}`}
+                        id={`reupload-button-${uploadCycleId}`}
                         variant="outlined"
                         size="small"
                         onClick={(event) => confirm(TASK_TYPE_ENUM.REUPLOAD_FAILED)}
@@ -108,7 +113,7 @@ export const ActionButtonsDiscard: React.FC<ActionButtonsProps> = ({ uploadCycle
                         <InfoIconWithTooltip input="Reupload Failed (Queued/Ushered/But Didnt Make it). Failure Type 2" />
                     </Button>
                     <Button
-                        id={`isolated-failed-upload-button-${uploadCycleId}`}
+                        id={`isolate-failures-button-${uploadCycleId}`}
                         variant="outlined"
                         size="small"
                         onClick={(event) => confirm(TASK_TYPE_ENUM.ISOLATE_UPLOAD_FAILED)}
@@ -120,7 +125,7 @@ export const ActionButtonsDiscard: React.FC<ActionButtonsProps> = ({ uploadCycle
                     </Button>
                 </Box>
                 <Button
-                    id={`move-to-freeze-button-${uploadCycleId}`}
+                    id={`freeze-button-${uploadCycleId}`}
                     variant="outlined"
                     size="small"
                     onClick={(event) => confirm(TASK_TYPE_ENUM.MOVE_TO_FREEZE)}
@@ -136,15 +141,18 @@ export const ActionButtonsDiscard: React.FC<ActionButtonsProps> = ({ uploadCycle
                 setOpenDialog={setOpenDialog}
                 invokeFuncOnClick={handleConfirm}
             />
-            <ResultDisplayPopover
-                popoverAnchor={popoverAnchor}
-                setPopoverAnchor={setPopoverAnchor}
-                popoverContent={popoverContent}
-                actionType={actionType}
-                reactComponent={reactComponent}
-                setReactComponent={setReactComponent}
-                loading={loading2}
-            />
+            <ExecPopover
+                open={Boolean(popoverAnchor)}
+                anchorEl={popoverAnchor}
+                onClose={() => setPopoverAnchor(null)}
+            >
+                {apiResult && (
+                    <Box>
+                        <Typography variant="h6" sx={{ mb: 2 }}>{actionType}</Typography>
+                        {apiResult}
+                    </Box>
+                )}
+            </ExecPopover>
 
         </>
     )
