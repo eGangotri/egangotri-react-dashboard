@@ -1,10 +1,10 @@
 import { BURGUNDY_RED_TW, GREEN_TO_YELLOW, INHERIT_BG_TW, LIGHT_YELLOW_TW, RED_TO_YELLOW as RED_TO_YELLOW_GRADIENT_TW, SUCCESS_GREEN_TW, WHITE_SMOKE } from "constants/colors"
 import { UploadCycleTableData } from "mirror/types"
 
-export const createBackgroundForRow = (row: UploadCycleTableData):string => {
+export const createBackgroundForRow = (row: UploadCycleTableData): string => {
     const countMatch = row?.countIntended === row?.totalCount;
 
-   // console.log(`row?.allUploadVerified( ${row?.allUploadVerified}) && countMatch(${countMatch})  -> ${row?.allUploadVerified && countMatch}`)
+    // console.log(`row?.allUploadVerified( ${row?.allUploadVerified}) && countMatch(${countMatch})  -> ${row?.allUploadVerified && countMatch}`)
 
     if (row?.allUploadVerified === null && !countMatch) {
         return LIGHT_YELLOW_TW;
@@ -33,5 +33,11 @@ export const createBackgroundForRow = (row: UploadCycleTableData):string => {
 
 export const checkCountEquality = (row: UploadCycleTableData) => {
     return (row?.totalCount === row?.totalQueueCount) && (row?.countIntended === row?.totalQueueCount)
+}
+
+export const calcRowUploadFailures = (row: UploadCycleTableData) => {
+    const rowSucess = row.archiveProfileAndCount.reduce((acc, curr) => acc + (curr?.uploadSuccessCount || 0), 0)
+    const rowFailures = row.totalCount - rowSucess;
+    return `(${rowFailures}/${row.totalCount})`;
 }
 

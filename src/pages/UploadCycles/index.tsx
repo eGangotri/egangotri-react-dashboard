@@ -4,8 +4,10 @@ import {
     TableContainer, TableHead, TableRow, Paper,
     TablePagination,
     Link, Typography,
-    Button, Box, Popover, Stack
+    Button, Box, Popover, Stack,
+    IconButton, Tooltip
 } from '@mui/material';
+import { MdList } from "react-icons/md";
 import "pages/UploadCycles/UploadCycles.css"
 import * as _ from 'lodash';
 import moment from 'moment';
@@ -78,11 +80,7 @@ const UploadCyclesOld1 = () => {
         setAnchorElReuploadFailed(null);
     };
 
-    const calcRowUploadFailures = (row: UploadCycleTableData) => {
-        const rowSucess = row.archiveProfileAndCount.reduce((acc, curr) => acc + (curr?.uploadSuccessCount || 0), 0)
-        const rowFailures = row.totalCount - rowSucess;
-        return `(${rowFailures}/${row.totalCount})`;
-    }
+
 
     const open = Boolean(anchorEl);
     const open2 = Boolean(anchorEl2);
@@ -355,7 +353,7 @@ const UploadCyclesOld1 = () => {
                                 sx={{ color: "#f38484", width: "200px", marginTop: "10px" }}
                                 disabled={isLoading || (row.allUploadVerified === true)}
                             >
-                                Reupload FailedX {calcRowUploadFailures(row)}
+                                {/* Reupload FailedX {calcRowUploadFailures(row)} */}
                                 <InfoIconWithTooltip input="Reupload Failed (Queued/Ushered/But Didnt Make it). Failure Type 2" />
                             </Button>
                             <Popover
@@ -412,13 +410,19 @@ const UploadCyclesOld1 = () => {
                                 <ItemToolTip input={archiveProfileAndCount?.archiveProfilePath || ""} /></Typography>
                             <Typography component="span">{archiveProfileAndCount.count}</Typography>
                             <Typography component="div" sx={{ fontWeight: 600 }}>
-                                <Button
-                                    variant='contained'
-                                    onClick={(e) => handleTitleClick(e, archiveProfileAndCount?.absolutePaths || [])}
-                                    disabled={isLoading}
-                                >
-                                    Fetch All Titles
-                                </Button>
+                                <Tooltip title="Fetch All Titles">
+                                    <IconButton
+                                        onClick={(e) => handleTitleClick(e, archiveProfileAndCount?.absolutePaths || [])}
+                                        disabled={isLoading}
+                                        color="primary"
+                                        size="small"
+                                    >
+                                        <MdList />
+                                        <Typography variant="caption" sx={{ ml: 0.5 }}>
+                                            ({archiveProfileAndCount.count})
+                                        </Typography>
+                                    </IconButton>
+                                </Tooltip>
                             </Typography>
 
                             <Popover

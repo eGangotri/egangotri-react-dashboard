@@ -4,9 +4,10 @@ import type React from "react"
 import { useEffect, useState, useCallback } from "react"
 import { DataGrid, type GridColDef, type GridRenderCellParams, type GridRowId } from "@mui/x-data-grid"
 import { FaTrash, FaTimes } from 'react-icons/fa';
-import { Typography, Box, Link, TextField, Select, MenuItem, FormControl, InputLabel, Button, SelectChangeEvent, Stack } from "@mui/material"
+import { Typography, Box, Link, TextField, Select, MenuItem, FormControl, InputLabel, Button, SelectChangeEvent, Stack, IconButton, Tooltip } from "@mui/material"
+import { MdVerified, MdFindInPage, MdCloudUpload, MdFilterList, MdAcUnit } from "react-icons/md"
 import type { UploadCycleTableData, UploadCycleTableDataDictionary } from "mirror/types"
-import { deleteUploadCycleById, getDataForUploadCycle, makePostCallWithErrorHandling } from "service/BackendFetchService"
+import { deleteUploadCycleById, getDataForUploadCycle, makePostCallWithErrorHandling, verifyUploadStatusForUploadCycleId } from "service/BackendFetchService"
 import { MAX_ITEMS_LISTABLE } from "utils/constants"
 import { createBackgroundForRow } from "./utils"
 import { ColorCodeInformationPanel } from "./ColorCodedInformationPanel"
@@ -17,6 +18,7 @@ import { ResultDisplayPopover } from "../../widgets/ResultDisplayPopover"
 import { launchUploader } from "service/launchGradle"
 import { UPLOADS_USHERED_PATH } from "Routes/constants"
 import { makeGetCall } from "service/ApiInterceptor";
+import { useUploadCycleActions, TASK_TYPE_ENUM } from "./useUploadCycleActions"
 
 type VerifiedFilter = "all" | "true" | "false" | "null"
 
@@ -27,6 +29,38 @@ const UploadCyclesList: React.FC = () => {
     const [filteredData, setFilteredData] = useState<UploadCycleTableData[]>([])
     const [openDialog, setOpenDialog] = useState(false)
     const [deletableUploadCycleId, setDeletableUploadCycleId] = useState<string>("")
+
+    const calcRowUploadFailures = (row: UploadCycleTableData) => {
+        const rowSucess = row.archiveProfileAndCount.reduce((acc, curr) => acc + (curr?.uploadSuccessCount || 0), 0)
+        const rowFailures = row.totalCount - rowSucess;
+        return `(${rowFailures}/${row.totalCount})`;
+    }
+    const fetchUploadCycles = useCallback(async () => {
+        try {
+            const dataForUploadCycle: UploadCycleTableDataDictionary[] = await getDataForUploadCycle(MAX_ITEMS_LISTABLE)
+            return dataForUploadCycle?.map((item) => ({
+                id: item.uploadCycle.uploadCycleId,
+                ...item.uploadCycle,
+            }))
+        } catch (error) {
+            console.error("Error fetching upload cycles:", error)
+            return [] // Return an empty array in case of error
+        }
+    }, [])
+
+    const fetchData = useCallback(async () => {
+        setIsLoading(true)
+        try {
+            const fetchedData = await fetchUploadCycles()
+            setData(fetchedData)
+            setFilteredData(fetchedData)
+        } catch (error) {
+            console.error("Error fetching data:", error)
+            // Handle error appropriately, e.g., display an error message
+        } finally {
+            setIsLoading(false)
+        }
+    }, [])
 
     const closeAllChrome = async () => {
         if (window.confirm('Are you sure you want to close all Chrome instances?')) {
@@ -184,6 +218,20 @@ const UploadCyclesList: React.FC = () => {
         setFilteredData(filtered)
     }
 
+    const {
+        handleVerifyUploadStatus,
+        handleFindMissing,
+        handleReupload,
+        handleIsolateUploadFailures,
+        handleMoveToFreeze
+    } = useUploadCycleActions({
+        setIsLoading,
+        setPopoverTitle,
+        setPopoverContent,
+        setPopoverAnchor,
+        fetchData
+    });
+
     const columns: GridColDef[] = [
         {
             field: "uploadCycleId",
@@ -242,15 +290,77 @@ const UploadCyclesList: React.FC = () => {
                             {params.value}
                             <FaTrash className="ml-1" />
                         </div>
-                        <ResultDisplayPopover
-                            popoverAnchor={popoverAnchor}
-                            setPopoverAnchor={setPopoverAnchor}
-                            popoverContent={popoverContent}
-                            actionType={popoverTitle}
-                        />
                     </>
                 )
             },
+        },
+        {
+            field: "apiCall",
+            headerName: "API Action",
+            width: 350,
+            filterable: false,
+            renderCell: (params) => (
+                <Box display="flex" alignItems="center">
+                    <Tooltip title="Verify UploadStatus">
+                        <IconButton
+                            id={`verify-button-${params.row.uploadCycleId}`}
+                            color="primary"
+                            onClick={() => handleVerifyUploadStatus(params.row.uploadCycleId, `verify-button-${params.row.uploadCycleId}`)}
+                            disabled={isLoading}
+                        >
+                            <MdVerified />
+                        </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Find Missing">
+                        <IconButton
+                            id={`find-missing-button-${params.row.uploadCycleId}`}
+                            color="primary"
+                            onClick={() => handleFindMissing(params.row.uploadCycleId, `find-missing-button-${params.row.uploadCycleId}`)}
+                            disabled={isLoading}
+                        >
+                            <MdFindInPage /> ({(params.row.countIntended || 0) - (params.row?.totalQueueCount || 0)}/{params.row.countIntended})
+
+                        </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Reupload">
+                        <IconButton
+                            id={`reupload-button-${params.row.uploadCycleId}`}
+                            color="primary"
+                            onClick={() => handleReupload(params.row.uploadCycleId, `reupload-button-${params.row.uploadCycleId}`)}
+                            disabled={isLoading}
+                        >
+                            <MdCloudUpload />{calcRowUploadFailures(params.row)}
+                        </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Isolate Upload-Failures">
+                        <IconButton
+                            id={`isolate-failures-button-${params.row.uploadCycleId}`}
+                            color="primary"
+                            onClick={() => handleIsolateUploadFailures(params.row.uploadCycleId, `isolate-failures-button-${params.row.uploadCycleId}`)}
+                            disabled={isLoading}
+                        >
+                            <MdFilterList />
+                        </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Move to Freeeze">
+                        <IconButton
+                            id={`freeze-button-${params.row.uploadCycleId}`}
+                            color="primary"
+                            onClick={() => handleMoveToFreeze(params.row.uploadCycleId, `freeze-button-${params.row.uploadCycleId}`)}
+                            disabled={isLoading}
+                        >
+                            <MdAcUnit />
+                        </IconButton>
+                    </Tooltip>
+                    <IconButton
+                        color="error"
+                        onClick={(e) => handleClick(e, params.row.uploadCycleId)}
+                        disabled={isLoading}
+                    >
+                        <FaTrash />
+                    </IconButton>
+                </Box>
+            ),
         },
         { field: "datetimeUploadStarted", headerName: "Upload Started", width: 180 },
         { field: "mode", headerName: "Mode", width: 100 },
@@ -272,32 +382,6 @@ const UploadCyclesList: React.FC = () => {
         }
     ]
 
-    const fetchUploadCycles = useCallback(async () => {
-        try {
-            const dataForUploadCycle: UploadCycleTableDataDictionary[] = await getDataForUploadCycle(MAX_ITEMS_LISTABLE)
-            return dataForUploadCycle?.map((item) => ({
-                id: item.uploadCycle.uploadCycleId,
-                ...item.uploadCycle,
-            }))
-        } catch (error) {
-            console.error("Error fetching upload cycles:", error)
-            return [] // Return an empty array in case of error
-        }
-    }, [])
-
-    const fetchData = useCallback(async () => {
-        setIsLoading(true)
-        try {
-            const fetchedData = await fetchUploadCycles()
-            setData(fetchedData)
-            setFilteredData(fetchedData)
-        } catch (error) {
-            console.error("Error fetching data:", error)
-            // Handle error appropriately, e.g., display an error message
-        } finally {
-            setIsLoading(false)
-        }
-    }, [])
 
     const [profilesCsv, setProfilesCsv] = useState("")
     const [extraDescription, setExtraDescription] = useState("")
@@ -460,6 +544,12 @@ const UploadCyclesList: React.FC = () => {
                 handleClose={() => setOpenDialog(false)}
                 setOpenDialog={setOpenDialog}
                 invokeFuncOnClick2={handleConfirm}
+            />
+            <ResultDisplayPopover
+                popoverAnchor={popoverAnchor}
+                setPopoverAnchor={setPopoverAnchor}
+                popoverContent={popoverContent}
+                actionType={popoverTitle}
             />
         </>
     );

@@ -9,29 +9,12 @@ import {
     Box,
     Icon
 } from "@mui/material"
-import { makePostCallWithErrorHandling, verifyUploadStatusForUploadCycleId } from "service/BackendFetchService"
 import ConfirmDialog from "../../widgets/ConfirmDialog"
-import { FaCopy, FaTimes } from "react-icons/fa"
-import { _launchGradlev2, launchGradleReuploadFailed } from "service/launchGradle"
-import { launchYarnMoveToFreezeByUploadId } from "service/launchYarn"
-import { profile } from "console"
 import { UploadCycleTableData } from "mirror/types"
 import InfoIconWithTooltip from "widgets/InfoIconWithTooltip"
-import { ERROR_RED } from "constants/colors"
-import { DD_MM_YYYY_WITH_TIME_FORMAT } from "utils/utils"
-import moment from "moment"
 import { ResultDisplayPopover } from "../../widgets/ResultDisplayPopover"
-import Spinner from "widgets/Spinner"
-
-const TASK_TYPE_ENUM = {
-    VERIFY_UPLOAD_STATUS: "Verify Upload Status",
-    FIND_MISSING: "Find Missing",
-    REUPLOAD_FAILED: "Reupload of Failed-Items",
-    REUPLOAD_MISSED: "Reupload of Missed-Items",
-    ISOLATE_MISSING: "Isolate Missing",
-    ISOLATE_UPLOAD_FAILED: "Isolate Upload Failed",
-    MOVE_TO_FREEZE: "Move to Freeze",
-}
+import { useUploadCycleActions, TASK_TYPE_ENUM } from "./useUploadCycleActions"
+import { calcRowUploadFailures } from "./utils"
 
 interface ActionButtonsProps {
     uploadCycleId: string,
@@ -49,186 +32,45 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({ uploadCycleId, row
     const [reactComponent, setReactComponent] = useState<JSX.Element>(<></>)
     const [loading2, setLoading2] = useState(false);
 
-    const calcRowUploadFailures = (row: UploadCycleTableData) => {
-        const rowSucess = row.archiveProfileAndCount.reduce((acc, curr) => acc + (curr?.uploadSuccessCount || 0), 0)
-        const rowFailures = row.totalCount - rowSucess;
-        return `(${rowFailures}/${row.totalCount})`;
-    }
-
-    const confirm = (buttonText: string) => {
-        setActionType(buttonText)
-        setOpenDialog(true)
-    }
-
-    const _verifyUploadStatus = async () => {
-        setIsLoading(true);
-        const result = await verifyUploadStatusForUploadCycleId(uploadCycleId);
-        console.log(`_verifyUploadStatus:result ${JSON.stringify(result)}`);
-        setIsLoading(false);
-        setPopoverContent(JSON.stringify(result, null, 2))
-        setPopoverAnchor(document.getElementById('verify-upload-status-button') as HTMLButtonElement)
-    };
-
-    const launchReuploadMissed = async (uploadCycleId: string) => {
-        setLoading2(true);
-        const _res = await _launchGradlev2({
-            uploadCycleId: uploadCycleId,
-        }, "reuploadMissedViaUploadCycleId")
-        console.log(`_res ${JSON.stringify(_res)}`)
-        setLoading2(false);
-        setPopoverContent(JSON.stringify(_res, null, 2))
-        setPopoverAnchor(document.getElementById('find-missing-button') as HTMLButtonElement)
-    }
-
-    const _isolateMissing = async (uploadCycleId: string) => {
-        setLoading2(true);
-        const _res = await _launchGradlev2({
-            uploadCycleId: uploadCycleId,
-        }, "isolateMissingViaUploadCycleId")
-        console.log(`_res ${JSON.stringify(_res)}`)
-        setLoading2(false);
-        setPopoverContent(JSON.stringify(_res, null, 2))
-        setPopoverAnchor(document.getElementById('find-missing-button') as HTMLButtonElement)
-    }
-
-    const _isolateUploadFailed = async (uploadCycleId: string) => {
-        setIsLoading(true);
-        const _res = await _launchGradlev2({
-            uploadCycleId: uploadCycleId,
-        }, "isolateUploadFailedViaUploadCycleId")
-        console.log(`_res ${JSON.stringify(_res)}`)
-        setIsLoading(false);
-        setPopoverContent(JSON.stringify(_res, null, 2))
-        setPopoverAnchor(document.getElementById('isolated-failed-upload-button') as HTMLButtonElement)
-    }
-
-    const _findMissing = async () => {
-        setIsLoading(true);
-        const missedData = await findMissingTitles();
-        console.log(`missedData ${missedData.length} ${JSON.stringify(missedData)}`)
-        setIsLoading(false);
-        const missingTitlesPanel = (
-            <>
-                {(missedData && missedData.length > 0) ?
-                    <>
-                        <Box sx={{ paddingBottom: "30px" }}>
-                            <Button
-                                variant="contained"
-                                onClick={() => confirm(TASK_TYPE_ENUM.REUPLOAD_MISSED)}
-                                size="small"
-                                sx={{ width: "200px", marginTop: "20px" }}
-                                disabled={loading2}>Reupload Missing ({(row.countIntended || 0) - (row?.totalQueueCount || 0)}/{row.countIntended})
-                            </Button>
-                        </Box>
-                        <Box sx={{ paddingBottom: "30px" }}>
-                            <Button
-                                variant="contained"
-                                onClick={() => confirm(TASK_TYPE_ENUM.ISOLATE_MISSING)}
-                                size="small"
-                                sx={{ width: "200px", marginTop: "20px" }}
-                                disabled={loading2 || row.countIntended === 0}>Isolate Missing ({(row.countIntended || 0) - (row?.totalQueueCount || 0)}/{row.countIntended})
-                            </Button>
-                        </Box>
-                        {
-                            <>
-                                <Typography>Missing Titles for {row.uploadCycleId}</Typography>
-                                {
-                                    missedData?.map((_data: { archiveProfile: string, missedCount: string, missed: string[] }, index: number) => {
-                                        return (
-                                            <>
-                                                <Typography>({index + 1}) {_data.archiveProfile} ({_data.missedCount})</Typography>
-                                                <Box sx={{ color: ERROR_RED }}>
-                                                    {_data.missed.map((item: string, index2: number) => {
-                                                        return (<Box>({index + 1}.{index2 + 1}) {item}</Box>)
-                                                    })}
-                                                </Box>
-                                            </>
-                                        )
-                                    })
-                                }
-                            </>
-
-                        }
-                    </> :
-                    <Typography>No Missing Titles for Upload Cycle with Id: {row.uploadCycleId} {missedData}</Typography>
-                }
-            </>);
-        setReactComponent(missingTitlesPanel)
-        setPopoverContent(JSON.stringify(missedData, null, 2))
-        setPopoverAnchor(document.getElementById('find-missing-button') as HTMLButtonElement)
-    };
-
-    const _reuploadFailed = async () => {
-        setIsLoading(true);
-        const _resp = await launchGradleReuploadFailed(uploadCycleId || "");
-        setIsLoading(false);
-        setPopoverContent(JSON.stringify(_resp, null, 2))
-        setPopoverAnchor(document.getElementById('reupload-failed-button') as HTMLButtonElement)
-    };
-
-    const findMissingTitles = async () => {
-        const missed = await makePostCallWithErrorHandling({
-            uploadCycleId: uploadCycleId,
-        }, `uploadCycle/getUploadQueueUploadUsheredMissed`);
-        console.log(`missed ${JSON.stringify(missed)}`)
-        return missed?.response?.missedData
-    }
-
-    const _moveToFreeze = async () => {
-        setIsLoading(true);
-        const _resp = await launchYarnMoveToFreezeByUploadId({
-            // profileAsCSV: profile,
-            uploadCycleId: uploadCycleId,
-            flatten: "true"
-        });
-        setIsLoading(false);
-        setPopoverContent(JSON.stringify(_resp, null, 2))
-        setPopoverAnchor(document.getElementById('move-to-freeze-button') as HTMLButtonElement)
-    };
+    const {
+        handleVerifyUploadStatus,
+        handleFindMissing,
+        handleReupload,
+        handleIsolateUploadFailures,
+        handleMoveToFreeze,
+        handleIsolateMissing,
+        handleLaunchReuploadMissed
+    } = useUploadCycleActions({
+        setIsLoading,
+        setPopoverTitle: setActionType,
+        setPopoverContent,
+        setPopoverAnchor,
+        setReactComponent,
+        fetchData
+    });
 
     const handleConfirm = async () => {
         console.log(`Confirmed: ${actionType} for Upload Cycle ID: ${uploadCycleId}`)
         setOpenDialog(false)
 
-        // Set appropriate loading state immediately based on action type
-        if (actionType === TASK_TYPE_ENUM.REUPLOAD_MISSED) {
-            setLoading2(true);
-        } else {
-            setIsLoading(true);
-        }
-
         try {
             if (actionType === TASK_TYPE_ENUM.VERIFY_UPLOAD_STATUS) {
-                await _verifyUploadStatus();
-                fetchData();
+                await handleVerifyUploadStatus(uploadCycleId, `verify-upload-status-button-${uploadCycleId}`);
             } else if (actionType === TASK_TYPE_ENUM.FIND_MISSING) {
-                await _findMissing();
+                await handleFindMissing(uploadCycleId, `find-missing-button-${uploadCycleId}`);
             } else if (actionType === TASK_TYPE_ENUM.REUPLOAD_FAILED) {
-                await _reuploadFailed();
-                fetchData();
+                await handleReupload(uploadCycleId, `reupload-failed-button-${uploadCycleId}`);
             } else if (actionType === TASK_TYPE_ENUM.REUPLOAD_MISSED) {
-                await launchReuploadMissed(uploadCycleId);
-                fetchData();
+                await handleLaunchReuploadMissed(uploadCycleId, `find-missing-button-${uploadCycleId}`);
             } else if (actionType === TASK_TYPE_ENUM.MOVE_TO_FREEZE) {
-                await _moveToFreeze();
-                fetchData();
+                await handleMoveToFreeze(uploadCycleId, `move-to-freeze-button-${uploadCycleId}`);
             } else if (actionType === TASK_TYPE_ENUM.ISOLATE_MISSING) {
-                await _isolateMissing(uploadCycleId);
-                fetchData();
-            }
-            else if (actionType === TASK_TYPE_ENUM.ISOLATE_UPLOAD_FAILED) {
-                await _isolateUploadFailed(uploadCycleId);
-                fetchData();
+                await handleIsolateMissing(uploadCycleId, `find-missing-button-${uploadCycleId}`);
+            } else if (actionType === TASK_TYPE_ENUM.ISOLATE_UPLOAD_FAILED) {
+                await handleIsolateUploadFailures(uploadCycleId, `isolated-failed-upload-button-${uploadCycleId}`);
             }
         } catch (error) {
             console.error(`Error executing ${actionType}:`, error);
-        } finally {
-            // Reset loading states in case they weren't reset in the individual functions
-            if (actionType === TASK_TYPE_ENUM.REUPLOAD_MISSED) {
-                setLoading2(false);
-            } else {
-                setIsLoading(false);
-            }
         }
     }
 
@@ -236,7 +78,7 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({ uploadCycleId, row
         <>
             <Stack spacing={0.5}>
                 <Button
-                    id="verify-upload-status-button"
+                    id={`verify-upload-status-button-${uploadCycleId}`}
                     variant="outlined"
                     size="small"
                     onClick={(event) => confirm(TASK_TYPE_ENUM.VERIFY_UPLOAD_STATUS)}
@@ -244,18 +86,18 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({ uploadCycleId, row
                     Verify Upload Status
                 </Button>
                 <Button
-                    id="find-missing-button"
+                    id={`find-missing-button-${uploadCycleId}`}
                     variant="outlined"
                     size="small"
                     disabled={isLoading || ((row.countIntended || 0) === (row?.totalQueueCount || 0))}
                     onClick={(event) => confirm(TASK_TYPE_ENUM.FIND_MISSING)}
                 >
-                    Find Missing ({(row.countIntended || 0) - (row?.totalQueueCount || 0)}/{row.countIntended})
+                    -Find Missing ({(row.countIntended || 0) - (row?.totalQueueCount || 0)}/{row.countIntended})
                     <InfoIconWithTooltip input="Find Missing (Unqueued/Unushered) Failure Type 1" />
                 </Button>
                 <Box sx={{ display: 'flex', gap: 0.5, width: '100%' }}>
                     <Button
-                        id="reupload-failed-button"
+                        id={`reupload-failed-button-${uploadCycleId}`}
                         variant="outlined"
                         size="small"
                         onClick={(event) => confirm(TASK_TYPE_ENUM.REUPLOAD_FAILED)}
@@ -266,7 +108,7 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({ uploadCycleId, row
                         <InfoIconWithTooltip input="Reupload Failed (Queued/Ushered/But Didnt Make it). Failure Type 2" />
                     </Button>
                     <Button
-                        id="isolated-failed-upload-button"
+                        id={`isolated-failed-upload-button-${uploadCycleId}`}
                         variant="outlined"
                         size="small"
                         onClick={(event) => confirm(TASK_TYPE_ENUM.ISOLATE_UPLOAD_FAILED)}
@@ -278,7 +120,7 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({ uploadCycleId, row
                     </Button>
                 </Box>
                 <Button
-                    id="move-to-freeze-button"
+                    id={`move-to-freeze-button-${uploadCycleId}`}
                     variant="outlined"
                     size="small"
                     onClick={(event) => confirm(TASK_TYPE_ENUM.MOVE_TO_FREEZE)}

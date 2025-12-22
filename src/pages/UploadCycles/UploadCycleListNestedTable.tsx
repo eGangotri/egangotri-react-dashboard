@@ -2,8 +2,12 @@ import {
     Table, TableBody, TableCell,
     TableHead, TableRow, Link,
     Button,
-    Box
+    Box,
+    IconButton,
+    Tooltip,
+    Typography
 } from "@mui/material"
+import { MdList } from "react-icons/md";
 import type { ArchiveProfileAndCount, UploadCycleArchiveProfile, UploadCycleTableData } from "mirror/types"
 import { UPLOADS_USHERED_PATH } from "Routes/constants"
 import path from 'path';
@@ -43,21 +47,26 @@ export const NestedTable: React.FC<{ data: UploadCycleTableData }> = ({ data }) 
                                     {archiveProfileAndCount.archiveProfile}
                                 </Link></TableCell>
                             <TableCell>
-                                <Button
-                                    variant='contained'
-                                    onClick={(e) => handleTitleClick(e, archiveProfileAndCount?.absolutePaths || [])}
-                                //disabled={isLoading}
-                                >
-                                    Fetch All Titles ({archiveProfileAndCount.count})
-                                </Button>
+                                <Tooltip title="Fetch All Titles">
+                                    <IconButton
+                                        onClick={(e) => handleTitleClick(e, archiveProfileAndCount?.absolutePaths || [])}
+                                        color="primary"
+                                        size="small"
+                                    >
+                                        <MdList />
+                                        <Typography variant="caption" sx={{ ml: 0.5 }}>
+                                            ({archiveProfileAndCount.count})
+                                        </Typography>
+                                    </IconButton>
+                                </Tooltip>
                             </TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
             </Table>
-            <ResultDisplayPopover popoverAnchor={anchorEl} 
-             setPopoverAnchor={setAnchorEl} 
-             popoverContent={titlesForPopover} actionType="Titles" />
+            <ResultDisplayPopover popoverAnchor={anchorEl}
+                setPopoverAnchor={setAnchorEl}
+                popoverContent={titlesForPopover} actionType="Titles" />
         </>
     )
 }
