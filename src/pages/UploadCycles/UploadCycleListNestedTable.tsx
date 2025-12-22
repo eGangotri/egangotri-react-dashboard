@@ -32,12 +32,6 @@ export const NestedTable: React.FC<{ data: UploadCycleTableData }> = ({ data }) 
     return (
         <>
             <Table size="small">
-                <TableHead>
-                    <TableRow>
-                        <TableCell>Archive Profile</TableCell>
-                        <TableCell>Titles</TableCell>
-                    </TableRow>
-                </TableHead>
                 <TableBody>
                     {data?.archiveProfileAndCountIntended?.map((archiveProfileAndCount: UploadCycleArchiveProfile,
                         index: number) => (
@@ -45,13 +39,14 @@ export const NestedTable: React.FC<{ data: UploadCycleTableData }> = ({ data }) 
                             <TableCell>
                                 <Link href={`${UPLOADS_USHERED_PATH}?uploadCycleId=${data.uploadCycleId}&archiveProfile=${archiveProfileAndCount.archiveProfile}`}>
                                     {archiveProfileAndCount.archiveProfile}
-                                </Link></TableCell>
-                            <TableCell>
+                                </Link>
                                 <Tooltip title="Fetch All Titles">
                                     <IconButton
                                         onClick={(e) => handleTitleClick(e, archiveProfileAndCount?.absolutePaths || [])}
                                         color="primary"
-                                        size="small"
+                                        size="medium"
+                                        sx={{ ml: 1 }}
+
                                     >
                                         <MdList />
                                         <Typography variant="caption" sx={{ ml: 0.5 }}>

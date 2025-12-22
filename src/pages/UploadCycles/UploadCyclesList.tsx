@@ -250,7 +250,7 @@ const UploadCyclesList: React.FC = () => {
         {
             field: "archiveProfileAndCount",
             headerName: "Archive Profile Details",
-            width: 300,
+            width: 200,
             renderCell: (params: GridRenderCellParams<UploadCycleTableData>) => <NestedTable data={params.row || []} />,
         },
         {
