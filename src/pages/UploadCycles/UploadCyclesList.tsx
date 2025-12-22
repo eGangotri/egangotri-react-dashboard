@@ -9,7 +9,7 @@ import { MdVerified, MdFindInPage, MdCloudUpload, MdFilterList, MdAcUnit } from 
 import type { UploadCycleTableData, UploadCycleTableDataDictionary } from "mirror/types"
 import { deleteUploadCycleById, getDataForUploadCycle, makePostCallWithErrorHandling, verifyUploadStatusForUploadCycleId } from "service/BackendFetchService"
 import { MAX_ITEMS_LISTABLE } from "utils/constants"
-import { createBackgroundForRow } from "./utils"
+import { createBackgroundForRow, calcRowUploadFailures } from "./utils"
 import { ColorCodeInformationPanel } from "./ColorCodedInformationPanel"
 import ConfirmDialog from "../../widgets/ConfirmDialog"
 import { NestedTable } from "./UploadCycleListNestedTable"
@@ -28,13 +28,10 @@ const UploadCyclesList: React.FC = () => {
     const [selectedRows, setSelectedRows] = useState<GridRowId[]>([])
     const [filteredData, setFilteredData] = useState<UploadCycleTableData[]>([])
     const [openDialog, setOpenDialog] = useState(false)
-    const [deletableUploadCycleId, setDeletableUploadCycleId] = useState<string>("")
+    const [confirmActionType, setConfirmActionType] = useState<string>("")
+    const [confirmTargetId, setConfirmTargetId] = useState<string>("")
+    const [confirmAnchorId, setConfirmAnchorId] = useState<string>("")
 
-    const calcRowUploadFailures = (row: UploadCycleTableData) => {
-        const rowSucess = row.archiveProfileAndCount.reduce((acc, curr) => acc + (curr?.uploadSuccessCount || 0), 0)
-        const rowFailures = row.totalCount - rowSucess;
-        return `(${rowFailures}/${row.totalCount})`;
-    }
     const fetchUploadCycles = useCallback(async () => {
         try {
             const dataForUploadCycle: UploadCycleTableDataDictionary[] = await getDataForUploadCycle(MAX_ITEMS_LISTABLE)
@@ -154,32 +151,47 @@ const UploadCyclesList: React.FC = () => {
     const [filterValue, setFilterValue] = useState<string>("")
     const [verifiedFilter, setVerifiedFilter] = useState<VerifiedFilter>("all")
 
-    const handleClick = (event: React.MouseEvent, _uploadCycleId: string) => {
-        event.stopPropagation()
+    const confirm = (type: string, id: string, anchorId: string) => {
+        setConfirmActionType(type)
+        setConfirmTargetId(id)
+        setConfirmAnchorId(anchorId)
         setOpenDialog(true)
-        setDeletableUploadCycleId(_uploadCycleId)
     }
 
     const handleConfirm = async () => {
         setOpenDialog(false)
-        handleDelete()
+        const type = confirmActionType
+        const id = confirmTargetId
+        const anchorId = confirmAnchorId
+
+        if (type === "Delete") {
+            await handleDelete(id, anchorId)
+        } else if (type === TASK_TYPE_ENUM.VERIFY_UPLOAD_STATUS) {
+            await handleVerifyUploadStatus(id, anchorId)
+        } else if (type === TASK_TYPE_ENUM.FIND_MISSING) {
+            await handleFindMissing(id, anchorId)
+        } else if (type === TASK_TYPE_ENUM.REUPLOAD_FAILED) {
+            await handleReupload(id, anchorId)
+        } else if (type === TASK_TYPE_ENUM.ISOLATE_UPLOAD_FAILED) {
+            await handleIsolateUploadFailures(id, anchorId)
+        } else if (type === TASK_TYPE_ENUM.MOVE_TO_FREEZE) {
+            await handleMoveToFreeze(id, anchorId)
+        }
     }
 
-    const handleDelete = async () => {
-        const _uploadCycleId = deletableUploadCycleId
-        setDeletableUploadCycleId("")
-        console.log("Delete clicked ", _uploadCycleId)
+    const handleDelete = async (id: string, anchorId: string) => {
+        console.log("Delete clicked ", id)
         setIsLoading(true);
         setPopoverTitle("Delete Results")
         try {
-            const _resp = await deleteUploadCycleById(_uploadCycleId)
+            const _resp = await deleteUploadCycleById(id)
             console.log(`result ${JSON.stringify(_resp)}`)
             setPopoverContent(JSON.stringify(_resp, null, 2))
-            setPopoverAnchor(document.getElementById(`delete-button-${_uploadCycleId}`) as HTMLButtonElement)
+            setPopoverAnchor(document.getElementById(anchorId) as HTMLButtonElement)
         } catch (error) {
             console.error("Error deleting upload cycle:", error)
             setPopoverContent(`Error deleting upload cycle: ${error}`)
-            setPopoverAnchor(document.getElementById(`delete-button-${_uploadCycleId}`) as HTMLButtonElement)
+            setPopoverAnchor(document.getElementById(anchorId) as HTMLButtonElement)
         } finally {
             setIsLoading(false)
             fetchData()
@@ -282,14 +294,7 @@ const UploadCyclesList: React.FC = () => {
             renderCell: (params: GridRenderCellParams<UploadCycleTableData>) => {
                 return (
                     <>
-                        <div
-                            id={`delete-button-${params.row.uploadCycleId}`}
-                            onClick={(e) => handleClick(e, params.row.uploadCycleId)}
-                            className="cursor-pointer inline-block ml-2 flex items-center"
-                        >
-                            {params.value}
-                            <FaTrash className="ml-1" />
-                        </div>
+                        {params.value}
                     </>
                 )
             },
@@ -305,7 +310,7 @@ const UploadCyclesList: React.FC = () => {
                         <IconButton
                             id={`verify-button-${params.row.uploadCycleId}`}
                             color="primary"
-                            onClick={() => handleVerifyUploadStatus(params.row.uploadCycleId, `verify-button-${params.row.uploadCycleId}`)}
+                            onClick={() => confirm(TASK_TYPE_ENUM.VERIFY_UPLOAD_STATUS, params.row.uploadCycleId, `verify-button-${params.row.uploadCycleId}`)}
                             disabled={isLoading}
                         >
                             <MdVerified />
@@ -315,7 +320,7 @@ const UploadCyclesList: React.FC = () => {
                         <IconButton
                             id={`find-missing-button-${params.row.uploadCycleId}`}
                             color="primary"
-                            onClick={() => handleFindMissing(params.row.uploadCycleId, `find-missing-button-${params.row.uploadCycleId}`)}
+                            onClick={() => confirm(TASK_TYPE_ENUM.FIND_MISSING, params.row.uploadCycleId, `find-missing-button-${params.row.uploadCycleId}`)}
                             disabled={isLoading}
                         >
                             <MdFindInPage /> ({(params.row.countIntended || 0) - (params.row?.totalQueueCount || 0)}/{params.row.countIntended})
@@ -326,7 +331,7 @@ const UploadCyclesList: React.FC = () => {
                         <IconButton
                             id={`reupload-button-${params.row.uploadCycleId}`}
                             color="primary"
-                            onClick={() => handleReupload(params.row.uploadCycleId, `reupload-button-${params.row.uploadCycleId}`)}
+                            onClick={() => confirm(TASK_TYPE_ENUM.REUPLOAD_FAILED, params.row.uploadCycleId, `reupload-button-${params.row.uploadCycleId}`)}
                             disabled={isLoading}
                         >
                             <MdCloudUpload />{calcRowUploadFailures(params.row)}
@@ -336,25 +341,26 @@ const UploadCyclesList: React.FC = () => {
                         <IconButton
                             id={`isolate-failures-button-${params.row.uploadCycleId}`}
                             color="primary"
-                            onClick={() => handleIsolateUploadFailures(params.row.uploadCycleId, `isolate-failures-button-${params.row.uploadCycleId}`)}
+                            onClick={() => confirm(TASK_TYPE_ENUM.ISOLATE_UPLOAD_FAILED, params.row.uploadCycleId, `isolate-failures-button-${params.row.uploadCycleId}`)}
                             disabled={isLoading}
                         >
                             <MdFilterList />
                         </IconButton>
                     </Tooltip>
-                    <Tooltip title="Move to Freeeze">
+                    <Tooltip title="Move to Freeze">
                         <IconButton
                             id={`freeze-button-${params.row.uploadCycleId}`}
                             color="primary"
-                            onClick={() => handleMoveToFreeze(params.row.uploadCycleId, `freeze-button-${params.row.uploadCycleId}`)}
+                            onClick={() => confirm(TASK_TYPE_ENUM.MOVE_TO_FREEZE, params.row.uploadCycleId, `freeze-button-${params.row.uploadCycleId}`)}
                             disabled={isLoading}
                         >
                             <MdAcUnit />
                         </IconButton>
                     </Tooltip>
                     <IconButton
+                        id={`delete-button-${params.row.uploadCycleId}`}
                         color="error"
-                        onClick={(e) => handleClick(e, params.row.uploadCycleId)}
+                        onClick={() => confirm("Delete", params.row.uploadCycleId, `delete-button-${params.row.uploadCycleId}`)}
                         disabled={isLoading}
                     >
                         <FaTrash />
