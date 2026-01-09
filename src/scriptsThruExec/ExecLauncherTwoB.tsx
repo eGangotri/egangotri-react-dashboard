@@ -132,6 +132,8 @@ const ExecLauncherTwoB: React.FC = () => {
                     secondTextBoxPlaceHolder='Number of Items (Optional)'
                     secondComponentRequired={false}
                     thirdTextBoxPlaceHolder='Date Range (Optional)'
+                    validationPattern={/^https:\/\/archive\.org\/details\/@/}
+                    validationMessage="First user input must start with https://archive.org/details/@"
                     reactComponent={<Box>
                         <FormControlLabel
                             control={<Checkbox checked={dontGenerateCheck} onChange={handleDontGenerateCheck} />}
@@ -154,6 +156,8 @@ const ExecLauncherTwoB: React.FC = () => {
                     secondTextBoxPlaceHolder='Enter Profile or File Abs Path for Dumping Item(s)'
                     execType={ExecType.DownloadAllArchiveItemsViaExcel}
                     css={{ width: "450px" }}
+                    validationPattern={/\.(xlsx|xls)$/}
+                    validationMessage="Must end with .xlsx or .xls"
                 />
 
                 <ExecComponent
@@ -162,6 +166,8 @@ const ExecLauncherTwoB: React.FC = () => {
                     secondTextBoxPlaceHolder='Enter Profile or File Abs Path for Dumping PDFs'
                     execType={ExecType.DownloadArchivePdfs}
                     css={{ width: "450px" }}
+                    validationPattern={/^https:\/\/archive\.org\/details\/@/}
+                    validationMessage="First user input must start with https://archive.org/details/@"
                 />
             </Box>
 

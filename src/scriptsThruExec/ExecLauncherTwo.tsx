@@ -51,6 +51,8 @@ const ExecLauncherTwo: React.FC = () => {
                     css={{ width: "250px" }}
                     css2={{ width: "450px" }}
                     thirdButton={<Button variant="contained" color="primary" onClick={loadFromLocalStorageForV1} sx={{ marginRight: "10px", marginBottom: "10px" }}>Load From Local Storage</Button>}
+                    validationPattern={/\.(xlsx|xls)$/}
+                    validationMessage="Must end with .xlsx or .xls"
                 />
 
                 <ExecComponent buttonText="Upload Excel V-3-With-1-Col Pdfs to Archive"
@@ -65,6 +67,8 @@ const ExecLauncherTwo: React.FC = () => {
                     css={{ width: "250px" }}
                     css2={{ width: "450px" }}
                     thirdButton={<Button variant="contained" color="primary" onClick={loadFromLocalStorageForV3} sx={{ marginRight: "10px", marginBottom: "10px" }}>Load From Local Storage</Button>}
+                    validationPattern={/\.(xlsx|xls)$/}
+                    validationMessage="Must end with .xlsx or .xls"
                 />
             </Box>
 

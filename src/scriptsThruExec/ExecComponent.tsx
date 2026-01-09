@@ -36,11 +36,16 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
   multiline3rdTf = false,
   rows1stTf = 1,
   rows2ndTf = 1,
-  onInputChange
+  onInputChange,
+  validationPattern,
+  validationMessage
 
 }) => {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
-  const { register, handleSubmit, setValue, formState: { errors }, reset } = useForm<ExecComponentFormData>();
+  const { register, handleSubmit, setValue, formState: { errors }, reset } = useForm<ExecComponentFormData>({
+    mode: 'onChange',
+    reValidateMode: 'onChange'
+  });
   const [openDialog, setOpenDialog] = React.useState<boolean>(false);
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
   const open = Boolean(anchorEl);
@@ -132,13 +137,26 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
             <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end' }}>
               <TextField variant="outlined"
                 placeholder={placeholder}
-                {...register('userInput', { required: "This field is required" })}
+                {...register('userInput', {
+                  required: "This field is required",
+                  validate: (value) => {
+                    if (validationPattern && !validationPattern.test(value)) {
+                      return validationMessage || "Invalid input";
+                    }
+                    return true;
+                  },
+                  onChange: handleInputChange
+                })}
                 error={Boolean(errors.userInput)}
-                sx={{ marginRight: "30px", marginBottom: "20px", ...css }}
+                sx={{
+                  marginRight: "30px",
+                  marginBottom: "20px",
+                  ...css,
+                  backgroundColor: errors.userInput ? '#ffcdd2' : undefined
+                }}
                 helperText={errors.userInput?.message}
                 rows={rows1stTf}
                 multiline={multiline1stTf}
-                onChange={handleInputChange}
               />
               {userInputOneInfo && <InfoIconWithTooltip input={userInputOneInfo} />
               }

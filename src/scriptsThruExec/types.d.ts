@@ -34,6 +34,8 @@ export type ExecComponentProps = {
     rows1stTf?: number;
     rows2ndTf?: number;
     onInputChange?: (inputValue: string) => void; // Add the callback function prop
+    validationPattern?: RegExp;
+    validationMessage?: string;
 };
 
 export type ExecResponse = {
