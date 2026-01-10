@@ -34,7 +34,8 @@ import {
     PDF_MERGE_HISTORY_TRACKER_PATH,
     PDF_MERGE_MODULE,
     LAUNCH_AI_GDRIVE_CP_RENAMER_HISTORY_PATH,
-    PDF_PAGE_EXTRACTION_HISTORY_PATH
+    PDF_PAGE_EXTRACTION_HISTORY_PATH,
+    ARCHIVE_DOWLOAD_LIST_PATH
 } from 'Routes/constants';
 
 export const TOP_PANEL_MENU: TopPanelMenu[] = [{
@@ -98,7 +99,7 @@ export const TOP_PANEL_MENU: TopPanelMenu[] = [{
             label: 'archive.org Data & Data Integrity',
         },
         {
-            path: EXEC_LAUNCHER_TWO_C_PATH,
+            path: ARCHIVE_DOWLOAD_LIST_PATH,
             label: 'Archive Download List',
         }
     ]

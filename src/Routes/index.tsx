@@ -77,6 +77,7 @@ import AITitleRenamerHistory from 'scriptsThruExec/AITitleRenamerHistory';
 import PdfMergeHistoryTracker from 'scriptsThruExec/PdfMergeHistoryTracker';
 import AITitlePdfRenamerHistory from 'scriptsThruExec/AITitlePdfRenamerHistory';
 import PdfPageExtractionHistory from 'scriptsThruExec/PdfPageExtractionHistory'
+import ArchiveDownloadListing from 'scriptsThruExec/ArchiveDownloadListing';
 
 import LauncherAIGDriveCPRenamerHistory from 'scriptsThruExec/ExecLauncherAIGDriveCPRenamerHistory';
 import PdfMergeModule from 'scriptsThruExec/PdfMergeModule';
@@ -94,7 +95,7 @@ const DashboardRoutes: React.FC = () => {
             {<Route path={EXEC_LAUNCHER_ZIP_PATH} element={<ExecLauncherZip />} />}
             {<Route path={EXEC_LAUNCHER_TWO_PATH} element={<ExecLauncherTwo />} />}
             {<Route path={EXEC_LAUNCHER_TWO_B_PATH} element={<ExecLauncherTwoB />} />}
-            {<Route path={ARCHIVE_DOWLOAD_LIST_PATH} element={<ExecLauncherTwoB />} />}
+            {<Route path={ARCHIVE_DOWLOAD_LIST_PATH} element={<ArchiveDownloadListing />} />}
             {<Route path={EXEC_LAUNCHER_TWO_C_PATH} element={<ExecLauncherTwoC />} />}
             {<Route path={EXEC_LAUNCHER_THREE_PATH} element={<ExecLauncherThree />} />}
             {<Route path={EXEC_LAUNCHER_FOUR_PATH} element={<ExecLauncherFour />} />}
