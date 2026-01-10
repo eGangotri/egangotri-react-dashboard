@@ -262,7 +262,7 @@ const UploadCyclesList: React.FC = () => {
         {
             field: "apiCall",
             headerName: "API Action",
-            width: 350,
+            width: 450,
             filterable: false,
             renderCell: (params) => (
                 <Box display="flex" alignItems="center">

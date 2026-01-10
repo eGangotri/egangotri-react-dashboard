@@ -390,7 +390,7 @@ const GDriveDownloadListing: React.FC = () => {
         {
             field: "apiCall",
             headerName: "API Action",
-            width: 250,
+            width: 300,
             filterable: false,
             renderCell: (params) => (
                 <>
