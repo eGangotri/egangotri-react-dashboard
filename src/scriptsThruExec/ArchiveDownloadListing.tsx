@@ -27,7 +27,8 @@ export interface IArchiveDownloadRequest {
     _id: string | { $oid: string };
     runId: string;
     commonRunId: string;
-    excelPath: string;
+    excelPath?: string;
+    archiveUrl?: string;
     profileOrAbsPath: string;
     status: string;
     totalItems: number;
@@ -36,6 +37,12 @@ export interface IArchiveDownloadRequest {
     createdAt: string | { $date: string };
     updatedAt: string | { $date: string };
     __v: number;
+    itemCounts?: {
+        total: number;
+        success: number;
+        failed: number;
+        queued: number;
+    };
 }
 
 export interface IArchiveDownloadItem {
@@ -53,6 +60,9 @@ export interface IArchiveDownloadItem {
 interface FetchResponse {
     data: IArchiveDownloadRequest[];
     totalItems: number;
+    currentPage?: number;
+    totalPages?: number;
+    response?: any;
 }
 
 const ArchiveDownloadListing: React.FC = () => {
@@ -81,10 +91,19 @@ const ArchiveDownloadListing: React.FC = () => {
     const loadDownloads = async () => {
         setLoading(true);
         try {
-            const { data, totalItems } = await fetchArchiveDownloads(paginationModel.page + 1, paginationModel.pageSize);
-            if (data) {
-                setDownloads(data);
-                setTotalItems(totalItems);
+            const response = await fetchArchiveDownloads(paginationModel.page + 1, paginationModel.pageSize);
+            if (response && response.data) {
+                setDownloads(response.data);
+                setTotalItems(response.totalItems || 0);
+            } else if (response && response.response) {
+                // Handle case where makeGetCall might have wrapped it differently
+                const data = response.response;
+                if (Array.isArray(data)) {
+                    setDownloads(data);
+                } else if (data.data) {
+                    setDownloads(data.data);
+                    setTotalItems(data.totalItems || 0);
+                }
             }
         } catch (error) {
             console.error("Error fetching Archive downloads:", error);
@@ -180,9 +199,10 @@ const ArchiveDownloadListing: React.FC = () => {
             ),
         },
         {
-            field: "excelPath",
-            headerName: "Excel Path",
+            field: "source",
+            headerName: "Source (Excel/URL)",
             width: 300,
+            valueGetter: (params, row) => row.excelPath || row.archiveUrl || "",
             renderCell: (params) => (
                 <Box display="flex" alignItems="center">
                     <Tooltip title={params.value}>
@@ -230,6 +250,25 @@ const ArchiveDownloadListing: React.FC = () => {
             headerName: "Total Items",
             width: 100,
             type: 'number',
+        },
+        {
+            field: "itemCounts",
+            headerName: "Quick Status (S/F/Q)",
+            width: 180,
+            renderCell: (params) => {
+                const counts = params.value;
+                if (!counts) return "-";
+                return (
+                    <Box>
+                        <Typography variant="body2" sx={{ fontSize: '0.85rem', fontWeight: 500 }}>
+                            <span style={{ color: 'green' }}>{counts.success}</span> /
+                            <span style={{ color: 'red' }}> {counts.failed}</span> /
+                            <span> {counts.queued}</span>
+                            {` (of ${counts.total})`}
+                        </Typography>
+                    </Box>
+                );
+            }
         },
         {
             field: "verify",
