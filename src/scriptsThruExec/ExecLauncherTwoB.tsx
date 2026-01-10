@@ -128,10 +128,9 @@ const ExecLauncherTwoB: React.FC = () => {
                     execType={archiveExcelExecType}
                     css={{ width: "450px" }}
                     userInputOneInfo="Enter Archive Link(s) or Identifier(s) as CSV or Space-Separated"
-                    userInputTwoInfoNonMandatory='Natural Number or Range such as 1-10'
+                    userInputTwoInfoNonMandatory='Natural Number or Range such as 1-10. Ex. 100 or  2-5 (Exclusive)'
                     userInputThreeInfoNonMandatory="YYYY/MM/DD-YYYY/MM/DD (Optional). Example 2021/01/01-2021/01/31"
                     secondTextBoxPlaceHolder='Number of Items or Range (Optional)'
-                    userInputTwoInfoNonMandatory="Number of Items or Range (Optional). Ex. 2-5 (Exclusive)"
                     secondComponentRequired={false}
                     thirdTextBoxPlaceHolder='Date Range (Optional)'
                     validationPattern={/^https:\/\/archive\.org\/details\/@/}
