@@ -59,7 +59,8 @@ import {
     PDF_MERGE_HISTORY_TRACKER_PATH,
     PDF_MERGE_MODULE,
     LAUNCH_AI_GDRIVE_CP_RENAMER_HISTORY_PATH,
-    PDF_PAGE_EXTRACTION_HISTORY_PATH
+    PDF_PAGE_EXTRACTION_HISTORY_PATH,
+    ARCHIVE_DOWLOAD_LIST_PATH
 } from './constants';
 import GDriveItemAggregates from 'components/gDriveListing/gDriveAggregatesByProfile';
 import ArchiveItemList from 'components/archiveListing';
@@ -93,6 +94,7 @@ const DashboardRoutes: React.FC = () => {
             {<Route path={EXEC_LAUNCHER_ZIP_PATH} element={<ExecLauncherZip />} />}
             {<Route path={EXEC_LAUNCHER_TWO_PATH} element={<ExecLauncherTwo />} />}
             {<Route path={EXEC_LAUNCHER_TWO_B_PATH} element={<ExecLauncherTwoB />} />}
+            {<Route path={ARCHIVE_DOWLOAD_LIST_PATH} element={<ExecLauncherTwoB />} />}
             {<Route path={EXEC_LAUNCHER_TWO_C_PATH} element={<ExecLauncherTwoC />} />}
             {<Route path={EXEC_LAUNCHER_THREE_PATH} element={<ExecLauncherThree />} />}
             {<Route path={EXEC_LAUNCHER_FOUR_PATH} element={<ExecLauncherFour />} />}

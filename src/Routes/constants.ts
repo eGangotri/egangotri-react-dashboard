@@ -11,6 +11,7 @@ export const EXEC_LAUNCHER_ZIP_PATH = "/execLauncherZipPath";
 export const EXEC_LAUNCHER_TWO_PATH = "/execLauncher2Path";
 export const EXEC_LAUNCHER_TWO_B_PATH = "/execLauncher2bPath";
 export const EXEC_LAUNCHER_TWO_C_PATH = "/execLauncher2cPath";
+export const ARCHIVE_DOWLOAD_LIST_PATH = "/archiveDownloadListPath";
 export const EXEC_LAUNCHER_THREE_PATH = "/execLauncher3Path";
 export const EXEC_LAUNCHER_FOUR_PATH = "/execLauncher4aPath";
 export const EXEC_LAUNCHER_FOUR_B_PATH = "/execLauncher4bPath";

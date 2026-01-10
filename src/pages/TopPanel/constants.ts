@@ -96,6 +96,10 @@ export const TOP_PANEL_MENU: TopPanelMenu[] = [{
         {
             path: EXEC_LAUNCHER_TWO_C_PATH,
             label: 'archive.org Data & Data Integrity',
+        },
+        {
+            path: EXEC_LAUNCHER_TWO_C_PATH,
+            label: 'Archive Download List',
         }
     ]
 },
