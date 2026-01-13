@@ -1,5 +1,6 @@
 import React, { ChangeEvent, useMemo } from "react"
 import { useState, useEffect } from "react"
+import { useNavigate } from "react-router-dom";
 import {
     DataGrid,
     type GridColDef,
@@ -12,7 +13,7 @@ import { Button, Dialog, DialogTitle, DialogContent, Chip, IconButton, Box, Radi
 import ExecPopover from 'scriptsThruExec/ExecPopover';
 import { makeGetCall } from 'service/ApiInterceptor';
 import { makePostCallWithErrorHandling } from "service/BackendFetchService";
-import { FaCopy, FaTrash } from "react-icons/fa";
+import { FaCopy, FaTrash, FaBrain } from "react-icons/fa";
 import ExecComponent from "scriptsThruExec/ExecComponent";
 import { ExecType } from "scriptsThruExec/ExecLauncherUtil";
 import { redownloadFromGDrive, verifyGDriveDwnldSuccessFolders } from "service/launchYarn";
@@ -20,6 +21,7 @@ import { buildDeterministicColorMap, colorForKey } from "utils/color";
 import ExecResponsePanel from "scriptsThruExec/ExecResponsePanel";
 import Spinner from "widgets/Spinner";
 import { ellipsis } from "widgets/ItemTooltip";
+import { LAUNCH_AI_RENAMER_PATH } from "Routes/constants";
 import path from "path";
 
 // Types
@@ -62,6 +64,7 @@ interface FetchResponse {
 
 
 const GDriveDownloadListing: React.FC = () => {
+    const navigate = useNavigate();
 
     const [gDriveFileType, setGDriveFileType] = React.useState<number>(ExecType.DWNLD_PDFS_ONLY_FROM_GOOGLE_DRIVE);
     const [label, setLabel] = React.useState<string>("");
@@ -337,11 +340,21 @@ const GDriveDownloadListing: React.FC = () => {
         {
             field: "combo",
             headerName: "Combo",
-            width: 100,
+            width: 230,
             filterable: true,
             renderCell: (params) => {
                 return (
                     <div className="flex items-center">
+                        <IconButton
+                            onClick={() => {
+                                const comboPath = path.join(params.row.fileDumpFolder, params.row.gDriveRootFolder);
+                                navigate(`${LAUNCH_AI_RENAMER_PATH}?path=${encodeURIComponent(comboPath)}`);
+                            }}
+                            className="ml-2"
+                            title="Go to AI Renamer"
+                        >
+                            <FaBrain />
+                        </IconButton>
                         <IconButton onClick={() => handleCopyLink(path.join(params.row.fileDumpFolder, params.row.gDriveRootFolder))} className="ml-2">
                             <FaCopy />
                         </IconButton>

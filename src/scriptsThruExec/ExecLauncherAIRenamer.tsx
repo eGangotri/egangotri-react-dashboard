@@ -1,4 +1,5 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import ExecComponent from './ExecComponent';
 import Box from '@mui/material/Box';
 import { ExecType } from './ExecLauncherUtil';
@@ -31,6 +32,16 @@ const LauncherAIRenamer: React.FC = () => {
     const [filePathForRenamerPdfs, setFilePathForRenamerPdfs] = useState('');
     const [absPathForAiRenamer, setAbsPathForAiRenamer] = useState('');
     const [reducedPathForAiRenamer, setReducedPathForAiRenamer] = useState('');
+
+    const [searchParams] = useSearchParams();
+    const queryPath = searchParams.get('path');
+
+    useEffect(() => {
+        if (queryPath) {
+            setFilePath(queryPath);
+          //  setAbsPathForAiRenamer(queryPath);
+        }
+    }, [queryPath]);
 
     const [validationCss, setValidationCss] = React.useState({
         backgroundColor: "lightgreen",
