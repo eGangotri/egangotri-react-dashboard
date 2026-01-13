@@ -219,6 +219,59 @@ const AITitleRenamerHistory: React.FC = () => {
       setLoading(false);
     }
   };
+
+  const handleApplyButKeepPrefixSelectedItems = async () => {
+    const selectedItems = groupedData.filter(item => selectedRows.includes(item._id));
+    const runIds = selectedItems.map(item => item.runId);
+
+    const ok = window.confirm(`Are you sure you want to apply (Keep Prefix) metadata to original files for ${runIds.length} selected items?`);
+    if (!ok) return;
+
+    try {
+      setLoading(true);
+      const response = await makePostCallWithErrorHandling({
+        runIds: runIds,
+        keepPrefix: true,
+      }, `ai/copyMetadataToOriginalFilesMulti`)
+
+      setResultTitle(`Copy Metadata (Keep Prefix) triggered for ${runIds.length} items`);
+      setResultBody(response);
+      setResultOpen(true);
+    } catch (e) {
+      console.error(e);
+      setResultTitle('Copy Metadata (Keep Prefix) error');
+      setResultBody({ error: e instanceof Error ? e.message : 'Unknown error' });
+      setResultOpen(true);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleReverseApplySelectedItems = async () => {
+    const selectedItems = groupedData.filter(item => selectedRows.includes(item._id));
+    const runIds = selectedItems.map(item => item.runId);
+
+    const ok = window.confirm(`Are you sure you want to REVERSE apply metadata for ${runIds.length} selected items?`);
+    if (!ok) return;
+
+    try {
+      setLoading(true);
+      const response = await makePostCallWithErrorHandling({
+        runIds: runIds,
+      }, `ai/reverseMetadataFromOriginalFilesMulti`)
+
+      setResultTitle(`Reverse Apply triggered for ${runIds.length} items`);
+      setResultBody(response);
+      setResultOpen(true);
+    } catch (e) {
+      console.error(e);
+      setResultTitle('Reverse Apply error');
+      setResultBody({ error: e instanceof Error ? e.message : 'Unknown error' });
+      setResultOpen(true);
+    } finally {
+      setLoading(false);
+    }
+  };
   // Handle cleanup for selected items
   const handleCleanupSelectedItems = async () => {
     const selectedItems = groupedData.filter(item => selectedRows.includes(item._id));
@@ -327,45 +380,96 @@ const AITitleRenamerHistory: React.FC = () => {
     },
     {
       field: 'action',
-      headerName: 'Apply Metadata to Original Files',
-      width: 130,
+      headerName: 'Apply Actions',
+      width: 450,
       filterable: false,
       sortable: false,
       renderCell: (params) => (
-        <Button
-          size="small"
-          variant="contained"
-          disabled={!!actionLoading[params.row.runId] || params.row.applyButtonClicked}
-          onClick={async () => {
-            const runId = params.row.runId;
-            const ok = window.confirm(`Are you sure you want to apply metadata to original files for runId=${runId}?`);
-            if (!ok) return;
-            try {
-              setActionLoading((m) => ({ ...m, [runId]: true }));
-              const res = await makePostCall({}, `ai/copyMetadataToOriginalFiles/${runId}`);
-              console.log('Trigger response:', JSON.stringify(res));
-              setResultTitle(`Copy Metadata triggered for runId=${runId}`);
-              setResultBody(res);
-              setResultOpen(true);
-            } catch (e) {
-              console.error(e);
-              setResultTitle('Copy Metadata error');
-              setResultBody({ error: e instanceof Error ? e.message : 'Unknown error' });
-              setResultOpen(true);
-            } finally {
-              setActionLoading((m) => ({ ...m, [runId]: false }));
-            }
-          }}
-        >
-          {actionLoading[params.row.runId] ? (
-            <>
-              <CircularProgress size={16} color="inherit" style={{ marginRight: 6 }} />
-              Running...
-            </>
-          ) : (
-            'Apply'
-          )}
-        </Button>
+        <Box display="flex" gap={1}>
+          <Button
+            size="small"
+            variant="contained"
+            disabled={!!actionLoading[params.row.runId] || params.row.applyButtonClicked}
+            onClick={async () => {
+              const runId = params.row.runId;
+              const ok = window.confirm(`Are you sure you want to apply metadata to original files for runId=${runId}?`);
+              if (!ok) return;
+              try {
+                setActionLoading((m) => ({ ...m, [runId]: true }));
+                const res = await makePostCall({}, `ai/copyMetadataToOriginalFiles/${runId}`);
+                console.log('Trigger response:', JSON.stringify(res));
+                setResultTitle(`Copy Metadata triggered for runId=${runId}`);
+                setResultBody(res);
+                setResultOpen(true);
+              } catch (e) {
+                console.error(e);
+                setResultTitle('Copy Metadata error');
+                setResultBody({ error: e instanceof Error ? e.message : 'Unknown error' });
+                setResultOpen(true);
+              } finally {
+                setActionLoading((m) => ({ ...m, [runId]: false }));
+              }
+            }}
+          >
+            {actionLoading[params.row.runId] ? <CircularProgress size={16} color="inherit" /> : 'Apply'}
+          </Button>
+
+          <Button
+            size="small"
+            variant="contained"
+            color="secondary"
+            disabled={!!actionLoading[params.row.runId]}
+            onClick={async () => {
+              const runId = params.row.runId;
+              const ok = window.confirm(`Are you sure you want to apply (Keep Prefix) metadata for runId=${runId}?`);
+              if (!ok) return;
+              try {
+                setActionLoading((m) => ({ ...m, [runId]: true }));
+                const res = await makePostCall({ keepPrefix: true }, `ai/copyMetadataToOriginalFiles/${runId}`);
+                setResultTitle(`Keep Prefix triggered for runId=${runId}`);
+                setResultBody(res);
+                setResultOpen(true);
+              } catch (e) {
+                console.error(e);
+                setResultTitle('Keep Prefix error');
+                setResultBody({ error: e instanceof Error ? e.message : 'Unknown error' });
+                setResultOpen(true);
+              } finally {
+                setActionLoading((m) => ({ ...m, [runId]: false }));
+              }
+            }}
+          >
+            {actionLoading[params.row.runId] ? <CircularProgress size={16} color="inherit" /> : 'Apply-But-Keep-Prefix'}
+          </Button>
+
+          <Button
+            size="small"
+            variant="contained"
+            color="error"
+            disabled={!!actionLoading[params.row.runId]}
+            onClick={async () => {
+              const runId = params.row.runId;
+              const ok = window.confirm(`Are you sure you want to REVERSE apply metadata for runId=${runId}?`);
+              if (!ok) return;
+              try {
+                setActionLoading((m) => ({ ...m, [runId]: true }));
+                const res = await makePostCall({}, `ai/reverseMetadataFromOriginalFiles/${runId}`);
+                setResultTitle(`Reverse Apply triggered for runId=${runId}`);
+                setResultBody(res);
+                setResultOpen(true);
+              } catch (e) {
+                console.error(e);
+                setResultTitle('Reverse Apply error');
+                setResultBody({ error: e instanceof Error ? e.message : 'Unknown error' });
+                setResultOpen(true);
+              } finally {
+                setActionLoading((m) => ({ ...m, [runId]: false }));
+              }
+            }}
+          >
+            {actionLoading[params.row.runId] ? <CircularProgress size={16} color="inherit" /> : 'Reverse Apply'}
+          </Button>
+        </Box>
       ),
     },
     {
@@ -534,6 +638,22 @@ const AITitleRenamerHistory: React.FC = () => {
             disabled={loading}
           >
             Apply Metadata ({selectedRows.length})
+          </Button>
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={handleApplyButKeepPrefixSelectedItems}
+            disabled={loading}
+          >
+            Apply But Keep Prefix ({selectedRows.length})
+          </Button>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={handleReverseApplySelectedItems}
+            disabled={loading}
+          >
+            Reverse Apply ({selectedRows.length})
           </Button>
           <Button
             variant="contained"
