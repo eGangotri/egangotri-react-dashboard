@@ -58,6 +58,8 @@
   },
   "scripts": {
     "start": "vite",
+    "// note": "pnpm st runs pnpm start   if alias st='pnpm run start' in bash then just st",
+    "st": "pnpm run start",
     "build": "tsc && vite build",
     "serve": "vite preview",
     "start0": "react-dotenv && pnpm run lint_fix",
