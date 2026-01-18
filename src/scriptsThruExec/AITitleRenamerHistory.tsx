@@ -333,6 +333,22 @@ const AITitleRenamerHistory: React.FC = () => {
       ),
     },
     {
+      field: 'srcFolder',
+      headerName: 'Source Folder',
+      width: 350,
+      filterable: true,
+      renderCell: (params) => (
+        <div className="flex items-center gap-2">
+          <IconButton onClick={() => handleCopyText(params.value)} className="ml-2">
+            <FaCopy />
+          </IconButton>
+          <Typography color="primary">
+            {params.value}
+          </Typography>
+        </div>
+      ),
+    },
+    {
       field: 'commonRunId',
       headerName: 'Common Run Id',
       width: 100,
@@ -350,25 +366,9 @@ const AITitleRenamerHistory: React.FC = () => {
       }
     },
     {
-      field: 'srcFolder',
-      headerName: 'Source Folder',
-      width: 300,
-      filterable: true,
-      renderCell: (params) => (
-        <div className="flex items-center gap-2">
-          <IconButton onClick={() => handleCopyText(params.value)} className="ml-2">
-            <FaCopy />
-          </IconButton>
-          <Typography color="primary">
-            {params.value}
-          </Typography>
-        </div>
-      ),
-    },
-    {
       field: 'count',
       headerName: 'Files',
-      width: 100,
+      width: 50,
       filterable: true,
     },
     {

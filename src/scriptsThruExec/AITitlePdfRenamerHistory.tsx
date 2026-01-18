@@ -28,6 +28,7 @@ type RunRow = {
   _id: Oid;
   runId: string;
   commonRunId: string;
+  srcFolder?: string;
   processedCount: number;
   successCount: number;
   failedCount: number;
@@ -158,8 +159,19 @@ const AITitlePdfRenamerHistory: React.FC = () => {
         </div>
       )
     },
+    {
+      field: 'srcFolder', headerName: 'Source Folder', width: 350, renderCell: (p) => (
+        <div className="flex items-center gap-2">
+          <IconButton onClick={() => copy(p.value)} size="small"><FaCopy /></IconButton>
+          <Typography color="primary" variant="body2">
+            {p.value}
+          </Typography>
+        </div>
+      )
+    },
     { field: 'processedCount', headerName: 'Processed', width: 70 },
-    { field: 'sfp', headerName: 'S+F=Processed', width: 70,
+    {
+      field: 'sfp', headerName: 'S+F=Processed', width: 70,
       renderCell: (p) => displayRenamingResults(p.row)
     },
     { field: 'successCount', headerName: 'Success', width: 70 },
