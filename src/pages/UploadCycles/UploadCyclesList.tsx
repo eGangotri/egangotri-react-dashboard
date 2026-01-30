@@ -145,6 +145,37 @@ const UploadCyclesList: React.FC = () => {
             }
         }
     }
+    const killAllGradleTasks = async () => {
+        if (window.confirm('Are you sure you want to kill all Gradle tasks?')) {
+            try {
+                const resp = await makeGetCall('/execLauncher/stopGradle')
+
+                // Check if the response indicates success
+                if (resp && resp.status === 'success') {
+                    alert("Gradle tasks killed successfully.")
+                    console.log('Gradle tasks killed response:', resp);
+                } else if (resp && resp.error) {
+                    // Handle error response from server
+                    alert(`Failed to kill Gradle tasks: ${resp.error}`)
+                    console.error('Gradle tasks killed failed:', resp);
+                } else {
+                    // Generic success if no specific status field
+                    alert("Gradle tasks killed successfully.")
+                    console.log('Gradle tasks killed response:', resp);
+                }
+            } catch (error: any) {
+                // Handle 404 and other HTTP errors
+                if (error?.response?.status === 404) {
+                    alert("Error: Gradle tasks kill endpoint not found (404).")
+                } else if (error?.message) {
+                    alert(`Error killing Gradle tasks: ${error.message}`)
+                } else {
+                    alert("Error killing Gradle tasks.")
+                }
+                console.error('Error killing Gradle tasks:', error);
+            }
+        }
+    }
     const [popoverAnchor, setPopoverAnchor] = useState<HTMLButtonElement | null>(null)
     const [apiResult, setApiResult] = useState<JSX.Element | null>(null)
     const [popoverTitle, setPopoverTitle] = useState<string>("")
@@ -429,9 +460,6 @@ const UploadCyclesList: React.FC = () => {
     return (
         <>
             <Box sx={{ height: 1000, width: '100%' }}>
-                <Typography variant="h4" component="h1" gutterBottom>
-                    Upload Cycles
-                </Typography>
                 <Box sx={{ display: 'flex', gap: 4, mt: 4 }}>
                     <Box>
                         <Box sx={{ flex: 1 }}>
@@ -487,8 +515,8 @@ const UploadCyclesList: React.FC = () => {
                             </Button>
                         </Box>
                     </Box>
-                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, minWidth: 'fit-content' }}>
-                        <Stack sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
+                    <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2, minWidth: 'fit-content' }}>
+                        <Stack sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                             <Button variant="contained" color="error" onClick={closeAllChrome} startIcon={<FaTimes />}
                                 sx={{ width: 200, height: 40 }}
                             >
@@ -498,6 +526,11 @@ const UploadCyclesList: React.FC = () => {
                                 sx={{ width: 220, height: 40 }}
                             >
                                 Update Chrome Driver
+                            </Button>
+                            <Button variant="contained" color="primary" onClick={killAllGradleTasks}
+                                sx={{ width: 220, height: 40 }}
+                            >
+                                Kill All Gradle Tasks
                             </Button>
                         </Stack>
                         <ColorCodeInformationPanel />
