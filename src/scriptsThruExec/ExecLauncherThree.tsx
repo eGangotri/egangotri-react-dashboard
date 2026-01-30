@@ -77,6 +77,7 @@ const ExecLauncherThree: React.FC = () => {
                             <FormControlLabel value={ExecType.GenListingsofLocalFolderAsAll} control={<Radio />} label="ALL" />
                         </RadioGroup>
                     </>}
+                    userInputOneInfo='works for CSVs'
                 />
             </Box>
 
