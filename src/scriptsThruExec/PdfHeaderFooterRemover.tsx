@@ -167,6 +167,24 @@ export default function PdfHeaderFooterRemover() {
                 </Box>
             ),
         },
+        {
+            field: "_destFolder",
+            headerName: "Dest Folder",
+            width: 300,
+            renderCell: (params: GridRenderCellParams) => (
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                    <Tooltip title="Copy">
+                        <IconButton
+                            size="small"
+                            onClick={() => navigator.clipboard.writeText(params.value)}
+                        >
+                            <ContentCopyIcon fontSize="small" />
+                        </IconButton>
+                    </Tooltip>
+                    <Typography variant="body2" sx={{ fontSize: '0.8rem' }}>{params.value}</Typography>
+                </Box>
+            ),
+        },
         { field: "success", headerName: "Success", width: 90, type: "boolean" },
         {
             field: "logs",
@@ -310,6 +328,7 @@ export default function PdfHeaderFooterRemover() {
                         <MenuItem value="runId">Run ID</MenuItem>
                         <MenuItem value="commonRunId">Batch ID</MenuItem>
                         <MenuItem value="_srcFolder">Source Folder</MenuItem>
+                        <MenuItem value="_destFolder">Dest Folder</MenuItem>
                         <MenuItem value="success">Success</MenuItem>
                     </Select>
                 </FormControl>
@@ -377,6 +396,9 @@ export default function PdfHeaderFooterRemover() {
                             disableRowSelectionOnClick
                             hideFooter={selectedResults.length <= 100}
                             density="compact"
+                            getRowClassName={(params) => {
+                                return params.row.success ? 'bg-green-500' : 'bg-red-500';
+                            }}
                         />
                         {selectedResults.length === 0 && (
                             <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
