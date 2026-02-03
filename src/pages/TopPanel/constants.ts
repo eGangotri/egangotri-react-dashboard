@@ -31,11 +31,12 @@ import {
     LAUNCH_AI_RENAMER_PATH,
     EXEC_LAUNCHER_FOUR_B_PATH,
     AI_TITLE_PDF_RENAMER_HISTORY_PATH,
-    PDF_MERGE_HISTORY_TRACKER_PATH,
+    PDF_HEADER_FOOTER_REMOVER,
     PDF_MERGE_MODULE,
     LAUNCH_AI_GDRIVE_CP_RENAMER_HISTORY_PATH,
     PDF_PAGE_EXTRACTION_HISTORY_PATH,
-    ARCHIVE_DOWLOAD_LIST_PATH
+    ARCHIVE_DOWLOAD_LIST_PATH,
+    
 } from 'Routes/constants';
 
 export const TOP_PANEL_MENU: TopPanelMenu[] = [{
@@ -130,6 +131,10 @@ export const TOP_PANEL_MENU: TopPanelMenu[] = [{
         {
             path: EXEC_LAUNCHER_FOUR_B_PATH,
             label: 'Excel Renamer',
+        },
+        {
+            path: PDF_HEADER_FOOTER_REMOVER,
+            label: 'PDF Header-Footer-Remover',
         }
     ]
 }, {

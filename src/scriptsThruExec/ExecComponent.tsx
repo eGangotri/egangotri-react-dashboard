@@ -37,6 +37,7 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
   rows1stTf = 1,
   rows2ndTf = 1,
   onInputChange,
+  onCompleted,
   validationPattern,
   validationMessage
 
@@ -97,6 +98,9 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
       setBackendResp(_resp);
       setExecLogsForPopover(<ExecResponsePanel response={_resp} execType={execType} />);
       setAnchorEl(currentTarget as HTMLButtonElement);
+      if (onCompleted) {
+        onCompleted(_resp);
+      }
     }
     catch (error) {
       console.error(error);

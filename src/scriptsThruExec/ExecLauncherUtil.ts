@@ -159,7 +159,10 @@ export enum ExecType {
   AI_CP_RENAMER = 2152,
 
   CONVERT_MULTIPLE_TXT_FILE_SCRIPTS = 216,
-  CONVERT_TEXT_SCRIPT = 217
+  CONVERT_TEXT_SCRIPT = 217,
+
+  REMOVE_HEADER_FOOTER = 2180,
+  REMOVE_HEADER_FOOTER_OVERRIDE_NON_EMPTY_FLAG = 2181,
 }
 
 export enum Tif2PdfExecType {
@@ -286,6 +289,22 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
           absPathsAsCSV: dataUserInput2Mandatory,
         },
           `fileUtil/moveFilesAsCSVOfAbsPaths`);
+        break;
+
+      case ExecType.REMOVE_HEADER_FOOTER:
+        _resp = await makePostCallWithErrorHandling({
+          folderOrProfile: dataUserInput,
+          overrideNonEmpty: false,
+          destination: dataUserInput2Mandatory,
+        }, 'fileUtil/removeHeaderFooter');
+        break;
+
+      case ExecType.REMOVE_HEADER_FOOTER_OVERRIDE_NON_EMPTY_FLAG:
+        _resp = await makePostCallWithErrorHandling({
+          folderOrProfile: dataUserInput,
+          overrideNonEmpty: true,
+          destination: dataUserInput2Mandatory,
+        }, 'fileUtil/removeHeaderFooter');
         break;
 
       case ExecType.ReverseMove:

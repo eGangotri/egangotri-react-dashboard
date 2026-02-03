@@ -15,6 +15,7 @@ export const ARCHIVE_DOWLOAD_LIST_PATH = "/archiveDownloadListPath";
 export const EXEC_LAUNCHER_THREE_PATH = "/execLauncher3Path";
 export const EXEC_LAUNCHER_FOUR_PATH = "/execLauncher4aPath";
 export const EXEC_LAUNCHER_FOUR_B_PATH = "/execLauncher4bPath";
+export const PDF_HEADER_FOOTER_REMOVER = "/pdfHeaderFooterRemoverPath";
 export const LAUNCH_AI_RENAMER_PATH = "/aiRenamer";
 export const PDF_MERGE_MODULE = "/pdfMergeModule";
 export const LAUNCH_AI_GDRIVE_CP_RENAMER_HISTORY_PATH = "/aiGDriveCPRenameHistory";

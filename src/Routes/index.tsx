@@ -60,7 +60,8 @@ import {
     PDF_MERGE_MODULE,
     LAUNCH_AI_GDRIVE_CP_RENAMER_HISTORY_PATH,
     PDF_PAGE_EXTRACTION_HISTORY_PATH,
-    ARCHIVE_DOWLOAD_LIST_PATH
+    ARCHIVE_DOWLOAD_LIST_PATH,
+    PDF_HEADER_FOOTER_REMOVER
 } from './constants';
 import GDriveItemAggregates from 'components/gDriveListing/gDriveAggregatesByProfile';
 import ArchiveItemList from 'components/archiveListing';
@@ -81,6 +82,7 @@ import ArchiveDownloadListing from 'scriptsThruExec/ArchiveDownloadListing';
 
 import LauncherAIGDriveCPRenamerHistory from 'scriptsThruExec/ExecLauncherAIGDriveCPRenamerHistory';
 import PdfMergeModule from 'scriptsThruExec/PdfMergeModule';
+import PdfHeaderFooterRemover from 'scriptsThruExec/PdfHeaderFooterRemover';
 
 const DashboardRoutes: React.FC = () => {
     const isLocalhost = true; //window.location.hostname === 'localhost';
@@ -100,6 +102,7 @@ const DashboardRoutes: React.FC = () => {
             {<Route path={EXEC_LAUNCHER_THREE_PATH} element={<ExecLauncherThree />} />}
             {<Route path={EXEC_LAUNCHER_FOUR_PATH} element={<ExecLauncherFour />} />}
             {<Route path={EXEC_LAUNCHER_FOUR_B_PATH} element={<ExecLauncher4B />} />}
+            {<Route path={PDF_HEADER_FOOTER_REMOVER} element={<PdfHeaderFooterRemover />} />}
             {<Route path={LAUNCH_AI_RENAMER_PATH} element={<LauncherAIRenamer />} />}
             {<Route path={PDF_MERGE_MODULE} element={<PdfMergeModule />} />}
             {<Route path={LAUNCH_AI_GDRIVE_CP_RENAMER_HISTORY_PATH} element={<LauncherAIGDriveCPRenamerHistory />} />}
