@@ -37,6 +37,7 @@ export type ExecComponentProps = {
     onCompleted?: (response: any) => void;
     validationPattern?: RegExp;
     validationMessage?: string;
+    confirmDialogMsg?: string;
 };
 
 export type ExecResponse = {

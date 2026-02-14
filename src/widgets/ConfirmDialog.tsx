@@ -17,19 +17,21 @@ type DialogProps = {
     setOpenDialog: React.Dispatch<React.SetStateAction<boolean>>
     invokeFuncOnClick?: (event: React.MouseEvent<HTMLButtonElement|HTMLDivElement>) => Promise<void>
     invokeFuncOnClick2?: () => void;
+    confirmDialogMsg?: string;
 }
 
 const ConfirmDialog: React.FC<DialogProps> = ({ openDialog,
     handleClose,
     setOpenDialog,
     invokeFuncOnClick,
-    invokeFuncOnClick2 }) => {
+    invokeFuncOnClick2,
+    confirmDialogMsg = "Do you want to proceed?" }) => {
     return (
         <Dialog open={openDialog} onClose={handleClose}>
             <DialogTitle>Confirmation</DialogTitle>
             <DialogContent>
                 <DialogContentText>
-                    Do you want to proceed?
+                    {confirmDialogMsg}
                 </DialogContentText>
             </DialogContent>
             <DialogActions>

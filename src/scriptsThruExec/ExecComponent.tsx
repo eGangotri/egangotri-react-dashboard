@@ -39,7 +39,8 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
   onInputChange,
   onCompleted,
   validationPattern,
-  validationMessage
+  validationMessage,
+  confirmDialogMsg = "Do you want to proceed?"
 
 }) => {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
@@ -218,7 +219,8 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
         <ConfirmDialog openDialog={openDialog}
           handleClose={handleClose}
           setOpenDialog={setOpenDialog}
-          invokeFuncOnClick={funcToInvoke} />
+          invokeFuncOnClick={funcToInvoke}
+          confirmDialogMsg={confirmDialogMsg} />
       </Box>
     </Stack>
   );

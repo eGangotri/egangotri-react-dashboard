@@ -141,6 +141,7 @@ const LauncherAIRenamer: React.FC = () => {
                     rows1stTf={4}
                     rows2ndTf={4}
                     onInputChange={handleInputChange}
+                    confirmDialogMsg="Do you want pages extracted? Tip: Make sure Ghostscript is installed for comnpression"
                     thirdButton={<>
                         <Button
                             variant="contained"
