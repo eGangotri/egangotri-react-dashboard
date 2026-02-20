@@ -53,6 +53,7 @@ const AITitlePdfRenamerHistory: React.FC = () => {
   const [selectedRun, setSelectedRun] = useState<RunRow | null>(null);
   const [detailKey, setDetailKey] = useState<DetailKey>('pairedBatches');
   const [reloadKey, setReloadKey] = useState<number>(0);
+  const [totalItems, setTotalItems] = useState(0);
   // Pagination state
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
     page: 0,
@@ -124,6 +125,7 @@ const AITitlePdfRenamerHistory: React.FC = () => {
           metaDataAggregated: r.metaDataAggregated || [],
         }));
         setRows(normalized);
+        setTotalItems(res.total || res.totalItems || 0);
       } catch (e) {
         setError(e instanceof Error ? e.message : 'Failed to load');
       } finally {
@@ -392,6 +394,10 @@ const AITitlePdfRenamerHistory: React.FC = () => {
           getRowId={(r) => r.runId}
           columns={columns}
           pagination
+          paginationMode="server"
+          rowCount={totalItems}
+          paginationModel={paginationModel}
+          onPaginationModelChange={setPaginationModel}
           pageSizeOptions={[10, 20, 50]}
           loading={loading}
           checkboxSelection
@@ -426,6 +432,8 @@ const AITitlePdfRenamerHistory: React.FC = () => {
               rows={detailRows}
               columns={detailColumns}
               getRowId={(r) => r.id}
+              paginationModel={detailPaginationModel}
+              onPaginationModelChange={setDetailPaginationModel}
               pageSizeOptions={[10, 20, 50]}
               pagination
               initialState={{

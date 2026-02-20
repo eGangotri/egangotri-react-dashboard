@@ -682,7 +682,7 @@ const AITitleRenamerHistory: React.FC = () => {
           getRowId={(row) => row._id}
           paginationModel={paginationModel}
           onPaginationModelChange={setPaginationModel}
-          pageSizeOptions={[5, 10, 20]}
+          pageSizeOptions={[10, 20, 50, 100]}
           pagination
           paginationMode="server"
           filterMode="server"
@@ -749,7 +749,7 @@ const AITitleRenamerHistory: React.FC = () => {
               getRowId={(row) => row._id + Math.random()}
               paginationModel={detailPaginationModel}
               onPaginationModelChange={setDetailPaginationModel}
-              pageSizeOptions={[5, 10, 20]}
+              pageSizeOptions={[10, 20, 50, 100]}
               pagination
               paginationMode="server"
               filterMode="server"
