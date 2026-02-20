@@ -29,6 +29,8 @@ interface ICompositeDocument {
     id: string
     fileName: string
     filePath: string
+    googleDriveLink?: string
+    googleDrivePath?: string
     status: "queued" | "in-progress" | "completed" | "failed"
     msg: string
 }
@@ -531,6 +533,23 @@ const GDriveDownloadListing: React.FC = () => {
     const fileColumns: GridColDef[] = [
         { field: "fileName", headerName: "File Name", width: 200, filterable: true },
         { field: "filePath", headerName: "File Path", width: 300, filterable: true },
+        {
+            field: "googleDriveLink",
+            headerName: "GDrive Link",
+            width: 120,
+            filterable: true,
+            renderCell: (params) => params.value ? (
+                <div className="flex items-center">
+                    <IconButton onClick={() => handleCopyLink(params.value)} size="small">
+                        <FaCopy />
+                    </IconButton>
+                    <a href={params.value} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline ml-1">
+                        Open
+                    </a>
+                </div>
+            ) : "-",
+        },
+        { field: "googleDrivePath", headerName: "GDrive Path", width: 200, filterable: true },
         {
             field: "status",
             headerName: "Status",
