@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import Box from '@mui/material/Box';
-import { Button, Chip, Dialog, DialogContent, DialogTitle, IconButton, Typography } from '@mui/material';
+import { Button, Chip, Dialog, DialogContent, DialogTitle, IconButton, Tooltip, Typography } from '@mui/material';
 import { DataGrid, GridColDef, GridPaginationModel, GridToolbar } from '@mui/x-data-grid';
 import { makeGetCall } from 'service/ApiInterceptor';
 import { buildDeterministicColorMap, colorForKey } from '../utils/color';
@@ -232,9 +232,11 @@ const PdfPageExtractionHistory: React.FC = () => {
         const asText = v.join(', ');
         return (
           <div className="flex items-center gap-2">
-            <IconButton onClick={() => handleCopyText(asText)} size="small" className="ml-1">
-              <FaCopy />
-            </IconButton>
+            <Tooltip title="Copy Source Folders">
+              <IconButton onClick={() => handleCopyText(asText)} size="small" className="ml-1">
+                <FaCopy />
+              </IconButton>
+            </Tooltip>
             <span>{asText}</span>
           </div>
         );
@@ -249,9 +251,11 @@ const PdfPageExtractionHistory: React.FC = () => {
         const asText = v.join(', ');
         return (
           <div className="flex items-center gap-2">
-            <IconButton onClick={() => handleCopyText(asText)} size="small" className="ml-1">
-              <FaCopy />
-            </IconButton>
+            <Tooltip title="Copy Destination Root Folders">
+              <IconButton onClick={() => handleCopyText(asText)} size="small" className="ml-1">
+                <FaCopy />
+              </IconButton>
+            </Tooltip>
             <span>{asText}</span>
           </div>
         );
@@ -352,11 +356,48 @@ const PdfPageExtractionHistory: React.FC = () => {
             <DataGrid
               rows={detailRows}
               columns={[
-                { field: '_srcFolder', headerName: 'Source Folder', width: 260 },
-                { field: '_destRootFolder', headerName: 'Dest Root Folder', width: 260 },
                 {
-                  field: 'runId', headerName: 'Run ID', width: 100,
-                  renderCell: (p) => ellipsis(p.value as string, 10),
+                  field: '_srcFolder',
+                  headerName: 'Source Folder',
+                  width: 260,
+                  renderCell: (params) => (
+                    <div className="flex items-center gap-2">
+                      <Tooltip title="Copy Source Folder">
+                        <IconButton onClick={() => handleCopyText(params.value as string)} size="small">
+                          <FaCopy />
+                        </IconButton>
+                      </Tooltip>
+                      <span>{params.value}</span>
+                    </div>
+                  ),
+                },
+                {
+                  field: '_destRootFolder',
+                  headerName: 'Dest Root Folder',
+                  width: 260,
+                  renderCell: (params) => (
+                    <div className="flex items-center gap-2">
+                      <Tooltip title="Copy Destination Root Folder">
+                        <IconButton onClick={() => handleCopyText(params.value as string)} size="small">
+                          <FaCopy />
+                        </IconButton>
+                      </Tooltip>
+                      <span>{params.value}</span>
+                    </div>
+                  ),
+                },
+                {
+                  field: 'runId', headerName: 'Run ID', width: 120,
+                  renderCell: (params) => (
+                    <div className="flex items-center gap-2">
+                      <Tooltip title="Copy Run ID">
+                        <IconButton onClick={() => handleCopyText(params.value as string)} size="small">
+                          <FaCopy />
+                        </IconButton>
+                      </Tooltip>
+                      <span>{ellipsis(params.value as string, 10)}</span>
+                    </div>
+                  ),
                 },
                 {
                   field: 'createdAt',
