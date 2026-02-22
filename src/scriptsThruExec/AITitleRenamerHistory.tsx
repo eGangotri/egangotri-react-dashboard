@@ -7,10 +7,12 @@ import { Button, Dialog, DialogTitle, DialogContent, Chip, IconButton, Typograph
 import { buildDeterministicColorMap, colorForKey } from '../utils/color';
 import { DataGrid, GridColDef, GridFilterModel, GridPaginationModel, GridToolbar } from '@mui/x-data-grid';
 import { makeGetCall, makePostCall } from 'service/ApiInterceptor';
-import { FaCopy } from 'react-icons/fa';
+import { FaCopy, FaArrowRight } from 'react-icons/fa';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { ellipsis } from 'widgets/ItemTooltip';
 import { makePostCallWithErrorHandling } from 'service/BackendFetchService';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { AI_TITLE_RENAMER_HISTORY_PATH } from 'Routes/constants';
 // No need for path module
 
 // Types
@@ -59,6 +61,9 @@ interface FetchRunDetailsResponse {
 }
 
 const AITitleRenamerHistory: React.FC = () => {
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const querySrc = searchParams.get('src');
   const [groupedData, setGroupedData] = useState<GroupedRenameData[]>([]);
   const [detailData, setDetailData] = useState<PdfTitleRename[]>([]);
   const [openDetailDialog, setOpenDetailDialog] = useState<boolean>(false);
@@ -85,7 +90,7 @@ const AITitleRenamerHistory: React.FC = () => {
 
   // Filter model
   const [filterModel, setFilterModel] = useState<GridFilterModel>({
-    items: [],
+    items: querySrc ? [{ field: 'srcFolder', operator: 'contains', value: querySrc }] : [],
   });
 
   // Filter model for detail view
@@ -342,6 +347,17 @@ const AITitleRenamerHistory: React.FC = () => {
           <IconButton onClick={() => handleCopyText(params.value)} className="ml-2">
             <FaCopy />
           </IconButton>
+          <Tooltip title={`Copy and Go to File Transfer`}>
+            <IconButton
+              onClick={() => {
+                handleCopyText(params.value);
+                navigate(`${FILE_TRANSFER_LISTING}?src=${encodeURIComponent(params.value)}`);
+              }}
+              color="primary"
+            >
+              <FaArrowRight />
+            </IconButton>
+          </Tooltip>
           <Typography color="primary">
             {params.value}
           </Typography>

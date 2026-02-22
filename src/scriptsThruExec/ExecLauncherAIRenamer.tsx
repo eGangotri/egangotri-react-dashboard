@@ -1,10 +1,12 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import ExecComponent from './ExecComponent';
 import Box from '@mui/material/Box';
 import { ExecType } from './ExecLauncherUtil';
-import { Button, Typography } from '@mui/material';
+import { Button, Typography, IconButton, Tooltip } from '@mui/material';
 import { AI_RENAMER_ABS_PATH_LOCAL_STORAGE_KEY, AI_RENAMER_REDUCED_PATH_LOCAL_STORAGE_KEY, AI_RENAMER_RENAMER_PATH_LOCAL_STORAGE_KEY } from 'service/consts';
+import HistoryIcon from '@mui/icons-material/History';
+import { AI_TITLE_RENAMER_HISTORY_PATH } from 'Routes/constants';
 import { replaceQuotes } from 'mirror/utils';
 import { csvize } from './Utils';
 
@@ -33,13 +35,14 @@ const LauncherAIRenamer: React.FC = () => {
     const [absPathForAiRenamer, setAbsPathForAiRenamer] = useState('');
     const [reducedPathForAiRenamer, setReducedPathForAiRenamer] = useState('');
 
+    const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const queryPath = searchParams.get('path');
 
     useEffect(() => {
         if (queryPath) {
             setFilePath(queryPath);
-          //  setAbsPathForAiRenamer(queryPath);
+            //  setAbsPathForAiRenamer(queryPath);
         }
     }, [queryPath]);
 
@@ -65,12 +68,12 @@ const LauncherAIRenamer: React.FC = () => {
         if (_filePath.includes(",")) {
             const redPaths: string[] = []
             _filePath.split(",").forEach((path) => {
-                redPaths.push(`${path}-${REDUCED_FILE_PATH_SUFFIX}`);
+                redPaths.push(`${path?.trim()}-${REDUCED_FILE_PATH_SUFFIX}`);
             })
             setFilePathForReducedPdfs(redPaths.join(","));
         }
         else {
-            setFilePathForReducedPdfs(`${filePath}-${REDUCED_FILE_PATH_SUFFIX}`);
+            setFilePathForReducedPdfs(`${filePath?.trim()}-${REDUCED_FILE_PATH_SUFFIX}`);
         }
     }
 
@@ -153,7 +156,6 @@ const LauncherAIRenamer: React.FC = () => {
                             color="primary"
                             onClick={() => setFilePath(csvize(filePath))}
                             sx={{ marginRight: "10px", marginBottom: "10px" }}>CSVize</Button>
-
                     </>}
                 />
 
@@ -200,6 +202,17 @@ const LauncherAIRenamer: React.FC = () => {
                                 onClick={() => setAbsPathForAiRenamer(csvize(absPathForAiRenamer))}
                                 sx={{ marginRight: "10px", marginBottom: "10px" }}>CSVize
                             </Button>
+                            <Tooltip title="Go to AI Title Renamer History">
+                                <Button
+                                    variant="contained"
+                                    color="secondary"
+                                    onClick={() => navigate(`${AI_TITLE_RENAMER_HISTORY_PATH}`)}
+                                    sx={{ marginRight: "10px", marginBottom: "10px" }}
+                                    startIcon={<HistoryIcon />}
+                                >
+                                    History
+                                </Button>
+                            </Tooltip>
                             <Button
                                 variant="contained"
                                 color="primary"

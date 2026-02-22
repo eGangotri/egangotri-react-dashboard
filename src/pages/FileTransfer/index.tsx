@@ -84,11 +84,22 @@ function FileTransferPopup({ open, onClose, files, title }: FileTransferPopupPro
 }
 
 
+import { useLocation } from "react-router-dom"
+
 export default function FileTransferList() {
+    const location = useLocation()
     const [data, setData] = useState<JsonData[]>([])
     const [loading, setLoading] = useState(true)
     const [page, setPage] = useState(1)
     const [totalPages, setTotalPages] = useState(1)
+
+    useEffect(() => {
+        const queryParams = new URLSearchParams(location.search)
+        const srcParam = queryParams.get("src")
+        if (srcParam) {
+            setFilePath(srcParam)
+        }
+    }, [location.search])
     const [filterField, setFilterField] = useState<string>("")
     const [filterValue, setFilterValue] = useState<string>("")
     const [openDialog, setOpenDialog] = useState(false)

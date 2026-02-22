@@ -1,11 +1,13 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import Box from '@mui/material/Box';
-import { Button, CircularProgress, Dialog, DialogContent, DialogTitle, IconButton, Typography, Backdrop, Chip } from '@mui/material';
+import { Button, CircularProgress, Dialog, DialogContent, DialogTitle, IconButton, Typography, Backdrop, Chip, Tooltip } from '@mui/material';
 import { DataGrid, GridColDef, GridFilterModel, GridPaginationModel, GridToolbar } from '@mui/x-data-grid';
-import { FaCopy } from 'react-icons/fa';
+import { FaCopy, FaArrowRight } from 'react-icons/fa';
 import { makeGetCall, makePostCall } from 'service/ApiInterceptor';
 import { buildDeterministicColorMap, colorForKey } from '../utils/color';
 import { ellipsis } from 'widgets/ItemTooltip';
+import { useNavigate } from 'react-router-dom';
+import { FILE_TRANSFER_LISTING } from 'Routes/constants';
 
 // Backend can send either Mongo-style wrappers or plain strings
 type Oid = { $oid: string } | string;
@@ -46,6 +48,7 @@ type RunRow = {
 type DetailKey = 'pairedBatches' | 'renamingResults' | 'metaDataAggregated';
 
 const AITitlePdfRenamerHistory: React.FC = () => {
+  const navigate = useNavigate();
   const [rows, setRows] = useState<RunRow[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -165,6 +168,18 @@ const AITitlePdfRenamerHistory: React.FC = () => {
       field: 'srcFolder', headerName: 'Source Folder', width: 350, renderCell: (p) => (
         <div className="flex items-center gap-2">
           <IconButton onClick={() => copy(p.value)} size="small"><FaCopy /></IconButton>
+          <Tooltip title={`Copy and Go to File Transfer`}>
+            <IconButton
+              onClick={() => {
+                copy(p.value);
+                navigate(`${FILE_TRANSFER_LISTING}?src=${encodeURIComponent(p.value)}`);
+              }}
+              size="small"
+              color="primary"
+            >
+              <FaArrowRight />
+            </IconButton>
+          </Tooltip>
           <Typography color="primary" variant="body2">
             {p.value}
           </Typography>

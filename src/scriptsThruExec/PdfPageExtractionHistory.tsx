@@ -4,8 +4,10 @@ import { Button, Chip, Dialog, DialogContent, DialogTitle, IconButton, Tooltip, 
 import { DataGrid, GridColDef, GridPaginationModel, GridToolbar } from '@mui/x-data-grid';
 import { makeGetCall } from 'service/ApiInterceptor';
 import { buildDeterministicColorMap, colorForKey } from '../utils/color';
-import { FaCopy } from 'react-icons/fa';
+import { FaCopy, FaArrowRight } from 'react-icons/fa';
 import { ellipsis } from 'widgets/ItemTooltip';
+import { useNavigate } from 'react-router-dom';
+import { FILE_TRANSFER_LISTING } from 'Routes/constants';
 
 interface ExtractNPagesItem {
   _id: string;
@@ -45,6 +47,7 @@ interface ExtractPerItemHistoryRow {
 }
 
 const PdfPageExtractionHistory: React.FC = () => {
+  const navigate = useNavigate();
   const [rows, setRows] = useState<ExtractNPagesItem[]>([]);
   const [totalItems, setTotalItems] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
@@ -237,6 +240,18 @@ const PdfPageExtractionHistory: React.FC = () => {
                 <FaCopy />
               </IconButton>
             </Tooltip>
+            <Tooltip title={`Copy and Go to File Transfer`}>
+              <IconButton
+                onClick={() => {
+                  handleCopyText(asText);
+                  navigate(`${FILE_TRANSFER_LISTING}?src=${encodeURIComponent(asText)}`);
+                }}
+                size="small"
+                color="primary"
+              >
+                <FaArrowRight />
+              </IconButton>
+            </Tooltip>
             <span>{asText}</span>
           </div>
         );
@@ -365,6 +380,18 @@ const PdfPageExtractionHistory: React.FC = () => {
                       <Tooltip title="Copy Source Folder">
                         <IconButton onClick={() => handleCopyText(params.value as string)} size="small">
                           <FaCopy />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title={`Copy and Go to File Transfer`}>
+                        <IconButton
+                          onClick={() => {
+                            handleCopyText(params.value as string);
+                            navigate(`${FILE_TRANSFER_LISTING}?src=${encodeURIComponent(params.value as string)}`);
+                          }}
+                          size="small"
+                          color="primary"
+                        >
+                          <FaArrowRight />
                         </IconButton>
                       </Tooltip>
                       <span>{params.value}</span>
