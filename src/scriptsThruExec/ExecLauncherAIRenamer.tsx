@@ -6,6 +6,7 @@ import { ExecType } from './ExecLauncherUtil';
 import { Button, Typography, IconButton, Tooltip } from '@mui/material';
 import { AI_RENAMER_ABS_PATH_LOCAL_STORAGE_KEY, AI_RENAMER_REDUCED_PATH_LOCAL_STORAGE_KEY, AI_RENAMER_RENAMER_PATH_LOCAL_STORAGE_KEY } from 'service/consts';
 import HistoryIcon from '@mui/icons-material/History';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { AI_TITLE_RENAMER_HISTORY_PATH } from 'Routes/constants';
 import { replaceQuotes } from 'mirror/utils';
 import { csvize } from './Utils';
@@ -156,6 +157,18 @@ const LauncherAIRenamer: React.FC = () => {
                             color="primary"
                             onClick={() => setFilePath(csvize(filePath))}
                             sx={{ marginRight: "10px", marginBottom: "10px" }}>CSVize</Button>
+                        <Tooltip title="Copy both paths to AI Renamer">
+                            <IconButton
+                                color="primary"
+                                onClick={() => {
+                                    setAbsPathForAiRenamer(filePath);
+                                    setReducedPathForAiRenamer(filePathForReducedPdfs);
+                                }}
+                                sx={{ marginBottom: "10px" }}
+                            >
+                                <ArrowForwardIcon />
+                            </IconButton>
+                        </Tooltip>
                     </>}
                 />
 
@@ -196,29 +209,31 @@ const LauncherAIRenamer: React.FC = () => {
                                 onClick={loadSrcAndReducedPDFNamesFromLocalStorage}
                                 sx={{ marginRight: "10px", marginBottom: "10px" }}>Load From Local Storage
                             </Button>
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                onClick={() => setAbsPathForAiRenamer(csvize(absPathForAiRenamer))}
-                                sx={{ marginRight: "10px", marginBottom: "10px" }}>CSVize
-                            </Button>
-                            <Tooltip title="Go to AI Title Renamer History">
+                            <Box>
                                 <Button
                                     variant="contained"
-                                    color="secondary"
-                                    onClick={() => navigate(`${AI_TITLE_RENAMER_HISTORY_PATH}`)}
-                                    sx={{ marginRight: "10px", marginBottom: "10px" }}
-                                    startIcon={<HistoryIcon />}
-                                >
-                                    History
+                                    color="primary"
+                                    onClick={() => setAbsPathForAiRenamer(csvize(absPathForAiRenamer))}
+                                    sx={{ marginRight: "10px", marginBottom: "10px" }}>CSVize
                                 </Button>
-                            </Tooltip>
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                onClick={() => generateRenamerFolders()}
-                                sx={{ marginRight: "10px", marginBottom: "10px" }}>Generate Renamer Folders
-                            </Button>
+                                <Tooltip title="Go to AI Title Renamer History">
+                                    <Button
+                                        variant="contained"
+                                        color="secondary"
+                                        onClick={() => navigate(`${AI_TITLE_RENAMER_HISTORY_PATH}`)}
+                                        sx={{ marginRight: "10px", marginBottom: "10px" }}
+                                        startIcon={<HistoryIcon />}
+                                    >
+                                        History
+                                    </Button>
+                                </Tooltip>
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={() => generateRenamerFolders()}
+                                    sx={{ marginRight: "10px", marginBottom: "10px" }}>Generate Renamer Folders
+                                </Button>
+                            </Box>
                         </>
                     }
                 />
