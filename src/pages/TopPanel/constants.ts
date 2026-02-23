@@ -9,7 +9,7 @@ import {
     TIFF_2_PDF,
     AI_TEXT_IDENTIFIER,
     EXEC_LAUNCHER_THREE_PATH,
-    EXEC_LAUNCHER_FOUR_PATH,
+    REFINE_FILE_DATA_1_PATH,
     SEARCH_ARCHIVE_DB_PATH,
     SEARCH_G_DRIVE_DB_PATH,
     G_DRIVE_LISTING_MAKER_PATH,
@@ -36,7 +36,8 @@ import {
     LAUNCH_AI_GDRIVE_CP_RENAMER_HISTORY_PATH,
     PDF_PAGE_EXTRACTION_HISTORY_PATH,
     ARCHIVE_DOWLOAD_LIST_PATH,
-    
+    REFINE_FILE_DATA_2_PATH,
+
 } from 'Routes/constants';
 
 export const TOP_PANEL_MENU: TopPanelMenu[] = [{
@@ -113,8 +114,12 @@ export const TOP_PANEL_MENU: TopPanelMenu[] = [{
             label: 'Files-Util',
         },
         {
-            path: EXEC_LAUNCHER_FOUR_PATH,
+            path: REFINE_FILE_DATA_1_PATH,
             label: 'Refine File Data-1',
+        },
+        {
+            path: REFINE_FILE_DATA_2_PATH,
+            label: 'Refine File Data-2',
         },
         {
             path: TIFF_2_PDF,

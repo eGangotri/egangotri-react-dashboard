@@ -9,7 +9,7 @@ import { useForm } from 'react-hook-form';
 import { IMG_TYPE_ANY, IMG_TYPE_CR2, IMG_TYPE_JPG, IMG_TYPE_PNG, IMG_TYPE_TIF } from './constants';
 import { CheckBox } from '@mui/icons-material';
 
-const ExecLauncherFour: React.FC = () => {
+const ExecLauncherRefineFileDataOne: React.FC = () => {
     const [imgType, setImgType] = useState(ExecType.JPG_TO_PDF);
     const [findBySizeType, setFindBySizeType] = useState(ExecType.DUPLICATES_BY_FILE_SIZE);
     const [duplicatesBySizeType, setDuplicatesBySizeType] = useState("1"); // or "2"
@@ -42,18 +42,6 @@ const ExecLauncherFour: React.FC = () => {
 
     return (
         <Box display="flex" gap={4} mb={2} flexDirection="row">
-            <Box display="flex" alignItems="center" gap={4} mb={2} flexDirection="column">
-
-                <ExecComponent buttonText="Vanitize Folder or Profile"
-                    placeholder='Vanitize'
-                    thirdTextBoxPlaceHolder='Suffix to add to Pdf'
-                    execType={ExecType.VANITIZE} />
-
-                <ExecComponent buttonText="Use Bulk Rename Conventions"
-                    placeholder='Use Bulk Rename Conventions'
-                    execType={ExecType.UseBulkRenameConventions} />
-            </Box>
-
 
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
                 <ExecComponent
@@ -76,38 +64,7 @@ const ExecLauncherFour: React.FC = () => {
                     execType={ExecType.AddHeaderFooter} />
             </Box>
 
-            <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
-                <ExecComponent
-                    buttonText={`Find ${getLabelForFileBySizeType()} by File Size`}
-                    placeholder='Folder Abs Path'
-                    secondTextBoxPlaceHolder='Folder Abs Path'
-                    execType={findBySizeType}
-                    css={{ width: "550px" }}
-                    css2={{ width: "550px" }}
-                    reactComponent={<>
-                        <Box display="flex" alignItems="center" gap={1}>
-                            <Checkbox checked={moveItems} onChange={(e) => handleMoveItemsChange(e)} />
-                            <Typography>Move {getLabelForFileBySizeType()} in Src</Typography>
-                        </Box>
-                        <RadioGroup aria-label="duplicatesBySizeType" name="duplicatesBySizeType" value={duplicatesBySizeType} onChange={handleFindBySizeChange} row>
-                            <FormControlLabel value={"1"} control={<Radio />} label="Duplicates" />
-                            <FormControlLabel value={"2"} control={<Radio />} label="Disjoint-Set" />
-                        </RadioGroup>
-                    </>} />
 
-                <ExecComponent
-                    buttonText="Move Multiple Files by Abs. Path"
-                    placeholder='Profile Name or Absolute Path as Dest'
-                    execType={ExecType.MoveMultipleFilesAsCSVtoFolderOrProfile}
-                    secondTextBoxPlaceHolder='CSV of Abs. Paths for Moving'
-                    css={{ width: "550px" }}
-                    css2={{ width: "550px" }}
-                    multiline2ndTf
-                    fullWidth
-                    rows2ndTf={8}
-                />
-
-            </Box>
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
 
                 <ExecComponent
@@ -119,6 +76,10 @@ const ExecLauncherFour: React.FC = () => {
 
                 <ExecComponent buttonText="Reverse Move (Python)"
                     execType={ExecType.ReverseMove} />
+            </Box>
+
+            <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
+
 
                 <ExecComponent
                     buttonText="Rename Non-ASCII File Names in Folder"
@@ -127,9 +88,8 @@ const ExecLauncherFour: React.FC = () => {
                     css={{ width: "250px" }}
                     execType={ExecType.RENAME_NON_ASCII_FILE_NAMES_IN_FOLDER} />
             </Box>
-
         </Box>
     );
 }
 
-export default ExecLauncherFour;
+export default ExecLauncherRefineFileDataOne;

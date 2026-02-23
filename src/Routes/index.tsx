@@ -10,7 +10,7 @@ import ExecLauncher4B from 'scriptsThruExec/ExecLauncher4B';
 import Tiff2Pdf from 'scriptsThruExec/Tiff2Pdf';
 import AITextIdentifier from 'scriptsThruExec/AITextIdentifier';
 import ExecLauncherThree from 'scriptsThruExec/ExecLauncherThree';
-import ExecLauncherFour from 'scriptsThruExec/ExecLauncherFour';
+import ExecLauncherFour from 'scriptsThruExec/ExecLauncherRefineFileDataOne';
 import SearchArchiveDB from 'pages/search/SearchArchiveDB';
 import SearchGDriveDB from 'pages/search/SearchGDriveDB'
 import ExecLauncherFive from 'scriptsThruExec/ExecLauncherFive';
@@ -33,7 +33,7 @@ import {
     TIFF_2_PDF,
     AI_TEXT_IDENTIFIER,
     EXEC_LAUNCHER_THREE_PATH,
-    EXEC_LAUNCHER_FOUR_PATH,
+    REFINE_FILE_DATA_1_PATH,
     SEARCH_ARCHIVE_DB_PATH,
     SEARCH_G_DRIVE_DB_PATH,
     G_DRIVE_LISTING_MAKER_PATH,
@@ -61,7 +61,8 @@ import {
     LAUNCH_AI_GDRIVE_CP_RENAMER_HISTORY_PATH,
     PDF_PAGE_EXTRACTION_HISTORY_PATH,
     ARCHIVE_DOWLOAD_LIST_PATH,
-    PDF_HEADER_FOOTER_REMOVER
+    PDF_HEADER_FOOTER_REMOVER,
+    REFINE_FILE_DATA_2_PATH
 } from './constants';
 import GDriveItemAggregates from 'components/gDriveListing/gDriveAggregatesByProfile';
 import ArchiveItemList from 'components/archiveListing';
@@ -83,6 +84,7 @@ import ArchiveDownloadListing from 'scriptsThruExec/ArchiveDownloadListing';
 import LauncherAIGDriveCPRenamerHistory from 'scriptsThruExec/ExecLauncherAIGDriveCPRenamerHistory';
 import PdfMergeModule from 'scriptsThruExec/PdfMergeModule';
 import PdfHeaderFooterRemover from 'scriptsThruExec/PdfHeaderFooterRemover';
+import ExecLauncherRefineFileDataTwo from 'scriptsThruExec/ExecLauncherRefineFileDataTwo';
 
 const DashboardRoutes: React.FC = () => {
     const isLocalhost = true; //window.location.hostname === 'localhost';
@@ -100,7 +102,8 @@ const DashboardRoutes: React.FC = () => {
             {<Route path={ARCHIVE_DOWLOAD_LIST_PATH} element={<ArchiveDownloadListing />} />}
             {<Route path={EXEC_LAUNCHER_TWO_C_PATH} element={<ExecLauncherTwoC />} />}
             {<Route path={EXEC_LAUNCHER_THREE_PATH} element={<ExecLauncherThree />} />}
-            {<Route path={EXEC_LAUNCHER_FOUR_PATH} element={<ExecLauncherFour />} />}
+            {<Route path={REFINE_FILE_DATA_1_PATH} element={<ExecLauncherFour />} />}
+            {<Route path={REFINE_FILE_DATA_2_PATH} element={<ExecLauncherRefineFileDataTwo />} />}
             {<Route path={EXEC_LAUNCHER_FOUR_B_PATH} element={<ExecLauncher4B />} />}
             {<Route path={PDF_HEADER_FOOTER_REMOVER} element={<PdfHeaderFooterRemover />} />}
             {<Route path={LAUNCH_AI_RENAMER_PATH} element={<LauncherAIRenamer />} />}

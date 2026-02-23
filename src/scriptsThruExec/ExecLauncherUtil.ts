@@ -39,6 +39,7 @@ export enum ExecType {
   MoveFolderContents = 2,
   MoveFolderContentsOverrideNonEmptyFlag = 22,
   MoveMultipleFilesAsCSVtoFolderOrProfile = 21,
+  CheckIntegrity = 211,
   ReverseMove = 31,
   SNAP_TO_HTML = 32,
   FILE_NAME_LENGTH = 33,
@@ -289,6 +290,13 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
           absPathsAsCSV: dataUserInput2Mandatory,
         },
           `fileUtil/moveFilesAsCSVOfAbsPaths`);
+        break;
+
+      case ExecType.CheckIntegrity:
+        _resp = await makePostCallWithErrorHandling({
+          folder: dataUserInput,
+        },
+          `fileUtil/checkIntegrity`);
         break;
 
       case ExecType.REMOVE_HEADER_FOOTER:
