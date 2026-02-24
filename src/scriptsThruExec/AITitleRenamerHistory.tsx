@@ -12,7 +12,7 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { ellipsis } from 'widgets/ItemTooltip';
 import { makePostCallWithErrorHandling } from 'service/BackendFetchService';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { AI_TITLE_RENAMER_HISTORY_PATH } from 'Routes/constants';
+import { AI_TITLE_RENAMER_HISTORY_PATH, FILE_TRANSFER_LISTING } from 'Routes/constants';
 // No need for path module
 
 // Types
