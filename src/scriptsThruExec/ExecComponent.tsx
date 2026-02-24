@@ -37,6 +37,7 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
   rows1stTf = 1,
   rows2ndTf = 1,
   onInputChange,
+  onInputChangeSecond,
   onCompleted,
   validationPattern,
   validationMessage,
@@ -134,6 +135,12 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
     }
   };
 
+  const handleInputChangeSecond = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (onInputChangeSecond) {
+      onInputChangeSecond(event.target.value);
+    }
+  };
+
   return (
     <Stack spacing={2} sx={{ width: '100%' }}>
       <Box display="flex" alignItems="center" gap={4} mb={2}>
@@ -176,7 +183,12 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
             <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start' }}>
               <TextField variant="outlined"
                 placeholder={secondTextBoxPlaceHolder}
-                {...register('userInputSecond', secondComponentRequired === true ? { required: "This field is required" } : {})}
+                {...register('userInputSecond', secondComponentRequired === true ? {
+                  required: "This field is required",
+                  onChange: handleInputChangeSecond
+                } : {
+                  onChange: handleInputChangeSecond
+                })}
                 error={Boolean(errors.userInputSecond)}
                 sx={{ marginRight: "30px", width: "250px", ...css2 }}
                 helperText={errors.userInputSecond?.message}

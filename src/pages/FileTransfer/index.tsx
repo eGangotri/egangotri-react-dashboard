@@ -21,6 +21,7 @@ import {
     Pagination,
     FormControlLabel,
     Checkbox,
+    Chip,
 } from "@mui/material"
 import { makeGetCall, makePostCall } from 'service/ApiInterceptor';
 import { IconButton, Tooltip } from "@mui/material";
@@ -32,6 +33,7 @@ import { ResultDisplayPopover } from "widgets/ResultDisplayPopover"
 import { ExecType } from "scriptsThruExec/ExecLauncherUtil";
 import ExecComponent from "scriptsThruExec/ExecComponent";
 import { csvize } from "scriptsThruExec/Utils";
+import { MdCloudUpload } from "react-icons/md";
 
 interface JsonData {
     _id: string
@@ -84,10 +86,11 @@ function FileTransferPopup({ open, onClose, files, title }: FileTransferPopupPro
 }
 
 
-import { useLocation } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 
 export default function FileTransferList() {
     const location = useLocation()
+    const navigate = useNavigate()
     const [data, setData] = useState<JsonData[]>([])
     const [loading, setLoading] = useState(true)
     const [page, setPage] = useState(1)
@@ -317,8 +320,13 @@ export default function FileTransferList() {
 
     const [moveFolderContentsExecType, setMoveFolderContentsExecType] = useState(ExecType.MoveFolderContents);
 
+    const [profilePath, setProfilePath] = useState('');
     const handleInputChange = (inputValue: string) => {
         setFilePath(inputValue);
+    };
+
+    const handleInputChangeSecond = (inputValue: string) => {
+        setProfilePath(inputValue);
     };
 
     return (
@@ -329,7 +337,9 @@ export default function FileTransferList() {
                     placeholder='Src Path for Moving QA-Passed-to-Pipeline'
                     secondTextBoxPlaceHolder="Profile Name or Absolute Path"
                     textBoxOneValue={filePath}
+                    textBoxTwoValue={profilePath}
                     onInputChange={handleInputChange}
+                    onInputChangeSecond={handleInputChangeSecond}
                     thirdButton={<Button
                         variant="contained"
                         color="primary"
@@ -341,11 +351,26 @@ export default function FileTransferList() {
                     userInputOneInfo="Multiple entries as Coma Separated Paths whether absolute or profile name"
                     userInputTwoInfoNonMandatory="Single Profile Name or Absolute Path"
                     reactComponent={<>
-                        <Box>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                             <FormControlLabel
                                 control={<Checkbox checked={overrideNonEmptyFlag} onChange={handleOverrideNonEmptyFlag} />}
                                 label="Override Non Empty Flag"
                             />
+                            {profilePath && (
+                                <Tooltip title={`Populate 'Profiles as CSV' on Upload Page with: ${profilePath}`}>
+                                    <Chip
+                                        icon={<MdCloudUpload />}
+                                        label={`Use Profiles: ${profilePath.length > 30 ? profilePath.substring(0, 30) + '...' : profilePath}`}
+                                        onClick={() => {
+                                            navigate(`/?profilesCsv=${encodeURIComponent(profilePath)}`);
+                                        }}
+                                        color="primary"
+                                        variant="outlined"
+                                        clickable
+                                        sx={{ ml: 1 }}
+                                    />
+                                </Tooltip>
+                            )}
                         </Box>
                     </>}
                 />

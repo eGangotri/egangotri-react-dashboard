@@ -1,7 +1,8 @@
 "use client"
 
 import type React from "react"
-import { useEffect, useState, useCallback } from "react"
+import { useEffect, useState, useCallback, useMemo } from "react"
+import { useSearchParams } from "react-router-dom"
 import { DataGrid, type GridColDef, type GridRenderCellParams, type GridRowId } from "@mui/x-data-grid"
 import { FaTrash, FaTimes } from 'react-icons/fa';
 import { Typography, Box, Link, TextField, Select, MenuItem, FormControl, InputLabel, Button, SelectChangeEvent, Stack, IconButton, Tooltip } from "@mui/material"
@@ -24,6 +25,8 @@ import { ellipsis } from "widgets/ItemTooltip";
 type VerifiedFilter = "all" | "true" | "false" | "null"
 
 const UploadCyclesList: React.FC = () => {
+    const [searchParams] = useSearchParams()
+    const queryProfilesCsv = searchParams.get("profilesCsv")
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [data, setData] = useState<UploadCycleTableData[]>([])
     const [selectedRows, setSelectedRows] = useState<GridRowId[]>([])
@@ -445,6 +448,12 @@ const UploadCyclesList: React.FC = () => {
             fetchData()
         }
     }
+
+    useEffect(() => {
+        if (queryProfilesCsv) {
+            setProfilesCsv(queryProfilesCsv)
+        }
+    }, [queryProfilesCsv])
 
     useEffect(() => {
         fetchData()
