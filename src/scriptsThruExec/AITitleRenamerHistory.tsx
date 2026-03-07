@@ -75,6 +75,7 @@ const AITitleRenamerHistory: React.FC = () => {
   const [resultOpen, setResultOpen] = useState<boolean>(false);
   const [resultTitle, setResultTitle] = useState<string>('');
   const [resultBody, setResultBody] = useState<any>(null);
+  const [reloadKey, setReloadKey] = useState<number>(0);
 
   // Pagination state
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
@@ -154,7 +155,7 @@ const AITitleRenamerHistory: React.FC = () => {
       }
     };
     loadGroupedData();
-  }, [paginationModel.page, paginationModel.pageSize]);
+  }, [paginationModel.page, paginationModel.pageSize, reloadKey]);
 
 
   useEffect(() => {
@@ -215,6 +216,7 @@ const AITitleRenamerHistory: React.FC = () => {
       setResultTitle(`Copy Metadata triggered for ${runIds.length} items`);
       setResultBody(response);
       setResultOpen(true);
+      setReloadKey(k => k + 1);
     } catch (e) {
       console.error(e);
       setResultTitle('Copy Metadata error');
@@ -242,6 +244,7 @@ const AITitleRenamerHistory: React.FC = () => {
       setResultTitle(`Copy Metadata (Keep Prefix) triggered for ${runIds.length} items`);
       setResultBody(response);
       setResultOpen(true);
+      setReloadKey(k => k + 1);
     } catch (e) {
       console.error(e);
       setResultTitle('Copy Metadata (Keep Prefix) error');
@@ -268,6 +271,7 @@ const AITitleRenamerHistory: React.FC = () => {
       setResultTitle(`Reverse Apply triggered for ${runIds.length} items`);
       setResultBody(response);
       setResultOpen(true);
+      setReloadKey(k => k + 1);
     } catch (e) {
       console.error(e);
       setResultTitle('Reverse Apply error');
@@ -294,6 +298,7 @@ const AITitleRenamerHistory: React.FC = () => {
       setResultTitle(`Cleanup triggered for ${runIds.length} items`);
       setResultBody(response);
       setResultOpen(true);
+      setReloadKey(k => k + 1);
     } catch (e) {
       console.error(e);
       setResultTitle('Cleanup error');
@@ -417,6 +422,7 @@ const AITitleRenamerHistory: React.FC = () => {
                 setResultTitle(`Copy Metadata triggered for runId=${runId}`);
                 setResultBody(res);
                 setResultOpen(true);
+                setReloadKey(k => k + 1);
               } catch (e) {
                 console.error(e);
                 setResultTitle('Copy Metadata error');
@@ -445,6 +451,7 @@ const AITitleRenamerHistory: React.FC = () => {
                 setResultTitle(`Keep Prefix triggered for runId=${runId}`);
                 setResultBody(res);
                 setResultOpen(true);
+                setReloadKey(k => k + 1);
               } catch (e) {
                 console.error(e);
                 setResultTitle('Keep Prefix error');
@@ -473,6 +480,7 @@ const AITitleRenamerHistory: React.FC = () => {
                 setResultTitle(`Reverse Apply triggered for runId=${runId}`);
                 setResultBody(res);
                 setResultOpen(true);
+                setReloadKey(k => k + 1);
               } catch (e) {
                 console.error(e);
                 setResultTitle('Reverse Apply error');
@@ -511,6 +519,7 @@ const AITitleRenamerHistory: React.FC = () => {
                 setResultTitle(`Cleanup triggered for runId=${runId}`);
                 setResultBody(res);
                 setResultOpen(true);
+                setReloadKey(k => k + 1);
               } catch (e) {
                 console.error(e);
                 setResultTitle('Cleanup error');
