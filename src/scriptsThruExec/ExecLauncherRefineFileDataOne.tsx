@@ -59,8 +59,8 @@ const ExecLauncherRefineFileDataOne: React.FC = () => {
                     </>} />
                 <ExecComponent
                     buttonText="Add Header/Footer to PDFs"
-                    placeholder='Folder Abs Path'
-                    secondTextBoxPlaceHolder='Folder Abs Path'
+                    placeholder='Src. Folder Abs Path'
+                    secondTextBoxPlaceHolder='Dest. Folder Abs Path'
                     execType={ExecType.AddHeaderFooter} />
             </Box>
 
