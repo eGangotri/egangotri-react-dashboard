@@ -15,7 +15,7 @@ type DialogProps = {
     openDialog: boolean;
     handleClose: () => void
     setOpenDialog: React.Dispatch<React.SetStateAction<boolean>>
-    invokeFuncOnClick?: (event: React.MouseEvent<HTMLButtonElement|HTMLDivElement>) => Promise<void>
+    invokeFuncOnClick?: (event: React.MouseEvent<HTMLButtonElement | HTMLDivElement>) => Promise<void>
     invokeFuncOnClick2?: () => void;
     confirmDialogMsg?: string;
 }
@@ -26,6 +26,31 @@ const ConfirmDialog: React.FC<DialogProps> = ({ openDialog,
     invokeFuncOnClick,
     invokeFuncOnClick2,
     confirmDialogMsg = "Do you want to proceed?" }) => {
+
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    useEffect(() => {
+        if (!openDialog) {
+            setIsSubmitting(false);
+        }
+    }, [openDialog]);
+
+    const handleYesClick = async (e: React.MouseEvent<HTMLButtonElement | HTMLDivElement>) => {
+        if (isSubmitting) return;
+        setIsSubmitting(true);
+        if (invokeFuncOnClick) {
+            await invokeFuncOnClick(e);
+        }
+    };
+
+    const handleYesClick2 = () => {
+        if (isSubmitting) return;
+        setIsSubmitting(true);
+        if (invokeFuncOnClick2) {
+            invokeFuncOnClick2();
+        }
+    };
+
     return (
         <Dialog open={openDialog} onClose={handleClose}>
             <DialogTitle>Confirmation</DialogTitle>
@@ -35,18 +60,18 @@ const ConfirmDialog: React.FC<DialogProps> = ({ openDialog,
                 </DialogContentText>
             </DialogContent>
             <DialogActions>
-                <Button onClick={() => setOpenDialog(false)} color="primary">
+                <Button onClick={() => setOpenDialog(false)} color="primary" disabled={isSubmitting}>
                     No
                 </Button>
                 {invokeFuncOnClick ?
-                    <Button onClick={(e) => invokeFuncOnClick != null && invokeFuncOnClick(e)} color="primary" autoFocus>
+                    <Button onClick={handleYesClick} color="primary" autoFocus disabled={isSubmitting}>
                         Yes
-                    </Button> :<></>
+                    </Button> : <></>
                 }
-                   {invokeFuncOnClick2 ?
-                    <Button onClick={(e) => invokeFuncOnClick2 != null && invokeFuncOnClick2()} color="primary" autoFocus>
+                {invokeFuncOnClick2 ?
+                    <Button onClick={handleYesClick2} color="primary" autoFocus disabled={isSubmitting}>
                         Yes
-                    </Button> :<></>
+                    </Button> : <></>
                 }
             </DialogActions>
         </Dialog>

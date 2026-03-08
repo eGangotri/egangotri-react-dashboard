@@ -219,10 +219,10 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
 
           {reactComponent}
           <Box sx={{ marginTop: "10px" }}>
-            <Button variant="contained" color="primary" type="submit" sx={{ marginRight: "10px", marginBottom: "10px" }}>
+            <Button variant="contained" color="primary" type="submit" disabled={isLoading} sx={{ marginRight: "10px", marginBottom: "10px" }}>
               {buttonText}
             </Button>
-            <Button variant="contained" color="primary" type="reset" onClick={() => reset()} sx={{ marginRight: "10px", marginBottom: "10px" }}>
+            <Button variant="contained" color="primary" type="reset" disabled={isLoading} onClick={() => reset()} sx={{ marginRight: "10px", marginBottom: "10px" }}>
               Reset
             </Button>
             {thirdButton}
