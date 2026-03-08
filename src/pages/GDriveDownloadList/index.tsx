@@ -193,10 +193,39 @@ const GDriveDownloadListing: React.FC = () => {
         [selectedIds, downloads]
     )
 
-    const handleBulkVerify = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    const [bulkVerifyDialogOpen, setBulkVerifyDialogOpen] = useState(false)
+    const [bulkRedownloadDialogOpen, setBulkRedownloadDialogOpen] = useState(false)
+
+    const handleBulkVerifyClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+        setAnchorElApi(e.currentTarget);
+        setBulkVerifyDialogOpen(true);
+    };
+
+    const handleBulkRedownloadClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+        setAnchorElApi(e.currentTarget);
+        setBulkRedownloadDialogOpen(true);
+    };
+
+    const redownloadTypes = new Set(
+        selectedIds
+            .map((id) => downloads.find((d) => d._id === id))
+            .filter((row) => row && (row as any).verify === false)
+            .map((row) => row?.downloadType === 'pdf' ? 'PDFs' : row?.downloadType === 'zip' ? 'Zips' : row?.downloadType === 'all' ? 'All' : '')
+    );
+    const redownloadTypeLabel = Array.from(redownloadTypes).filter(Boolean).join('/');
+
+    const verifyTypes = new Set(
+        selectedIds
+            .map((id) => downloads.find((d) => d._id === id))
+            .filter((row): row is IGDriveDownload => !!row)
+            .map((row) => row?.downloadType === 'pdf' ? 'PDFs' : row?.downloadType === 'zip' ? 'Zips' : row?.downloadType === 'all' ? 'All' : '')
+    );
+    const verifyTypeLabel = Array.from(verifyTypes).filter(Boolean).join('/');
+
+    const handleBulkVerify = async () => {
+        setBulkVerifyDialogOpen(false);
         if (verifyEligibleIds.length === 0) return
         try {
-            setAnchorElApi(e.currentTarget);
             setApiResult(null)
             setApiLoading(true)
             const response = await makePostCallWithErrorHandling({
@@ -238,10 +267,10 @@ const GDriveDownloadListing: React.FC = () => {
         }
     }
 
-    const handleBulkRedownload = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    const handleBulkRedownload = async () => {
+        setBulkRedownloadDialogOpen(false);
         if (redownloadEligibleIds.length === 0) return
         try {
-            setAnchorElApi(e.currentTarget);
             setApiResult(null)
             setApiLoading(true)
             const response = await makePostCallWithErrorHandling({
@@ -606,20 +635,36 @@ const GDriveDownloadListing: React.FC = () => {
                         variant="contained"
                         color="primary"
                         disabled={apiLoading || verifyEligibleIds.length === 0}
-                        onClick={handleBulkVerify}
+                        onClick={handleBulkVerifyClick}
                     >
-                        {apiLoading ? <Spinner /> : `Verify (${verifyEligibleIds.length})`}
+                        {apiLoading ? <Spinner /> : `Verify ${verifyTypeLabel ? verifyTypeLabel : ''} (${verifyEligibleIds.length})`}
                     </Button>
                     <Button
                         variant="contained"
                         color="primary"
                         disabled={apiLoading || redownloadEligibleIds.length === 0}
-                        onClick={handleBulkRedownload}
+                        onClick={handleBulkRedownloadClick}
                     >
-                        {apiLoading ? <Spinner /> : `Re-DL (${redownloadEligibleIds.length})`}
+                        {apiLoading ? <Spinner /> : `Re-DL ${redownloadTypeLabel ? redownloadTypeLabel : ''} (${redownloadEligibleIds.length})`}
                     </Button>
                 </Box>
             )}
+
+            <ConfirmDialog
+                openDialog={bulkVerifyDialogOpen}
+                handleClose={() => setBulkVerifyDialogOpen(false)}
+                setOpenDialog={setBulkVerifyDialogOpen}
+                invokeFuncOnClick={async () => await handleBulkVerify()}
+                confirmDialogMsg={`Are you sure you want to verify the ${verifyEligibleIds.length} selected item${verifyEligibleIds.length > 1 ? 's' : ''}?`}
+            />
+
+            <ConfirmDialog
+                openDialog={bulkRedownloadDialogOpen}
+                handleClose={() => setBulkRedownloadDialogOpen(false)}
+                setOpenDialog={setBulkRedownloadDialogOpen}
+                invokeFuncOnClick={async () => await handleBulkRedownload()}
+                confirmDialogMsg={`Are you sure you want to re-download the ${redownloadEligibleIds.length} selected item${redownloadEligibleIds.length > 1 ? 's' : ''}?`}
+            />
             <DataGrid
                 rows={downloads}
                 columns={columns}
