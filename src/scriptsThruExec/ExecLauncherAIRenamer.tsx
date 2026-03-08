@@ -66,10 +66,17 @@ const LauncherAIRenamer: React.FC = () => {
     const handleFetchPrompt = async () => {
         try {
             setPromptLoading(true);
-            const res = await makePostCall({}, "ai/getMetadataExtractionPrompt");
-            if (res?.response?.PDF_METADATA_EXTRACTION_PROMPT) {
-                setExtractionPrompt(res.response.PDF_METADATA_EXTRACTION_PROMPT);
+            const customPrompt = localStorage.getItem("PDF_METADATA_EXTRACTION_PROMPT");
+            if (customPrompt) {
+                setExtractionPrompt(customPrompt);
                 setPromptDialogOpen(true);
+                return;
+            } else {
+                const res = await makePostCall({}, "ai/getMetadataExtractionPrompt");
+                if (res?.response?.PDF_METADATA_EXTRACTION_PROMPT) {
+                    setExtractionPrompt(res.response.PDF_METADATA_EXTRACTION_PROMPT);
+                    setPromptDialogOpen(true);
+                }
             }
         } catch (e) {
             console.error(e);
