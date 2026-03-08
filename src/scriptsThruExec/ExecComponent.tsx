@@ -41,10 +41,18 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
   onCompleted,
   validationPattern,
   validationMessage,
-  confirmDialogMsg = "Do you want to proceed?"
-
+  confirmDialogMsg = "Do you want to proceed?",
+  externalLoading = false,
+  onLoadingChange
 }) => {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
+
+  useEffect(() => {
+    if (onLoadingChange) {
+      onLoadingChange(isLoading);
+    }
+  }, [isLoading, onLoadingChange]);
+
   const { register, handleSubmit, setValue, formState: { errors }, reset } = useForm<ExecComponentFormData>({
     mode: 'onChange',
     reValidateMode: 'onChange'
@@ -219,10 +227,10 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
 
           {reactComponent}
           <Box sx={{ marginTop: "10px" }}>
-            <Button variant="contained" color="primary" type="submit" disabled={isLoading} sx={{ marginRight: "10px", marginBottom: "10px" }}>
+            <Button variant="contained" color="primary" type="submit" disabled={isLoading || externalLoading} sx={{ marginRight: "10px", marginBottom: "10px" }}>
               {buttonText}
             </Button>
-            <Button variant="contained" color="primary" type="reset" disabled={isLoading} onClick={() => reset()} sx={{ marginRight: "10px", marginBottom: "10px" }}>
+            <Button variant="contained" color="primary" type="reset" disabled={isLoading || externalLoading} onClick={() => reset()} sx={{ marginRight: "10px", marginBottom: "10px" }}>
               Reset
             </Button>
             {thirdButton}

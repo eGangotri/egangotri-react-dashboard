@@ -39,6 +39,8 @@ export type ExecComponentProps = {
     validationPattern?: RegExp;
     validationMessage?: string;
     confirmDialogMsg?: string;
+    externalLoading?: boolean;
+    onLoadingChange?: (loading: boolean) => void;
 };
 
 export type ExecResponse = {

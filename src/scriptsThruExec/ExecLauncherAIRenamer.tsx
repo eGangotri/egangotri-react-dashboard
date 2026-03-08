@@ -3,7 +3,14 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 import ExecComponent from './ExecComponent';
 import Box from '@mui/material/Box';
 import { ExecType } from './ExecLauncherUtil';
-import { Button, Typography, IconButton, Tooltip } from '@mui/material';
+import { Button, Typography, IconButton, Tooltip, Dialog, DialogTitle, DialogContent, DialogActions, TextField, CircularProgress } from '@mui/material';
+import EditNoteIcon from '@mui/icons-material/EditNote';
+import DeleteIcon from '@mui/icons-material/Delete';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import { makePostCall } from 'service/ApiInterceptor';
+import { makePostCallWithErrorHandling } from 'service/BackendFetchService';
+import ExecPopover from './ExecPopover';
+import ExecResponsePanel from './ExecResponsePanel';
 import { AI_RENAMER_ABS_PATH_LOCAL_STORAGE_KEY, AI_RENAMER_REDUCED_PATH_LOCAL_STORAGE_KEY, AI_RENAMER_RENAMER_PATH_LOCAL_STORAGE_KEY } from 'service/consts';
 import HistoryIcon from '@mui/icons-material/History';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
@@ -40,12 +47,77 @@ const LauncherAIRenamer: React.FC = () => {
     const [searchParams] = useSearchParams();
     const queryPath = searchParams.get('path');
 
+    const [promptDialogOpen, setPromptDialogOpen] = useState(false);
+    const [extractionPrompt, setExtractionPrompt] = useState("");
+    const [promptLoading, setPromptLoading] = useState(false);
+
+    const [customRunLoading, setCustomRunLoading] = useState(false);
+    const [mainRunLoading, setMainRunLoading] = useState(false);
+    const [apiResult, setApiResult] = useState<any>(null);
+    const [anchorElApi, setAnchorElApi] = useState<HTMLButtonElement | null>(null);
+
     useEffect(() => {
         if (queryPath) {
             setFilePath(queryPath);
             //  setAbsPathForAiRenamer(queryPath);
         }
     }, [queryPath]);
+
+    const handleFetchPrompt = async () => {
+        try {
+            setPromptLoading(true);
+            const res = await makePostCall({}, "ai/getMetadataExtractionPrompt");
+            if (res?.response?.PDF_METADATA_EXTRACTION_PROMPT) {
+                setExtractionPrompt(res.response.PDF_METADATA_EXTRACTION_PROMPT);
+                setPromptDialogOpen(true);
+            }
+        } catch (e) {
+            console.error(e);
+        } finally {
+            setPromptLoading(false);
+        }
+    };
+
+    const handleSavePrompt = () => {
+        localStorage.setItem("PDF_METADATA_EXTRACTION_PROMPT", extractionPrompt);
+        setPromptDialogOpen(false);
+    };
+
+    const handleDeletePrompt = () => {
+        if (window.confirm("Are you sure you want to delete the prompt from local storage?")) {
+            localStorage.removeItem("PDF_METADATA_EXTRACTION_PROMPT");
+            setExtractionPrompt("");
+        }
+    };
+
+    const handleRunCustomPrompt = async (e: React.MouseEvent<HTMLButtonElement>) => {
+        const promptFromStorage = localStorage.getItem("PDF_METADATA_EXTRACTION_PROMPT");
+        if (!promptFromStorage) {
+            alert("No custom prompt found in local storage. Please fetch and save a prompt first.");
+            return;
+        }
+
+        setAnchorElApi(e.currentTarget);
+        try {
+            setCustomRunLoading(true);
+            const dataUserInput = replaceQuotes(absPathForAiRenamer);
+            const dataUserInput2Mandatory = replaceQuotes(reducedPathForAiRenamer);
+            const dataUserInput3NonMandatory = replaceQuotes(filePathForRenamerPdfs);
+
+            const res = await makePostCallWithErrorHandling({
+                srcFolder: dataUserInput,
+                reducedFolder: dataUserInput2Mandatory,
+                outputSuffix: dataUserInput3NonMandatory,
+                metadataExtractionPrompt: promptFromStorage
+            }, `ai/aiRenamer`);
+            setApiResult(<ExecResponsePanel response={res} execType={ExecType.AI_RENAMER} />);
+        } catch (err) {
+            console.error(err);
+            setApiResult(null);
+        } finally {
+            setCustomRunLoading(false);
+        }
+    };
 
     const [validationCss, setValidationCss] = React.useState({
         backgroundColor: "lightgreen",
@@ -201,6 +273,8 @@ const LauncherAIRenamer: React.FC = () => {
                     multiline3rdTf
                     rows1stTf={4}
                     rows2ndTf={4}
+                    externalLoading={customRunLoading}
+                    onLoadingChange={setMainRunLoading}
                     thirdButton={
                         <>
                             <Button
@@ -216,6 +290,15 @@ const LauncherAIRenamer: React.FC = () => {
                                     onClick={() => setAbsPathForAiRenamer(csvize(absPathForAiRenamer))}
                                     sx={{ marginRight: "10px", marginBottom: "10px" }}>CSVize
                                 </Button>
+
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={() => generateRenamerFolders()}
+                                    sx={{ marginRight: "10px", marginBottom: "10px" }}>Generate Renamer Folders
+                                </Button>
+                            </Box>
+                            <Box>
                                 <Tooltip title="Go to AI Title Renamer History">
                                     <Button
                                         variant="contained"
@@ -227,17 +310,75 @@ const LauncherAIRenamer: React.FC = () => {
                                         History
                                     </Button>
                                 </Tooltip>
-                                <Button
-                                    variant="contained"
-                                    color="primary"
-                                    onClick={() => generateRenamerFolders()}
-                                    sx={{ marginRight: "10px", marginBottom: "10px" }}>Generate Renamer Folders
-                                </Button>
+                                <Tooltip title="Run AI Renamer with Local Prompt">
+                                    <Button
+                                        variant="contained"
+                                        color="warning"
+                                        onClick={handleRunCustomPrompt}
+                                        disabled={customRunLoading || mainRunLoading}
+                                        startIcon={customRunLoading ? <CircularProgress size={16} /> : <PlayArrowIcon />}
+                                        sx={{ marginRight: "10px", marginBottom: "10px" }}
+                                    >
+                                        Run Custom
+                                    </Button>
+                                </Tooltip>
+                                <Tooltip title="Fetch Metadata Extraction Prompt">
+                                    <Button
+                                        variant="contained"
+                                        color="secondary"
+                                        onClick={handleFetchPrompt}
+                                        disabled={promptLoading}
+                                        startIcon={promptLoading ? <CircularProgress size={16} color="inherit" /> : <EditNoteIcon />}
+                                        sx={{ marginRight: "10px", marginBottom: "10px" }}
+                                    >
+                                        Prompt
+                                    </Button>
+                                </Tooltip>
+                                <Tooltip title="Delete Prompt from Local Storage">
+                                    <IconButton
+                                        color="error"
+                                        onClick={handleDeletePrompt}
+                                        sx={{ marginBottom: "10px" }}
+                                    >
+                                        <DeleteIcon />
+                                    </IconButton>
+                                </Tooltip>
                             </Box>
                         </>
                     }
                 />
             </Box>
+            <Dialog open={promptDialogOpen} onClose={() => setPromptDialogOpen(false)} maxWidth="md" fullWidth>
+                <DialogTitle>Edit Extraction Prompt</DialogTitle>
+                <DialogContent>
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        label="PDF Metadata Extraction Prompt"
+                        type="text"
+                        fullWidth
+                        multiline
+                        rows={10}
+                        variant="outlined"
+                        value={extractionPrompt}
+                        onChange={(e) => setExtractionPrompt(e.target.value)}
+                        sx={{ mt: 2 }}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setPromptDialogOpen(false)} color="inherit">Cancel</Button>
+                    <Button onClick={handleSavePrompt} color="primary" variant="contained">Save to Local Storage</Button>
+                </DialogActions>
+            </Dialog>
+
+            <ExecPopover
+                id={anchorElApi ? 'api-result-popover' : undefined}
+                open={Boolean(anchorElApi)}
+                anchorEl={anchorElApi}
+                onClose={() => setAnchorElApi(null)}
+            >
+                {apiResult}
+            </ExecPopover>
         </Box >
 
     );
