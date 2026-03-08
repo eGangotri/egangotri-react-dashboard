@@ -23,6 +23,7 @@ import Spinner from "widgets/Spinner";
 import { ellipsis } from "widgets/ItemTooltip";
 import { LAUNCH_AI_RENAMER_PATH } from "Routes/constants";
 import path from "path";
+import ConfirmDialog from "widgets/ConfirmDialog";
 
 // Types
 interface ICompositeDocument {
@@ -407,36 +408,40 @@ const GDriveDownloadListing: React.FC = () => {
             headerName: "API Action",
             width: 300,
             filterable: false,
-            renderCell: (params) => (
-                <>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={(e) => { setVerifyDialogOpen(true); setConfirmTargetId(params.row._id) }}
-                        disabled={apiLoading}
-                    >
-                        {apiLoading ? <> <Spinner /></> : "Verify"}
-                    </Button>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        sx={{ ml: 1 }}
-                        onClick={(e) => { setConfirmDialogOpen(true); setConfirmTargetId(params.row._id); }}
-                        disabled={apiLoading || (params.row.verify === undefined || params.row.verify === true)}
-                    >
-                        {apiLoading ? <Spinner /> : "Re-D/L"}
-                    </Button>
-                    <IconButton
-                        color="error"
-                        sx={{ ml: 1 }}
-                        onClick={() => handleDeleteClick(params.row.runId)}
-                        disabled={apiLoading}
-                    >
-                        <FaTrash />
-                    </IconButton>
-                </>
-
-            ),
+            renderCell: (params) => {
+                const typeLabel = params.row.downloadType === 'pdf' ? 'PDFs' :
+                    params.row.downloadType === 'zip' ? 'Zips' :
+                        params.row.downloadType === 'all' ? 'All' : '';
+                return (
+                    <>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={(e) => { setVerifyDialogOpen(true); setConfirmTargetId(params.row._id) }}
+                            disabled={apiLoading}
+                        >
+                            {apiLoading ? <> <Spinner /></> : `Verify ${typeLabel}`}
+                        </Button>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            sx={{ ml: 1 }}
+                            onClick={(e) => { setConfirmDialogOpen(true); setConfirmTargetId(params.row._id); }}
+                            disabled={apiLoading || (params.row.verify === undefined || params.row.verify === true)}
+                        >
+                            {apiLoading ? <Spinner /> : `Re-D/L ${typeLabel}`}
+                        </Button>
+                        <IconButton
+                            color="error"
+                            sx={{ ml: 1 }}
+                            onClick={() => handleDeleteClick(params.row.runId)}
+                            disabled={apiLoading}
+                        >
+                            <FaTrash />
+                        </IconButton>
+                    </>
+                )
+            },
         },
         {
             field: "quickStatus",
@@ -713,38 +718,29 @@ const GDriveDownloadListing: React.FC = () => {
                 </DialogContent>
             </Dialog>
 
-            <Dialog open={confirmDialogOpen} onClose={() => setConfirmDialogOpen(false)}>
-                <DialogTitle>Confirm Re-download</DialogTitle>
-                <DialogContent>
-                    Are you sure you want to re-download this item?
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setConfirmDialogOpen(false)} color="inherit">No</Button>
-                    <Button onClick={(e) => handleConfirm(e, confirmTargetId)} color="primary" variant="contained">Yes</Button>
-                </DialogActions>
-            </Dialog>
+            <ConfirmDialog
+                openDialog={confirmDialogOpen}
+                handleClose={() => setConfirmDialogOpen(false)}
+                setOpenDialog={setConfirmDialogOpen}
+                invokeFuncOnClick={async (e: React.MouseEvent<HTMLButtonElement | HTMLDivElement>) => await handleConfirm(e as any, confirmTargetId)}
+                confirmDialogMsg="Are you sure you want to re-download this item?"
+            />
 
-            <Dialog open={verifyDialogOpen} onClose={() => setVerifyDialogOpen(false)}>
-                <DialogTitle>Confirm Verify </DialogTitle>
-                <DialogContent>
-                    Are you sure you want to verify this item?
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setVerifyDialogOpen(false)} color="inherit">No</Button>
-                    <Button onClick={(e) => handleConfirm(e, confirmTargetId, true)} color="primary" variant="contained">Yes</Button>
-                </DialogActions>
-            </Dialog>
+            <ConfirmDialog
+                openDialog={verifyDialogOpen}
+                handleClose={() => setVerifyDialogOpen(false)}
+                setOpenDialog={setVerifyDialogOpen}
+                invokeFuncOnClick={async (e: React.MouseEvent<HTMLButtonElement | HTMLDivElement>) => await handleConfirm(e as any, confirmTargetId, true)}
+                confirmDialogMsg="Are you sure you want to verify this item?"
+            />
 
-            <Dialog open={deleteConfirmDialogOpen} onClose={() => setDeleteConfirmDialogOpen(false)}>
-                <DialogTitle>Confirm Delete</DialogTitle>
-                <DialogContent>
-                    Are you sure you want to delete this run ({deleteTargetRunId})?
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setDeleteConfirmDialogOpen(false)} color="inherit">No</Button>
-                    <Button onClick={(e) => handleDeleteConfirm(e)} color="error" variant="contained">Yes</Button>
-                </DialogActions>
-            </Dialog>
+            <ConfirmDialog
+                openDialog={deleteConfirmDialogOpen}
+                handleClose={() => setDeleteConfirmDialogOpen(false)}
+                setOpenDialog={setDeleteConfirmDialogOpen}
+                invokeFuncOnClick={async (e: React.MouseEvent<HTMLButtonElement | HTMLDivElement>) => await handleDeleteConfirm(e as any)}
+                confirmDialogMsg={`Are you sure you want to delete this run (${deleteTargetRunId})?`}
+            />
 
             <ExecPopover
                 id={anchorElApi ? 'api-result-popover' : undefined}
