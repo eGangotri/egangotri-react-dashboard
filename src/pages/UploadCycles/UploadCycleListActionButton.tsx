@@ -47,6 +47,7 @@ export const ActionButtonsDiscard: React.FC<ActionButtonsProps> = ({ uploadCycle
         handleIsolateMissing,
         handleLaunchReuploadMissed
     } = useUploadCycleActions({
+        isLoading,
         setIsLoading,
         setPopoverTitle: setActionType,
         setApiResult,
@@ -56,7 +57,6 @@ export const ActionButtonsDiscard: React.FC<ActionButtonsProps> = ({ uploadCycle
 
     const handleConfirm = async () => {
         console.log(`Confirmed: ${actionType} for Upload Cycle ID: ${uploadCycleId}`)
-        setOpenDialog(false)
 
         try {
             if (actionType === TASK_TYPE_ENUM.VERIFY_UPLOAD_STATUS) {
@@ -76,6 +76,8 @@ export const ActionButtonsDiscard: React.FC<ActionButtonsProps> = ({ uploadCycle
             }
         } catch (error) {
             console.error(`Error executing ${actionType}:`, error);
+        } finally {
+            setOpenDialog(false)
         }
     }
 

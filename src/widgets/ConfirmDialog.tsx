@@ -4,7 +4,7 @@ import {
     TableContainer, TableHead, TableRow, Paper,
     TablePagination,
     Link, Typography,
-    Button, Box, Popover, Stack, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions
+    Button, Box, Popover, Stack, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, CircularProgress
 } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import "pages/UploadCycles/UploadCycles.css"
@@ -63,16 +63,28 @@ const ConfirmDialog: React.FC<DialogProps> = ({ openDialog,
                 <Button onClick={() => setOpenDialog(false)} color="primary" disabled={isSubmitting}>
                     No
                 </Button>
-                {invokeFuncOnClick ?
-                    <Button onClick={handleYesClick} color="primary" autoFocus disabled={isSubmitting}>
+                {invokeFuncOnClick ? (
+                    <Button
+                        onClick={handleYesClick}
+                        color="primary"
+                        autoFocus
+                        disabled={isSubmitting}
+                        startIcon={isSubmitting ? <CircularProgress size={16} /> : null}
+                    >
                         Yes
-                    </Button> : <></>
-                }
-                {invokeFuncOnClick2 ?
-                    <Button onClick={handleYesClick2} color="primary" autoFocus disabled={isSubmitting}>
+                    </Button>
+                ) : null}
+                {invokeFuncOnClick2 ? (
+                    <Button
+                        onClick={handleYesClick2}
+                        color="primary"
+                        autoFocus
+                        disabled={isSubmitting}
+                        startIcon={isSubmitting ? <CircularProgress size={16} /> : null}
+                    >
                         Yes
-                    </Button> : <></>
-                }
+                    </Button>
+                ) : null}
             </DialogActions>
         </Dialog>
     )

@@ -192,7 +192,6 @@ const UploadCyclesList: React.FC = () => {
     }
 
     const handleConfirm = async () => {
-        setOpenDialog(false)
         const type = confirmActionType
         const id = confirmTargetId
 
@@ -210,6 +209,7 @@ const UploadCyclesList: React.FC = () => {
         } else if (type === TASK_TYPE_ENUM.MOVE_TO_FREEZE) {
             await handleMoveToFreeze(id)
         }
+        setOpenDialog(false)
     }
 
     const handleDelete = async (id: string, anchorId: string) => {
@@ -270,6 +270,7 @@ const UploadCyclesList: React.FC = () => {
         handleIsolateUploadFailures,
         handleMoveToFreeze
     } = useUploadCycleActions({
+        isLoading,
         setIsLoading,
         setPopoverTitle,
         setApiResult,
@@ -346,7 +347,7 @@ const UploadCyclesList: React.FC = () => {
                             id={`freeze-button-${params.row.uploadCycleId}`}
                             color="primary"
                             onClick={() => confirmAction(TASK_TYPE_ENUM.MOVE_TO_FREEZE, params.row.uploadCycleId)}
-                            disabled={isLoading}
+                            disabled={isLoading || params.row.moveToFreeze === true}
                         >
                             <MdAcUnit />
                         </IconButton>

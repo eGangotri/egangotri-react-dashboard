@@ -9,6 +9,9 @@ import { DataGrid, GridColDef, GridFilterModel, GridPaginationModel, GridToolbar
 import { makeGetCall, makePostCall } from 'service/ApiInterceptor';
 import { FaCopy, FaArrowRight } from 'react-icons/fa';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
+import UndoIcon from '@mui/icons-material/Undo';
 import { ellipsis } from 'widgets/ItemTooltip';
 import { makePostCallWithErrorHandling } from 'service/BackendFetchService';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -372,17 +375,22 @@ const AITitleRenamerHistory: React.FC = () => {
     {
       field: 'commonRunId',
       headerName: 'Common Run Id',
-      width: 100,
+      width: 180,
       filterable: true,
       renderCell: (params) => {
         const v = String(params.value ?? '');
         const { bg, color, border } = commonRunIdColorMap[v] || colorForKey(v);
         return (
-          <Chip
-            label={v}
-            size="small"
-            sx={{ bgcolor: bg, color, fontWeight: 600, border: `1px solid ${border}` }}
-          />
+          <div className="flex items-center gap-2">
+            <IconButton onClick={() => handleCopyText(v)} className="ml-2">
+              <FaCopy />
+            </IconButton>
+            <Chip
+              label={v}
+              size="small"
+              sx={{ bgcolor: bg, color, fontWeight: 600, border: `1px solid ${border}` }}
+            />
+          </div>
         );
       }
     },
@@ -402,97 +410,101 @@ const AITitleRenamerHistory: React.FC = () => {
     {
       field: 'action',
       headerName: 'Apply Actions',
-      width: 450,
+      width: 180,
       filterable: false,
       sortable: false,
       renderCell: (params) => (
         <Box display="flex" gap={1}>
-          <Button
-            size="small"
-            variant="contained"
-            disabled={!!actionLoading[params.row.runId] || params.row.applyButtonClicked}
-            onClick={async () => {
-              const runId = params.row.runId;
-              const ok = window.confirm(`Are you sure you want to apply metadata to original files for runId=${runId}?`);
-              if (!ok) return;
-              try {
-                setActionLoading((m) => ({ ...m, [runId]: true }));
-                const res = await makePostCall({}, `ai/copyMetadataToOriginalFiles/${runId}`);
-                console.log('Trigger response:', JSON.stringify(res));
-                setResultTitle(`Copy Metadata triggered for runId=${runId}`);
-                setResultBody(res);
-                setResultOpen(true);
-                setReloadKey(k => k + 1);
-              } catch (e) {
-                console.error(e);
-                setResultTitle('Copy Metadata error');
-                setResultBody({ error: e instanceof Error ? e.message : 'Unknown error' });
-                setResultOpen(true);
-              } finally {
-                setActionLoading((m) => ({ ...m, [runId]: false }));
-              }
-            }}
-          >
-            {actionLoading[params.row.runId] ? <CircularProgress size={16} color="inherit" /> : 'Apply'}
-          </Button>
+          <Tooltip title="Apply metadata to original files">
+            <IconButton
+              size="small"
+              color="primary"
+              disabled={!!actionLoading[params.row.runId] || params.row.applyButtonClicked}
+              onClick={async () => {
+                const runId = params.row.runId;
+                const ok = window.confirm(`Are you sure you want to apply metadata to original files for runId=${runId}?`);
+                if (!ok) return;
+                try {
+                  setActionLoading((m) => ({ ...m, [runId]: true }));
+                  const res = await makePostCall({}, `ai/copyMetadataToOriginalFiles/${runId}`);
+                  console.log('Trigger response:', JSON.stringify(res));
+                  setResultTitle(`Copy Metadata triggered for runId=${runId}`);
+                  setResultBody(res);
+                  setResultOpen(true);
+                  setReloadKey(k => k + 1);
+                } catch (e) {
+                  console.error(e);
+                  setResultTitle('Copy Metadata error');
+                  setResultBody({ error: e instanceof Error ? e.message : 'Unknown error' });
+                  setResultOpen(true);
+                } finally {
+                  setActionLoading((m) => ({ ...m, [runId]: false }));
+                }
+              }}
+            >
+              {actionLoading[params.row.runId] ? <CircularProgress size={20} color="inherit" /> : <CheckCircleIcon />}
+            </IconButton>
+          </Tooltip>
 
-          <Button
-            size="small"
-            variant="contained"
-            color="secondary"
-            disabled={!!actionLoading[params.row.runId]}
-            onClick={async () => {
-              const runId = params.row.runId;
-              const ok = window.confirm(`Are you sure you want to apply (Keep Prefix) metadata for runId=${runId}?`);
-              if (!ok) return;
-              try {
-                setActionLoading((m) => ({ ...m, [runId]: true }));
-                const res = await makePostCall({ keepPrefix: true }, `ai/copyMetadataToOriginalFiles/${runId}`);
-                setResultTitle(`Keep Prefix triggered for runId=${runId}`);
-                setResultBody(res);
-                setResultOpen(true);
-                setReloadKey(k => k + 1);
-              } catch (e) {
-                console.error(e);
-                setResultTitle('Keep Prefix error');
-                setResultBody({ error: e instanceof Error ? e.message : 'Unknown error' });
-                setResultOpen(true);
-              } finally {
-                setActionLoading((m) => ({ ...m, [runId]: false }));
-              }
-            }}
-          >
-            {actionLoading[params.row.runId] ? <CircularProgress size={16} color="inherit" /> : 'Apply-But-Keep-Prefix'}
-          </Button>
+          <Tooltip title="Apply But Keep Prefix">
+            <IconButton
+              size="small"
+              color="secondary"
+              disabled={!!actionLoading[params.row.runId]}
+              onClick={async () => {
+                const runId = params.row.runId;
+                const ok = window.confirm(`Are you sure you want to apply (Keep Prefix) metadata for runId=${runId}?`);
+                if (!ok) return;
+                try {
+                  setActionLoading((m) => ({ ...m, [runId]: true }));
+                  const res = await makePostCall({ keepPrefix: true }, `ai/copyMetadataToOriginalFiles/${runId}`);
+                  setResultTitle(`Keep Prefix triggered for runId=${runId}`);
+                  setResultBody(res);
+                  setResultOpen(true);
+                  setReloadKey(k => k + 1);
+                } catch (e) {
+                  console.error(e);
+                  setResultTitle('Keep Prefix error');
+                  setResultBody({ error: e instanceof Error ? e.message : 'Unknown error' });
+                  setResultOpen(true);
+                } finally {
+                  setActionLoading((m) => ({ ...m, [runId]: false }));
+                }
+              }}
+            >
+              {actionLoading[params.row.runId] ? <CircularProgress size={20} color="inherit" /> : <PlaylistAddCheckIcon />}
+            </IconButton>
+          </Tooltip>
 
-          <Button
-            size="small"
-            variant="contained"
-            color="error"
-            disabled={!!actionLoading[params.row.runId]}
-            onClick={async () => {
-              const runId = params.row.runId;
-              const ok = window.confirm(`Are you sure you want to REVERSE apply metadata for runId=${runId}?`);
-              if (!ok) return;
-              try {
-                setActionLoading((m) => ({ ...m, [runId]: true }));
-                const res = await makePostCall({}, `ai/reverseMetadataFromOriginalFiles/${runId}`);
-                setResultTitle(`Reverse Apply triggered for runId=${runId}`);
-                setResultBody(res);
-                setResultOpen(true);
-                setReloadKey(k => k + 1);
-              } catch (e) {
-                console.error(e);
-                setResultTitle('Reverse Apply error');
-                setResultBody({ error: e instanceof Error ? e.message : 'Unknown error' });
-                setResultOpen(true);
-              } finally {
-                setActionLoading((m) => ({ ...m, [runId]: false }));
-              }
-            }}
-          >
-            {actionLoading[params.row.runId] ? <CircularProgress size={16} color="inherit" /> : 'Reverse Apply'}
-          </Button>
+          <Tooltip title="Reverse Apply">
+            <IconButton
+              size="small"
+              color="error"
+              disabled={!!actionLoading[params.row.runId]}
+              onClick={async () => {
+                const runId = params.row.runId;
+                const ok = window.confirm(`Are you sure you want to REVERSE apply metadata for runId=${runId}?`);
+                if (!ok) return;
+                try {
+                  setActionLoading((m) => ({ ...m, [runId]: true }));
+                  const res = await makePostCall({}, `ai/reverseMetadataFromOriginalFiles/${runId}`);
+                  setResultTitle(`Reverse Apply triggered for runId=${runId}`);
+                  setResultBody(res);
+                  setResultOpen(true);
+                  setReloadKey(k => k + 1);
+                } catch (e) {
+                  console.error(e);
+                  setResultTitle('Reverse Apply error');
+                  setResultBody({ error: e instanceof Error ? e.message : 'Unknown error' });
+                  setResultOpen(true);
+                } finally {
+                  setActionLoading((m) => ({ ...m, [runId]: false }));
+                }
+              }}
+            >
+              {actionLoading[params.row.runId] ? <CircularProgress size={20} color="inherit" /> : <UndoIcon />}
+            </IconButton>
+          </Tooltip>
         </Box>
       ),
     },
