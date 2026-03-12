@@ -14,7 +14,8 @@ import ExecResponsePanel from './ExecResponsePanel';
 import { AI_RENAMER_ABS_PATH_LOCAL_STORAGE_KEY, AI_RENAMER_REDUCED_PATH_LOCAL_STORAGE_KEY, AI_RENAMER_RENAMER_PATH_LOCAL_STORAGE_KEY } from 'service/consts';
 import HistoryIcon from '@mui/icons-material/History';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import { AI_TITLE_RENAMER_HISTORY_PATH } from 'Routes/constants';
+import StopIcon from '@mui/icons-material/Stop';
+import { AI_TITLE_RENAMER_HISTORY_PATH, PDF_PAGE_EXTRACTION_HISTORY_PATH } from 'Routes/constants';
 import { replaceQuotes } from 'mirror/utils';
 import { csvize } from './Utils';
 
@@ -202,6 +203,16 @@ const LauncherAIRenamer: React.FC = () => {
         }
     }
 
+    const handleStopAiRenamer = async () => {
+        if (window.confirm("Are you sure you want to stop the AI Renaming process?")) {
+            try {
+                await makePostCall({}, "ai/aiRenameHalt");
+            } catch (e) {
+                console.error(e);
+            }
+        }
+    };
+
     return (
         <Box display="flex" gap={4} mb={2} flexDirection="row">
             <Box display="flex" alignItems="center" gap={4} mb={2} flexDirection="column">
@@ -236,6 +247,17 @@ const LauncherAIRenamer: React.FC = () => {
                             color="primary"
                             onClick={() => setFilePath(csvize(filePath))}
                             sx={{ marginRight: "10px", marginBottom: "10px" }}>CSVize</Button>
+                        <Tooltip title="Go to Page Extraction History">
+                            <Button
+                                variant="contained"
+                                color="secondary"
+                                onClick={() => navigate(`${PDF_PAGE_EXTRACTION_HISTORY_PATH}`)}
+                                sx={{ marginRight: "10px", marginBottom: "10px" }}
+                                startIcon={<HistoryIcon />}
+                            >
+                                History
+                            </Button>
+                        </Tooltip>
                         <Tooltip title="Copy both paths to AI Renamer">
                             <IconButton
                                 color="primary"
@@ -304,6 +326,17 @@ const LauncherAIRenamer: React.FC = () => {
                                     onClick={() => generateRenamerFolders()}
                                     sx={{ marginRight: "10px", marginBottom: "10px" }}>Generate Renamer Folders
                                 </Button>
+                                <Tooltip title="Stop AI Renaming Process">
+                                    <Button
+                                        variant="contained"
+                                        color="error"
+                                        onClick={handleStopAiRenamer}
+                                        startIcon={<StopIcon />}
+                                        sx={{ marginRight: "10px", marginBottom: "10px" }}
+                                    >
+                                        Stop AI Renamer
+                                    </Button>
+                                </Tooltip>
                             </Box>
                             <Box>
                                 <Tooltip title="Go to AI Title Renamer History">
