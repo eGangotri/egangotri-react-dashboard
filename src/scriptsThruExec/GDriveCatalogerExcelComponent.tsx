@@ -4,7 +4,7 @@ import { ExecType } from './ExecLauncherUtil';
 import GDriveExcelOptions from './GDriveExcelOptions';
 
 const GDriveCatalogerExcelComponent: React.FC = () => {
-    const [excelGDrive, setExcelGDrive] = useState<number>(ExecType.GenExcelOfGoogleDriveLinkPdfOnly);
+    const [excelGDrive, setExcelGDrive] = useState<number>(ExecType.GenExcelOfGoogleDriveLinkPdfOnlyMinimalVersion);
     const [validationCss, setValidationCss] = useState({
         backgroundColor: "lightgreen",
         width: "450px"
@@ -56,7 +56,7 @@ const GDriveCatalogerExcelComponent: React.FC = () => {
             css={{ minWidth: "23vw", width: "450px" }}
             css2={validationCss}
             onInputChange={handleInputChange}
-            userInputTwoInfoNonMandatory="Only Folder Name not Path"
+            userInputTwoInfoNonMandatory="Only Folder Name not Path. Either one Folder-Name or CSV of Folder-Names"
             reactComponent={<GDriveExcelOptions value={excelGDrive} onChange={chooseGDriveExcelType} />}
         />
     );
