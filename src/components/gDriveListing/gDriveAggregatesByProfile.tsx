@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { DataGrid, GridPaginationModel } from "@mui/x-data-grid";
+import { DataGrid, GridPaginationModel, GridToolbar, GridSearchIcon } from "@mui/x-data-grid";
+import { TextField, InputAdornment, Box, Typography } from "@mui/material";
 import { makeGetCall } from 'service/ApiInterceptor';
 import { gDriveAggregateCol, GDriveItemAggregate } from "./constants";
 
-
-
 const GDriveItemAggregates: React.FC = () => {
     const [items, setItems] = useState<GDriveItemAggregate[]>([]);
+    const [filteredItems, setFilteredItems] = useState<GDriveItemAggregate[]>([]);
+    const [searchTerm, setSearchTerm] = useState<string>("");
     const [page, setPage] = useState<number>(1);
     const [pageSize, setPageSize] = useState<number>(10);
     const [totalPages, setTotalPages] = useState<number>(1);
@@ -21,6 +22,8 @@ const GDriveItemAggregates: React.FC = () => {
     // Handle pagination and sorting
     const handlePaginationChange = (model: GridPaginationModel) => {
         setPaginationModel(model);
+        setPage(model.page + 1);
+        setPageSize(model.pageSize);
     };
 
     useEffect(() => {
@@ -35,12 +38,25 @@ const GDriveItemAggregates: React.FC = () => {
             console.log(`resp from fetchAggregates: ${JSON.stringify(response)}`);
             setIsLoading(false);
 
-            setItems(response?.response);
+            setItems(response?.response || []);
             setTotalPages(response?.response?.length || 0);
         } catch (error) {
             console.error("Error fetching items:", error);
+            setIsLoading(false);
         }
     };
+
+    useEffect(() => {
+        if (items) {
+            const lowSearch = searchTerm.toLowerCase();
+            const filtered = items.filter(item =>
+                (item.source?.toLowerCase() || "").includes(lowSearch)
+            );
+            setFilteredItems(filtered);
+        } else {
+            setFilteredItems([]);
+        }
+    }, [items, searchTerm]);
 
     const handleSortModelChange = (sortModel: any) => {
         if (sortModel.length > 0) {
@@ -50,10 +66,34 @@ const GDriveItemAggregates: React.FC = () => {
         }
     };
 
+    const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchTerm(event.target.value);
+    };
+
     return (
         <div className="p-4">
+            <Box sx={{ mb: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <TextField
+                    variant="outlined"
+                    placeholder="Search by Source..."
+                    value={searchTerm}
+                    onChange={handleSearchChange}
+                    size="small"
+                    sx={{ width: 400 }}
+                    InputProps={{
+                        startAdornment: (
+                            <InputAdornment position="start">
+                                <GridSearchIcon />
+                            </InputAdornment>
+                        ),
+                    }}
+                />
+                <Typography variant="body2" color="textSecondary">
+                    Showing {filteredItems.length} of {items.length} aggregates
+                </Typography>
+            </Box>
             <DataGrid
-                rows={items}
+                rows={filteredItems}
                 columns={gDriveAggregateCol}
                 onSortModelChange={handleSortModelChange}
                 getRowId={(row) => row.source}
@@ -65,6 +105,12 @@ const GDriveItemAggregates: React.FC = () => {
                 onPaginationModelChange={handlePaginationChange}
                 disableRowSelectionOnClick
                 sortingOrder={["asc", "desc"]}
+                slots={{ toolbar: GridToolbar }}
+                slotProps={{
+                    toolbar: {
+                        showQuickFilter: false // We have our own search box
+                    }
+                }}
                 initialState={{
                     pagination: { paginationModel: { pageSize: 10, page: 0 } },
                 }}

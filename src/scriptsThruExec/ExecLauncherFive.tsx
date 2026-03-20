@@ -170,7 +170,7 @@ const ExecLauncherFive: React.FC = () => {
                 />
 
                 <ExecComponent
-                    buttonText="Dump Combination Excel to MongoDB"
+                    buttonText="Dump Combination Excel to MongoDB**"
                     placeholder='Absolute Path to Combination Excel Folder'
                     execType={ExecType.DUMP_GDRIVE_COMBO_EXCEL_TO_MONGO}
                     css={{ minWidth: "33vw" }}
@@ -179,6 +179,10 @@ const ExecLauncherFive: React.FC = () => {
                     thirdButton={<Button variant="contained" color="primary" onClick={loadComboExcelFromLocalStorage} sx={{ marginRight: "10px", marginBottom: "10px" }}>Load From Local Storage</Button>}
                 //  css3={{marginTop: "30px", width: "100%"}}
                 />
+                <Typography>
+                    ***You can run this for multiple excels in a folder.<br></br>
+                    pnpm run excelFolderToMongoGDrive "C:\path\to\your\folder_with_excels"
+                </Typography>
             </Box>
         </Box>
 

@@ -28,14 +28,14 @@ export
     // add more fields as required
 }
 
-export const gDriveItemColumns: GridColDef[] = [
+export const G_DRIVE_ITEM_COLUMNS_BASE: GridColDef[] = [
     { field: "serialNo", headerName: "Serial No", width: 130 },
-    { field: "titleGDrive", headerName: "Title", width: 200 },
-    { field: "gDriveLink", headerName: "GDrive Link", width: 200 },
-    { field: "sizeWithUnits", headerName: "Size", width: 120 },
-    { field: "folderName", headerName: "Folder Name", width: 150 },
-    { field: "createdTime", headerName: "Created Time", width: 150 },
+    { field: "titleGDrive", headerName: "Title", width: 250 },
+    { field: "gDriveLink", headerName: "GDrive Link", width: 120 },
+    { field: "sizeWithUnits", headerName: "Size", width: 100 },
+    { field: "folderName", headerName: "Folder Name", width: 220 },
     { field: "source", headerName: "Source", width: 150 },
+    { field: "createdTime", headerName: "Created Time", width: 150 },
     { field: "identifier", headerName: "Identifier", width: 150 },
 ];
 
