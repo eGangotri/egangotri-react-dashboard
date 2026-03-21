@@ -24,6 +24,7 @@ import { ellipsis } from "widgets/ItemTooltip";
 import { LAUNCH_AI_RENAMER_PATH } from "Routes/constants";
 import path from "path";
 import ConfirmDialog from "widgets/ConfirmDialog";
+import { DEFAULT_PAGE_SIZE_OPTIONS } from "utils/constants";
 
 // Types
 interface ICompositeDocument {
@@ -671,7 +672,7 @@ const GDriveDownloadListing: React.FC = () => {
                 columns={columns}
                 paginationModel={paginationModel}
                 onPaginationModelChange={setPaginationModel}
-                pageSizeOptions={[10, 15, 20]}
+                pageSizeOptions={[10, 20, 50, 100]}
                 pagination
                 paginationMode="server"
                 filterMode="server"
@@ -717,7 +718,7 @@ const GDriveDownloadListing: React.FC = () => {
                             columns={fileColumns}
                             paginationModel={filesPaginationModel}
                             onPaginationModelChange={setFilesPaginationModel}
-                            pageSizeOptions={[5, 10, 20]}
+                            pageSizeOptions={DEFAULT_PAGE_SIZE_OPTIONS}
                             pagination
                             slots={{
                                 toolbar: GridToolbar,

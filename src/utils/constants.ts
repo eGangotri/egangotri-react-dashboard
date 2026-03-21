@@ -14,6 +14,8 @@ console.log(`Deployment on ${import.meta.env.VITE_LAST_DEPLOYMENT_ON}
 ${reactDevEnv}
     getServer:${BACKEND_SERVER}`)
 
+export const DEFAULT_PAGE_SIZE_OPTIONS = [10, 20, 50, 100];
+
 export function getBackendServer(): string {
   if (!BACKEND_SERVER.endsWith("/")) {
     return `${BACKEND_SERVER}/`;

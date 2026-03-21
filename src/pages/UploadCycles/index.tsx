@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { DEFAULT_PAGE_SIZE_OPTIONS } from 'utils/constants';
 import {
     Table, TableBody, TableCell,
     TableContainer, TableHead, TableRow, Paper,
@@ -475,7 +476,7 @@ const UploadCyclesOld1 = () => {
             <div className='bg-black'>
                 <TableContainer component={Paper}>
                     <TablePagination
-                        rowsPerPageOptions={[10, 20, 50]}
+                        rowsPerPageOptions={DEFAULT_PAGE_SIZE_OPTIONS}
                         component="div"
                         count={sortedData.length}
                         rowsPerPage={rowsPerPage}
@@ -540,7 +541,7 @@ const UploadCyclesOld1 = () => {
                         </TableBody>
                     </Table>
                     <TablePagination
-                        rowsPerPageOptions={[10, 20, 50]}
+                        rowsPerPageOptions={DEFAULT_PAGE_SIZE_OPTIONS}
                         component="div"
                         count={sortedData.length}
                         rowsPerPage={rowsPerPage}

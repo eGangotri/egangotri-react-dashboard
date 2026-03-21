@@ -5,6 +5,7 @@ import { DataGrid, GridColDef, GridToolbar } from '@mui/x-data-grid';
 import { makeGetCall } from 'service/ApiInterceptor';
 import { FaCopy } from 'react-icons/fa';
 import { ellipsis } from 'widgets/ItemTooltip';
+import { DEFAULT_PAGE_SIZE_OPTIONS } from 'utils/constants';
 
 // Types for API responses
 interface CommonRunRow {
@@ -171,7 +172,7 @@ const PdfMergeHistoryTracker: React.FC = () => {
           </div>
         );
       }
-    },{
+    }, {
       field: 'first_pdf_path', headerName: 'First PDF', width: 360,
       renderCell: (p) => (
         <div className="flex items-center">
@@ -198,7 +199,7 @@ const PdfMergeHistoryTracker: React.FC = () => {
         </div>
       )
     },
-    
+
     {
       field: 'operationResult', headerName: 'Operation Result', width: 180,
       renderCell: (p) => (
@@ -268,7 +269,7 @@ const PdfMergeHistoryTracker: React.FC = () => {
           columns={columns}
           getRowId={(row) => row.commonRunId}
           pagination
-          pageSizeOptions={[5, 10, 20]}
+          pageSizeOptions={DEFAULT_PAGE_SIZE_OPTIONS}
           loading={loading}
           slots={{ toolbar: GridToolbar }}
         />
@@ -337,7 +338,7 @@ const PdfMergeHistoryTracker: React.FC = () => {
               rows={detailRows}
               columns={detailColumns}
               getRowId={(r) => r._id}
-              pageSizeOptions={[5, 10, 20]}
+              pageSizeOptions={DEFAULT_PAGE_SIZE_OPTIONS}
               pagination
               loading={detailLoading}
               slots={{ toolbar: GridToolbar }}
@@ -436,7 +437,7 @@ const PdfMergeHistoryTracker: React.FC = () => {
                   }
                 ] as GridColDef[]}
                 getRowId={(r) => (r as any).id}
-                pageSizeOptions={[5, 10, 20]}
+                pageSizeOptions={DEFAULT_PAGE_SIZE_OPTIONS}
                 pagination
               />
             </div>

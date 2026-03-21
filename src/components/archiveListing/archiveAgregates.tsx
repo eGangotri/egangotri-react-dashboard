@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { DEFAULT_PAGE_SIZE_OPTIONS } from 'utils/constants';
 import { DataGrid, GridPaginationModel, GridSearchIcon } from '@mui/x-data-grid';
 import { Box, InputAdornment, TextField } from '@mui/material';
 import { archiveItemAggregateColumns, ArchiveItemAggregateType, archiveItemColumns } from './constants';
@@ -85,7 +86,7 @@ const ArchiveItemAggregates: React.FC = () => {
             <DataGrid
                 rows={filteredItems.map((item, index) => ({ ...item, id: index }))}
                 columns={archiveItemAggregateColumns}
-                pageSizeOptions={[10, 20, 50]}
+                pageSizeOptions={DEFAULT_PAGE_SIZE_OPTIONS}
                 paginationModel={paginationModel}
                 onPaginationModelChange={handlePaginationChange}
                 loading={loading}

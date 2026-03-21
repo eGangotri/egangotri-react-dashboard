@@ -8,6 +8,7 @@ import { FaCopy, FaArrowRight } from 'react-icons/fa';
 import { ellipsis } from 'widgets/ItemTooltip';
 import { useNavigate } from 'react-router-dom';
 import { FILE_TRANSFER_LISTING } from 'Routes/constants';
+import { DEFAULT_PAGE_SIZE_OPTIONS } from 'utils/constants';
 
 interface ExtractNPagesItem {
   _id: string;
@@ -330,7 +331,7 @@ const PdfPageExtractionHistory: React.FC = () => {
           getRowId={(row) => row._id}
           paginationModel={paginationModel}
           onPaginationModelChange={setPaginationModel}
-          pageSizeOptions={[5, 10, 20]}
+          pageSizeOptions={DEFAULT_PAGE_SIZE_OPTIONS}
           pagination
           paginationMode="server"
           rowCount={totalItems}
@@ -484,7 +485,7 @@ const PdfPageExtractionHistory: React.FC = () => {
                 { field: 'reducePdfSizeAlso', headerName: 'Reduce Size', width: 120, renderCell: (p) => (p.value ? 'Yes' : 'No') },
               ]}
               getRowId={(row) => row._id}
-              pageSizeOptions={[5, 10, 20]}
+              pageSizeOptions={DEFAULT_PAGE_SIZE_OPTIONS}
               pagination
               loading={detailLoading}
               initialState={{
