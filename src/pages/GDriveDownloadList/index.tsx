@@ -24,6 +24,7 @@ import { ellipsis } from "widgets/ItemTooltip";
 import { LAUNCH_AI_RENAMER_PATH } from "Routes/constants";
 import path from "path";
 import ConfirmDialog from "widgets/ConfirmDialog";
+import WindowedDialog from "widgets/WindowedDialog";
 import { DEFAULT_PAGE_SIZE_OPTIONS } from "utils/constants";
 
 // Types
@@ -709,8 +710,7 @@ const GDriveDownloadListing: React.FC = () => {
                 }}
             />
 
-            <Dialog open={openDialog} onClose={() => setOpenDialog(false)} maxWidth="md" fullWidth>
-                <DialogTitle>Files</DialogTitle>
+            <WindowedDialog open={openDialog} onCloseDialog={() => setOpenDialog(false)} maxWidth="md" fullWidth title="Files">
                 <DialogContent>
                     <div className="h-[400px] w-full">
                         <DataGrid
@@ -726,19 +726,17 @@ const GDriveDownloadListing: React.FC = () => {
                         />
                     </div>
                 </DialogContent>
-            </Dialog>
+            </WindowedDialog>
 
-            <Dialog open={openMsgDialog} onClose={() => setOpenMsgDialog(false)}>
-                <DialogTitle>Message</DialogTitle>
+            <WindowedDialog open={openMsgDialog} onCloseDialog={() => setOpenMsgDialog(false)} title="Message">
                 <DialogContent className="max-h-96 overflow-y-auto">
                     {selectedMsg.split(",").map((line, index) => (
                         <p key={index}>{index + 1}). {line.trim()}</p>
                     ))}
                 </DialogContent>
-            </Dialog>
+            </WindowedDialog>
 
-            <Dialog open={openQuickStatusDialog} onClose={() => setOpenQuickStatusDialog(false)} maxWidth="md" fullWidth>
-                <DialogTitle>Quick Status Details</DialogTitle>
+            <WindowedDialog open={openQuickStatusDialog} onCloseDialog={() => setOpenQuickStatusDialog(false)} maxWidth="md" fullWidth title="Quick Status Details">
                 <DialogContent>
                     <div className="h-[300px] w-full">
                         <DataGrid
@@ -763,7 +761,7 @@ const GDriveDownloadListing: React.FC = () => {
                         />
                     </div>
                 </DialogContent>
-            </Dialog>
+            </WindowedDialog>
 
             <ConfirmDialog
                 openDialog={confirmDialogOpen}
