@@ -9,12 +9,13 @@ import { GDriveItem, G_DRIVE_ITEM_COLUMNS_BASE } from "./constants";
 import { makePostCall } from "service/ApiInterceptor";
 
 const GDriveItemList: React.FC = () => {
+    const RESULT_LIMIT = 5000
     const [items, setItems] = useState<GDriveItem[]>([]);
     const [filteredItems, setFilteredItems] = useState<GDriveItem[]>([]);
-    const [searchTerm, setSearchTerm] = useState<string>("");
-    const [dbSearchTerm, setDbSearchTerm] = useState<string>("");
+    const [localSearchTerm, setLocalSearchTerm] = useState<string>("");
+    const [globalSearchTerm, setGlobalSearchTerm] = useState<string>("");
     const [page, setPage] = useState<number>(1);
-    const [pageSize, setPageSize] = useState<number>(500);
+    const [pageSize, setPageSize] = useState<number>(RESULT_LIMIT);
     const [totalPages, setTotalPages] = useState<number>(1);
     const [sortField, setSortField] = useState<string>("createdTime");
     const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
@@ -79,21 +80,21 @@ const GDriveItemList: React.FC = () => {
     useEffect(() => {
         const timeoutId = setTimeout(() => {
             fetchItems();
-        }, 500);
+        }, RESULT_LIMIT);
         return () => clearTimeout(timeoutId);
-    }, [page, pageSize, sortField, sortOrder, dbSearchTerm]);
+    }, [page, pageSize, sortField, sortOrder, globalSearchTerm]);
 
     const fetchItems = async () => {
         setIsLoading(true);
         try {
             let url = `googleDriveDB/getPerSource` + (src ? `/${src}` : "");
-            if (dbSearchTerm.trim()) {
-                url += `?searchTerm=${encodeURIComponent(dbSearchTerm.trim())}`;
+            if (globalSearchTerm.trim()) {
+                url += `?searchTerm=${encodeURIComponent(globalSearchTerm.trim())}`;
             }
 
             const response = await makePostCall({
                 page,
-                limit: 5000,
+                limit: RESULT_LIMIT,
                 sortField,
                 sortOrder,
             }, url);
@@ -117,7 +118,7 @@ const GDriveItemList: React.FC = () => {
     useEffect(() => {
         if (items) {
             const filtered = items.filter(item => {
-                const lowSearch = searchTerm.toLowerCase();
+                const lowSearch = localSearchTerm.toLowerCase();
                 return (
                     (item.titleGDrive?.toLowerCase() || "").includes(lowSearch) ||
                     (item.folderName?.toLowerCase() || "").includes(lowSearch) ||
@@ -128,7 +129,7 @@ const GDriveItemList: React.FC = () => {
         } else {
             setFilteredItems([]);
         }
-    }, [items, searchTerm]);
+    }, [items, localSearchTerm]);
 
     const handleSortModelChange = (sortModel: any) => {
         if (sortModel.length > 0) {
@@ -139,7 +140,7 @@ const GDriveItemList: React.FC = () => {
     };
 
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSearchTerm(event.target.value);
+        setLocalSearchTerm(event.target.value);
     };
 
     return (
@@ -147,9 +148,9 @@ const GDriveItemList: React.FC = () => {
             <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 2, mb: 3 }}>
                 <TextField
                     variant="outlined"
-                    placeholder="Search DB directly..."
-                    value={dbSearchTerm}
-                    onChange={(e) => setDbSearchTerm(e.target.value)}
+                    placeholder="Search entire DB directly..."
+                    value={globalSearchTerm}
+                    onChange={(e) => setGlobalSearchTerm(e.target.value)}
                     size="small"
                     sx={{ width: 300 }}
                     InputProps={{
@@ -163,7 +164,7 @@ const GDriveItemList: React.FC = () => {
                 <TextField
                     variant="outlined"
                     placeholder="Filter current page..."
-                    value={searchTerm}
+                    value={localSearchTerm}
                     onChange={handleSearchChange}
                     size="small"
                     sx={{ width: 300 }}
