@@ -1,4 +1,5 @@
 import React, { useMemo, useState, useEffect } from "react";
+import { DEFAULT_PAGE_SIZE_OPTIONS } from "utils/constants";
 import {
     DataGrid,
     type GridColDef,
@@ -431,7 +432,7 @@ const ArchiveDownloadListing: React.FC = () => {
                             loading={itemsLoading}
                             slots={{ toolbar: GridToolbar }}
                             disableRowSelectionOnClick
-                            pageSizeOptions={[10, 20, 50]}
+                            pageSizeOptions={DEFAULT_PAGE_SIZE_OPTIONS}
                             initialState={{
                                 pagination: { paginationModel: { pageSize: 10 } },
                             }}

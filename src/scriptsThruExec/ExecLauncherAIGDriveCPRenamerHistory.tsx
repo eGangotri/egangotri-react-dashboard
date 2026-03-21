@@ -7,6 +7,7 @@ import { FaCopy } from 'react-icons/fa';
 import ExecComponent from './ExecComponent';
 import { ExecType } from './ExecLauncherUtil';
 import { buildDeterministicColorMap, colorForKey } from 'utils/color';
+import { DEFAULT_PAGE_SIZE_OPTIONS } from 'utils/constants';
 
 interface GroupRow {
     runId: string;
@@ -244,7 +245,7 @@ const LauncherAIGDriveCPRenamerHistory: React.FC = () => {
                     getRowId={(r) => r.runId}
                     paginationModel={paginationModel}
                     onPaginationModelChange={setPaginationModel}
-                    pageSizeOptions={[5, 10, 20]}
+                    pageSizeOptions={DEFAULT_PAGE_SIZE_OPTIONS}
                     pagination
                     paginationMode="server"
                     filterMode="server"
@@ -286,7 +287,7 @@ const LauncherAIGDriveCPRenamerHistory: React.FC = () => {
                             getRowId={(r) => r._id}
                             paginationModel={detailPaginationModel}
                             onPaginationModelChange={setDetailPaginationModel}
-                            pageSizeOptions={[5, 10, 20]}
+                            pageSizeOptions={DEFAULT_PAGE_SIZE_OPTIONS}
                             pagination
                             paginationMode="server"
                             filterMode="server"

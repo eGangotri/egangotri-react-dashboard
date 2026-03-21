@@ -17,6 +17,7 @@ import { FOLDER_OF_UNZIPPED_IMGS } from "service/consts";
 import { IMG_TYPE_CR2, IMG_TYPE_JPG, IMG_TYPE_PNG, IMG_TYPE_TIF } from "scriptsThruExec/constants";
 import { csvize } from "scriptsThruExec/Utils";
 import { buildDeterministicColorMap, colorForKey } from "utils/color";
+import { DEFAULT_PAGE_SIZE_OPTIONS } from "utils/constants";
 
 // Interface for folder info
 interface IFolderInfo {
@@ -334,7 +335,7 @@ const ImgToPdfListing: React.FC = () => {
                 columns={getColumns(handleViewDetails, commonRunIdColorMap)}
                 paginationModel={paginationModel}
                 onPaginationModelChange={setPaginationModel}
-                pageSizeOptions={[5, 10, 20]}
+                pageSizeOptions={DEFAULT_PAGE_SIZE_OPTIONS}
                 pagination
                 paginationMode="server"
                 filterMode="server"
@@ -384,7 +385,7 @@ const ImgToPdfListing: React.FC = () => {
                                     id: index
                                 }))}
                                 columns={folderDetailsColumns}
-                                pageSizeOptions={[5, 10, 20]}
+                                pageSizeOptions={DEFAULT_PAGE_SIZE_OPTIONS}
                                 pagination
                                 initialState={{
                                     pagination: { paginationModel: { pageSize: 10 } },

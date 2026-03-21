@@ -3,6 +3,7 @@ import { DataGrid, GridColDef, GridPaginationModel, GridRowHeightParams } from '
 import { Container } from '@mui/material';
 import { aggregatesBySourcesColumns, AggregatesBySourcesType } from './constants';
 import { makeGetCall } from 'service/ApiInterceptor';
+import { DEFAULT_PAGE_SIZE_OPTIONS } from 'utils/constants';
 
 
 const AggregatesBySources = () => {
@@ -45,13 +46,13 @@ const AggregatesBySources = () => {
       setSortOrder(sort as "asc" | "desc");
     }
   };
-  const getRowHeight = (params:GridRowHeightParams) => {
+  const getRowHeight = (params: GridRowHeightParams) => {
     const accts = params.model.accts;
     const totalChars = accts.reduce((sum: number, acct: string) => sum + acct.length, 0);
 
     const lines = Math.ceil(totalChars / 25);
     return lines * 24 + 16; // Adjust the multiplier and padding as needed
-};
+  };
   return (
     <Container>
       <DataGrid
@@ -59,7 +60,7 @@ const AggregatesBySources = () => {
         columns={aggregatesBySourcesColumns}
         pagination
         autoHeight
-        pageSizeOptions={[10, 20, 50]}
+        pageSizeOptions={DEFAULT_PAGE_SIZE_OPTIONS}
         paginationModel={paginationModel}
         onPaginationModelChange={handlePaginationChange}
         loading={loading}

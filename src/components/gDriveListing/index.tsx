@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { DEFAULT_PAGE_SIZE_OPTIONS } from "utils/constants";
 import { DataGrid, GridColDef, GridPaginationModel, GridToolbar, GridSearchIcon } from "@mui/x-data-grid";
 import { TextField, InputAdornment, Box, Typography, IconButton, Tooltip, Link } from "@mui/material";
 import { ContentCopy as ContentCopyIcon, OpenInNew as OpenInNewIcon } from "@mui/icons-material";
@@ -188,7 +189,7 @@ const GDriveItemList: React.FC = () => {
                 getRowId={(row) => row._id}
                 autoHeight
                 disableColumnMenu
-                pageSizeOptions={[10, 20, 50]}
+                pageSizeOptions={DEFAULT_PAGE_SIZE_OPTIONS}
                 paginationModel={paginationModel}
                 onPaginationModelChange={handlePaginationChange}
                 disableRowSelectionOnClick

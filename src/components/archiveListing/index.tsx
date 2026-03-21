@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { DEFAULT_PAGE_SIZE_OPTIONS } from "utils/constants";
 import { DataGrid, GridPaginationModel } from "@mui/x-data-grid";
 import { Box, Typography } from "@mui/material";
 import { ArchiveItem, archiveItemColumns } from "./constants";
@@ -46,7 +47,7 @@ const ArchiveItemList: React.FC = () => {
             setLoading(false);
         }
     };
-  
+
     // Handle pagination and sorting
     const handlePaginationChange = (model: GridPaginationModel) => {
         setPaginationModel(model);
@@ -58,7 +59,7 @@ const ArchiveItemList: React.FC = () => {
             <DataGrid
                 rows={items}
                 columns={archiveItemColumns}
-                pageSizeOptions={[10, 20, 50]}
+                pageSizeOptions={DEFAULT_PAGE_SIZE_OPTIONS}
                 paginationModel={paginationModel}
                 onPaginationModelChange={handlePaginationChange}
                 loading={loading}
@@ -67,7 +68,7 @@ const ArchiveItemList: React.FC = () => {
                 initialState={{
                     pagination: { paginationModel: { pageSize: 10, page: 0 } },
                 }}
-                getRowId={(row) => row.identifier} 
+                getRowId={(row) => row.identifier}
             />
         </Box>
     );

@@ -8,7 +8,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider"
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns"
 import * as XLSX from "xlsx"
 import { getUploadStatusData, verifyUploadStatus } from "../../service/BackendFetchService"
-import { MAX_ITEMS_LISTABLE } from "../../utils/constants"
+import { DEFAULT_PAGE_SIZE_OPTIONS, MAX_ITEMS_LISTABLE } from "../../utils/constants"
 import { useSearchParams } from "react-router-dom"
 import ItemToolTip from "widgets/ItemTooltip"
 import { createArchiveLink } from "mirror"
@@ -340,7 +340,7 @@ const Uploads: React.FC<UploadsType> = ({ forQueues = false }) => {
                 paginationModel: { page: 0, pageSize: 10 },
               },
             }}
-            pageSizeOptions={[5, 10, 20, 50]}
+            pageSizeOptions={DEFAULT_PAGE_SIZE_OPTIONS}
             checkboxSelection
             getRowClassName={(params) => highlightRow(params.row)}
             apiRef={gridApiRef}

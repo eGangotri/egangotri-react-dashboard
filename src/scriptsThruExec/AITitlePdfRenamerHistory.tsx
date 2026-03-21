@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { DEFAULT_PAGE_SIZE_OPTIONS } from 'utils/constants';
 import Box from '@mui/material/Box';
 import { Button, CircularProgress, Dialog, DialogContent, DialogTitle, IconButton, Typography, Backdrop, Chip, Tooltip } from '@mui/material';
 import { DataGrid, GridColDef, GridFilterModel, GridPaginationModel, GridToolbar } from '@mui/x-data-grid';
@@ -413,7 +414,7 @@ const AITitlePdfRenamerHistory: React.FC = () => {
           rowCount={totalItems}
           paginationModel={paginationModel}
           onPaginationModelChange={setPaginationModel}
-          pageSizeOptions={[10, 20, 50]}
+          pageSizeOptions={DEFAULT_PAGE_SIZE_OPTIONS}
           loading={loading}
           checkboxSelection
           disableRowSelectionOnClick
@@ -449,7 +450,7 @@ const AITitlePdfRenamerHistory: React.FC = () => {
               getRowId={(r) => r.id}
               paginationModel={detailPaginationModel}
               onPaginationModelChange={setDetailPaginationModel}
-              pageSizeOptions={[10, 20, 50]}
+              pageSizeOptions={DEFAULT_PAGE_SIZE_OPTIONS}
               pagination
               initialState={{
                 sorting: {
