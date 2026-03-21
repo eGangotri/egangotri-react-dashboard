@@ -48,9 +48,9 @@ const GDriveItemAggregates: React.FC = () => {
     };
 
     useEffect(() => {
-        if (items) {
+        if (items && items.length > 0) {
             const lowSearch = searchTerm.toLowerCase();
-            const filtered = items.filter(item =>
+            const filtered = items?.filter(item =>
                 (item.source?.toLowerCase() || "").includes(lowSearch)
             );
             setFilteredItems(filtered);
