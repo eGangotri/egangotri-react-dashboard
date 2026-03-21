@@ -11,6 +11,7 @@ const GDriveItemList: React.FC = () => {
     const [items, setItems] = useState<GDriveItem[]>([]);
     const [filteredItems, setFilteredItems] = useState<GDriveItem[]>([]);
     const [searchTerm, setSearchTerm] = useState<string>("");
+    const [dbSearchTerm, setDbSearchTerm] = useState<string>("");
     const [page, setPage] = useState<number>(1);
     const [pageSize, setPageSize] = useState<number>(500);
     const [totalPages, setTotalPages] = useState<number>(1);
@@ -75,19 +76,26 @@ const GDriveItemList: React.FC = () => {
     const { src } = useParams<{ src: string }>();
 
     useEffect(() => {
-        fetchItems();
-    }, [page, pageSize, sortField, sortOrder]);
+        const timeoutId = setTimeout(() => {
+            fetchItems();
+        }, 500);
+        return () => clearTimeout(timeoutId);
+    }, [page, pageSize, sortField, sortOrder, dbSearchTerm]);
 
     const fetchItems = async () => {
         setIsLoading(true);
         try {
+            let url = `googleDriveDB/getPerSource` + (src ? `/${src}` : "");
+            if (dbSearchTerm.trim()) {
+                url += `?searchTerm=${encodeURIComponent(dbSearchTerm.trim())}`;
+            }
+
             const response = await makePostCall({
                 page,
-                limit: pageSize,
+                limit: 5000,
                 sortField,
                 sortOrder,
-            },
-                `googleDriveDB/getPerSource` + (src ? `/${src}` : ""));
+            }, url);
             console.log(`resp from fetchItems(${src}): ${JSON.stringify(response?.response?.[0]?.titleGDrive)}`);
             setIsLoading(false);
             if (response && response?.response && response?.response?.length > 0) {
@@ -135,14 +143,29 @@ const GDriveItemList: React.FC = () => {
 
     return (
         <div className="p-4">
-            <Box sx={{ mb: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 2, mb: 3 }}>
                 <TextField
                     variant="outlined"
-                    placeholder="Search by Title, Folder or Source..."
+                    placeholder="Search DB directly..."
+                    value={dbSearchTerm}
+                    onChange={(e) => setDbSearchTerm(e.target.value)}
+                    size="small"
+                    sx={{ width: 300 }}
+                    InputProps={{
+                        startAdornment: (
+                            <InputAdornment position="start">
+                                <GridSearchIcon />
+                            </InputAdornment>
+                        ),
+                    }}
+                />
+                <TextField
+                    variant="outlined"
+                    placeholder="Filter current page..."
                     value={searchTerm}
                     onChange={handleSearchChange}
                     size="small"
-                    sx={{ width: 400 }}
+                    sx={{ width: 300 }}
                     InputProps={{
                         startAdornment: (
                             <InputAdornment position="start">
