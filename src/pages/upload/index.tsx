@@ -1,6 +1,6 @@
 import type React from "react"
 import { useEffect, useState, useCallback } from "react"
-import { DataGrid, type GridColDef } from "@mui/x-data-grid"
+import { DataGrid, type GridColDef, GridToolbar } from "@mui/x-data-grid"
 import { useGridApiRef } from "@mui/x-data-grid"
 import { Button, Box, Typography, TextField, Grid, Alert } from "@mui/material"
 import { DatePicker } from "@mui/x-date-pickers/DatePicker"
@@ -237,7 +237,7 @@ const Uploads: React.FC<UploadsType> = ({ forQueues = false }) => {
       id: row.id,
       archiveId: row.archiveItemId,
       isValid: row.isValid,
-    })) 
+    }))
     const result = await verifyUploadStatus(selectedUploadItems)
     setVerificationResults(result)
   }
@@ -246,7 +246,7 @@ const Uploads: React.FC<UploadsType> = ({ forQueues = false }) => {
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <Box sx={{ height: 600, width: "100%" }}>
         <Typography variant="h4" gutterBottom>
-         Scanned Material Listing
+          Scanned Material Listing
         </Typography>
         <Grid container spacing={2} sx={{ mb: 2 }}>
           <Grid item xs={12} sm={6} md={3}>
@@ -346,6 +346,9 @@ const Uploads: React.FC<UploadsType> = ({ forQueues = false }) => {
             apiRef={gridApiRef}
             onRowSelectionModelChange={(newSelectionModel) => {
               setSelectedRowCount(newSelectionModel.length)
+            }}
+            slots={{
+              toolbar: GridToolbar,
             }}
             getRowId={(row) => row.id}
           />

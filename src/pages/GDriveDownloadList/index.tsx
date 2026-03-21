@@ -615,6 +615,7 @@ const GDriveDownloadListing: React.FC = () => {
                     placeholder='Enter Google Drive Link(s)/Identifiers as csv'
                     secondTextBoxPlaceHolder='Enter Profile or File Abs Path'
                     execType={gDriveFileType}
+                    textBoxTwoValue="PLAYGROUND"
                     onCompleted={() => {
                         loadDownloads()
                     }}
