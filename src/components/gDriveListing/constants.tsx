@@ -1,5 +1,6 @@
-import { Typography } from "@mui/material";
+import { Typography, Box, IconButton } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
+import { ContentCopy as ContentCopyIcon  } from "@mui/icons-material";
 import { formatMem } from "mirror/utils";
 import { Link } from "react-router-dom";
 import { G_DRIVE_ITEM_LIST_PATH } from "Routes/constants";
@@ -29,12 +30,39 @@ export
 }
 
 export const G_DRIVE_ITEM_COLUMNS_BASE: GridColDef[] = [
-    { field: "serialNo", headerName: "Serial No", width: 130 },
-    { field: "titleGDrive", headerName: "Title", width: 250 },
+    { field: "serialNo", headerName: "Serial No", width: 40 },
+    {
+        field: "titleGDrive", headerName: "Title", width: 650,
+        renderCell: (params) => (
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <IconButton size="small" sx={{ mr: 1 }} onClick={() => navigator.clipboard.writeText(params.value)}>
+                    <ContentCopyIcon size={12} />
+                </IconButton>
+                <Typography>
+                    {params.value}
+                </Typography>
+            </Box>
+        )
+    },
     { field: "gDriveLink", headerName: "GDrive Link", width: 120 },
     { field: "sizeWithUnits", headerName: "Size", width: 100 },
     { field: "folderName", headerName: "Folder Name", width: 220 },
-    { field: "source", headerName: "Source", width: 150 },
+    {
+        field: "source", headerName: "Source", width: 200,
+        renderCell: (params) => (
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <IconButton size="small" sx={{ mr: 1 }} onClick={() => navigator.clipboard.writeText(params.value)}>
+                    <ContentCopyIcon size={12} />
+                </IconButton>
+                <Typography>
+                    <Link to={`${window.location.origin}${G_DRIVE_ITEM_LIST_PATH}/${params.value}`} className="text-blue-500 underline">
+                        {params.value}
+                    </Link>
+                </Typography>
+            </Box>
+        )
+
+    },
     { field: "createdTime", headerName: "Created Time", width: 150 },
     { field: "identifier", headerName: "Identifier", width: 150 },
 ];
@@ -57,11 +85,16 @@ export const gDriveAggregateCol: GridColDef[] = [
     {
         field: "source",
         headerName: "Source",
-        width: 150,
+        width: 200,
         renderCell: (params) => (
-            <Link to={`${window.location.origin}${G_DRIVE_ITEM_LIST_PATH}/${params.value}`} className="text-blue-500 underline">
-                {params.value}
-            </Link>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <IconButton size="small" sx={{ mr: 1 }} onClick={() => navigator.clipboard.writeText(params.value)}>
+                    <ContentCopyIcon size={12} />
+                </IconButton>
+                <Link to={`${window.location.origin}${G_DRIVE_ITEM_LIST_PATH}/${params.value}`} className="text-blue-500 underline">
+                    {params.value}
+                </Link>
+            </Box>
         )
     },
     {

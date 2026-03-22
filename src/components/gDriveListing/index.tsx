@@ -7,6 +7,7 @@ import { useParams } from 'react-router-dom';
 import Spinner from "widgets/Spinner";
 import { GDriveItem, G_DRIVE_ITEM_COLUMNS_BASE } from "./constants";
 import { makePostCall } from "service/ApiInterceptor";
+import { ellipsis } from "widgets/ItemTooltip";
 
 const GDriveItemList: React.FC = () => {
     const RESULT_LIMIT = 5000
@@ -38,7 +39,7 @@ const GDriveItemList: React.FC = () => {
         if (col.field === 'gDriveLink') {
             return {
                 ...col,
-                width: 150,
+                width: 230,
                 renderCell: (params) => (
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                         <Tooltip title="Open Link">
@@ -61,6 +62,9 @@ const GDriveItemList: React.FC = () => {
                                 <ContentCopyIcon fontSize="small" />
                             </IconButton>
                         </Tooltip>
+                        <Typography variant="body2" color="textSecondary" >
+                           { ellipsis(params.value)}
+                        </Typography>
                     </Box>
                 )
             };
