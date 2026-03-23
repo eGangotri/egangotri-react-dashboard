@@ -17,12 +17,35 @@ ${reactDevEnv}
 export const DEFAULT_PAGE_SIZE_OPTIONS = [10, 20, 50, 100];
 
 export function getBackendServer(): string {
-  if (!BACKEND_SERVER.endsWith("/")) {
-    return `${BACKEND_SERVER}/`;
-  }
-  return BACKEND_SERVER;
+    if (!BACKEND_SERVER.endsWith("/")) {
+        return `${BACKEND_SERVER}/`;
+    }
+    return BACKEND_SERVER;
 }
 
 export const MAX_ITEMS_LISTABLE = 5250;
 
 export const WIDTH_OF_WIDGETS = 250;
+
+export const DISPOSE_TOGGLE_CLASS = 'dispose-toggle';
+
+export const DISPOSED_ROW_SX = {
+    '& .disposed-row': {
+        opacity: 0.6,
+    },
+    '& .disposed-row .MuiDataGrid-cell': {
+        textDecoration: 'line-through !important',
+        color: 'text.disabled !important',
+    },
+    '& .disposed-row .MuiTypography-root': {
+        textDecoration: 'line-through !important',
+        color: 'text.disabled !important',
+    },
+    '& .disposed-row a, & .disposed-row button:not(.dispose-toggle)': {
+        pointerEvents: 'none',
+    },
+    '& .disposed-row button.dispose-toggle': {
+        pointerEvents: 'auto',
+    }
+};
+

@@ -12,7 +12,7 @@ import {
 import { Button, Dialog, DialogTitle, DialogContent, Chip, IconButton, Box, RadioGroup, FormControlLabel, Typography, Radio, CircularProgress, DialogActions } from "@mui/material"
 import ExecPopover from 'scriptsThruExec/ExecPopover';
 import { makeGetCall } from 'service/ApiInterceptor';
-import { makePostCallWithErrorHandling } from "service/BackendFetchService";
+import {  makePostCallWithErrorHandling } from "service/BackendFetchService";
 import { FaTrash, FaBrain } from "react-icons/fa";
 import ExecComponent from "scriptsThruExec/ExecComponent";
 import { ExecType } from "scriptsThruExec/ExecLauncherUtil";
@@ -25,8 +25,9 @@ import { LAUNCH_AI_RENAMER_PATH } from "Routes/constants";
 import path from "path";
 import ConfirmDialog from "widgets/ConfirmDialog";
 import WindowedDialog from "widgets/WindowedDialog";
-import { DEFAULT_PAGE_SIZE_OPTIONS } from "utils/constants";
-import { ContentCopy as ContentCopyIcon  } from "@mui/icons-material";
+import { DEFAULT_PAGE_SIZE_OPTIONS, DISPOSED_ROW_SX } from "utils/constants";
+import { ContentCopy } from "@mui/icons-material";
+import { getDisposeActionColumn } from "utils/reactConstants";
 
 // Types
 interface ICompositeDocument {
@@ -317,6 +318,24 @@ const GDriveDownloadListing: React.FC = () => {
         }
     };
 
+    const handleDisposeRow = async (id: string, e: React.MouseEvent<HTMLButtonElement>) => {
+        setAnchorElApi(e.currentTarget);
+        try {
+            setApiLoading(true);
+            const response = await makePostCallWithErrorHandling(
+                { id },
+                'gDrive/disposeDriveDownload'
+            );
+            setApiResult(<ExecResponsePanel response={response} execType={gDriveFileType} />);
+            loadDownloads();
+        } catch (error) {
+            console.error("Error calling dispose API:", error);
+            setApiResult(null);
+        } finally {
+            setApiLoading(false);
+        }
+    };
+
     // Build a deterministic color map for visible commonRunId values
     const commonRunIdColorMap = useMemo(() => {
         const ids = Array.from(new Set((downloads || []).map((r) => String((r as any)?.commonRunId ?? ''))));
@@ -325,6 +344,14 @@ const GDriveDownloadListing: React.FC = () => {
 
     const columns: GridColDef[] = [
         {
+            field: "disposeAction",
+            headerName: "",
+            width: 50,
+            filterable: false,
+            sortable: false,
+            renderCell: (params) => getDisposeActionColumn(params, handleDisposeRow)
+        },
+        {
             field: "googleDriveLink",
             headerName: "Google Drive Link",
             width: 200,
@@ -332,7 +359,7 @@ const GDriveDownloadListing: React.FC = () => {
             renderCell: (params) => (
                 <div className="flex items-center">
                     <IconButton onClick={() => handleCopyLink(params.value)} className="ml-2">
-                        <ContentCopyIcon />
+                        <ContentCopy />
                     </IconButton>
                     <a href={params.value} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">
                         {params.value}
@@ -349,7 +376,7 @@ const GDriveDownloadListing: React.FC = () => {
                 return (
                     <div className="flex items-center">
                         <IconButton onClick={() => handleCopyLink(params.value)} className="ml-2">
-                            <ContentCopyIcon />
+                            <ContentCopy />
                         </IconButton>
                         {params.value}
                     </div>
@@ -366,7 +393,7 @@ const GDriveDownloadListing: React.FC = () => {
                 return (
                     <div className="flex items-center">
                         <IconButton onClick={() => handleCopyLink(params.value)} className="ml-2">
-                            <ContentCopyIcon />
+                            <ContentCopy />
                         </IconButton>
                         {params.value}
                     </div>
@@ -392,7 +419,7 @@ const GDriveDownloadListing: React.FC = () => {
                             <FaBrain />
                         </IconButton>
                         <IconButton onClick={() => handleCopyLink(path.join(params.row.fileDumpFolder, params.row.gDriveRootFolder))} className="ml-2">
-                            <ContentCopyIcon />
+                            <ContentCopy />
                         </IconButton>
                         {path.join(params.row.fileDumpFolder, params.row.gDriveRootFolder)}
                     </div>
@@ -424,7 +451,7 @@ const GDriveDownloadListing: React.FC = () => {
                     <div className="flex items-center">
                         {v && (
                             <IconButton size="small" onClick={() => handleCopyLink(v)} className="mr-1">
-                                <ContentCopyIcon size={12} />
+                                <ContentCopy size={12} />
                             </IconButton>
                         )}
                         <Chip
@@ -447,7 +474,7 @@ const GDriveDownloadListing: React.FC = () => {
                     <div className="flex items-center">
                         {v !== "-" && (
                             <IconButton size="small" onClick={() => handleCopyLink(v)} className="mr-1">
-                                <ContentCopyIcon size={12} />
+                                <ContentCopy size={12} />
                             </IconButton>
                         )}
                         <span>{ellipsis(v, 5)}</span>
@@ -598,7 +625,7 @@ const GDriveDownloadListing: React.FC = () => {
             renderCell: (params) => params.value ? (
                 <div className="flex items-center">
                     <IconButton onClick={() => handleCopyLink(params.value)} size="small">
-                        <ContentCopyIcon />
+                        <ContentCopy />
                     </IconButton>
                     <a href={params.value} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline ml-1">
                         Open
@@ -710,26 +737,11 @@ const GDriveDownloadListing: React.FC = () => {
                 slots={{
                     toolbar: GridToolbar,
                 }}
-                sx={{
-                    '& .disposed-row': {
-                        opacity: 0.6,
-                    },
-                    '& .disposed-row .MuiDataGrid-cell': {
-                        textDecoration: 'line-through !important',
-                        color: 'text.disabled !important',
-                    },
-                    '& .disposed-row .MuiTypography-root': {
-                        textDecoration: 'line-through !important',
-                        color: 'text.disabled !important',
-                    },
-                    '& .disposed-row a, & .disposed-row button': {
-                        pointerEvents: 'none',
-                    }
-                }}
+                sx={DISPOSED_ROW_SX}
                 getRowClassName={(params) => {
                     // Accumulate classes so we preserve the background colors (like bg-green-500)
                     let classes = params.row.disposed ? "disposed-row " : ""
-                    
+
                     const qsVal = params.row.quickStatus
                     const qsArray: QuickStatus[] = Array.isArray(qsVal)
                         ? qsVal
