@@ -1,6 +1,6 @@
 import { Typography, Box, IconButton } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
-import { ContentCopy as ContentCopyIcon  } from "@mui/icons-material";
+import { ContentCopy } from "@mui/icons-material";
 import { formatMem } from "mirror/utils";
 import { Link } from "react-router-dom";
 import { G_DRIVE_ITEM_LIST_PATH } from "Routes/constants";
@@ -37,7 +37,7 @@ export const G_DRIVE_ITEM_COLUMNS_BASE: GridColDef[] = [
         renderCell: (params) => (
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <IconButton size="small" sx={{ mr: 1 }} onClick={() => navigator.clipboard.writeText(params.value)}>
-                    <ContentCopyIcon size={12} />
+                    <ContentCopy sx={{ fontSize: 12 }} />
                 </IconButton>
                 <Typography>
                     {params.value}
@@ -53,7 +53,7 @@ export const G_DRIVE_ITEM_COLUMNS_BASE: GridColDef[] = [
         renderCell: (params) => (
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <IconButton size="small" sx={{ mr: 1 }} onClick={() => navigator.clipboard.writeText(params.value)}>
-                    <ContentCopyIcon size={12} />
+                    <ContentCopy sx={{ fontSize: 12 }} />
                 </IconButton>
                 <Typography>
                     <Link to={`${window.location.origin}${G_DRIVE_ITEM_LIST_PATH}/${params.value}`} className="text-blue-500 underline">
@@ -90,7 +90,7 @@ export const gDriveAggregateCol: GridColDef[] = [
         renderCell: (params) => (
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <IconButton size="small" sx={{ mr: 1 }} onClick={() => navigator.clipboard.writeText(params.value)}>
-                    <ContentCopyIcon size={12} />
+                    <ContentCopy sx={{ fontSize: 12 }} />
                 </IconButton>
                 <Link to={`${window.location.origin}${G_DRIVE_ITEM_LIST_PATH}/${params.value}`} className="text-blue-500 underline">
                     {params.value}

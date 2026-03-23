@@ -2,7 +2,7 @@ import React from 'react';
 import { Typography, Button, Box, Stack } from '@mui/material';
 import { ExecResponseDetails } from './types';
 import RenderJsonData from 'components/RenderJsonData';
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import ContentCopy from '@mui/icons-material/ContentCopy';
 import { ExecType } from './ExecLauncherUtil';
 
 const ExecResponsePanel: React.FC<{ response: ExecResponseDetails; execType?: number }> = ({ response, execType }) => {
@@ -10,19 +10,19 @@ const ExecResponsePanel: React.FC<{ response: ExecResponseDetails; execType?: nu
     return (<></>);
   else {
     const keys = Object.keys(response);
-    
+
     // Function to get ExecType name from numeric value
     const getExecTypeName = (execTypeValue?: number): string => {
       if (!execTypeValue) return '';
-      
+
       // Find the key in ExecType enum that matches the value
       const execTypeName = Object.keys(ExecType).find(
         (key) => ExecType[key as keyof typeof ExecType] === execTypeValue
       );
-      
+
       return execTypeName || `Type: ${execTypeValue}`;
     };
-    
+
     const handleCopyJson = async () => {
       try {
         await navigator.clipboard.writeText(JSON.stringify(response, null, 2));
@@ -31,7 +31,7 @@ const ExecResponsePanel: React.FC<{ response: ExecResponseDetails; execType?: nu
         console.error('Failed to copy JSON: ', err);
       }
     };
-    
+
     const handleCopyText = async () => {
       try {
         const formattedText = formatResponseAsText(response);
@@ -41,12 +41,12 @@ const ExecResponsePanel: React.FC<{ response: ExecResponseDetails; execType?: nu
         console.error('Failed to copy text: ', err);
       }
     };
-    
+
     const formatResponseAsText = (resp: any): string => {
       const date = new Date().toLocaleString();
       let result = 'Backend Response\n\n';
       result += `Date: ${date}\n`;
-      
+
       const formatObject = (obj: any, indent: string = ''): string => {
         let output = '';
         for (const [key, value] of Object.entries(obj)) {
@@ -67,26 +67,26 @@ const ExecResponsePanel: React.FC<{ response: ExecResponseDetails; execType?: nu
         }
         return output;
       };
-      
+
       return result + formatObject(resp);
     };
-    
+
     return (
       <>
         <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mb: 1 }}>Backend Resp. {getExecTypeName(execType)}</Typography>
         <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
-          <Button 
-            variant="outlined" 
-            size="small" 
-            startIcon={<ContentCopyIcon />}
+          <Button
+            variant="outlined"
+            size="small"
+            startIcon={<ContentCopy />}
             onClick={handleCopyJson}
           >
             Copy JSON
           </Button>
-          <Button 
-            variant="outlined" 
-            size="small" 
-            startIcon={<ContentCopyIcon />}
+          <Button
+            variant="outlined"
+            size="small"
+            startIcon={<ContentCopy />}
             onClick={handleCopyText}
           >
             Copy Text

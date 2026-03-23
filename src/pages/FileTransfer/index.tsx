@@ -25,7 +25,7 @@ import {
 } from "@mui/material"
 import { makeGetCall, makePostCall } from 'service/ApiInterceptor';
 import { IconButton, Tooltip } from "@mui/material";
-import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import ContentCopy from "@mui/icons-material/ContentCopy";
 import { FileWidget } from "./FileWidget"
 import ConfirmDialog from "widgets/ConfirmDialog"
 import { set } from "lodash"
@@ -185,7 +185,7 @@ export default function FileTransferList() {
                             size="small"
                             onClick={() => navigator.clipboard.writeText(params.value)}
                         >
-                            <ContentCopyIcon fontSize="small" />
+                            <ContentCopy fontSize="small" />
                         </IconButton>
                     </Tooltip>
                     <Typography>{params.value}</Typography>
@@ -201,7 +201,7 @@ export default function FileTransferList() {
                             size="small"
                             onClick={() => navigator.clipboard.writeText(params.value)}
                         >
-                            <ContentCopyIcon fontSize="small" />
+                            <ContentCopy fontSize="small" />
                         </IconButton>
                     </Tooltip>
                     <Typography>{params.value}</Typography>

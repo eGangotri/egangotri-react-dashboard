@@ -26,7 +26,7 @@ import {
 } from "@mui/material"
 import { makeGetCall, makePostCall } from 'service/ApiInterceptor';
 import { IconButton, Tooltip } from "@mui/material";
-import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import ContentCopy from "@mui/icons-material/ContentCopy";
 import ConfirmDialog from "widgets/ConfirmDialog"
 import { set } from "lodash"
 import { useMemo } from "react"
@@ -160,7 +160,7 @@ export default function PdfHeaderFooterRemover() {
                             size="small"
                             onClick={() => navigator.clipboard.writeText(params.value)}
                         >
-                            <ContentCopyIcon fontSize="small" />
+                            <ContentCopy fontSize="small" />
                         </IconButton>
                     </Tooltip>
                     <Typography variant="body2" sx={{ fontSize: '0.8rem' }}>{params.value}</Typography>
@@ -178,7 +178,7 @@ export default function PdfHeaderFooterRemover() {
                             size="small"
                             onClick={() => navigator.clipboard.writeText(params.value)}
                         >
-                            <ContentCopyIcon fontSize="small" />
+                            <ContentCopy fontSize="small" />
                         </IconButton>
                     </Tooltip>
                     <Typography variant="body2" sx={{ fontSize: '0.8rem' }}>{params.value}</Typography>

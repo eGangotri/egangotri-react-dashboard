@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { DEFAULT_PAGE_SIZE_OPTIONS } from "utils/constants";
 import { DataGrid, GridColDef, GridPaginationModel, GridToolbar, GridSearchIcon } from "@mui/x-data-grid";
 import { TextField, InputAdornment, Box, Typography, IconButton, Tooltip, Link } from "@mui/material";
-import { ContentCopy as ContentCopyIcon, OpenInNew as OpenInNewIcon } from "@mui/icons-material";
+import { ContentCopy, OpenInNew as OpenInNewIcon } from "@mui/icons-material";
 import { useParams } from 'react-router-dom';
 import Spinner from "widgets/Spinner";
 import { GDriveItem, G_DRIVE_ITEM_COLUMNS_BASE } from "./constants";
@@ -59,11 +59,11 @@ const GDriveItemList: React.FC = () => {
                                 onClick={() => handleCopy(params.value)}
                                 color={copySuccess === params.value ? "success" : "default"}
                             >
-                                <ContentCopyIcon fontSize="small" />
+                                <ContentCopy fontSize="small" />
                             </IconButton>
                         </Tooltip>
                         <Typography variant="body2" color="textSecondary" >
-                           { ellipsis(params.value)}
+                            {ellipsis(params.value)}
                         </Typography>
                     </Box>
                 )

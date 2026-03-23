@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, List, ListItem, ListItemText, IconButton, Tooltip, TextField, InputAdornment } from "@mui/material"
-import ContentCopyIcon from "@mui/icons-material/ContentCopy"
+import ContentCopy from "@mui/icons-material/ContentCopy"
 import SearchIcon from "@mui/icons-material/Search"
 
 interface FileTransferPopupProps {
@@ -12,8 +12,8 @@ interface FileTransferPopupProps {
 
 export function FileTransferPopup({ open, onClose, files, title }: FileTransferPopupProps) {
   const [searchQuery, setSearchQuery] = useState("");
-  
-  const filteredFiles = files.filter(file => 
+
+  const filteredFiles = files.filter(file =>
     file.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -59,7 +59,7 @@ export function FileTransferPopup({ open, onClose, files, title }: FileTransferP
               onClick={handleCopyAll}
               sx={{ marginLeft: 2 }}
             >
-              <ContentCopyIcon fontSize="small" />
+              <ContentCopy fontSize="small" />
             </IconButton>
           </Tooltip>
           <Tooltip title="Copy as Comma Separated">
@@ -68,7 +68,7 @@ export function FileTransferPopup({ open, onClose, files, title }: FileTransferP
               onClick={handleCopyAsCommaSeparated}
               sx={{ marginLeft: 2 }}
             >
-              <ContentCopyIcon fontSize="small" />
+              <ContentCopy fontSize="small" />
             </IconButton>
           </Tooltip>
           <Tooltip title="Copy Filenames as CSV">
@@ -77,7 +77,7 @@ export function FileTransferPopup({ open, onClose, files, title }: FileTransferP
               onClick={handleCopyFilenamesAsCSV}
               sx={{ marginLeft: 2 }}
             >
-              <ContentCopyIcon fontSize="small" />
+              <ContentCopy fontSize="small" />
             </IconButton>
           </Tooltip>
           <Button onClick={onClose} sx={{ marginLeft: 2 }}>Close</Button>
