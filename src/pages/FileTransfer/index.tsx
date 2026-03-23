@@ -34,6 +34,9 @@ import { ExecType } from "scriptsThruExec/ExecLauncherUtil";
 import ExecComponent from "scriptsThruExec/ExecComponent";
 import { csvize } from "scriptsThruExec/Utils";
 import { MdCloudUpload } from "react-icons/md";
+import { makePostCallWithErrorHandling } from 'service/BackendFetchService';
+import { getDisposeActionColumn } from "utils/reactConstants";
+import { DISPOSED_ROW_SX } from "utils/constants";
 
 interface JsonData {
     _id: string
@@ -54,6 +57,7 @@ interface JsonData {
     reversed: boolean
     createdAt: string
     updatedAt: string
+    disposed?: boolean
 }
 
 interface FileTransferPopupProps {
@@ -110,7 +114,32 @@ export default function FileTransferList() {
     const [popoverAnchor, setPopoverAnchor] = useState<HTMLButtonElement | null>(null)
     const [popoverContent, setPopoverContent] = useState<string>("")
     const [filePath, setFilePath] = useState('');
+
+    const handleDisposeRow = async (id: string, e: React.MouseEvent<HTMLButtonElement>) => {
+        try {
+            setLoading(true);
+            const response = await makePostCallWithErrorHandling({ id }, 'fileUtil/disposeFileMove');
+            setPopoverContent(JSON.stringify(response, null, 2));
+            setPopoverAnchor(e.currentTarget);
+        } catch (error: any) {
+            console.error("Error calling dispose API:", error);
+            setPopoverContent(error?.message ? String(error.message) : 'Unknown error');
+            setPopoverAnchor(e.currentTarget);
+        } finally {
+            setLoading(false);
+            fetchData();
+        }
+    };
+
     const columns: GridColDef[] = [
+        {
+            field: "disposeAction",
+            headerName: "",
+            width: 50,
+            filterable: false,
+            sortable: false,
+            renderCell: (params) => getDisposeActionColumn(params, handleDisposeRow as any)
+        },
         {
             field: "filesMoved",
             headerName: "Files Transferred",
@@ -414,8 +443,11 @@ export default function FileTransferList() {
                 loading={loading}
                 hideFooterPagination
                 disableRowSelectionOnClick
+                sx={DISPOSED_ROW_SX}
                 getRowClassName={(params) => {
-                    return params.row.success ? 'bg-green-500' : 'bg-red-500';
+                    let classes = params.row.disposed ? "disposed-row " : "";
+                    classes += params.row.success ? 'bg-green-500' : 'bg-red-500';
+                    return classes.trim();
                 }}
             />
             <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>

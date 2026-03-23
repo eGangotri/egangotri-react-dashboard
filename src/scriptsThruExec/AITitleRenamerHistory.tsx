@@ -16,7 +16,8 @@ import { ellipsis } from 'widgets/ItemTooltip';
 import { makePostCallWithErrorHandling } from 'service/BackendFetchService';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { AI_TITLE_RENAMER_HISTORY_PATH, FILE_TRANSFER_LISTING } from 'Routes/constants';
-// No need for path module
+import { getDisposeActionColumn } from "utils/reactConstants";
+import { DISPOSED_ROW_SX } from "utils/constants";
 
 // Types
 interface PdfTitleRename {
@@ -51,6 +52,7 @@ interface GroupedRenameData {
   _id: string;
   createdAt: string;
   srcFolder?: string;
+  disposed?: boolean;
 }
 
 interface FetchResponse {
@@ -195,6 +197,24 @@ const AITitleRenamerHistory: React.FC = () => {
   };
 
   // Handle copying selected source folders as CSV
+  const handleDisposeRow = async (id: string, e: React.MouseEvent<HTMLButtonElement>) => {
+    try {
+      setLoading(true);
+      const response = await makePostCallWithErrorHandling({ id }, 'ai/disposeTitleRenamedViaAIListGroupedByRunId');
+      setResultTitle('Dispose action triggered');
+      setResultBody(response);
+      setResultOpen(true);
+      setReloadKey(k => k + 1);
+    } catch (error) {
+      console.error("Error calling dispose API:", error);
+      setResultTitle('Dispose error');
+      setResultBody({ error: error instanceof Error ? error.message : 'Unknown error' });
+      setResultOpen(true);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleCopySelectedSrcFolders = () => {
     const selectedItems = groupedData.filter(item => selectedRows.includes(item._id));
     const srcFolders = selectedItems.map(item => item.srcFolder || '').join(',');
@@ -329,6 +349,14 @@ const AITitleRenamerHistory: React.FC = () => {
 
   // Define columns for the grouped data DataGrid
   const groupedColumns: GridColDef[] = [
+    {
+      field: "disposeAction",
+      headerName: "",
+      width: 50,
+      filterable: false,
+      sortable: false,
+      renderCell: (params) => getDisposeActionColumn(params, handleDisposeRow as any)
+    },
     {
       field: 'runId',
       headerName: 'Run ID',
@@ -727,6 +755,8 @@ const AITitleRenamerHistory: React.FC = () => {
           onFilterModelChange={setFilterModel}
           rowCount={totalItems}
           loading={loading}
+          sx={DISPOSED_ROW_SX}
+          getRowClassName={(params) => params.row.disposed ? "disposed-row " : ""}
           slots={{
             toolbar: GridToolbar,
           }}

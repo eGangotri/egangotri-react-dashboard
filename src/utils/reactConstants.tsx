@@ -11,7 +11,7 @@ export const getDisposeActionColumn = (params: any, handleDisposeRow: (id: strin
                 <IconButton
                     size="small"
                     className={DISPOSE_TOGGLE_CLASS}
-                    onClick={(e) => handleDisposeRow(params.row._id, e as any)}
+                    onClick={(e) => handleDisposeRow(params.row._id || params.row.id, e as any)}
                     sx={{
                         color: isDisposed ? "error.main" : "action.disabled",
                         transition: "color 0.2s ease",

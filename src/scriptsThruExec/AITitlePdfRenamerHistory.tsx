@@ -9,6 +9,9 @@ import { buildDeterministicColorMap, colorForKey } from '../utils/color';
 import { ellipsis } from 'widgets/ItemTooltip';
 import { useNavigate } from 'react-router-dom';
 import { FILE_TRANSFER_LISTING } from 'Routes/constants';
+import { getDisposeActionColumn } from "utils/reactConstants";
+import { DISPOSED_ROW_SX } from "utils/constants";
+import { makePostCallWithErrorHandling } from 'service/BackendFetchService';
 
 // Backend can send either Mongo-style wrappers or plain strings
 type Oid = { $oid: string } | string;
@@ -44,6 +47,7 @@ type RunRow = {
   createdAt: IsoDate;
   updatedAt: IsoDate;
   __v: number;
+  disposed?: boolean;
 };
 
 type DetailKey = 'pairedBatches' | 'renamingResults' | 'metaDataAggregated';
@@ -139,7 +143,33 @@ const AITitlePdfRenamerHistory: React.FC = () => {
     load(paginationModel.page + 1, paginationModel.pageSize);
   }, [reloadKey, paginationModel.page, paginationModel.pageSize]);
 
+  const handleDisposeRow = async (id: string, e: React.MouseEvent<HTMLButtonElement>) => {
+    try {
+      setLoading(true);
+      const response = await makePostCallWithErrorHandling({ id }, 'ai/disposeTitlePdfRenamedViaAIList');
+      setRedoTitle('Dispose action triggered');
+      setRedoBody(JSON.stringify(response, null, 2));
+      setRedoOpen(true);
+      setReloadKey((k) => k + 1);
+    } catch (e: any) {
+      console.error("Error calling dispose API:", e);
+      setRedoTitle('Dispose error');
+      setRedoBody(e?.message ? String(e.message) : 'Unknown error');
+      setRedoOpen(true);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const columns: GridColDef<RunRow>[] = useMemo(() => ([
+    {
+      field: "disposeAction",
+      headerName: "",
+      width: 50,
+      filterable: false,
+      sortable: false,
+      renderCell: (params) => getDisposeActionColumn(params, handleDisposeRow as any)
+    },
     {
       field: 'commonRunId',
       headerName: 'Common Run Id',
@@ -422,8 +452,11 @@ const AITitlePdfRenamerHistory: React.FC = () => {
             setSelectedRunIds((newSelection as any[]).map((id) => String(id)));
           }}
           slots={{ toolbar: GridToolbar }}
+          sx={DISPOSED_ROW_SX}
           getRowClassName={(params) => {
-            return (params.row.failedCount > 0) ? 'bg-red-100' : 'bg-green-100';
+            let classes = params.row.disposed ? "disposed-row " : "";
+            classes += (params.row.failedCount > 0) ? 'bg-red-100' : 'bg-green-100';
+            return classes.trim();
           }}
         />
       </div>

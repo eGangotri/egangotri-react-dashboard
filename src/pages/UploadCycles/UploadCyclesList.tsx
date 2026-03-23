@@ -21,6 +21,8 @@ import { UPLOADS_USHERED_PATH } from "Routes/constants"
 import { makeGetCall } from "service/ApiInterceptor";
 import { useUploadCycleActions, TASK_TYPE_ENUM } from "./useUploadCycleActions"
 import { ellipsis } from "widgets/ItemTooltip";
+import { getDisposeActionColumn } from "utils/reactConstants";
+import { DISPOSED_ROW_SX } from "utils/constants";
 
 type VerifiedFilter = "all" | "true" | "false" | "null"
 
@@ -212,6 +214,24 @@ const UploadCyclesList: React.FC = () => {
         setOpenDialog(false)
     }
 
+    const handleDisposeRow = async (id: string, e: React.MouseEvent<HTMLButtonElement>) => {
+        try {
+            setIsLoading(true);
+            const response = await makePostCallWithErrorHandling({ id }, 'uploadCycle/disposeUploadCycle');
+            setPopoverTitle("Dispose Result");
+            setApiResult(<ExecResponsePanel response={response} />);
+            setPopoverAnchor(e.currentTarget);
+        } catch (error: any) {
+            console.error("Error calling dispose API:", error);
+            setPopoverTitle("Dispose Error");
+            setApiResult(<ExecResponsePanel response={{ error: error?.message || String(error) }} />);
+            setPopoverAnchor(e.currentTarget);
+        } finally {
+            setIsLoading(false);
+            fetchData();
+        }
+    };
+
     const handleDelete = async (id: string, anchorId: string) => {
         console.log("Delete clicked ", id)
         setIsLoading(true);
@@ -279,6 +299,14 @@ const UploadCyclesList: React.FC = () => {
     });
 
     const columns: GridColDef[] = [
+        {
+            field: "disposeAction",
+            headerName: "",
+            width: 50,
+            filterable: false,
+            sortable: false,
+            renderCell: (params) => getDisposeActionColumn(params, handleDisposeRow as any)
+        },
         {
             field: "uploadCycleId",
             headerName: "Upload Cycle ID",
@@ -585,7 +613,12 @@ const UploadCyclesList: React.FC = () => {
                     loading={isLoading}
                     getRowHeight={() => "auto"}
                     getEstimatedRowHeight={() => 200}
-                    getRowClassName={(params) => createBackgroundForRow(params.row)}
+                    sx={DISPOSED_ROW_SX}
+                    getRowClassName={(params) => {
+                        let classes = params.row.disposed ? "disposed-row " : "";
+                        classes += createBackgroundForRow(params.row);
+                        return classes.trim();
+                    }}
                 />
             </Box>
             <ConfirmDialog

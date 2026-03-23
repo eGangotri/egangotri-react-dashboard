@@ -12,7 +12,7 @@ import {
 import { Button, Dialog, DialogTitle, DialogContent, Chip, IconButton, Box, RadioGroup, FormControlLabel, Typography, Radio, CircularProgress, DialogActions } from "@mui/material"
 import ExecPopover from 'scriptsThruExec/ExecPopover';
 import { makeGetCall } from 'service/ApiInterceptor';
-import {  makePostCallWithErrorHandling } from "service/BackendFetchService";
+import { makePostCallWithErrorHandling } from "service/BackendFetchService";
 import { FaTrash, FaBrain } from "react-icons/fa";
 import ExecComponent from "scriptsThruExec/ExecComponent";
 import { ExecType } from "scriptsThruExec/ExecLauncherUtil";
@@ -451,7 +451,7 @@ const GDriveDownloadListing: React.FC = () => {
                     <div className="flex items-center">
                         {v && (
                             <IconButton size="small" onClick={() => handleCopyLink(v)} className="mr-1">
-                                <ContentCopy size={12} />
+                                <ContentCopy sx={{ fontSize: 12 }} />
                             </IconButton>
                         )}
                         <Chip
@@ -474,7 +474,7 @@ const GDriveDownloadListing: React.FC = () => {
                     <div className="flex items-center">
                         {v !== "-" && (
                             <IconButton size="small" onClick={() => handleCopyLink(v)} className="mr-1">
-                                <ContentCopy size={12} />
+                                <ContentCopy sx={{ fontSize: 12 }} />
                             </IconButton>
                         )}
                         <span>{ellipsis(v, 5)}</span>
