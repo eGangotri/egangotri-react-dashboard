@@ -146,7 +146,7 @@ const AITitlePdfRenamerHistory: React.FC = () => {
   const handleDisposeRow = async (id: string, e: React.MouseEvent<HTMLButtonElement>) => {
     try {
       setLoading(true);
-      const response = await makePostCallWithErrorHandling({ id }, 'ai/disposeTitlePdfRenamedViaAIList');
+      const response = await makePostCallWithErrorHandling({ id }, 'ai/disposePdfTitleAndFileRenamingTrackerViaAI');
       setRedoTitle('Dispose action triggered');
       setRedoBody(JSON.stringify(response, null, 2));
       setRedoOpen(true);

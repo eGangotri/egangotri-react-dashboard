@@ -118,7 +118,7 @@ export default function FileTransferList() {
     const handleDisposeRow = async (id: string, e: React.MouseEvent<HTMLButtonElement>) => {
         try {
             setLoading(true);
-            const response = await makePostCallWithErrorHandling({ id }, 'fileUtil/disposeFileMove');
+            const response = await makePostCallWithErrorHandling({ id }, 'fileUtil/disposeFileMoveTracker');
             setPopoverContent(JSON.stringify(response, null, 2));
             setPopoverAnchor(e.currentTarget);
         } catch (error: any) {

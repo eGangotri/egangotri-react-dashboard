@@ -200,7 +200,7 @@ const AITitleRenamerHistory: React.FC = () => {
   const handleDisposeRow = async (id: string, e: React.MouseEvent<HTMLButtonElement>) => {
     try {
       setLoading(true);
-      const response = await makePostCallWithErrorHandling({ id }, 'ai/disposeTitleRenamedViaAIListGroupedByRunId');
+      const response = await makePostCallWithErrorHandling({ id }, 'ai/disposePdfTitleRenamingViaAITracker');
       setResultTitle('Dispose action triggered');
       setResultBody(response);
       setResultOpen(true);
