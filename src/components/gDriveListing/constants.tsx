@@ -26,6 +26,7 @@ export
     createdTime: string;
     source: string;
     identifier: string;
+    disposed?: boolean;
     // add more fields as required
 }
 

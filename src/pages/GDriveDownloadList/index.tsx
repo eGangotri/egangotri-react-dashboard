@@ -13,7 +13,7 @@ import { Button, Dialog, DialogTitle, DialogContent, Chip, IconButton, Box, Radi
 import ExecPopover from 'scriptsThruExec/ExecPopover';
 import { makeGetCall } from 'service/ApiInterceptor';
 import { makePostCallWithErrorHandling } from "service/BackendFetchService";
-import { FaCopy, FaTrash, FaBrain } from "react-icons/fa";
+import { FaTrash, FaBrain } from "react-icons/fa";
 import ExecComponent from "scriptsThruExec/ExecComponent";
 import { ExecType } from "scriptsThruExec/ExecLauncherUtil";
 import { redownloadFromGDrive, verifyGDriveDwnldSuccessFolders } from "service/launchYarn";
@@ -26,6 +26,7 @@ import path from "path";
 import ConfirmDialog from "widgets/ConfirmDialog";
 import WindowedDialog from "widgets/WindowedDialog";
 import { DEFAULT_PAGE_SIZE_OPTIONS } from "utils/constants";
+import { ContentCopy as ContentCopyIcon  } from "@mui/icons-material";
 
 // Types
 interface ICompositeDocument {
@@ -60,6 +61,7 @@ interface IGDriveDownload {
     downloadType: string
     files: ICompositeDocument[]
     quickStatus: QuickStatus | QuickStatus[]
+    disposed?: boolean
 }
 
 interface FetchResponse {
@@ -330,7 +332,7 @@ const GDriveDownloadListing: React.FC = () => {
             renderCell: (params) => (
                 <div className="flex items-center">
                     <IconButton onClick={() => handleCopyLink(params.value)} className="ml-2">
-                        <FaCopy />
+                        <ContentCopyIcon />
                     </IconButton>
                     <a href={params.value} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">
                         {params.value}
@@ -347,7 +349,7 @@ const GDriveDownloadListing: React.FC = () => {
                 return (
                     <div className="flex items-center">
                         <IconButton onClick={() => handleCopyLink(params.value)} className="ml-2">
-                            <FaCopy />
+                            <ContentCopyIcon />
                         </IconButton>
                         {params.value}
                     </div>
@@ -364,7 +366,7 @@ const GDriveDownloadListing: React.FC = () => {
                 return (
                     <div className="flex items-center">
                         <IconButton onClick={() => handleCopyLink(params.value)} className="ml-2">
-                            <FaCopy />
+                            <ContentCopyIcon />
                         </IconButton>
                         {params.value}
                     </div>
@@ -390,7 +392,7 @@ const GDriveDownloadListing: React.FC = () => {
                             <FaBrain />
                         </IconButton>
                         <IconButton onClick={() => handleCopyLink(path.join(params.row.fileDumpFolder, params.row.gDriveRootFolder))} className="ml-2">
-                            <FaCopy />
+                            <ContentCopyIcon />
                         </IconButton>
                         {path.join(params.row.fileDumpFolder, params.row.gDriveRootFolder)}
                     </div>
@@ -413,26 +415,45 @@ const GDriveDownloadListing: React.FC = () => {
         {
             field: 'commonRunId',
             headerName: 'Common Run Id',
-            width: 100,
+            width: 140,
             filterable: true,
             renderCell: (params) => {
                 const v = String(params.value ?? '');
                 const { bg, color, border } = commonRunIdColorMap[v] || colorForKey(v);
                 return (
-                    <Chip
-                        label={v}
-                        size="small"
-                        sx={{ bgcolor: bg, color, fontWeight: 600, border: `1px solid ${border}` }}
-                    />
+                    <div className="flex items-center">
+                        {v && (
+                            <IconButton size="small" onClick={() => handleCopyLink(v)} className="mr-1">
+                                <ContentCopyIcon size={12} />
+                            </IconButton>
+                        )}
+                        <Chip
+                            label={v}
+                            size="small"
+                            sx={{ bgcolor: bg, color, fontWeight: 600, border: `1px solid ${border}` }}
+                        />
+                    </div>
                 );
             }
         },
         {
             field: "runId",
             headerName: "Run ID",
-            width: 80,
+            width: 110,
             filterable: true,
-            renderCell: (params) => ellipsis(params?.value?.toString() || "-", 5),
+            renderCell: (params) => {
+                const v = params?.value?.toString() || "-";
+                return (
+                    <div className="flex items-center">
+                        {v !== "-" && (
+                            <IconButton size="small" onClick={() => handleCopyLink(v)} className="mr-1">
+                                <ContentCopyIcon size={12} />
+                            </IconButton>
+                        )}
+                        <span>{ellipsis(v, 5)}</span>
+                    </div>
+                );
+            },
         },
         {
             field: "apiCall",
@@ -577,7 +598,7 @@ const GDriveDownloadListing: React.FC = () => {
             renderCell: (params) => params.value ? (
                 <div className="flex items-center">
                     <IconButton onClick={() => handleCopyLink(params.value)} size="small">
-                        <FaCopy />
+                        <ContentCopyIcon />
                     </IconButton>
                     <a href={params.value} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline ml-1">
                         Open
@@ -689,7 +710,26 @@ const GDriveDownloadListing: React.FC = () => {
                 slots={{
                     toolbar: GridToolbar,
                 }}
+                sx={{
+                    '& .disposed-row': {
+                        opacity: 0.6,
+                    },
+                    '& .disposed-row .MuiDataGrid-cell': {
+                        textDecoration: 'line-through !important',
+                        color: 'text.disabled !important',
+                    },
+                    '& .disposed-row .MuiTypography-root': {
+                        textDecoration: 'line-through !important',
+                        color: 'text.disabled !important',
+                    },
+                    '& .disposed-row a, & .disposed-row button': {
+                        pointerEvents: 'none',
+                    }
+                }}
                 getRowClassName={(params) => {
+                    // Accumulate classes so we preserve the background colors (like bg-green-500)
+                    let classes = params.row.disposed ? "disposed-row " : ""
+                    
                     const qsVal = params.row.quickStatus
                     const qsArray: QuickStatus[] = Array.isArray(qsVal)
                         ? qsVal
@@ -700,13 +740,16 @@ const GDriveDownloadListing: React.FC = () => {
                     const success_count = Number(latest?.success_count ?? 0)
                     const totalPdfsToDownload = Number(latest?.totalPdfsToDownload ?? 0)
                     if (params.row.verify === false) {
-                        return "bg-red-500"
+                        classes += "bg-red-500"
+                    } else if (params.row.verify === true) {
+                        classes += "bg-green-500"
+                    } else if (success_count === 0 && totalPdfsToDownload === 0) {
+                        classes += "bg-yellow-100"
+                    } else {
+                        classes += success_count === totalPdfsToDownload ? "bg-green-100" : "bg-red-100"
                     }
-                    if (params.row.verify === true) {
-                        return "bg-green-500"
-                    }
-                    if (success_count === 0 && totalPdfsToDownload === 0) return "bg-yellow-100"
-                    return success_count === totalPdfsToDownload ? "bg-green-100" : "bg-red-100"
+
+                    return classes.trim();
                 }}
             />
 
