@@ -31,7 +31,7 @@ export
 }
 
 export const G_DRIVE_ITEM_COLUMNS_BASE: GridColDef[] = [
-    { field: "serialNo", headerName: "Serial No", width: 40 },
+    { field: "serialNo", headerName: "No.", width: 80 },
     {
         field: "titleGDrive", headerName: "Title", width: 650,
         renderCell: (params) => (

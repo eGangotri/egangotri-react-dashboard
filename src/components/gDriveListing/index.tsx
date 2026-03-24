@@ -191,23 +191,6 @@ const GDriveItemList: React.FC = () => {
                 loading={isLoading}
                 onSortModelChange={handleSortModelChange}
                 getRowId={(row) => row._id}
-                getRowClassName={(params) => params.row.disposed ? 'disposed-row' : 'disposed-row'}
-                sx={{
-                    '& .disposed-row': {
-                        opacity: 0.6,
-                    },
-                    '& .disposed-row .MuiDataGrid-cell': {
-                        textDecoration: 'line-through !important',
-                        color: 'text.disabled !important',
-                    },
-                    '& .disposed-row .MuiTypography-root': {
-                        textDecoration: 'line-through !important',
-                        color: 'text.disabled !important',
-                    },
-                    '& .disposed-row a, & .disposed-row button': {
-                        pointerEvents: 'none',
-                    }
-                }}
                 autoHeight
                 disableColumnMenu
                 pageSizeOptions={DEFAULT_PAGE_SIZE_OPTIONS}
