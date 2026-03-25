@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { DEFAULT_PAGE_SIZE_OPTIONS } from 'utils/constants';
+import { DEFAULT_PAGE_SIZE_OPTIONS, MAX_ITEMS_LISTABLE_FOR_UPLOAD_CYCLE } from 'utils/constants';
 import {
     Table, TableBody, TableCell,
     TableContainer, TableHead, TableRow, Paper,
@@ -18,7 +18,6 @@ import { DD_MM_YYYY_WITH_TIME_FORMAT } from 'utils/utils';
 import { getDataForUploadCycle } from 'service/BackendFetchService';
 import { ArchiveProfileAndCount, UploadCycleArchiveProfile, UploadCycleTableData, UploadCycleTableDataDictionary } from 'mirror/types';
 import { UPLOADS_USHERED_PATH } from 'Routes/constants';
-import { MAX_ITEMS_LISTABLE } from 'utils/constants';
 import { ERROR_RED, SUCCESS_GREEN } from 'constants/colors';
 import Spinner from 'widgets/Spinner';
 import { _launchGradlev2, launchGradleReuploadFailed } from 'service/launchGradle';
@@ -452,7 +451,7 @@ const UploadCyclesOld1 = () => {
     }
 
     async function fetchUploadCycles() {
-        const dataForUploadCycle: UploadCycleTableDataDictionary[] = await getDataForUploadCycle(MAX_ITEMS_LISTABLE);
+        const dataForUploadCycle: UploadCycleTableDataDictionary[] = await getDataForUploadCycle(MAX_ITEMS_LISTABLE_FOR_UPLOAD_CYCLE);
         return dataForUploadCycle;
     }
 
