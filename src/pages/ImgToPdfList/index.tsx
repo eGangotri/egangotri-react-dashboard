@@ -301,6 +301,7 @@ const ImgToPdfListing: React.FC = () => {
                     execType={imgType}
                     secondTextBoxPlaceHolder='Dest Folder Abs Path'
                     onInputChange={setFolderOfUnzippedImgs}
+                    userInputOneInfo="Proivde a Folder. per sub-folder(s) img files will be converted to pdf without any overlap"
                     reactComponent={<>
                         <RadioGroup aria-label="fileType" name="fileType" value={imgType} onChange={handleChangeImgFilesToPdf} row>
                             <FormControlLabel value={ExecType.ANY_IMG_TYPE_TO_PDF} control={<Radio />} label="ANY" />
