@@ -6,7 +6,7 @@ import { useSearchParams } from "react-router-dom"
 import { DataGrid, type GridColDef, type GridRenderCellParams, type GridRowId } from "@mui/x-data-grid"
 import { FaTrash, FaTimes } from 'react-icons/fa';
 import { Typography, Box, Link, TextField, Select, MenuItem, FormControl, InputLabel, Button, SelectChangeEvent, Stack, IconButton, Tooltip } from "@mui/material"
-import { MdVerified, MdFindInPage, MdCloudUpload, MdFilterList, MdAcUnit } from "react-icons/md"
+import { MdVerified, MdFindInPage, MdCloudUpload, MdFilterList, MdFilterListOff, MdAcUnit } from "react-icons/md"
 import type { UploadCycleTableData, UploadCycleTableDataDictionary } from "mirror/types"
 import { deleteUploadCycleById, getDataForUploadCycle, makePostCallWithErrorHandling, verifyUploadStatusForUploadCycleId } from "service/BackendFetchService"
 import { MAX_ITEMS_LISTABLE } from "utils/constants"
@@ -208,6 +208,8 @@ const UploadCyclesList: React.FC = () => {
             await handleReupload(id)
         } else if (type === TASK_TYPE_ENUM.ISOLATE_UPLOAD_FAILED) {
             await handleIsolateUploadFailures(id)
+        } else if (type === TASK_TYPE_ENUM.DE_ISOLATE_UPLOAD_FAILED) {
+            await handleDeIsolateUploadFailures(id)
         } else if (type === TASK_TYPE_ENUM.MOVE_TO_FREEZE) {
             await handleMoveToFreeze(id)
         }
@@ -288,6 +290,7 @@ const UploadCyclesList: React.FC = () => {
         handleFindMissing,
         handleReupload,
         handleIsolateUploadFailures,
+        handleDeIsolateUploadFailures,
         handleMoveToFreeze
     } = useUploadCycleActions({
         isLoading,
@@ -368,6 +371,16 @@ const UploadCyclesList: React.FC = () => {
                             disabled={isLoading}
                         >
                             <MdFilterList />
+                        </IconButton>
+                    </Tooltip>
+                    <Tooltip title="De-Isolate Upload-Failures">
+                        <IconButton
+                            id={`de-isolate-failures-button-${params.row.profile}`}
+                            color="primary"
+                            onClick={() => confirmAction(TASK_TYPE_ENUM.DE_ISOLATE_UPLOAD_FAILED, params.row.profile)}
+                            disabled={isLoading}
+                        >
+                            <MdFilterListOff />
                         </IconButton>
                     </Tooltip>
                     <Tooltip title="Move to Freeze">

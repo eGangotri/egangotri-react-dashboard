@@ -13,6 +13,7 @@ export const TASK_TYPE_ENUM = {
     REUPLOAD_MISSED: "Reupload of Missed-Items",
     ISOLATE_MISSING: "Isolate Missing",
     ISOLATE_UPLOAD_FAILED: "Isolate Upload Failed",
+    DE_ISOLATE_UPLOAD_FAILED: "De-Isolate Upload Failed",
     MOVE_TO_FREEZE: "Move to Freeze",
 }
 
@@ -109,6 +110,8 @@ export const useUploadCycleActions = ({
                 return `reupload-button-${uploadCycleId}`;
             case TASK_TYPE_ENUM.ISOLATE_UPLOAD_FAILED:
                 return `isolate-failures-button-${uploadCycleId}`;
+            case TASK_TYPE_ENUM.DE_ISOLATE_UPLOAD_FAILED:
+                return `de-isolate-failures-button-${uploadCycleId}`;
             case TASK_TYPE_ENUM.MOVE_TO_FREEZE:
                 return `freeze-button-${uploadCycleId}`;
             default:
@@ -223,6 +226,28 @@ export const useUploadCycleActions = ({
         }
     };
 
+    const handleDeIsolateUploadFailures = async (profile: string) => {
+        const anchorId = getAnchorId(profile, TASK_TYPE_ENUM.DE_ISOLATE_UPLOAD_FAILED);
+        setIsLoading(true);
+        setLastMissedData(null);
+        setPopoverTitle(TASK_TYPE_ENUM.DE_ISOLATE_UPLOAD_FAILED)
+        try {
+            const _res = await _launchGradlev2({
+                profile: profile,
+            }, "deIsolateUploadFailedViaProfile")
+            setApiResult(<ExecResponsePanel response={_res} />);
+            const el = document.getElementById(anchorId);
+            if (el) setPopoverAnchor(el as HTMLButtonElement);
+        } catch (error: any) {
+            console.error("Error de-isolating upload failures:", error);
+            setApiResult(<ExecResponsePanel response={{ error: error?.message || String(error) }} />);
+            const el = document.getElementById(anchorId);
+            if (el) setPopoverAnchor(el as HTMLButtonElement);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     const handleMoveToFreeze = async (uploadCycleId: string) => {
         const anchorId = getAnchorId(uploadCycleId, TASK_TYPE_ENUM.MOVE_TO_FREEZE);
         setIsLoading(true);
@@ -298,6 +323,7 @@ export const useUploadCycleActions = ({
         handleFindMissing,
         handleReupload,
         handleIsolateUploadFailures,
+        handleDeIsolateUploadFailures,
         handleMoveToFreeze,
         handleIsolateMissing,
         handleLaunchReuploadMissed
