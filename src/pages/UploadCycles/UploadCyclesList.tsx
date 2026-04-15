@@ -393,9 +393,9 @@ const UploadCyclesList: React.FC = () => {
                     </Tooltip>
                     <Tooltip title="De-Isolate Upload-Failures">
                         <IconButton
-                            id={`de-isolate-failures-button-${params.row.profile}`}
+                            id={`de-isolate-failures-button-${params.row.archiveProfileAndCount?.[0]?.archiveProfile}`}
                             color="primary"
-                            onClick={() => confirmAction(TASK_TYPE_ENUM.DE_ISOLATE_UPLOAD_FAILED, params.row.profile)}
+                            onClick={() => confirmAction(TASK_TYPE_ENUM.DE_ISOLATE_UPLOAD_FAILED, params.row.archiveProfileAndCount?.[0]?.archiveProfile || "")}
                             disabled={isLoading}
                         >
                             <MdFilterListOff />

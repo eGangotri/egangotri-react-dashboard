@@ -226,7 +226,7 @@ export const useUploadCycleActions = ({
         }
     };
 
-    const handleDeIsolateUploadFailures = async (profile: string) => {
+    const handleDeIsolateFailedUploads = async (profile: string) => {
         const anchorId = getAnchorId(profile, TASK_TYPE_ENUM.DE_ISOLATE_UPLOAD_FAILED);
         setIsLoading(true);
         setLastMissedData(null);
@@ -323,7 +323,7 @@ export const useUploadCycleActions = ({
         handleFindMissing,
         handleReupload,
         handleIsolateUploadFailures,
-        handleDeIsolateUploadFailures,
+        handleDeIsolateUploadFailures: handleDeIsolateFailedUploads,
         handleMoveToFreeze,
         handleIsolateMissing,
         handleLaunchReuploadMissed
