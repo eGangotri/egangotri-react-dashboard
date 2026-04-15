@@ -4,7 +4,7 @@ import type React from "react"
 import { useEffect, useState, useCallback, useMemo } from "react"
 import { useSearchParams } from "react-router-dom"
 import { DataGrid, type GridColDef, type GridRenderCellParams, type GridRowId } from "@mui/x-data-grid"
-import { FaTrash, FaTimes } from 'react-icons/fa';
+import { FaTrash, FaTimes, FaChrome, FaSync, FaStop, FaSearch, FaPlay, FaUndo, FaCloudUploadAlt } from 'react-icons/fa';
 import { Typography, Box, Link, TextField, Select, MenuItem, FormControl, InputLabel, Button, SelectChangeEvent, Stack, IconButton, Tooltip } from "@mui/material"
 import { MdVerified, MdFindInPage, MdCloudUpload, MdFilterList, MdFilterListOff, MdAcUnit } from "react-icons/md"
 import type { UploadCycleTableData, UploadCycleTableDataDictionary } from "mirror/types"
@@ -73,6 +73,24 @@ const UploadCyclesList: React.FC = () => {
             } catch (error) {
                 alert("Error closing Chrome.")
                 console.error('Error closing Chrome:', error);
+            }
+        }
+    }
+    const inspectChromeTabs = async (e: React.MouseEvent<HTMLButtonElement>) => {
+        if (window.confirm('Are you sure you want to resume uploads?')) {
+            try {
+                setIsLoading(true);
+                const resp = await makeGetCall('/chrome/inspectTabs?archiveOrgOnly=true&dismissDialogs=accept')
+                setPopoverTitle("Resume Uploads Result");
+                setApiResult(<ExecResponsePanel response={resp} />);
+                setPopoverAnchor(e.currentTarget);
+            } catch (error: any) {
+                console.error('Error resuming uploads:', error);
+                setPopoverTitle("Resume Uploads Error");
+                setApiResult(<ExecResponsePanel response={{ error: error?.message || String(error) }} />);
+                setPopoverAnchor(e.currentTarget);
+            } finally {
+                setIsLoading(false);
             }
         }
     }
@@ -527,12 +545,16 @@ const UploadCyclesList: React.FC = () => {
                                 onChange={(e) => setExtraDescription(e.target.value)}
                                 sx={{ mb: 2, mr: 2 }}
                             />
-                            <Button variant="contained"
-                                color="primary" onClick={uploadToArchive}
-                                sx={{ mt: 1 }}
-                                disabled={isLoading}>
-                                Upload PDFs to Archive for profile
-                            </Button>
+                            <Tooltip title="Upload PDFs to Archive for profile">
+                                <span>
+                                    <IconButton
+                                        color="primary" onClick={uploadToArchive}
+                                        sx={{ mt: 1 }}
+                                        disabled={isLoading}>
+                                        <FaCloudUploadAlt />
+                                    </IconButton>
+                                </span>
+                            </Tooltip>
                         </Box>
 
                         <Box sx={{ display: "flex", gap: 2, mb: 2, mr: 2 }}>
@@ -557,33 +579,43 @@ const UploadCyclesList: React.FC = () => {
                                     <MenuItem value="null">N/A</MenuItem>
                                 </Select>
                             </FormControl>
-                            <Button variant="contained"
-                                color="primary"
-                                onClick={() => reset()}
-                                sx={{ my: 1 }}
-                                disabled={isLoading}>
-                                Reset
-                            </Button>
+                            <Tooltip title="Reset">
+                                <span>
+                                    <IconButton
+                                        color="primary"
+                                        onClick={() => reset()}
+                                        sx={{ my: 1 }}
+                                        disabled={isLoading}>
+                                        <FaUndo />
+                                    </IconButton>
+                                </span>
+                            </Tooltip>
                         </Box>
                     </Box>
                     <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2, minWidth: 'fit-content' }}>
-                        <Stack sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                            <Button variant="contained" color="error" onClick={closeAllChrome} startIcon={<FaTimes />}
-                                sx={{ width: 200, height: 40 }}
-                            >
-                                Close All Chrome
-                            </Button>
-                            <Button variant="contained" color="primary" onClick={updateChromeDriver}
-                                sx={{ width: 220, height: 40 }}
-                            >
-                                Update Chrome Driver
-                            </Button>
-                            <Button variant="contained" color="primary" onClick={killAllGradleTasks}
-                                sx={{ width: 220, height: 40 }}
-                            >
-                                Kill All Gradle Tasks
-                            </Button>
-                        </Stack>
+                        <Box sx={{ display: 'flex', flexDirection: 'row', gap: 1, alignItems: 'center' }}>
+                            <Tooltip title="Close All Chrome">
+                                <IconButton color="error" onClick={closeAllChrome}>
+                                    <FaChrome />
+                                    <FaTimes style={{ position: 'absolute', fontSize: '0.7em', color: 'red', bottom: 4, right: 4 }} />
+                                </IconButton>
+                            </Tooltip>
+                            <Tooltip title="Resume Uploads">
+                                <IconButton color="primary" onClick={inspectChromeTabs}>
+                                    <FaPlay />
+                                </IconButton>
+                            </Tooltip>
+                            <Tooltip title="Update Chrome Driver">
+                                <IconButton color="primary" onClick={updateChromeDriver}>
+                                    <FaSync />
+                                </IconButton>
+                            </Tooltip>
+                            <Tooltip title="Kill All Gradle Tasks">
+                                <IconButton color="primary" onClick={killAllGradleTasks}>
+                                    <FaStop />
+                                </IconButton>
+                            </Tooltip>
+                        </Box>
                         <ColorCodeInformationPanel />
                     </Box>
                 </Box>
