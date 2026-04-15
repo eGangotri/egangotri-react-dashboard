@@ -234,7 +234,7 @@ export const useUploadCycleActions = ({
         try {
             const _res = await _launchGradlev2({
                 profile: profile,
-            }, "deIsolateUploadFailedViaProfile")
+            }, "deIsolateByProfile")
             setApiResult(<ExecResponsePanel response={_res} />);
             const el = document.getElementById(anchorId);
             if (el) setPopoverAnchor(el as HTMLButtonElement);
