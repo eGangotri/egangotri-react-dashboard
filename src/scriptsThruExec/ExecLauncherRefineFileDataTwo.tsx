@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import ExecComponent from './ExecComponent';
 import Box from '@mui/material/Box';
 import { ExecType } from './ExecLauncherUtil';
-import { Radio, RadioGroup, FormControlLabel, TextField, Checkbox, Typography } from '@mui/material';
+import { Radio, RadioGroup, FormControlLabel, TextField, Checkbox, Typography, Switch } from '@mui/material';
 import { ChangeEvent } from 'react';
 import { ExecComponentFormData } from './types';
 import { useForm } from 'react-hook-form';
@@ -14,6 +14,7 @@ const ExecLauncherRefineFileDataTwo: React.FC = () => {
     const [findBySizeType, setFindBySizeType] = useState(ExecType.DUPLICATES_BY_FILE_SIZE);
     const [duplicatesBySizeType, setDuplicatesBySizeType] = useState("1"); // or "2"
     const [moveItems, setMoveItems] = useState(false);
+    const [findByName, setFindByName] = useState(false);
     const { register } = useForm<ExecComponentFormData>();
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -26,14 +27,20 @@ const ExecLauncherRefineFileDataTwo: React.FC = () => {
         const _val = event.target.value;
         setDuplicatesBySizeType(_val);
         console.log("bySizeType: ", _val);
-        setFindBySizeType(Number(`${ExecType.DUPLICATES_BY_FILE_SIZE_SUFFIX}${_val}${moveItems ? 1 : 0}`));
+        setFindBySizeType(Number(`${ExecType.DUPLICATES_BY_FILE_SIZE_SUFFIX}${_val}${moveItems ? 1 : 0}${findByName ? 1 : ''}`));
     };
 
     const handleMoveItemsChange = (event: ChangeEvent<HTMLInputElement>) => {
         const _checked = event.target.checked;
         console.log("moveItems: ", _checked);
         setMoveItems(_checked);
-        setFindBySizeType(Number(`${ExecType.DUPLICATES_BY_FILE_SIZE_SUFFIX}${duplicatesBySizeType}${_checked ? 1 : 0}`));
+        setFindBySizeType(Number(`${ExecType.DUPLICATES_BY_FILE_SIZE_SUFFIX}${duplicatesBySizeType}${_checked ? 1 : 0}${findByName ? 1 : ''}`));
+    };
+
+    const handleFindByNameChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const _checked = event.target.checked;
+        setFindByName(_checked);
+        setFindBySizeType(Number(`${ExecType.DUPLICATES_BY_FILE_SIZE_SUFFIX}${duplicatesBySizeType}${moveItems ? 1 : 0}${_checked ? 1 : ''}`));
     };
 
     const getLabelForFileBySizeType = () => {
@@ -55,13 +62,17 @@ const ExecLauncherRefineFileDataTwo: React.FC = () => {
             </Box>
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
                 <ExecComponent
-                    buttonText={`Find ${getLabelForFileBySizeType()} by File Size`}
+                    buttonText={`Find ${getLabelForFileBySizeType()} by ${findByName ? 'File Name' : 'File Size'}`}
                     placeholder='Folder Abs Path'
                     secondTextBoxPlaceHolder='Folder Abs Path'
                     execType={findBySizeType}
                     css={{ width: "550px" }}
                     css2={{ width: "550px" }}
                     reactComponent={<>
+                        <Box display="flex" alignItems="center" gap={1}>
+                            <Switch checked={findByName} onChange={handleFindByNameChange} />
+                            <Typography>By File Name</Typography>
+                        </Box>
                         <Box display="flex" alignItems="center" gap={1}>
                             <Checkbox checked={moveItems} onChange={(e) => handleMoveItemsChange(e)} />
                             <Typography>Move {getLabelForFileBySizeType()} in Src</Typography>

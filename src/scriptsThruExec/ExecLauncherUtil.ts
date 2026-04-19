@@ -50,6 +50,11 @@ export enum ExecType {
   DUPLICATES_BY_FILE_SIZE_MOVE_ITEMS = 3511,
   DISJOINT_SET_BY_FILE_SIZE_MOVE_ITEMS = 3521,
 
+  DUPLICATES_BY_FILE_NAME = 35101,
+  DISJOINT_SET_BY_FILE_NAME = 35201,
+  DUPLICATES_BY_FILE_NAME_MOVE_ITEMS = 35111,
+  DISJOINT_SET_BY_FILE_NAME_MOVE_ITEMS = 35211,
+
   RENAME_NON_ASCII_FILE_NAMES_IN_FOLDER = 36,
   JPG_TO_PDF = 37,
   PNG_TO_PDF = 38,
@@ -627,43 +632,28 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         break;
 
       case ExecType.DUPLICATES_BY_FILE_SIZE:
-        _resp = await makePostCallWithErrorHandling({
-          folder1: dataUserInput,
-          folder2: dataUserInput2Mandatory,
-          findDisjoint: false,
-          moveItems: false
-        },
-          `fileUtil/findByFileSize`);
-        break;
-
       case ExecType.DUPLICATES_BY_FILE_SIZE_MOVE_ITEMS:
-        _resp = await makePostCallWithErrorHandling({
-          folder1: dataUserInput,
-          folder2: dataUserInput2Mandatory,
-          findDisjoint: false,
-          moveItems: true
-        },
-          `fileUtil/findByFileSize`);
-        break;
-
       case ExecType.DISJOINT_SET_BY_FILE_SIZE:
-        _resp = await makePostCallWithErrorHandling({
-          folder1: dataUserInput,
-          folder2: dataUserInput2Mandatory,
-          findDisjoint: true,
-          moveItems: false
-        },
-          `fileUtil/findByFileSize`);
-        break;
-
       case ExecType.DISJOINT_SET_BY_FILE_SIZE_MOVE_ITEMS:
-        _resp = await makePostCallWithErrorHandling({
-          folder1: dataUserInput,
-          folder2: dataUserInput2Mandatory,
-          findDisjoint: true,
-          moveItems: true
-        },
-          `fileUtil/findByFileSize`);
+      case ExecType.DUPLICATES_BY_FILE_NAME:
+      case ExecType.DUPLICATES_BY_FILE_NAME_MOVE_ITEMS:
+      case ExecType.DISJOINT_SET_BY_FILE_NAME:
+      case ExecType.DISJOINT_SET_BY_FILE_NAME_MOVE_ITEMS:
+        {
+          const isDisjoint = [ExecType.DISJOINT_SET_BY_FILE_SIZE, ExecType.DISJOINT_SET_BY_FILE_SIZE_MOVE_ITEMS, ExecType.DISJOINT_SET_BY_FILE_NAME, ExecType.DISJOINT_SET_BY_FILE_NAME_MOVE_ITEMS].includes(execType);
+          const isMoveItems = [ExecType.DUPLICATES_BY_FILE_SIZE_MOVE_ITEMS, ExecType.DISJOINT_SET_BY_FILE_SIZE_MOVE_ITEMS, ExecType.DUPLICATES_BY_FILE_NAME_MOVE_ITEMS, ExecType.DISJOINT_SET_BY_FILE_NAME_MOVE_ITEMS].includes(execType);
+          const isByFileName = [ExecType.DUPLICATES_BY_FILE_NAME, ExecType.DUPLICATES_BY_FILE_NAME_MOVE_ITEMS, ExecType.DISJOINT_SET_BY_FILE_NAME, ExecType.DISJOINT_SET_BY_FILE_NAME_MOVE_ITEMS].includes(execType);
+
+          _resp = await makePostCallWithErrorHandling({
+            folder1: dataUserInput,
+            folder2: dataUserInput2Mandatory,
+            findDisjoint: isDisjoint,
+            moveItems: isMoveItems,
+            byFileName: isByFileName
+
+          },
+            isByFileName ? `fileUtil/findByFileName` : `fileUtil/findByFileSize`);
+        }
         break;
 
       case ExecType.RENAME_NON_ASCII_FILE_NAMES_IN_FOLDER:

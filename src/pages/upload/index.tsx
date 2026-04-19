@@ -2,7 +2,8 @@ import type React from "react"
 import { useEffect, useState, useCallback } from "react"
 import { DataGrid, type GridColDef, GridToolbar } from "@mui/x-data-grid"
 import { useGridApiRef } from "@mui/x-data-grid"
-import { Button, Box, Typography, TextField, Grid, Alert } from "@mui/material"
+import { Button, Box, Typography, TextField, Grid, Alert, IconButton, Tooltip } from "@mui/material"
+import { MdContentCopy } from "react-icons/md"
 import { DatePicker } from "@mui/x-date-pickers/DatePicker"
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider"
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns"
@@ -66,7 +67,29 @@ const columns: GridColDef[] = [
     width: 300,
     renderCell: (params) => <ItemToolTip input={params.value} url={false} />,
   },
-  { field: "title", headerName: "Title", width: 300 },
+  {
+    field: "title",
+    headerName: "Title",
+    width: 300,
+    renderCell: (params) => (
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', overflow: 'hidden' }}>
+        <Typography noWrap sx={{ overflow: 'hidden', textOverflow: 'ellipsis', flexGrow: 1, pr: 1 }}>
+          {params.value}
+        </Typography>
+        <Tooltip title="Copy Title">
+          <IconButton
+            size="small"
+            onClick={(e) => {
+              e.stopPropagation()
+              navigator.clipboard.writeText(params.value)
+            }}
+          >
+            <MdContentCopy size={16} />
+          </IconButton>
+        </Tooltip>
+      </Box>
+    )
+  },
   { field: "csvName", headerName: "CSV Name", width: 100 },
   { field: "uploadFlag", headerName: "Upload Flag", width: 100, type: "boolean" },
   { field: "datetimeUploadStarted", headerName: "Upload Started", width: 200 },
