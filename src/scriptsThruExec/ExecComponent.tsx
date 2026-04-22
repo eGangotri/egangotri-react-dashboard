@@ -43,7 +43,8 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
   validationMessage,
   confirmDialogMsg = "Do you want to proceed?",
   externalLoading = false,
-  onLoadingChange
+  onLoadingChange,
+  additionalPayload
 }) => {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
 
@@ -102,7 +103,8 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
       const currentTarget = event.currentTarget
       setOpenDialog(false);
       setIsLoading(true);
-      const _resp = await invokeFuncBasedOnExecType(execType, formData);
+      const payloadToPass = additionalPayload ? { ...formData, ...additionalPayload } : formData;
+      const _resp = await invokeFuncBasedOnExecType(execType, payloadToPass);
       console.log(`_resp ${JSON.stringify(_resp)}`);
       setIsLoading(false);
       setBackendResp(_resp);

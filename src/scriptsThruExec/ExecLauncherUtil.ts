@@ -441,7 +441,8 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
           "googleDriveLink": dataUserInput,
           "folderName": data.userInputSecond || "D:\\",
           "reduced": false,
-          "allNotJustPdfs": false
+          "allNotJustPdfs": false,
+          "includePdfPageCount": data.includePdfPageCount || false
         }, `gDrive/getGoogleDriveListingAsExcel`);
         break;
 
@@ -453,6 +454,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
           "ignoreFolder": "",
           "allNotJustPdfs": true,
           "manuVersion": true,
+          "includePdfPageCount": data.includePdfPageCount || false
         }, `gDrive/getGoogleDriveListingAsExcel`);
         break;
 
@@ -463,6 +465,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
           "reduced": false,
           "allNotJustPdfs": false,
           "minimalVersion": true,
+          "includePdfPageCount": data.includePdfPageCount || false
         }, `gDrive/getGoogleDriveListingAsExcel`);
         break;
 
@@ -474,6 +477,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
           "allNotJustPdfs": true,
           "minimalVersion": false,
           "manuVersion": false,
+          "includePdfPageCount": data.includePdfPageCount || false
         }, `gDrive/getGoogleDriveListingAsExcel`);
         break;
 
@@ -483,7 +487,8 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
           "googleDriveLink": dataUserInput,
           "folderName": data.userInputSecond || "D:\\",
           "reduced": true,
-          "allNotJustPdfs": false
+          "allNotJustPdfs": false,
+          "includePdfPageCount": data.includePdfPageCount || false
         }, `gDrive/getGoogleDriveListingAsExcel`);
         break;
 
@@ -493,7 +498,8 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
           "folderName": data.userInputSecond || "D:\\",
           "reduced": false,
           "pdfRenamerXlV2": true,
-          "allNotJustPdfs": false
+          "allNotJustPdfs": false,
+          "includePdfPageCount": data.includePdfPageCount || false
         }, `gDrive/getGoogleDriveListingAsExcel`);
         break;
 

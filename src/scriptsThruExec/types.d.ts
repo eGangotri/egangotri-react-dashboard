@@ -5,6 +5,7 @@ export type ExecComponentFormData = {
     userInput: string;
     userInputSecond?: string;
     userInputThird?: string;
+    includePdfPageCount?: boolean;
 };
 
 export type ExecComponentProps = {
@@ -41,6 +42,7 @@ export type ExecComponentProps = {
     confirmDialogMsg?: string;
     externalLoading?: boolean;
     onLoadingChange?: (loading: boolean) => void;
+    additionalPayload?: Record<string, any>;
 };
 
 export type ExecResponse = {

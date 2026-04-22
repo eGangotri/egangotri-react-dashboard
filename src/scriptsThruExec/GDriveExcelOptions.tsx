@@ -1,14 +1,21 @@
 import React, { ChangeEvent } from 'react';
-import { Box, FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material';
+import { Box, FormControlLabel, Radio, RadioGroup, Typography, Checkbox } from '@mui/material';
 import { ExecType } from './ExecLauncherUtil';
 
 interface GDriveExcelOptionsProps {
     value: number;
     onChange: (event: ChangeEvent<HTMLInputElement>) => void;
+    includePdfPageCount: boolean;
+    onIncludePdfPageCountChange: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 
-const GDriveExcelOptions: React.FC<GDriveExcelOptionsProps> = ({ value, onChange }) => {
+const GDriveExcelOptions: React.FC<GDriveExcelOptionsProps> = ({ value, onChange, includePdfPageCount, onIncludePdfPageCountChange }) => {
     return (
+        <Box display="flex" flexDirection="column">
+            <FormControlLabel
+                control={<Checkbox checked={includePdfPageCount} onChange={onIncludePdfPageCountChange} />}
+                label="Include PDF Page Count"
+            />
         <RadioGroup aria-label="excelGDrive" name="excelGDrive" value={value} onChange={onChange} row>
             <Box display="flex" flexDirection="column">
                 <Typography>PDF-Only</Typography>
@@ -23,6 +30,7 @@ const GDriveExcelOptions: React.FC<GDriveExcelOptionsProps> = ({ value, onChange
                 <FormControlLabel value={ExecType.GenExcelOfGoogleDriveLinkForReduced} control={<Radio />} label="REDUCED" />
             </Box>
         </RadioGroup>
+        </Box>
     );
 };
 

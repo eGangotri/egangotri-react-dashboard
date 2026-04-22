@@ -5,6 +5,7 @@ import GDriveExcelOptions from './GDriveExcelOptions';
 
 const GDriveCatalogerExcelComponent: React.FC = () => {
     const [excelGDrive, setExcelGDrive] = useState<number>(ExecType.GenExcelOfGoogleDriveLinkPdfOnlyMinimalVersion);
+    const [includePdfPageCount, setIncludePdfPageCount] = useState<boolean>(false);
     const [validationCss, setValidationCss] = useState({
         backgroundColor: "lightgreen",
         width: "450px"
@@ -53,11 +54,19 @@ const GDriveCatalogerExcelComponent: React.FC = () => {
             placeholder='Enter Google Drive Link(s)/Identifiers as csv'
             secondTextBoxPlaceHolder='Enter Folder Name (not path)'
             execType={excelGDrive}
+            additionalPayload={{ includePdfPageCount }}
             css={{ minWidth: "23vw", width: "450px" }}
             css2={validationCss}
             onInputChange={handleInputChange}
             userInputTwoInfoNonMandatory="Only Folder Name not Path. Either one Folder-Name or CSV of Folder-Names"
-            reactComponent={<GDriveExcelOptions value={excelGDrive} onChange={chooseGDriveExcelType} />}
+            reactComponent={
+                <GDriveExcelOptions 
+                    value={excelGDrive} 
+                    onChange={chooseGDriveExcelType} 
+                    includePdfPageCount={includePdfPageCount}
+                    onIncludePdfPageCountChange={(e) => setIncludePdfPageCount(e.target.checked)}
+                />
+            }
         />
     );
 };
