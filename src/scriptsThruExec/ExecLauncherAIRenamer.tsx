@@ -12,10 +12,11 @@ import { makePostCallWithErrorHandling } from 'service/BackendFetchService';
 import ExecPopover from './ExecPopover';
 import ExecResponsePanel from './ExecResponsePanel';
 import { AI_RENAMER_ABS_PATH_LOCAL_STORAGE_KEY, AI_RENAMER_REDUCED_PATH_LOCAL_STORAGE_KEY, AI_RENAMER_RENAMER_PATH_LOCAL_STORAGE_KEY } from 'service/consts';
+import ManageHistoryIcon from '@mui/icons-material/ManageHistory';
 import HistoryIcon from '@mui/icons-material/History';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import StopIcon from '@mui/icons-material/Stop';
-import { AI_TITLE_RENAMER_HISTORY_PATH, PDF_PAGE_EXTRACTION_HISTORY_PATH } from 'Routes/constants';
+import { AI_TITLE_PDF_RENAMER_HISTORY_PATH, AI_TITLE_RENAMER_HISTORY_PATH, PDF_PAGE_EXTRACTION_HISTORY_PATH } from 'Routes/constants';
 import { replaceQuotes } from 'mirror/utils';
 import { csvize } from './Utils';
 
@@ -251,7 +252,7 @@ const LauncherAIRenamer: React.FC = () => {
                             <Button
                                 variant="contained"
                                 color="secondary"
-                                onClick={() => navigate(`${PDF_PAGE_EXTRACTION_HISTORY_PATH}`)}
+                                onClick={() => window.open(`${PDF_PAGE_EXTRACTION_HISTORY_PATH}`, '_blank')}
                                 sx={{ marginRight: "10px", marginBottom: "10px" }}
                                 startIcon={<HistoryIcon />}
                             >
@@ -339,11 +340,22 @@ const LauncherAIRenamer: React.FC = () => {
                                 </Tooltip>
                             </Box>
                             <Box>
+                                <Tooltip title="Go to AI Title and Pdf Renamer History">
+                                    <Button
+                                        variant="contained"
+                                        color="secondary"
+                                        onClick={() => window.open(`${AI_TITLE_PDF_RENAMER_HISTORY_PATH}`, '_blank')}
+                                        sx={{ marginRight: "10px", marginBottom: "10px" }}
+                                        startIcon={<ManageHistoryIcon />}
+                                    >
+                                        History
+                                    </Button>
+                                </Tooltip>
                                 <Tooltip title="Go to AI Title Renamer History">
                                     <Button
                                         variant="contained"
                                         color="secondary"
-                                        onClick={() => navigate(`${AI_TITLE_RENAMER_HISTORY_PATH}`)}
+                                        onClick={() => window.open(`${AI_TITLE_RENAMER_HISTORY_PATH}`, '_blank')}
                                         sx={{ marginRight: "10px", marginBottom: "10px" }}
                                         startIcon={<HistoryIcon />}
                                     >

@@ -387,7 +387,7 @@ const AITitleRenamerHistory: React.FC = () => {
             <IconButton
               onClick={() => {
                 handleCopyText(params.value);
-                navigate(`${FILE_TRANSFER_LISTING}?src=${encodeURIComponent(params.value)}`);
+                window.open(`${FILE_TRANSFER_LISTING}?src=${encodeURIComponent(params.value)}`, '_blank');
               }}
               color="primary"
             >
@@ -675,7 +675,7 @@ const AITitleRenamerHistory: React.FC = () => {
     <div className="h-[1200px] w-full">
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
         <Typography variant="h5" component="h2">
-          AI PDF Title Renamer History
+          AI Title Renamer History
         </Typography>
       </Box>
 

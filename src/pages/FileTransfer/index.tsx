@@ -391,7 +391,7 @@ export default function FileTransferList() {
                                         icon={<MdCloudUpload />}
                                         label={`Use Profiles: ${profilePath.length > 30 ? profilePath.substring(0, 30) + '...' : profilePath}`}
                                         onClick={() => {
-                                            navigate(`/?profilesCsv=${encodeURIComponent(profilePath)}`);
+                                            window.open(`/?profilesCsv=${encodeURIComponent(profilePath)}`, '_blank');
                                         }}
                                         color="primary"
                                         variant="outlined"

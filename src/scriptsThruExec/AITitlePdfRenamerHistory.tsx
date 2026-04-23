@@ -8,10 +8,11 @@ import { makeGetCall, makePostCall } from 'service/ApiInterceptor';
 import { buildDeterministicColorMap, colorForKey } from '../utils/color';
 import { ellipsis } from 'widgets/ItemTooltip';
 import { useNavigate } from 'react-router-dom';
-import { FILE_TRANSFER_LISTING } from 'Routes/constants';
+import { AI_TITLE_RENAMER_HISTORY_PATH, FILE_TRANSFER_LISTING } from 'Routes/constants';
 import { getDisposeActionColumn } from "utils/reactConstants";
 import { DISPOSED_ROW_SX } from "utils/constants";
 import { makePostCallWithErrorHandling } from 'service/BackendFetchService';
+import HistoryIcon from '@mui/icons-material/History';
 
 // Backend can send either Mongo-style wrappers or plain strings
 type Oid = { $oid: string } | string;
@@ -203,7 +204,7 @@ const AITitlePdfRenamerHistory: React.FC = () => {
             <IconButton
               onClick={() => {
                 copy(p.value);
-                navigate(`${FILE_TRANSFER_LISTING}?src=${encodeURIComponent(p.value)}`);
+                window.open(`${FILE_TRANSFER_LISTING}?src=${encodeURIComponent(p.value)}`, '_blank');
               }}
               size="small"
               color="primary"
@@ -397,7 +398,22 @@ const AITitlePdfRenamerHistory: React.FC = () => {
   return (
     <div className="w-full">
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-        <Typography variant="h5">AI Title PDF Renamer History</Typography>
+        <Box display="flex" gap={2} flexDirection="row">
+          <Typography variant="h5">AI Title PDF Renamer History</Typography>
+          <Box display="flex" gap={2} alignItems="center">
+            <Tooltip title="Go to AI Title and Renamer History">
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={() => window.open(`${AI_TITLE_RENAMER_HISTORY_PATH}`, '_blank')}
+                sx={{ marginRight: "10px", marginBottom: "10px" }}
+                startIcon={<HistoryIcon />}
+              >
+                History
+              </Button>
+            </Tooltip>
+          </Box>
+        </Box>
         <Box display="flex" gap={2} alignItems="center">
           <Button
             variant="contained"
