@@ -343,23 +343,23 @@ const LauncherAIRenamer: React.FC = () => {
                                 <Tooltip title="Go to AI Title and Pdf Renamer History">
                                     <Button
                                         variant="contained"
-                                        color="secondary"
+                                        color="success"
                                         onClick={() => window.open(`${AI_TITLE_PDF_RENAMER_HISTORY_PATH}`, '_blank')}
                                         sx={{ marginRight: "10px", marginBottom: "10px" }}
                                         startIcon={<ManageHistoryIcon />}
                                     >
-                                        History
+                                        History Title&Pdf
                                     </Button>
                                 </Tooltip>
                                 <Tooltip title="Go to AI Title Renamer History">
                                     <Button
                                         variant="contained"
-                                        color="secondary"
+                                        color="success"
                                         onClick={() => window.open(`${AI_TITLE_RENAMER_HISTORY_PATH}`, '_blank')}
-                                        sx={{ marginRight: "10px", marginBottom: "10px" }}
-                                        startIcon={<HistoryIcon />}
+                                        sx={{ marginRight: "10px", marginBottom: "10px"  }}
+                                        startIcon={<HistoryIcon  />}
                                     >
-                                        History
+                                        History Title
                                     </Button>
                                 </Tooltip>
                                 <Tooltip title="Run AI Renamer with Local Prompt">
