@@ -2,13 +2,29 @@ import React from 'react';
 import './index.css';
 import './assets/css/index.css';
 import Dashboard from './pages/Dashboard';
-import reportWebVitals from './reportWebVitals';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import './assets/main.css';
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import { initializeMemoryCache } from './service/BackendFetchService';
 
 const root = createRoot(document.getElementById('root') as Element);
+
+const initCache = async () => {
+  try {
+    const data = {
+      app_start_time: new Date().toLocaleString(),
+      environment: import.meta.env.VITE_DEV_ENV || 'dev',
+    };
+    const result = await initializeMemoryCache(data);
+    console.log('Backend Memory Cache Initialized:', result);
+  } catch (err) {
+    console.error('Failed to initialize backend memory cache:', err);
+  }
+};
+
+initCache();
+
 /**
  * in Google Cloud Console. enable 
  * Identity Toolkit API	
