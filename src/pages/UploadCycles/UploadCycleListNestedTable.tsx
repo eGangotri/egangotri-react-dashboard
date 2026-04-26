@@ -12,6 +12,7 @@ import type { ArchiveProfileAndCount, UploadCycleArchiveProfile, UploadCycleTabl
 import { UPLOADS_USHERED_PATH } from "Routes/constants"
 import path from 'path';
 import React from "react";
+import { getCachedValue } from "../../service/BackendFetchService";
 import { ResultDisplayPopover } from "../../widgets/ResultDisplayPopover";
 
 
@@ -37,9 +38,11 @@ export const NestedTable: React.FC<{ data: UploadCycleTableData }> = ({ data }) 
                         index: number) => (
                         <TableRow key={index}>
                             <TableCell>
-                                <Link href={`${UPLOADS_USHERED_PATH}?uploadCycleId=${data.uploadCycleId}&archiveProfile=${archiveProfileAndCount.archiveProfile}`}>
-                                    {archiveProfileAndCount.archiveProfile}
-                                </Link>
+                                <Tooltip title={getCachedValue(archiveProfileAndCount.archiveProfile||"") || "No cached info"}>
+                                    <Link href={`${UPLOADS_USHERED_PATH}?uploadCycleId=${data.uploadCycleId}&archiveProfile=${archiveProfileAndCount.archiveProfile}`}>
+                                        {archiveProfileAndCount.archiveProfile}
+                                    </Link>
+                                </Tooltip>
                                 <Tooltip title="Fetch All Titles">
                                     <IconButton
                                         onClick={(e) => handleTitleClick(e, archiveProfileAndCount?.absolutePaths || [])}

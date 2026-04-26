@@ -13,6 +13,25 @@ const USHERED_API_PREFIX = "itemsushered";
 export const chooseApiPrefix = (forQueues = false) => {
   return forQueues ? QUEUE_API_PREFIX : USHERED_API_PREFIX;
 };
+
+let frontendCache: Record<string, any> = {};
+
+export const initializeMemoryCache = async (data: Record<string, any>) => {
+  const result = await makeGetCall("folderUtil/getAllArchiveProfiles");
+  if (result && result.response) {
+    frontendCache = result.response;
+  }
+  return result;
+};
+
+export const getCachedValue = (key: string) => {
+  return frontendCache[key];
+};
+
+export const getAllCachedData = () => {
+  return frontendCache;
+};
+
 export const originalMakePostCall = async (body: Record<string, unknown>, resource: string) => {
   const requestOptions: RequestInit = {
     method: "POST",
