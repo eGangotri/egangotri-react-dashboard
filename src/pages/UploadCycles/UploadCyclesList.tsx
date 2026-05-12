@@ -4,7 +4,7 @@ import type React from "react"
 import { useEffect, useState, useCallback, useMemo } from "react"
 import { useSearchParams } from "react-router-dom"
 import { DataGrid, type GridColDef, type GridRenderCellParams, type GridRowId } from "@mui/x-data-grid"
-import { FaTrash, FaTimes, FaChrome, FaSync, FaStop, FaSearch, FaPlay, FaUndo, FaCloudUploadAlt } from 'react-icons/fa';
+import { FaTrash, FaTimes, FaChrome, FaSync, FaStop, FaSearch, FaPlay, FaUndo, FaCloudUploadAlt, FaCheckCircle } from 'react-icons/fa';
 import { Typography, Box, Link, TextField, Select, MenuItem, FormControl, InputLabel, Button, SelectChangeEvent, Stack, IconButton, Tooltip } from "@mui/material"
 import { MdVerified, MdFindInPage, MdCloudUpload, MdFilterList, MdFilterListOff, MdAcUnit } from "react-icons/md"
 import type { UploadCycleTableData, UploadCycleTableDataDictionary } from "mirror/types"
@@ -76,6 +76,7 @@ const UploadCyclesList: React.FC = () => {
             }
         }
     }
+
     const inspectChromeTabs = async (e: React.MouseEvent<HTMLButtonElement>) => {
         if (window.confirm('Are you sure you want to resume uploads?')) {
             try {
@@ -89,6 +90,25 @@ const UploadCyclesList: React.FC = () => {
                 setPopoverTitle("Resume Uploads Error");
                 setApiResult(<ExecResponsePanel response={{ error: error?.message || String(error) }} />);
                 setPopoverAnchor(e.currentTarget);
+            } finally {
+                setIsLoading(false);
+            }
+        }
+    }
+
+    const invokeCloseSuccessfullyUploaded = async () => {
+        if (window.confirm('Are you sure you want to close all Chrome instances with successfully uploaded tabs?')) {
+              try {
+                setIsLoading(true);
+                const resp = await makeGetCall('/chrome/closeSuccessfullyUploaded')
+                setPopoverTitle("Close Successfully Uploaded Result");
+                setApiResult(<ExecResponsePanel response={resp} />);
+                setPopoverAnchor(null);
+            } catch (error: any) {
+                console.error('Error closing successfully uploaded tabs:', error);
+                setPopoverTitle("Close Successfully Uploaded Error");
+                setApiResult(<ExecResponsePanel response={{ error: error?.message || String(error) }} />);
+                setPopoverAnchor(null);
             } finally {
                 setIsLoading(false);
             }
@@ -600,11 +620,17 @@ const UploadCyclesList: React.FC = () => {
                                     <FaTimes style={{ position: 'absolute', fontSize: '0.7em', color: 'red', bottom: 4, right: 4 }} />
                                 </IconButton>
                             </Tooltip>
+                             <Tooltip title="Close Uploaded">
+                                <IconButton color="primary" onClick={invokeCloseSuccessfullyUploaded}>
+                                    <FaCheckCircle />
+                                </IconButton>
+                            </Tooltip>
                             <Tooltip title="Resume Uploads">
                                 <IconButton color="primary" onClick={inspectChromeTabs}>
                                     <FaPlay />
                                 </IconButton>
                             </Tooltip>
+                           
                             <Tooltip title="Update Chrome Driver">
                                 <IconButton color="primary" onClick={updateChromeDriver}>
                                     <FaSync />
