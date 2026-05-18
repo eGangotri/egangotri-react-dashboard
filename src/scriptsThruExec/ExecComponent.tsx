@@ -11,6 +11,11 @@ import ExecResponsePanel from './ExecResponsePanel';
 import { ExecComponentFormData, ExecComponentProps } from './types';
 import InfoIconWithTooltip from 'widgets/InfoIconWithTooltip';
 import ExecPopover from './ExecPopover';
+import { Dayjs } from 'dayjs';
+import { DateRange } from '@mui/x-date-pickers-pro';
+import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
 const ExecComponent: React.FC<ExecComponentProps> = ({
   placeholder = 'Comma Separated Profile Codes',
@@ -19,6 +24,7 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
   secondTextBoxPlaceHolder = "",
   thirdTextBoxPlaceHolder = "",
   thirdTextBoxDefaultValue = "",
+  thirdInputType = "text",
   reactComponent = <></>,
   thirdButton = <></>,
   css = {},
@@ -68,6 +74,7 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
   const [execLogsForPopover, setExecLogsForPopover] = React.useState(<></>);
 
   const [backendResp, setBackendResp] = React.useState({});
+  const [thirdDateRange, setThirdDateRange] = React.useState<DateRange<Dayjs>>([null, null]);
 
   // const formatResponse = (resp: any): string => {
   //   const date = new Date().toLocaleString();
@@ -151,6 +158,13 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
     }
   };
 
+  const handleThirdDateRangeChange = (newValue: DateRange<Dayjs>) => {
+    setThirdDateRange(newValue);
+    const [startDate, endDate] = newValue;
+    const formattedValue = startDate && endDate ? `${startDate.format('YYYY/MM/DD')}-${endDate.format('YYYY/MM/DD')}` : "";
+    setValue('userInputThird', formattedValue);
+  };
+
   return (
     <Stack spacing={2} sx={{ width: '100%' }}>
       <Box display="flex" alignItems="center" gap={4} mb={2}>
@@ -215,13 +229,34 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
           {thirdTextBoxPlaceHolder?.length > 0 ?
             <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start' }}>
 
-              <TextField variant="outlined"
-                placeholder={thirdTextBoxPlaceHolder}
-                {...register('userInputThird')}
-                error={Boolean(errors.userInputThird)}
-                defaultValue={thirdTextBoxDefaultValue || ""}
-                sx={{ marginTop: "30px", width: "250px", ...css3 }}
-                helperText={errors.userInputThird?.message} />
+              {thirdInputType === "dateRange" ?
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <>
+                    <input type="hidden" {...register('userInputThird')} />
+                    <DateRangePicker
+                      value={thirdDateRange}
+                      onChange={handleThirdDateRangeChange}
+                      format="YYYY/MM/DD"
+                      slotProps={{
+                        textField: {
+                          placeholder: thirdTextBoxPlaceHolder,
+                          sx: {paddingTop: "30px", marginTop: "30px", width: "250px", ...css3 },
+                          error: Boolean(errors.userInputThird),
+                          helperText: errors.userInputThird?.message,
+                        },
+                      }}
+                    />
+                  </>
+                </LocalizationProvider>
+                :
+                <TextField variant="outlined"
+                  placeholder={thirdTextBoxPlaceHolder}
+                  {...register('userInputThird')}
+                  error={Boolean(errors.userInputThird)}
+                  defaultValue={thirdTextBoxDefaultValue || ""}
+                  sx={{ marginTop: "30px", width: "250px", ...css3 }}
+                  helperText={errors.userInputThird?.message} />
+              }
               {userInputThreeInfo && <InfoIconWithTooltip input={userInputThreeInfo} />}
             </Box>
             : null

@@ -133,6 +133,7 @@ const ExecLauncherTwoB: React.FC = () => {
                     secondTextBoxPlaceHolder='Number of Items or Range (Optional)'
                     secondComponentRequired={false}
                     thirdTextBoxPlaceHolder='Date Range (Optional)'
+                    thirdInputType="dateRange"
                     validationPattern={/^https:\/\/archive\.org\/details\/@/}
                     validationMessage="First user input must start with https://archive.org/details/@"
                     reactComponent={<Box>
