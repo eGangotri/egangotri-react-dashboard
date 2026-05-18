@@ -16,6 +16,7 @@ export type ExecComponentProps = {
     thirdTextBoxPlaceHolder?: string;
     secondTextBoxDefaultValue?: string;
     thirdTextBoxDefaultValue?: string;
+    thirdInputType?: "text" | "dateRange";
     reactComponent?: JSX.Element;
     css?: SxProps<Theme>;
     css2?: SxProps<Theme>;
