@@ -172,7 +172,12 @@ const LauncherAIGDriveCPRenamerHistory: React.FC = () => {
         },
         {
             field: 'mainGDriveLink', headerName: 'Google Drive Link', width: 250, renderCell: (params) => (
-                <a href={params.value} target="_blank" rel="noreferrer">{params.value || "N/A"}</a>
+                <div className="flex items-center gap-2" style={{ width: '100%' }}>
+                    <IconButton onClick={() => handleCopyText(params.value)} className="ml-2">
+                        <FaCopy />
+                    </IconButton>
+                    <a href={params.value} target="_blank" rel="noreferrer">{params.value || "N/A"}</a>
+                </div>
             )
         },
         {
