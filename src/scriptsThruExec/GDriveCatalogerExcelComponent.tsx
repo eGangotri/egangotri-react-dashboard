@@ -5,7 +5,7 @@ import GDriveExcelOptions from './GDriveExcelOptions';
 
 const GDriveCatalogerExcelComponent: React.FC = () => {
     const [excelGDrive, setExcelGDrive] = useState<number>(ExecType.GenExcelOfGoogleDriveLinkPdfOnlyMinimalVersion);
-    const [includePdfPageCount, setIncludePdfPageCount] = useState<boolean>(false);
+    const [includePdfPageCount, setIncludePdfPageCount] = useState<boolean>(true);
     const [validationCss, setValidationCss] = useState({
         backgroundColor: "lightgreen",
         width: "450px"

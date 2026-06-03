@@ -2,20 +2,36 @@ import React, { useState } from 'react';
 import ExecComponent from './ExecComponent';
 import Box from '@mui/material/Box';
 import { ExecType } from './ExecLauncherUtil';
-import { Radio, RadioGroup, FormControlLabel } from '@mui/material';
+import { Radio, RadioGroup, FormControlLabel, Checkbox } from '@mui/material';
 import { ChangeEvent } from 'react';
 
 const ExecLauncherThree: React.FC = () => {
     const [genListingOfLocalFolder, setGenListingOfLocalFolder] = useState<number>(ExecType.GenListingsofLocalFolderAsPdf);
+    const [makeAdditionalCopy, setMakeAdditionalCopy] = useState<boolean>(false);
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
         const _val = event.target.value;
         console.log("_val", _val)
-        const _listingType = _val === `${ExecType.GenListingsofLocalFolderAsAll}` ? ExecType.GenListingsofLocalFolderAsAll : ExecType.GenListingsofLocalFolderAsPdf
+        const isAll = _val === `${ExecType.GenListingsofLocalFolderAsAll}`;
+        const _listingType = isAll
+            ? (makeAdditionalCopy ? ExecType.GenListingsofLocalFolderAsAllWithMakeAdditionalCopy : ExecType.GenListingsofLocalFolderAsAll)
+            : (makeAdditionalCopy ? ExecType.GenListingsofLocalFolderAsPdfWithMakeAdditionalCopy : ExecType.GenListingsofLocalFolderAsPdf);
         console.log("_listingType", _listingType)
         setGenListingOfLocalFolder(_listingType);
     };
 
+
+    const handleMakeAdditionalCopy = (checked: boolean) => {
+        setMakeAdditionalCopy(checked);
+        console.log("_val", checked)
+        const isAll = genListingOfLocalFolder === ExecType.GenListingsofLocalFolderAsAll ||
+            genListingOfLocalFolder === ExecType.GenListingsofLocalFolderAsAllWithMakeAdditionalCopy;
+        const _listingType = isAll
+            ? (checked ? ExecType.GenListingsofLocalFolderAsAllWithMakeAdditionalCopy : ExecType.GenListingsofLocalFolderAsAll)
+            : (checked ? ExecType.GenListingsofLocalFolderAsPdfWithMakeAdditionalCopy : ExecType.GenListingsofLocalFolderAsPdf);
+        setGenListingOfLocalFolder(_listingType);
+    };
+    
     const [genListingOfLocalFolderYarn, setGenListingOfLocalFolderYarn] = useState<number>(ExecType.GenListingsofLocalFolderAsPdf);
 
     const handleChangeYarn = (event: ChangeEvent<HTMLInputElement>) => {
@@ -72,10 +88,15 @@ const ExecLauncherThree: React.FC = () => {
                     execType={genListingOfLocalFolder}
                     css={{ width: "40vw" }}
                     reactComponent={<>
-                        <RadioGroup aria-label="fileType" name="fileType" value={genListingOfLocalFolder} onChange={handleChange} row>
+                        
+                        <RadioGroup aria-label="fileType" name="fileType" value={makeAdditionalCopy ? genListingOfLocalFolder - 2 : genListingOfLocalFolder} onChange={handleChange} row>
                             <FormControlLabel value={ExecType.GenListingsofLocalFolderAsPdf} control={<Radio />} label="PDF-ONLY" />
                             <FormControlLabel value={ExecType.GenListingsofLocalFolderAsAll} control={<Radio />} label="ALL" />
                         </RadioGroup>
+                        <FormControlLabel
+                            control={<Checkbox checked={makeAdditionalCopy} onChange={(e) => handleMakeAdditionalCopy(e.target.checked)} />}
+                            label="Make Additional Copy in Folder Also"
+                        />
                     </>}
                     userInputOneInfo='works for CSVs'
                 />

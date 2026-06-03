@@ -30,10 +30,11 @@ export async function launchBulkRename(profiles: string) {
     return launchGradle(profiles, 'bulkRename')
 }
 
-export async function launchLocalFolderListingForAll(params: string) {
+export async function launchLocalFolderListingForAll(params: string, withAdditionalCopy: boolean = false) {
     return _launchGradlev2({
         "argFirst": params,
-        "pdfsOnly": "false"
+        "pdfsOnly": "false",
+        "withAdditionalCopy": withAdditionalCopy.toString()
 
     }, 'bookTitles')
 }
@@ -43,10 +44,11 @@ const extractValue = (text: string, pattern: RegExp): string => {
     return match ? match[1] : 'Not found';
 };
 
-export async function launchLocalFolderListingForPdf(params: string) {
+export async function launchLocalFolderListingForPdf(params: string, withAdditionalCopy: boolean = false) {
     const jsonResp = await _launchGradlev2({
         "argFirst": params,
-        "pdfsOnly": "true"
+        "pdfsOnly": "true",
+        "withAdditionalCopy": withAdditionalCopy.toString()
     }, 'bookTitles')
     console.log(`jsonResp ${JSON.stringify(jsonResp)}`);
 

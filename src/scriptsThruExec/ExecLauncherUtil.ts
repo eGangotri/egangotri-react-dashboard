@@ -108,6 +108,8 @@ export enum ExecType {
   GenExcelOfGoogleDriveLinkForRenameFilesExcel = 83,
   GenListingsofLocalFolderAsPdf = 91,
   GenListingsofLocalFolderAsAll = 92,
+  GenListingsofLocalFolderAsPdfWithMakeAdditionalCopy = 93,
+  GenListingsofLocalFolderAsAllWithMakeAdditionalCopy = 94,
 
   GenListingsofLocalFolderAsPdfYarn = 2000,
   GenListingsofLocalFolderAsPdfWithStatsYarn = 2001,
@@ -509,6 +511,14 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
 
       case ExecType.GenListingsofLocalFolderAsAll:
         _resp = await launchLocalFolderListingForAll(dataUserInput);
+        break;
+
+         case ExecType.GenListingsofLocalFolderAsPdfWithMakeAdditionalCopy:
+        _resp = await launchLocalFolderListingForPdf(dataUserInput,true);
+        break;
+
+      case ExecType.GenListingsofLocalFolderAsAllWithMakeAdditionalCopy:
+        _resp = await launchLocalFolderListingForAll(dataUserInput,true);
         break;
 
       case ExecType.GenExcelV3ofAbsPathsFromProfile:
