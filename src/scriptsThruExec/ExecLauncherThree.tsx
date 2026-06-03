@@ -98,7 +98,10 @@ const ExecLauncherThree: React.FC = () => {
                             label="Make Additional Copy in Folder Also"
                         />
                     </>}
-                    userInputOneInfo='works for CSVs'
+                    userInputOneInfo='works for CSVs.<br> will work for <br>
+                    "C:\tmp\_quickUpld , C:\tmp\_quickUpld2"<br>
+                    "C:\tmp\_quickUpld" , "C:\tmp\_quickUpld2"<br>
+                    but doesnt yet handle cumulative, treats each separately'
                 />
             </Box>
 
