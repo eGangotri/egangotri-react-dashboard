@@ -480,6 +480,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
           "allNotJustPdfs": true,
           "minimalVersion": false,
           "manuVersion": false,
+          "ignoreFolder": "proc",
           "includePdfPageCount": data.includePdfPageCount || false
         }, `gDrive/getGoogleDriveListingAsExcel`);
         break;

@@ -64,7 +64,6 @@ const ExecLauncherSix: React.FC = () => {
 
     return (
         <Box display="flex" gap={4} mb={2} flexDirection="row">
-
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
                 <ExecComponent
                     buttonText="Create G-Drive Excel"
