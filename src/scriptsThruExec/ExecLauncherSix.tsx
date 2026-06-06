@@ -11,7 +11,9 @@ const ExecLauncherSix: React.FC = () => {
     const [localListingExcelName, setLocalListingExcelName] = useState('');
     const [gDriveIntegrityCheckExcel, setGDriveIntegrityCheckExcel] = useState('');
 
+    const [compareGDriveAndLocalExcel, setCompareGDriveAndLocalExcel] = useState(ExecType.COMPARE_G_DRIVE_AND_LOCAL_EXCEL);
     const [includeFilePath, setIncludeFilePath] = useState(false);
+    const [checkBySize, setCheckBySize] = useState(false);
     const [fileNameLongerCheck, setFileNameLongerCheck] = useState(ExecType.FILE_NAME_LENGTH);
     const [validationCss, setValidationCss] = React.useState({
         backgroundColor: "lightgreen",
@@ -24,6 +26,11 @@ const ExecLauncherSix: React.FC = () => {
         } else {
             setValidationCss({ backgroundColor: "lightgreen", width: "450px" });
         }
+    };
+
+    const handleCheckBySize = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setCheckBySize(event.target.checked);
+        setCompareGDriveAndLocalExcel(event.target.checked ? ExecType.COMPARE_G_DRIVE_AND_LOCAL_EXCEL_WITH_SIZE_CHECK : ExecType.COMPARE_G_DRIVE_AND_LOCAL_EXCEL);
     };
 
     const handleIncludeFilePath = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -114,13 +121,20 @@ const ExecLauncherSix: React.FC = () => {
                 <ExecComponent
                     buttonText="Compare G-Drive and Local Excel"
                     placeholder='Absolute Path to G-Drive Excel'
-                    secondTextBoxPlaceHolder='Absolute Path to Local Excel'
-                    execType={ExecType.COMPARE_G_DRIVE_AND_LOCAL_EXCEL}
+                    secondTextBoxPlaceHolder='Absolute Path to Local Excel.'
+                    execType={compareGDriveAndLocalExcel}
                     css={{ minWidth: "33vw" }}
                     css2={{ minWidth: "35vw" }}
                     textBoxOneValue={gDriveExcelName}
                     textBoxTwoValue={localListingExcelName}
                     thirdButton={<Button variant="contained" color="primary" onClick={loadFromLocalStorage} sx={{ marginRight: "10px", marginBottom: "10px" }}>Load From Local Storage</Button>}
+                    additionalPayload={{ checkBySize }}
+                    reactComponent={<Box>
+                        <FormControlLabel
+                            control={<Checkbox checked={checkBySize} onChange={handleCheckBySize} />}
+                            label="Check by Size Also"
+                        />
+                    </Box>}
                 />
 
                 <ExecComponent

@@ -160,6 +160,7 @@ export enum ExecType {
   COMPARE_UPLOADS_VIA_EXCEL_V3_WITH_ARCHIVE_ORG = 2110,
 
   COMPARE_G_DRIVE_AND_LOCAL_EXCEL = 212,
+  COMPARE_G_DRIVE_AND_LOCAL_EXCEL_WITH_SIZE_CHECK = 2122,
   UPLOAD_MISSED_TO_GDRIVE = 213,
   BL_EAP_WORK = 214,
 
@@ -513,12 +514,12 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         _resp = await launchLocalFolderListingForAll(dataUserInput);
         break;
 
-         case ExecType.GenListingsofLocalFolderAsPdfWithMakeAdditionalCopy:
-        _resp = await launchLocalFolderListingForPdf(dataUserInput,true);
+      case ExecType.GenListingsofLocalFolderAsPdfWithMakeAdditionalCopy:
+        _resp = await launchLocalFolderListingForPdf(dataUserInput, true);
         break;
 
       case ExecType.GenListingsofLocalFolderAsAllWithMakeAdditionalCopy:
-        _resp = await launchLocalFolderListingForAll(dataUserInput,true);
+        _resp = await launchLocalFolderListingForAll(dataUserInput, true);
         break;
 
       case ExecType.GenExcelV3ofAbsPathsFromProfile:
@@ -820,6 +821,16 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         _resp = await makePostCallForGDriveExcelTrack({
           gDriveExcel: dataUserInput,
           localExcel: dataUserInput2Mandatory,
+          checkBySize: false
+        },
+          `googleDriveDB/compareGDriveAndLocalExcel`);
+        break;
+
+      case ExecType.COMPARE_G_DRIVE_AND_LOCAL_EXCEL_WITH_SIZE_CHECK:
+        _resp = await makePostCallForGDriveExcelTrack({
+          gDriveExcel: dataUserInput,
+          localExcel: dataUserInput2Mandatory,
+          checkBySizeAlso: true,
         },
           `googleDriveDB/compareGDriveAndLocalExcel`);
         break;

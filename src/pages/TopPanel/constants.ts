@@ -130,19 +130,25 @@ export const TOP_PANEL_MENU: TopPanelMenu[] = [{
             label: 'File Transfer List',
         },
         {
-            path: PDF_MERGE_MODULE,
-            label: 'Pdf Merge Module',
-        },
-        {
             path: EXEC_LAUNCHER_FOUR_B_PATH,
             label: 'Excel Renamer',
+        }
+    ]
+},
+{
+    menuLabel: "PDFUtils",
+    submenu: [
+        {
+            path: PDF_MERGE_MODULE,
+            label: 'Pdf Merge Module',
         },
         {
             path: PDF_HEADER_FOOTER_REMOVER,
             label: 'PDF Header-Footer-Remover',
         }
     ]
-}, {
+},
+{
     menuLabel: "AI",
     submenu: [
 
