@@ -3,7 +3,7 @@ import ExecComponent from './ExecComponent';
 import ExecResponsePanel from './ExecResponsePanel';
 import Box from '@mui/material/Box';
 import { ExecType } from './ExecLauncherUtil';
-import { Button, Dialog, DialogTitle, DialogContent, Chip, IconButton, Typography, CircularProgress, TextField, Tooltip } from '@mui/material';
+import { Button, Dialog, DialogTitle, DialogContent, Chip, IconButton, Typography, CircularProgress, TextField, Tooltip, Select, MenuItem } from '@mui/material';
 import { buildDeterministicColorMap, colorForKey } from '../utils/color';
 import { DataGrid, GridColDef, GridFilterModel, GridPaginationModel, GridToolbar } from '@mui/x-data-grid';
 import { makeGetCall, makePostCall } from 'service/ApiInterceptor';
@@ -108,7 +108,7 @@ const AITitleRenamerHistory: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   // State for cleanup folder textfield
-  const [cleanupTOFolder, setCleanupTOFolder] = useState<string>('NAGITHA');
+  const [cleanupTOFolder, setCleanupTOFolder] = useState<string>('ONIT');
 
   // State for row selection
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
@@ -554,7 +554,7 @@ const AITitleRenamerHistory: React.FC = () => {
               if (!ok) return;
               try {
                 setActionLoading((m) => ({ ...m, [runId]: true }));
-                const res = await makePostCall({ profile: cleanupTOFolder }, `ai/cleanupRedRenamerFilers/${runId}`);
+                const res = await makePostCall({ profile: cleanupTOFolder === "Default" ? "" : cleanupTOFolder }, `ai/cleanupRedRenamerFilers/${runId}`);
                 console.log('Trigger response:', JSON.stringify(res));
                 setResultTitle(`Cleanup triggered for runId=${runId}`);
                 setResultBody(res);
@@ -579,14 +579,16 @@ const AITitleRenamerHistory: React.FC = () => {
               'Cleanup'
             )}
           </Button>
-          <TextField
+          <Select
             size="small"
-            variant="outlined"
-            placeholder="Cleanup TO Folder"
             value={cleanupTOFolder}
             onChange={(e) => setCleanupTOFolder(e.target.value)}
             sx={{ ml: 1, minWidth: 200 }}
-          />
+          >
+            <MenuItem value="NAGITHA">NAGITHA</MenuItem>
+            <MenuItem value="ONIT">ONIT</MenuItem>
+            <MenuItem value="Default">Default</MenuItem>
+          </Select>
           <Tooltip title="Use Folder/Profile for sub-folder under Profile use %PROFILE%/subFolder" arrow>
             <IconButton size="small" sx={{ ml: 0.5 }}>
               <InfoOutlinedIcon fontSize="small" />
@@ -728,14 +730,16 @@ const AITitleRenamerHistory: React.FC = () => {
           >
             Cleanup ({selectedRows.length})
           </Button>
-          <TextField
+          <Select
             size="small"
-            variant="outlined"
-            placeholder="Cleanup TO Folder"
             value={cleanupTOFolder}
             onChange={(e) => setCleanupTOFolder(e.target.value)}
-            sx={{ minWidth: 200 }}
-          />
+            sx={{ ml: 1, minWidth: 200 }}
+          >
+            <MenuItem value="NAGITHA">NAGITHA</MenuItem>
+            <MenuItem value="ONIT">ONIT</MenuItem>
+            <MenuItem value="">Default</MenuItem>
+          </Select>
         </Box>
       )}
 
