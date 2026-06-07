@@ -4,6 +4,7 @@ import ExecResponsePanel from './ExecResponsePanel';
 import Box from '@mui/material/Box';
 import { ExecType } from './ExecLauncherUtil';
 import { Button, Dialog, DialogTitle, DialogContent, Chip, IconButton, Typography, CircularProgress, TextField, Tooltip, Select, MenuItem } from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
 import { buildDeterministicColorMap, colorForKey } from '../utils/color';
 import { DataGrid, GridColDef, GridFilterModel, GridPaginationModel, GridToolbar } from '@mui/x-data-grid';
 import { makeGetCall, makePostCall } from 'service/ApiInterceptor';
@@ -12,6 +13,7 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 import UndoIcon from '@mui/icons-material/Undo';
+import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
 import { ellipsis } from 'widgets/ItemTooltip';
 import { makePostCallWithErrorHandling } from 'service/BackendFetchService';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -112,6 +114,35 @@ const AITitleRenamerHistory: React.FC = () => {
 
   // State for row selection
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
+
+  const executeFolderCleanup = async (runId: string) => {
+    const _profile = cleanupTOFolder === "Default" ? "" : cleanupTOFolder
+    console.log(`Executing folder cleanup for runId: ${runId} with profile: ${_profile}`)
+    const res = await makePostCall({ profile: _profile }, `ai/cleanupRedRenamerFilers/${runId}`);
+    console.log(`Response from executeFolderCleanup: ${JSON.stringify(res)}`);
+    return res;
+  }
+
+  const handleCleanupClick = async (runId: string) => {
+    const ok = window.confirm(`Are you sure you want to cleanup Reduced/Renamer folders for runId=${runId}?`);
+    if (!ok) return;
+    try {
+      setActionLoading((m) => ({ ...m, [runId]: true }));
+      const res = await executeFolderCleanup(runId);
+      console.log('Trigger response:', JSON.stringify(res));
+      setResultTitle(`Cleanup triggered for runId=${runId}`);
+      setResultBody(res);
+      setResultOpen(true);
+      setReloadKey(k => k + 1);
+    } catch (e) {
+      console.error(e);
+      setResultTitle('Cleanup error');
+      setResultBody({ error: e instanceof Error ? e.message : 'Unknown error' });
+      setResultOpen(true);
+    } finally {
+      setActionLoading((m) => ({ ...m, [runId]: false }));
+    }
+  }
 
   // API calls
   const fetchGroupedRenameData = async (page: number, pageSize: number): Promise<FetchResponse> => {
@@ -543,58 +574,47 @@ const AITitleRenamerHistory: React.FC = () => {
       filterable: false,
       sortable: false,
       renderCell: (params) => (
-        <>
-          <Button
-            size="small"
-            variant="contained"
-            disabled={!!actionLoading[params.row.runId] || params.row.cleanupButtonClicked}
-            onClick={async () => {
-              const runId = params.row.runId;
-              const ok = window.confirm(`Are you sure you want to cleanup Reduced/Renamer folders for runId=${runId}?`);
-              if (!ok) return;
-              try {
-                setActionLoading((m) => ({ ...m, [runId]: true }));
-                const res = await makePostCall({ profile: cleanupTOFolder === "Default" ? "" : cleanupTOFolder }, `ai/cleanupRedRenamerFilers/${runId}`);
-                console.log('Trigger response:', JSON.stringify(res));
-                setResultTitle(`Cleanup triggered for runId=${runId}`);
-                setResultBody(res);
-                setResultOpen(true);
-                setReloadKey(k => k + 1);
-              } catch (e) {
-                console.error(e);
-                setResultTitle('Cleanup error');
-                setResultBody({ error: e instanceof Error ? e.message : 'Unknown error' });
-                setResultOpen(true);
-              } finally {
-                setActionLoading((m) => ({ ...m, [runId]: false }));
-              }
-            }}
-          >
-            {actionLoading[params.row.runId] ? (
-              <>
-                <CircularProgress size={16} color="inherit" style={{ marginRight: 6 }} />
-                Running...
-              </>
-            ) : (
-              'Cleanup'
-            )}
-          </Button>
-          <Select
+        <Box display="flex" alignItems="center" gap={1}>
+          <Tooltip title="Cleanup" arrow>
+            <Button
+              size="small"
+              variant="contained"
+              disabled={!!actionLoading[params.row.runId] || params.row.cleanupButtonClicked}
+              onClick={() => handleCleanupClick(params.row.runId)}
+            >
+              {actionLoading[params.row.runId] ? (
+                <CircularProgress size={16} color="inherit" />
+              ) : (
+                <CleaningServicesIcon />
+              )}
+            </Button>
+          </Tooltip>
+          <Autocomplete
             size="small"
             value={cleanupTOFolder}
-            onChange={(e) => setCleanupTOFolder(e.target.value)}
-            sx={{ ml: 1, minWidth: 200 }}
-          >
-            <MenuItem value="NAGITHA">NAGITHA</MenuItem>
-            <MenuItem value="ONIT">ONIT</MenuItem>
-            <MenuItem value="Default">Default</MenuItem>
-          </Select>
+            onChange={(event, newValue) => {
+              const value = typeof newValue === 'string' ? newValue : (newValue || "");
+              setCleanupTOFolder(value);
+            }}
+            onInputChange={(event, newInputValue) => {
+              setCleanupTOFolder(newInputValue);
+            }}
+            options={["ONIT", "NAGITHA", "Default"]}
+            freeSolo
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                placeholder="Cleanup To Folder"
+                sx={{ minWidth: 200 }}
+              />
+            )}
+          />
           <Tooltip title="Use Folder/Profile for sub-folder under Profile use %PROFILE%/subFolder" arrow>
-            <IconButton size="small" sx={{ ml: 0.5 }}>
+            <IconButton size="small">
               <InfoOutlinedIcon fontSize="small" />
             </IconButton>
           </Tooltip>
-        </>
+        </Box>
       ),
     },
   ];
@@ -730,16 +750,26 @@ const AITitleRenamerHistory: React.FC = () => {
           >
             Cleanup ({selectedRows.length})
           </Button>
-          <Select
+          <Autocomplete
             size="small"
             value={cleanupTOFolder}
-            onChange={(e) => setCleanupTOFolder(e.target.value)}
-            sx={{ ml: 1, minWidth: 200 }}
-          >
-            <MenuItem value="NAGITHA">NAGITHA</MenuItem>
-            <MenuItem value="ONIT">ONIT</MenuItem>
-            <MenuItem value="">Default</MenuItem>
-          </Select>
+            onChange={(event, newValue) => {
+              const value = typeof newValue === 'string' ? newValue : (newValue || "");
+              setCleanupTOFolder(value);
+            }}
+            onInputChange={(event, newInputValue) => {
+              setCleanupTOFolder(newInputValue);
+            }}
+            options={["ONIT", "NAGITHA", "Default"]}
+            freeSolo
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                placeholder="Cleanup To Folder"
+                sx={{ ml: 1, minWidth: 200 }}
+              />
+            )}
+          />
         </Box>
       )}
 
