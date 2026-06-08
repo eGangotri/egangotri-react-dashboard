@@ -378,7 +378,7 @@ export default function FileTransferList() {
                     css={{ minWidth: "80vw" }}
                     css2={{ minWidth: "80vw" }}
                     userInputOneInfo="Multiple entries as Coma Separated Paths whether absolute or profile name"
-                    userInputTwoInfoNonMandatory="Single Profile Name or Absolute Path"
+                    userInputTwoInfoNonMandatory="Multiple CSV Profile Name(s) or Absolute Path(s)"
                     reactComponent={<>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                             <FormControlLabel
