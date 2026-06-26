@@ -128,6 +128,9 @@ const UploadCyclesList: React.FC = () => {
             console.log(`-resp ${JSON.stringify(_resp, null, 2)}`)
             setApiResult(<ExecResponsePanel response={_resp} />);
             setPopoverAnchor(document.getElementById("bulk-verify-upload-button") as HTMLButtonElement)
+            
+            // Refresh the data to show updated verification status
+            await fetchUploadCycles();
         } catch (error) {
             console.error('Error verifying upload:', error);
             alert("Error verifying upload.")
