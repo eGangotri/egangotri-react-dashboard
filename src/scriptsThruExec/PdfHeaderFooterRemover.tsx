@@ -185,6 +185,35 @@ export default function PdfHeaderFooterRemover() {
                 </Box>
             ),
         },
+        {
+            field: "reRemove",
+            headerName: "ReRemove",
+            width: 120,
+            sortable: false,
+            filterable: false,
+            renderCell: (params: GridRenderCellParams) => (
+                <Button
+                    variant="outlined"
+                    size="small"
+                    onClick={async () => {
+                        const commonRunId = params.row.commonRunId;
+                        if (!commonRunId) return;
+                        setLoading(true);
+                        try {
+                            const result = await makePostCall({}, `fileUtil/resumeRemoveHeaderFooterByCommonRunId/${commonRunId}`);
+                            console.log("ReRemove result", result);
+                            await fetchData();
+                        } catch (error) {
+                            console.error("ReRemove error", error);
+                        } finally {
+                            setLoading(false);
+                        }
+                    }}
+                >
+                    ReRemove
+                </Button>
+            ),
+        },
         { field: "success", headerName: "Success", width: 90, type: "boolean" },
         {
             field: "logs",
