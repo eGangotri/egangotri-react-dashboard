@@ -5,6 +5,9 @@ import { readFile, utils } from 'xlsx';
 import { GDriveExcelItem } from './types/GDriveExcelItem';
 import { HtmlDataType } from './types/HtmlDataType';
 
+/**
+ * pnpm run excelToHTML
+ */
 const excelToJson = () => {
     const xlsxFileName = 'Tr-93-GDrive.xlsx';
     const excelPath = process.argv[2] || path.join(process.cwd(), `./src/html/input/${xlsxFileName}`);
