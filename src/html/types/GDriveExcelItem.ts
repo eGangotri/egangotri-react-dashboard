@@ -9,6 +9,3 @@ export interface GDriveExcelItem {
     "Thumbnail": string;
     "Created Time": string;
 }
-
-
-   
