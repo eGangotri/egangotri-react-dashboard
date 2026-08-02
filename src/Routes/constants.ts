@@ -17,6 +17,7 @@ export const EXEC_LAUNCHER_FOUR_B_PATH = "/execLauncher4bPath";
 export const REFINE_FILE_DATA_1_PATH = "/refineFileData1Path";
 export const REFINE_FILE_DATA_2_PATH = "/refineFileData2Path";
 export const PDF_HEADER_FOOTER_REMOVER = "/pdfHeaderFooterRemoverPath";
+export const PDF_EXCEL_RENAMER = "/pdfExcelRenamer";
 export const LAUNCH_AI_RENAMER_PATH = "/aiRenamer";
 export const PDF_MERGE_MODULE = "/pdfMergeModule";
 export const LAUNCH_AI_GDRIVE_CP_RENAMER_HISTORY_PATH = "/aiGDriveCPRenameHistory";

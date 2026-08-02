@@ -37,6 +37,7 @@ import {
     PDF_PAGE_EXTRACTION_HISTORY_PATH,
     ARCHIVE_DOWLOAD_LIST_PATH,
     REFINE_FILE_DATA_2_PATH,
+    PDF_EXCEL_RENAMER,
 
 } from 'Routes/constants';
 
@@ -145,6 +146,10 @@ export const TOP_PANEL_MENU: TopPanelMenu[] = [{
         {
             path: PDF_HEADER_FOOTER_REMOVER,
             label: 'PDF Header-Footer-Remover',
+        },
+        {
+            path: PDF_EXCEL_RENAMER,
+            label: 'Rename Files Via Excel',
         }
     ]
 },
