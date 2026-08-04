@@ -119,7 +119,36 @@ const LauncherAIRenamer: React.FC = () => {
                 outputSuffix: dataUserInput3NonMandatory,
                 metadataExtractionPrompt: promptFromStorage
             }, `ai/aiRenamer`);
-            setApiResult(<ExecResponsePanel response={res} execType={ExecType.AI_RENAMER} />);
+            setApiResult(<ExecResponsePanel response={res} execType={ExecType.AI_RENAMER_CUSTOM} />);
+        } catch (err) {
+            console.error(err);
+            setApiResult(null);
+        } finally {
+            setCustomRunLoading(false);
+        }
+    };
+
+    const handleTibetanPrompt = async (e: React.MouseEvent<HTMLButtonElement>) => {
+        const promptFromStorage = localStorage.getItem("PDF_METADATA_EXTRACTION_PROMPT");
+        if (!promptFromStorage) {
+            alert("No custom prompt found in local storage. Please fetch and save a prompt first.");
+            return;
+        }
+
+        setAnchorElApi(e.currentTarget);
+        try {
+            setCustomRunLoading(true);
+            const dataUserInput = replaceQuotes(absPathForAiRenamer);
+            const dataUserInput2Mandatory = replaceQuotes(reducedPathForAiRenamer);
+            const dataUserInput3NonMandatory = replaceQuotes(filePathForRenamerPdfs);
+
+            const res = await makePostCallWithErrorHandling({
+                srcFolder: dataUserInput,
+                reducedFolder: dataUserInput2Mandatory,
+                outputSuffix: dataUserInput3NonMandatory,
+                tibetan: true
+            }, `ai/aiRenamer`);
+            setApiResult(<ExecResponsePanel response={res} execType={ExecType.AI_RENAMER_TIBETAN} />);
         } catch (err) {
             console.error(err);
             setApiResult(null);
@@ -307,13 +336,25 @@ const LauncherAIRenamer: React.FC = () => {
                     onLoadingChange={setMainRunLoading}
                     thirdButton={
                         <>
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                onClick={loadSrcAndReducedPDFNamesFromLocalStorage}
-                                sx={{ marginRight: "10px", marginBottom: "10px" }}>Load From Local Storage
-                            </Button>
+
+                            <Tooltip title="Stop AI Renaming Process">
+                                <Button
+                                    variant="contained"
+                                    color="error"
+                                    onClick={handleStopAiRenamer}
+                                    startIcon={<StopIcon />}
+                                    sx={{ marginRight: "10px", marginBottom: "10px" }}
+                                >
+                                    Stop AI Renamer
+                                </Button>
+                            </Tooltip>
                             <Box>
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={loadSrcAndReducedPDFNamesFromLocalStorage}
+                                    sx={{ marginRight: "10px", marginBottom: "10px" }}>Load From Local Storage
+                                </Button>
                                 <Button
                                     variant="contained"
                                     color="primary"
@@ -327,17 +368,6 @@ const LauncherAIRenamer: React.FC = () => {
                                     onClick={() => generateRenamerFolders()}
                                     sx={{ marginRight: "10px", marginBottom: "10px" }}>Generate Renamer Folders
                                 </Button>
-                                <Tooltip title="Stop AI Renaming Process">
-                                    <Button
-                                        variant="contained"
-                                        color="error"
-                                        onClick={handleStopAiRenamer}
-                                        startIcon={<StopIcon />}
-                                        sx={{ marginRight: "10px", marginBottom: "10px" }}
-                                    >
-                                        Stop AI Renamer
-                                    </Button>
-                                </Tooltip>
                             </Box>
                             <Box>
                                 <Tooltip title="Go to AI Title and Pdf Renamer History">
@@ -356,12 +386,20 @@ const LauncherAIRenamer: React.FC = () => {
                                         variant="contained"
                                         color="success"
                                         onClick={() => window.open(`${AI_TITLE_RENAMER_HISTORY_PATH}`, '_blank')}
-                                        sx={{ marginRight: "10px", marginBottom: "10px"  }}
-                                        startIcon={<HistoryIcon  />}
+                                        sx={{ marginRight: "10px", marginBottom: "10px" }}
+                                        startIcon={<HistoryIcon />}
                                     >
                                         History Title
                                     </Button>
                                 </Tooltip>
+                            </Box>
+                            <Box>
+                                <Button
+                                    variant="contained"
+                                    color="info"
+                                    onClick={handleTibetanPrompt}
+                                    sx={{ marginRight: "10px", marginBottom: "10px" }}>AI Tibetan Renamer
+                                </Button>
                                 <Tooltip title="Run AI Renamer with Local Prompt">
                                     <Button
                                         variant="contained"

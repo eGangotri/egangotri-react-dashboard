@@ -7,10 +7,19 @@ import { HtmlDataType } from './types/HtmlDataType';
 
 /**
  * pnpm run excelToHTML
+ * add your latest Google Drive excel with name latest-XX.xlsx as input Folder
+ * in call at bottom to 
+ * const json = excelToJson('latest-XX.xlsx');
+ * Make sure its a Google Drive Excel
+
+ * 
  */
-const excelToJson = () => {
-    const xlsxFileName = 'Tr-93-GDrive.xlsx';
+const excelToJson = (xlsxFileName:string) => {
     const excelPath = process.argv[2] || path.join(process.cwd(), `./src/html/input/${xlsxFileName}`);
+    if (!fs.existsSync(excelPath)) {
+        console.error(`Error: Excel file not found at ${excelPath}`);
+        process.exit(1);
+    }
     const outputJsonPath = `${excelPath.replace(/\.xlsx$/i, '')}.json`;
 
     const workbook = readFile(excelPath);
@@ -22,8 +31,33 @@ const excelToJson = () => {
     return outputJsonPath
 }
 
+const REQUIRED_GDRIVE_KEYS: (keyof GDriveExcelItem)[] = [
+    'S.No',
+    'Title in Google Drive',
+    'Link to File Location',
+    'No. of Pages',
+    'Size with Units',
+    'Size in Bytes',
+    'Folder Name',
+    'Thumbnail',
+    'Created Time',
+];
+
+const validateGDriveExcelItems = (raw: unknown): GDriveExcelItem[] => {
+    if (!Array.isArray(raw) || raw.length === 0) {
+        throw new Error('The excel/json headers are not of type GDriveExcelItem. Are you by mistake using a Local Hard Drive Data Excel, We need Google Drive Excel');
+    }
+    const first = raw[0];
+    const missing = REQUIRED_GDRIVE_KEYS.filter((key) => !(key in first));
+    if (missing.length > 0) {
+        throw new Error('The excel/json headers are not of type GDriveExcelItem. Are you by mistake using a Local Hard Drive Data Excel, We need Google Drive Excel');
+    }
+    return raw as GDriveExcelItem[];
+};
+
 const gDriveExcelJsonToHtmlDataJson = (inputJsonPath: string) => {
-    const items: GDriveExcelItem[] = JSON.parse(fs.readFileSync(inputJsonPath, 'utf-8'));
+    const parsed = JSON.parse(fs.readFileSync(inputJsonPath, 'utf-8'));
+    const items = validateGDriveExcelItems(parsed);
     const htmlData: HtmlDataType[] = items.map((item) => ({
         t: item["Title in Google Drive"],
         l: item["Link to File Location"],
@@ -117,7 +151,7 @@ const injectHtmlJsonIntoGDriveExplorer = (htmlJsonPath: string) => {
     console.log(`Injected ${newItems.length} items into state.allData of ${htmlFilePath}`);
 }
 
-const json = excelToJson();
+const json = excelToJson('latest-94.xlsx');
 const htmlJson = gDriveExcelJsonToHtmlDataJson(json);
 injectHtmlJsonIntoGDriveExplorer(htmlJson);
 

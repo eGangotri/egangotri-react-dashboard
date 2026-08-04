@@ -136,6 +136,7 @@ export enum ExecType {
   DownloadAllGDriveItemsViaExcel = 122,
   VANITIZE = 100,
   RENAME_FIES_VIA_EXCEL = 101,
+  RENAME_FIES_VIA_EXCEL_TWO_COL = 10011,
 
   GET_FIRST_N_PAGES_PYTHON = 200,
   GET_FIRST_N_PAGES_PYTHON_FOR_AI_RENAMER = 200912,
@@ -165,6 +166,8 @@ export enum ExecType {
   BL_EAP_WORK = 214,
 
   AI_RENAMER = 2151,
+  AI_RENAMER_TIBETAN = 21510,
+  AI_RENAMER_CUSTOM = 21511,
   AI_CP_RENAMER = 2152,
 
   CONVERT_MULTIPLE_TXT_FILE_SCRIPTS = 216,
@@ -798,6 +801,14 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
             folderOrProfile: dataUserInput2Mandatory,
           }, `fileUtil/renameFilesViaExcel`);
         }
+        break;
+
+      case ExecType.RENAME_FIES_VIA_EXCEL_TWO_COL:
+        _resp = await makePostCallWithErrorHandling({
+          excelPath: dataUserInput,
+          columns: dataUserInput2Mandatory,
+        },
+          `fileUtil/renameFilesViaExcelTwoCol`);
         break;
 
       case ExecType.COMPARE_UPLOADS_VIA_EXCEL_V1_WITH_ARCHIVE_ORG:
