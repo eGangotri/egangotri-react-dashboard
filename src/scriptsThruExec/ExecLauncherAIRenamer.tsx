@@ -394,8 +394,8 @@ const LauncherAIRenamer: React.FC = () => {
                                         onClick={handleTibetanPrompt}
                                         sx={{ marginRight: "10px", marginBottom: "10px" }}>AI Tibetan Renamer
                                     </Button>
-                                </  
-                                    <Tooltip title="Run AI Renamer with Local Prompt">
+                                </Tooltip>
+                                <Tooltip title="Run AI Renamer with Local Prompt">
                                     <Button
                                         variant="contained"
                                         color="warning"
