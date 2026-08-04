@@ -54,6 +54,7 @@ const LauncherAIRenamer: React.FC = () => {
     const [promptLoading, setPromptLoading] = useState(false);
 
     const [customRunLoading, setCustomRunLoading] = useState(false);
+    const [tibetanLoading, setTibetanLoading] = useState(false);
     const [mainRunLoading, setMainRunLoading] = useState(false);
     const [apiResult, setApiResult] = useState<any>(null);
     const [anchorElApi, setAnchorElApi] = useState<HTMLButtonElement | null>(null);
@@ -130,7 +131,8 @@ const LauncherAIRenamer: React.FC = () => {
 
     const handleTibetanPrompt = async (e: React.MouseEvent<HTMLButtonElement>) => {
         try {
-            setCustomRunLoading(true);
+            setAnchorElApi(e.currentTarget);
+            setTibetanLoading(true);
             const dataUserInput = replaceQuotes(absPathForAiRenamer);
             const dataUserInput2Mandatory = replaceQuotes(reducedPathForAiRenamer);
             const dataUserInput3NonMandatory = replaceQuotes(filePathForRenamerPdfs);
@@ -146,7 +148,7 @@ const LauncherAIRenamer: React.FC = () => {
             console.error(err);
             setApiResult(null);
         } finally {
-            setCustomRunLoading(false);
+            setTibetanLoading(false);
         }
     };
 
@@ -392,6 +394,8 @@ const LauncherAIRenamer: React.FC = () => {
                                         variant="contained"
                                         color="info"
                                         onClick={handleTibetanPrompt}
+                                        disabled={customRunLoading || mainRunLoading}
+                                        startIcon={customRunLoading ? <CircularProgress size={16} /> : <PlayArrowIcon />}
                                         sx={{ marginRight: "10px", marginBottom: "10px" }}>AI Tibetan Renamer
                                     </Button>
                                 </Tooltip>
