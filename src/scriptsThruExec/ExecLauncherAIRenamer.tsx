@@ -129,13 +129,6 @@ const LauncherAIRenamer: React.FC = () => {
     };
 
     const handleTibetanPrompt = async (e: React.MouseEvent<HTMLButtonElement>) => {
-        const promptFromStorage = localStorage.getItem("PDF_METADATA_EXTRACTION_PROMPT");
-        if (!promptFromStorage) {
-            alert("No custom prompt found in local storage. Please fetch and save a prompt first.");
-            return;
-        }
-
-        setAnchorElApi(e.currentTarget);
         try {
             setCustomRunLoading(true);
             const dataUserInput = replaceQuotes(absPathForAiRenamer);
@@ -394,13 +387,15 @@ const LauncherAIRenamer: React.FC = () => {
                                 </Tooltip>
                             </Box>
                             <Box>
-                                <Button
-                                    variant="contained"
-                                    color="info"
-                                    onClick={handleTibetanPrompt}
-                                    sx={{ marginRight: "10px", marginBottom: "10px" }}>AI Tibetan Renamer
-                                </Button>
-                                <Tooltip title="Run AI Renamer with Local Prompt">
+                                <Tooltip title="Run AI Renamer for Tibetan">
+                                    <Button
+                                        variant="contained"
+                                        color="info"
+                                        onClick={handleTibetanPrompt}
+                                        sx={{ marginRight: "10px", marginBottom: "10px" }}>AI Tibetan Renamer
+                                    </Button>
+                                </  
+                                    <Tooltip title="Run AI Renamer with Local Prompt">
                                     <Button
                                         variant="contained"
                                         color="warning"
