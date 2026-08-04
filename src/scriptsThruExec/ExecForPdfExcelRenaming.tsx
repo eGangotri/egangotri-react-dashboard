@@ -8,7 +8,7 @@ const ExecForPdfExcelRenaming: React.FC = () => {
     return (
         <Box display="flex" gap={4} mb={2} flexDirection="row">
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
-                 <ExecComponent buttonText="Rename Files via Excel. Abs Path->New Name "
+                <ExecComponent buttonText="Rename Files via Excel. Abs Path->New Name "
                     placeholder='Excel File Path'
                     secondTextBoxPlaceHolder='Dash Separated Column Indices. 1-based. Ex. 2-3'
                     execType={ExecType.RENAME_FIES_VIA_EXCEL_TWO_COL}
@@ -19,13 +19,13 @@ const ExecForPdfExcelRenaming: React.FC = () => {
                     css3={{ width: "400px" }}
                 />
 
-                 <ExecComponent buttonText="Rename Files via Excel"
-                                    placeholder='Excel File Path'
-                                    secondTextBoxPlaceHolder='Profile or Abs Path'
-                                    thirdTextBoxPlaceHolder='Dash Separated Column Indices. Fill Only for Non Fixed Model'
-                                    execType={ExecType.RENAME_FIES_VIA_EXCEL}
-                                    userInputTwoInfoNonMandatory="Predefined Columns and Indices. Follow Static Model. Leave below blank"
-                                    userInputThreeInfoNonMandatory={`Specify Dash Separated Column Indexes with first for Orig Title Second for New Title.
+                <ExecComponent buttonText="Rename Files via Excel"
+                    placeholder='Excel File Path'
+                    secondTextBoxPlaceHolder='Profile or Abs Path'
+                    thirdTextBoxPlaceHolder='Dash Separated Column Indices. Fill Only for Non Fixed Model'
+                    execType={ExecType.RENAME_FIES_VIA_EXCEL}
+                    userInputTwoInfoNonMandatory="Predefined Columns and Indices. Follow Static Model. Leave below blank"
+                    userInputThreeInfoNonMandatory={`Specify Dash Separated Column Indexes with first for Orig Title Second for New Title.
                                         if you leave this COl. empty then it will call 
                                         and expect fixed structure of excel
                                         POST /fileUtil/renameFilesViaExcel
@@ -46,19 +46,19 @@ const ExecForPdfExcelRenaming: React.FC = () => {
                                             Col-1 & 2 should be both just names not abs. paths.
                                             Caveat. the code works on unique name searches so multiple same name files will be ignored.
                 `}
-                
-                                    css={{ width: "400px" }}
-                                    css2={{ width: "400px" }}
-                                    css3={{ width: "400px" }}
-                                />
+
+                    css={{ width: "400px" }}
+                    css2={{ width: "400px" }}
+                    css3={{ width: "400px" }}
+                />
             </Box>
 
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
-               
+
 
             </Box>
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
-              
+
             </Box>
         </Box>
     );
