@@ -38,6 +38,7 @@ import {
     ARCHIVE_DOWLOAD_LIST_PATH,
     REFINE_FILE_DATA_2_PATH,
     PDF_EXCEL_RENAMER,
+    PDF_REPAIR_MODULE,
 
 } from 'Routes/constants';
 
@@ -150,6 +151,10 @@ export const TOP_PANEL_MENU: TopPanelMenu[] = [{
         {
             path: PDF_EXCEL_RENAMER,
             label: 'Rename Files Via Excel',
+        },
+        {
+            path: PDF_REPAIR_MODULE,
+            label: 'Pdf Repair',
         }
     ]
 },

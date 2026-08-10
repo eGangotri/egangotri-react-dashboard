@@ -145,6 +145,8 @@ export enum ExecType {
   CORRUPTION_CHECK_QUICK_ISOLATE = 2004502,
   CORRUPTION_CHECK_DEEP = 2004503,
   CORRUPTION_CHECK_DEEP_ISOLATE = 2004504,
+  REPAIR_PDF = 2004505,
+
   COPY_ALL_PDFS_PYTHON = 200300,
   GET_FIRST_N_PAGES_GRADLE = 200200,
   COMBINE_GDRIVE_AND_REDUCED_PDF_DRIVE_EXCELS = 201,
@@ -448,8 +450,10 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
           "folderName": data.userInputSecond || "D:\\",
           "reduced": false,
           "allNotJustPdfs": false,
-          "includePdfPageCount": data.includePdfPageCount || false
+          "includePdfPageCount": data.includePdfPageCount || false,
+          "ignoreFolder": data.userInputThird || "",
         }, `gDrive/getGoogleDriveListingAsExcel`);
+
         break;
 
       case ExecType.GenExcelOfGoogleDriveLinkPdfOnlyManuVersion:
@@ -457,10 +461,10 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
           "googleDriveLink": dataUserInput,
           "folderName": data.userInputSecond || "D:\\",
           "reduced": false,
-          "ignoreFolder": "",
           "allNotJustPdfs": true,
           "manuVersion": true,
-          "includePdfPageCount": data.includePdfPageCount || false
+          "includePdfPageCount": data.includePdfPageCount || false,
+          "ignoreFolder": data.userInputThird || "",
         }, `gDrive/getGoogleDriveListingAsExcel`);
         break;
 
@@ -471,7 +475,8 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
           "reduced": false,
           "allNotJustPdfs": false,
           "minimalVersion": true,
-          "includePdfPageCount": data.includePdfPageCount || false
+          "includePdfPageCount": data.includePdfPageCount || false,
+          "ignoreFolder": data.userInputThird || "",
         }, `gDrive/getGoogleDriveListingAsExcel`);
         break;
 
@@ -483,8 +488,8 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
           "allNotJustPdfs": true,
           "minimalVersion": false,
           "manuVersion": false,
-          "ignoreFolder": "proc",
-          "includePdfPageCount": data.includePdfPageCount || false
+          "ignoreFolder": data.userInputThird || "proc",
+          "includePdfPageCount": data.includePdfPageCount || false,
         }, `gDrive/getGoogleDriveListingAsExcel`);
         break;
 
@@ -495,7 +500,8 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
           "folderName": data.userInputSecond || "D:\\",
           "reduced": true,
           "allNotJustPdfs": false,
-          "includePdfPageCount": data.includePdfPageCount || false
+          "includePdfPageCount": data.includePdfPageCount || false,
+          "ignoreFolder": data.userInputThird || "",
         }, `gDrive/getGoogleDriveListingAsExcel`);
         break;
 
@@ -506,7 +512,8 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
           "reduced": false,
           "pdfRenamerXlV2": true,
           "allNotJustPdfs": false,
-          "includePdfPageCount": data.includePdfPageCount || false
+          "includePdfPageCount": data.includePdfPageCount || false,
+          "ignoreFolder": data.userInputThird || "",
         }, `gDrive/getGoogleDriveListingAsExcel`);
         break;
 
@@ -576,7 +583,11 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         }, `pythonScripts/getFirstAndLastNPages`);
         break;
 
-
+      case ExecType.REPAIR_PDF:
+        _resp = await makePostCallWithErrorHandling({
+          srcFolder: dataUserInput,
+        }, `pdf/repairPdfs`);
+        break;
 
       case ExecType.MERGE_PDFS_PYTHON:
         _resp = await makePostCallWithErrorHandling({

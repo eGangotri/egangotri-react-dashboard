@@ -63,7 +63,8 @@ import {
     ARCHIVE_DOWLOAD_LIST_PATH,
     PDF_HEADER_FOOTER_REMOVER,
     REFINE_FILE_DATA_2_PATH,
-    PDF_EXCEL_RENAMER
+    PDF_EXCEL_RENAMER,
+    PDF_REPAIR_MODULE
 } from './constants';
 import GDriveItemAggregates from 'components/gDriveListing/gDriveAggregatesByProfile';
 import ArchiveItemList from 'components/archiveListing';
@@ -87,6 +88,7 @@ import PdfMergeModule from 'scriptsThruExec/PdfMergeModule';
 import PdfHeaderFooterRemover from 'scriptsThruExec/PdfHeaderFooterRemover';
 import ExecLauncherRefineFileDataTwo from 'scriptsThruExec/ExecLauncherRefineFileDataTwo';
 import ExecForPdfExcelRenaming from 'scriptsThruExec/ExecForPdfExcelRenaming';
+import PdfRepairModule from 'scriptsThruExec/PdfRepair';
 
 const DashboardRoutes: React.FC = () => {
     const isLocalhost = true; //window.location.hostname === 'localhost';
@@ -111,6 +113,7 @@ const DashboardRoutes: React.FC = () => {
             {<Route path={PDF_EXCEL_RENAMER} element={<ExecForPdfExcelRenaming />} />}
             {<Route path={LAUNCH_AI_RENAMER_PATH} element={<LauncherAIRenamer />} />}
             {<Route path={PDF_MERGE_MODULE} element={<PdfMergeModule />} />}
+            {<Route path={PDF_REPAIR_MODULE} element={<PdfRepairModule />} />}
             {<Route path={LAUNCH_AI_GDRIVE_CP_RENAMER_HISTORY_PATH} element={<LauncherAIGDriveCPRenamerHistory />} />}
             {<Route path={AI_TITLE_RENAMER_HISTORY_PATH} element={<AITitleRenamerHistory />} />}
             {<Route path={AI_TITLE_PDF_RENAMER_HISTORY_PATH} element={<AITitlePdfRenamerHistory />} />}

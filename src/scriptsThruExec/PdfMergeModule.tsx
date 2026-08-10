@@ -139,9 +139,6 @@ const PdfMergeModule: React.FC = () => {
                 <Box sx={{ mt: 5 }}>
                     <DynamicTextAreas />
                 </Box>
-                <Box sx={{ mt: 5 }}>
-                    <PdfUtil/>
-                </Box>
             </Box>
             
             <Box sx={{ minWidth: '45vw' }}>
