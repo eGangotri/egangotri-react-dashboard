@@ -2,7 +2,10 @@ import React from "react"
 import { makePostCallWithErrorHandling, verifyUploadStatusForUploadCycleId } from "service/BackendFetchService"
 import { _launchGradlev2, launchGradleReuploadFailed } from "service/launchGradle"
 import { launchYarnMoveToFreezeByUploadId } from "service/launchYarn"
-import { Box, Button, Typography, CircularProgress } from "@mui/material"
+import { Box, Button, Typography, CircularProgress, IconButton, Tooltip } from "@mui/material"
+import Link from "@mui/material/Link";
+import Search from "@mui/icons-material/Search";
+
 import { ERROR_RED } from "constants/colors"
 import ExecResponsePanel from "scriptsThruExec/ExecResponsePanel"
 
@@ -25,6 +28,16 @@ interface UseUploadCycleActionsProps {
     setPopoverAnchor: (anchor: HTMLButtonElement | null) => void;
     fetchData: () => void;
 }
+
+const getArchiveSearchUrl = (filePath: string) => {
+    const backslash = String.fromCharCode(92);
+    const lastSep = Math.max(filePath.lastIndexOf('/'), filePath.lastIndexOf(backslash));
+    const fileName = lastSep >= 0 ? filePath.slice(lastSep + 1) : filePath;
+    const lastDot = fileName.lastIndexOf('.');
+    const nameWithoutExt = lastDot > 0 ? fileName.slice(0, lastDot) : fileName;
+    const queryName = nameWithoutExt.split('-')[0];
+    return `https://archive.org/search?query=${encodeURIComponent(queryName)}`;
+};
 
 export const useUploadCycleActions = ({
     isLoading,
@@ -74,7 +87,21 @@ export const useUploadCycleActions = ({
                                         <Typography variant="body2" sx={{ fontWeight: 'bold' }}>({index + 1}) {_data.archiveProfile} ({_data.missedCount})</Typography>
                                         <Box sx={{ color: ERROR_RED, ml: 2 }}>
                                             {_data.missed.map((item: string, index2: number) => {
-                                                return (<Typography key={index2} variant="caption" sx={{ display: 'block' }}>({index + 1}.{index2 + 1}) {item}</Typography>)
+                                                return (
+                                                    <Typography key={index2} variant="caption" sx={{ display: 'block' }}>
+                                                        ({index + 1}.{index2 + 1}) {item}
+                                                        <Tooltip title="Search in archive">
+                                                            <IconButton
+                                                                size="small"
+                                                                href={getArchiveSearchUrl(item)}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                            >
+                                                                <Search />
+                                                            </IconButton>
+                                                        </Tooltip>
+                                                    </Typography>
+                                                )
                                             })}
                                         </Box>
                                     </Box>
@@ -87,7 +114,7 @@ export const useUploadCycleActions = ({
                 <Box sx={{ mt: 2 }}>
                     <ExecResponsePanel response={missed} />
                 </Box>
-            </Box>
+            </Box >
         );
         setApiResult(missingTitlesPanel);
     }, [isLoading, setApiResult]);
