@@ -5,6 +5,7 @@ import { launchYarnMoveToFreezeByUploadId } from "service/launchYarn"
 import { Box, Button, Typography, CircularProgress, IconButton, Tooltip } from "@mui/material"
 import Link from "@mui/material/Link";
 import Search from "@mui/icons-material/Search";
+import CloudUpload from "@mui/icons-material/CloudUpload";
 
 import { ERROR_RED } from "constants/colors"
 import ExecResponsePanel from "scriptsThruExec/ExecResponsePanel"
@@ -100,6 +101,15 @@ export const useUploadCycleActions = ({
                                                                 <Search />
                                                             </IconButton>
                                                         </Tooltip>
+                                                        <Tooltip title="Upload single file">
+                                                            <IconButton
+                                                                size="small"
+                                                                onClick={(event) => handleSingleUpload(_data.archiveProfile, item, event.currentTarget as HTMLButtonElement)}
+                                                            >
+                                                                <CloudUpload />
+                                                            </IconButton>
+                                                        </Tooltip>
+                                                        
                                                     </Typography>
                                                 )
                                             })}
@@ -340,6 +350,24 @@ export const useUploadCycleActions = ({
             const el = document.getElementById(anchorId);
             if (el) setPopoverAnchor(el as HTMLButtonElement);
             setLastMissedData(null);
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
+    const handleSingleUpload = async (archiveProfile: string, absPath: string, anchor: HTMLButtonElement) => {
+        setIsLoading(true);
+        setPopoverTitle("Single Upload")
+        try {
+            const _res = await _launchGradlev2({
+                gradleArgs: `${archiveProfile} # '${absPath} '`,
+            }, "launchUploaderViaAbsPath");
+            setApiResult(<ExecResponsePanel response={_res} />);
+            setPopoverAnchor(anchor);
+        } catch (error: any) {
+            console.error("Error uploading single item:", error);
+            setApiResult(<ExecResponsePanel response={{ error: error?.message || String(error) }} />);
+            setPopoverAnchor(anchor);
         } finally {
             setIsLoading(false);
         }
