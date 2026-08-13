@@ -40,6 +40,14 @@ const getArchiveSearchUrl = (filePath: string) => {
     return `https://archive.org/search?query=${encodeURIComponent(queryName)}`;
 };
 
+const getTitleFromPath = (filePath: string) => {
+    const backslash = String.fromCharCode(92);
+    const lastSep = Math.max(filePath.lastIndexOf('/'), filePath.lastIndexOf(backslash));
+    const fileName = lastSep >= 0 ? filePath.slice(lastSep + 1) : filePath;
+    const lastDot = fileName.lastIndexOf('.');
+    return lastDot > 0 ? fileName.slice(0, lastDot) : fileName;
+};
+
 export const useUploadCycleActions = ({
     isLoading,
     setIsLoading,
@@ -369,7 +377,7 @@ export const useUploadCycleActions = ({
         try {
             const _res = await makePostCallWithErrorHandling({
                 uploadCycleId,
-                itemsForReupload: [{ archiveProfile, absolutePath: absPath }]
+                itemsForReupload: [{ archiveProfile, title: getTitleFromPath(absPath), absolutePath: absPath }]
             }, 'execLauncher/reuploadMissedByProfileAndAbsPath');
             setApiResult(<ExecResponsePanel response={_res} />);
             setPopoverAnchor(anchor);
