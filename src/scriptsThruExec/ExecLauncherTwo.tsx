@@ -64,7 +64,7 @@ const ExecLauncherTwo: React.FC = () => {
                     textBoxTwoValue={uploadablesExcelV3}
                     userInputOneInfo="Excel File Format: Col1. Abs Path.Use http://localhost:3000/execLauncher2b Archive Uploadable Excel V-3 to create"
                     userInputThreeInfoNonMandatory="Range of Whole Numbers. Ex 1-10 (Optional).inclusive"
-                    css={{ width: "250px" }}
+                    css={{ width: "450px" }}
                     css2={{ width: "450px" }}
                     thirdButton={<Button variant="contained" color="primary" onClick={loadFromLocalStorageForV3} sx={{ marginRight: "10px", marginBottom: "10px" }}>Load From Local Storage</Button>}
                     validationPattern={/\.(xlsx|xls)$/}
