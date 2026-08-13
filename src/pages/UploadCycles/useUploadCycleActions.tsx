@@ -6,6 +6,7 @@ import { Box, Button, Typography, CircularProgress, IconButton, Tooltip } from "
 import Link from "@mui/material/Link";
 import Search from "@mui/icons-material/Search";
 import CloudUpload from "@mui/icons-material/CloudUpload";
+import FilterList from "@mui/icons-material/FilterList";
 
 import { ERROR_RED } from "constants/colors"
 import ExecResponsePanel from "scriptsThruExec/ExecResponsePanel"
@@ -107,6 +108,14 @@ export const useUploadCycleActions = ({
                                                                 onClick={(event) => handleSingleUpload(_data.archiveProfile, item, event.currentTarget as HTMLButtonElement)}
                                                             >
                                                                 <CloudUpload />
+                                                            </IconButton>
+                                                        </Tooltip>
+                                                        <Tooltip title="Isolate missed">
+                                                            <IconButton
+                                                                size="small"
+                                                                onClick={(event) => handleSingleIsolate(_data.archiveProfile, item, event.currentTarget as HTMLButtonElement)}
+                                                            >
+                                                                <FilterList />
                                                             </IconButton>
                                                         </Tooltip>
                                                         
@@ -366,6 +375,24 @@ export const useUploadCycleActions = ({
             setPopoverAnchor(anchor);
         } catch (error: any) {
             console.error("Error uploading single item:", error);
+            setApiResult(<ExecResponsePanel response={{ error: error?.message || String(error) }} />);
+            setPopoverAnchor(anchor);
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
+    const handleSingleIsolate = async (archiveProfile: string, absPath: string, anchor: HTMLButtonElement) => {
+        setIsLoading(true);
+        setPopoverTitle("Isolate Missed")
+        try {
+            const _res = await _launchGradlev2({
+                gradleArgs: `${archiveProfile} # '${absPath} '`,
+            }, "isolateMissingViaAbsPath");
+            setApiResult(<ExecResponsePanel response={_res} />);
+            setPopoverAnchor(anchor);
+        } catch (error: any) {
+            console.error("Error isolating single item:", error);
             setApiResult(<ExecResponsePanel response={{ error: error?.message || String(error) }} />);
             setPopoverAnchor(anchor);
         } finally {
