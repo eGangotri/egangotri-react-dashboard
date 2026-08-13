@@ -104,7 +104,7 @@ export const useUploadCycleActions = ({
                                                         <Tooltip title="Upload single file">
                                                             <IconButton
                                                                 size="small"
-                                                                onClick={(event) => handleSingleUpload(_data.archiveProfile, item, event.currentTarget as HTMLButtonElement)}
+                                                                onClick={(event) => handleSingleUpload(uploadCycleId, _data.archiveProfile, item, event.currentTarget as HTMLButtonElement)}
                                                             >
                                                                 <CloudUpload />
                                                             </IconButton>
@@ -363,11 +363,12 @@ export const useUploadCycleActions = ({
         }
     }
 
-    const handleSingleUpload = async (archiveProfile: string, absPath: string, anchor: HTMLButtonElement) => {
+    const handleSingleUpload = async (uploadCycleId: string, archiveProfile: string, absPath: string, anchor: HTMLButtonElement) => {
         setIsLoading(true);
         setPopoverTitle("Single Upload")
         try {
             const _res = await makePostCallWithErrorHandling({
+                uploadCycleId,
                 itemsForReupload: [{ archiveProfile, absolutePath: absPath }]
             }, 'execLauncher/reuploadMissedByProfileAndAbsPath');
             setApiResult(<ExecResponsePanel response={_res} />);
