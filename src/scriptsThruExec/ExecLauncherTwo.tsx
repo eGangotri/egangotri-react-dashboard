@@ -56,8 +56,8 @@ const ExecLauncherTwo: React.FC = () => {
                 />
 
                 <ExecComponent buttonText="Upload Excel V-3-With-1-Col Pdfs to Archive"
-                    placeholder='Profile Name'
-                    secondTextBoxPlaceHolder='Enter Excel Abs Path'
+                    placeholder='Enter Excel Abs Path'
+                    secondTextBoxPlaceHolder='Profile Name'
                     thirdTextBoxPlaceHolder='Range (eg. 1-00) (Optional).inclusive'
                     execType={ExecType.UploadPdfsViaExcelV3}
                     textBoxOneValue={uploadableExcelV3Profiles}
