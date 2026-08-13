@@ -125,7 +125,7 @@ export const useUploadCycleActions = ({
                                                                 <FilterList />
                                                             </IconButton>
                                                         </Tooltip>
-                                                        
+
                                                     </Typography>
                                                 )
                                             })}
@@ -377,7 +377,7 @@ export const useUploadCycleActions = ({
         try {
             const _res = await makePostCallWithErrorHandling({
                 uploadCycleId,
-                itemsForReupload: [{ archiveProfile, title: getTitleFromPath(absPath), absolutePath: absPath, absolutePaths: absPath }]
+                itemsForReupload: [{ archiveProfile, absolutePath: absPath, uploadCycleId: uploadCycleId }]
             }, 'execLauncher/reuploadMissedByProfileAndAbsPath');
             setApiResult(<ExecResponsePanel response={_res} />);
             setPopoverAnchor(anchor);
