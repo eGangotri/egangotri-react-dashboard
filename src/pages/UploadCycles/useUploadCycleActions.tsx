@@ -1,9 +1,8 @@
 import React from "react"
 import { makePostCallWithErrorHandling, verifyUploadStatusForUploadCycleId } from "service/BackendFetchService"
-import { _launchGradlev2, launchGradleReuploadFailed, launchGradleWithPostData } from "service/launchGradle"
+import { _launchGradlev2, launchGradleReuploadFailed } from "service/launchGradle"
 import { launchYarnMoveToFreezeByUploadId } from "service/launchYarn"
 import { Box, Button, Typography, CircularProgress, IconButton, Tooltip } from "@mui/material"
-import Link from "@mui/material/Link";
 import Search from "@mui/icons-material/Search";
 import CloudUpload from "@mui/icons-material/CloudUpload";
 import FilterList from "@mui/icons-material/FilterList";
@@ -368,9 +367,9 @@ export const useUploadCycleActions = ({
         setIsLoading(true);
         setPopoverTitle("Single Upload")
         try {
-            const _res = await launchGradleWithPostData([
-                { archiveProfile, absolutePaths: absPath }
-            ], 'reuploadMissedByProfileAndAbsPath');
+            const _res = await makePostCallWithErrorHandling({
+                itemsForReupload: [{ archiveProfile, absolutePath: absPath }]
+            }, 'execLauncher/reuploadMissedByProfileAndAbsPath');
             setApiResult(<ExecResponsePanel response={_res} />);
             setPopoverAnchor(anchor);
         } catch (error: any) {
