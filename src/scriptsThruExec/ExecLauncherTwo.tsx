@@ -47,7 +47,11 @@ const ExecLauncherTwo: React.FC = () => {
                     textBoxOneValue={uploadableExcelV1Profiles}
                     textBoxTwoValue={uploadablesExcelV1}
                     userInputOneInfo="Excel File Format: Col1. Abs Path. Col2. Suject. Col 3. Description Col 4. Creator. Headers best not included in Excel"
-                    userInputThreeInfoNonMandatory="Range of Whole Numbers. Ex 1-10 (Optional).inclusive. 0-based unless have headers"
+                    userInputThreeInfoNonMandatory="(Optional).Range of Whole Numbers.
+Ex 1-10 inclusive
+Row 1 is for header and is always ignored
+1-3 will mean 
+2nd row to 5th row. 0-based unless have headers"
                     css={{ width: "250px" }}
                     css2={{ width: "450px" }}
                     thirdButton={<Button variant="contained" color="primary" onClick={loadFromLocalStorageForV1} sx={{ marginRight: "10px", marginBottom: "10px" }}>Load From Local Storage</Button>}
@@ -63,7 +67,11 @@ const ExecLauncherTwo: React.FC = () => {
                     textBoxOneValue={uploadableExcelV3Profiles}
                     textBoxTwoValue={uploadablesExcelV3}
                     userInputOneInfo="Excel File Format: Col1. Abs Path.Use http://localhost:3000/execLauncher2b Archive Uploadable Excel V-3 to create"
-                    userInputThreeInfoNonMandatory="Range of Whole Numbers. Ex 1-10 (Optional).inclusive"
+                    userInputThreeInfoNonMandatory="(Optional).Range of Whole Numbers.
+Ex 1-10 inclusive
+Row 1 is for header and is always ignored
+1-3 will mean 
+2nd row to 5th row"
                     css={{ width: "250px" }}
                     css2={{ width: "450px" }}
                     thirdButton={<Button variant="contained" color="primary" onClick={loadFromLocalStorageForV3} sx={{ marginRight: "10px", marginBottom: "10px" }}>Load From Local Storage</Button>}
@@ -109,7 +117,11 @@ const ExecLauncherTwo: React.FC = () => {
                     userInputOneInfo="Run 'Verify Uploads'. Then From Mongo DB filter using UploadCycleId extract JSON "
                     thirdTextBoxPlaceHolder='Range (eg. 1-00) (Optional).inclusive'
                     css={{ width: "250px" }}
-                    userInputThreeInfoNonMandatory="Range of Whole Numbers. Ex 1-10 (Optional).inclusive"
+                    userInputThreeInfoNonMandatory="(Optional).Range of Whole Numbers.
+Ex 1-10 inclusive
+Row 1 is for header and is always ignored
+1-3 will mean 
+2nd row to 5th row"
                 />
             </Box>
         </Box>
