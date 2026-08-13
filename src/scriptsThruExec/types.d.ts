@@ -40,6 +40,8 @@ export type ExecComponentProps = {
     onCompleted?: (response: any) => void;
     validationPattern?: RegExp;
     validationMessage?: string;
+    validationPattern2?: RegExp;
+    validationMessage2?: string;
     confirmDialogMsg?: string;
     externalLoading?: boolean;
     onLoadingChange?: (loading: boolean) => void;

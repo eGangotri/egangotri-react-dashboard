@@ -47,6 +47,9 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
   onCompleted,
   validationPattern,
   validationMessage,
+
+  validationPattern2,
+  validationMessage2,
   confirmDialogMsg = "Do you want to proceed?",
   externalLoading = false,
   onLoadingChange,
@@ -209,6 +212,12 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
                 placeholder={secondTextBoxPlaceHolder}
                 {...register('userInputSecond', secondComponentRequired === true ? {
                   required: "This field is required",
+                  validate: (value) => {
+                    if (validationPattern2 && !validationPattern2.test(value||"")) {
+                      return validationMessage2 || "Invalid input";
+                    }
+                    return true;
+                  },
                   onChange: handleInputChangeSecond
                 } : {
                   onChange: handleInputChangeSecond
@@ -240,7 +249,7 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
                       slotProps={{
                         textField: {
                           placeholder: thirdTextBoxPlaceHolder,
-                          sx: {paddingTop: "30px", marginTop: "30px", width: "250px", ...css3 },
+                          sx: { paddingTop: "30px", marginTop: "30px", width: "250px", ...css3 },
                           error: Boolean(errors.userInputThird),
                           helperText: errors.userInputThird?.message,
                         },

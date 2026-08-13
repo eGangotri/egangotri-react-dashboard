@@ -151,7 +151,7 @@ const injectHtmlJsonIntoGDriveExplorer = (htmlJsonPath: string) => {
     console.log(`Injected ${newItems.length} items into state.allData of ${htmlFilePath}`);
 }
 
-const json = excelToJson('latest-94.xlsx');
+const json = excelToJson('latest.xlsx');
 const htmlJson = gDriveExcelJsonToHtmlDataJson(json);
 injectHtmlJsonIntoGDriveExplorer(htmlJson);
 
