@@ -623,7 +623,7 @@ const UploadCyclesList: React.FC = () => {
                                     <FaTimes style={{ position: 'absolute', fontSize: '0.7em', color: 'red', bottom: 4, right: 4 }} />
                                 </IconButton>
                             </Tooltip>
-                             <Tooltip title="Close All Tabs for Uploaded Items">
+                             <Tooltip title="Close All Tabs for Successfully Uploaded Items">
                                 <IconButton color="primary" onClick={invokeCloseSuccessfullyUploaded}>
                                     <FaCheckCircle />
                                 </IconButton>
