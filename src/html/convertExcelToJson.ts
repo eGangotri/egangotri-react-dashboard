@@ -107,18 +107,18 @@ const mergeHtmlDataJsonFiles = ( masterJsonPath: string, injectableDataPath: str
     const injectable = validateHtmlDataItems(JSON.parse(fs.readFileSync(injectableDataPath, 'utf-8')), injectableDataPath);
 
     const existingCount = master.length;
-    const indexByLink = 
+    const indexByLinkForMaster = 
     new Map<string, number>(master.map((item, idx) => [item.l, idx]));
 
     let overwritten = 0;
     let added = 0;
     for (const item of injectable) {
-        const existingIdx = indexByLink.get(item.l);
+        const existingIdx = indexByLinkForMaster.get(item.l);
         if (existingIdx !== undefined) {
             master[existingIdx] = item;
             overwritten++;
         } else {
-            indexByLink.set(item.l, injectable.length);
+            indexByLinkForMaster.set(item.l, injectable.length);
             master.push(item);
             added++;
         }
@@ -128,8 +128,8 @@ const mergeHtmlDataJsonFiles = ( masterJsonPath: string, injectableDataPath: str
     fs.writeFileSync(masterJsonPath, JSON.stringify(injectable, null, 2));
 
     console.log('--- Merge Report ---');
-    console.log(`Target file:            ${injectableDataPath}`);
     console.log(`Source file:            ${masterJsonPath}`);
+    console.log(`Target file:            ${injectableDataPath}`);
     console.log(`Existing items (before): ${existingCount}`);
     console.log(`Source items processed:  ${injectable.length}`);
     console.log(`New items written:       ${added}`);
