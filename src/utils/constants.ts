@@ -23,7 +23,7 @@ export function getBackendServer(): string {
     return BACKEND_SERVER;
 }
 
-export const MAX_ITEMS_LISTABLE = 5250;
+export const MAX_ITEMS_LISTABLE = 5250 // typeof localStorage !== 'undefined' ? Number(localStorage.getItem('MAX_ITEMS_LISTABLE')) || 5250 : 5250;
 export const MAX_ITEMS_LISTABLE_FOR_UPLOAD_CYCLE = 100;
 
 export const WIDTH_OF_WIDGETS = 250;
