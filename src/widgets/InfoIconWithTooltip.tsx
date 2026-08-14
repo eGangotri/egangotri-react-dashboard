@@ -12,7 +12,7 @@ const InfoIconWithTooltip: React.FC<ItemToolTipPropsType> = ({
   input,
 }) => {
   return (
-    <Tooltip title={input} arrow placement="right">
+    <Tooltip title={input} arrow placement="right" slotProps={{ tooltip: { sx: { whiteSpace: "pre-line" } } }}>
       <Box className="flex items-center m-1">
         <FaInfoCircle color="primary" />
       </Box>

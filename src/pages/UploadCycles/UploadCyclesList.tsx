@@ -629,7 +629,7 @@ const UploadCyclesList: React.FC = () => {
                                 </IconButton>
                             </Tooltip>
                             <Tooltip title="Resume Uploads">
-                                <IconButton color="primary" onClick={inspectChromeTabs}>
+                                <IconButton color="success" onClick={inspectChromeTabs}>
                                     <FaPlay />
                                 </IconButton>
                             </Tooltip>
