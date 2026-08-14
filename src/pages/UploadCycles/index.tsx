@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { DEFAULT_PAGE_SIZE_OPTIONS, MAX_ITEMS_LISTABLE_FOR_UPLOAD_CYCLE } from 'utils/constants';
+import { DEFAULT_PAGE_SIZE_OPTIONS, MAX_ITEMS_LISTABLE } from 'utils/constants';
 import {
     Table, TableBody, TableCell,
     TableContainer, TableHead, TableRow, Paper,
@@ -451,7 +451,7 @@ const UploadCyclesOld1 = () => {
     }
 
     async function fetchUploadCycles() {
-        const dataForUploadCycle: UploadCycleTableDataDictionary[] = await getDataForUploadCycle(MAX_ITEMS_LISTABLE_FOR_UPLOAD_CYCLE);
+        const dataForUploadCycle: UploadCycleTableDataDictionary[] = await getDataForUploadCycle(MAX_ITEMS_LISTABLE);
         return dataForUploadCycle;
     }
 
