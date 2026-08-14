@@ -1,4 +1,4 @@
-import { AI_SERVER, getBackendServer, MAX_ITEMS_LISTABLE } from "utils/constants";
+import { AI_SERVER, getBackendServer, MAX_ITEMS_LISTABLE, MAX_ITEMS_LISTABLE_FOR_UPLOAD_CYCLE } from "utils/constants";
 import * as _ from 'lodash';
 import { SelectedUploadItem } from "mirror/types"
 import { ExecResponseDetails } from "scriptsThruExec/types";
@@ -329,11 +329,11 @@ export const getUploadStatusDataByProfile = async (
 
 
 export const getDataForUploadCycle = async (
-  limit: number = MAX_ITEMS_LISTABLE,
-  forQueues = false
+  limit: number = MAX_ITEMS_LISTABLE_FOR_UPLOAD_CYCLE,
+  limit2:number = MAX_ITEMS_LISTABLE
 ) => {
   const resource =
-    `${chooseApiPrefix(forQueues)}/listForUploadCycle?limit=${limit}`;
+    `${chooseApiPrefix(false)}/listForUploadCycle?limit=${limit}&limit2=${limit2}`;
   const result = await makeGetCall(resource);
   return result?.response || [];
 };

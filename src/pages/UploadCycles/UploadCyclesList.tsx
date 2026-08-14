@@ -9,7 +9,6 @@ import { Typography, Box, Link, TextField, Select, MenuItem, FormControl, InputL
 import { MdVerified, MdFindInPage, MdCloudUpload, MdFilterList, MdFilterListOff, MdAcUnit } from "react-icons/md"
 import type { UploadCycleTableData, UploadCycleTableDataDictionary } from "mirror/types"
 import { deleteUploadCycleById, getDataForUploadCycle, makePostCallWithErrorHandling, verifyUploadStatusForUploadCycleId } from "service/BackendFetchService"
-import { MAX_ITEMS_LISTABLE } from "utils/constants"
 import { createBackgroundForRow, calcRowUploadFailures } from "./utils"
 import { ColorCodeInformationPanel } from "./ColorCodedInformationPanel"
 import ConfirmDialog from "../../widgets/ConfirmDialog"
@@ -39,7 +38,7 @@ const UploadCyclesList: React.FC = () => {
 
     const fetchUploadCycles = useCallback(async () => {
         try {
-            const dataForUploadCycle: UploadCycleTableDataDictionary[] = await getDataForUploadCycle(MAX_ITEMS_LISTABLE)
+            const dataForUploadCycle: UploadCycleTableDataDictionary[] = await getDataForUploadCycle()
             return dataForUploadCycle?.map((item) => ({
                 id: item.uploadCycle.uploadCycleId,
                 ...item.uploadCycle,

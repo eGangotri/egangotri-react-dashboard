@@ -23,8 +23,17 @@ export function getBackendServer(): string {
     return BACKEND_SERVER;
 }
 
-export const MAX_ITEMS_LISTABLE = 1000 // typeof localStorage !== 'undefined' ? Number(localStorage.getItem('MAX_ITEMS_LISTABLE')) || 5250 : 5250;
-//export const MAX_ITEMS_LISTABLE_FOR_UPLOAD_CYCLE = 100;
+//sum of all items inside each
+//UploacCycle.archiveProfiles[].archiveProfilePath[].absolutePaths
+// in other words  total intended count of items per upload cycle
+// so if u see 20 rows. each row has intendedItems summed up under MAX_ITEMS_LISTABLE
+//u r good. otherwise after MAX_ITEMS_LISTABLE  count
+// wrong values will start showing up.
+export const MAX_ITEMS_LISTABLE =  typeof localStorage !== 'undefined' ? Number(localStorage.getItem('MAX_ITEMS_LISTABLE')) || 5000 : 5000;
+ 
+
+//No. of UploadCycles that can be displayed in Home Page
+export const MAX_ITEMS_LISTABLE_FOR_UPLOAD_CYCLE =  typeof localStorage !== 'undefined' ? Number(localStorage.getItem('MAX_ITEMS_LISTABLE_FOR_UPLOAD_CYCLE')) || 100 : 100;
 
 export const WIDTH_OF_WIDGETS = 250;
 
