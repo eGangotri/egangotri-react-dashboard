@@ -1,9 +1,23 @@
 /// <reference types="node" />
 import * as fs from 'fs';
 import * as path from 'path';
-import { INPUT_PATH, MASTER_JSON, FINAL_HTML_PATH, TEMPLATE_PATH } from './constants';
+import { BACKUP_DIR, MASTER_JSON, FINAL_HTML_PATH, TEMPLATE_PATH } from './constants';
 
-
+function getAllDataItemCountLabel(filePath: string): string {
+  try {
+    const html = fs.readFileSync(filePath, 'utf-8');
+    const match = html.match(/state\.allData = (\[[\s\S]*?\n\]);/);
+    if (match) {
+      const allData = JSON.parse(match[1]);
+      if (Array.isArray(allData)) {
+        return `${allData.length}-Items-`;
+      }
+    }
+  } catch {
+    // if unreadable/unparseable, skip the count in the filename
+  }
+  return '';
+}
 
 function getUniqueBackupPath(filePath: string): string {
   const timestamp = new Date()
@@ -11,13 +25,15 @@ function getUniqueBackupPath(filePath: string): string {
     .replace(/[:.]/g, '-')
     .replace('T', '_')
     .replace('Z', '');
-  const base = filePath.replace(/\.html$/i, '');
+  fs.mkdirSync(BACKUP_DIR, { recursive: true });
+  const base = path.join(BACKUP_DIR, path.basename(filePath).replace(/\.html$/i, ''));
+  const itemCountLabel = getAllDataItemCountLabel(filePath);
 
-  let candidate = `${base}-backup-${timestamp}.html`;
+  let candidate = `${base}-backup-${itemCountLabel}${timestamp}.html`;
   if (!fs.existsSync(candidate)) return candidate;
 
   for (let i = 1; i < Number.MAX_SAFE_INTEGER; i++) {
-    candidate = `${base}-backup-${timestamp}-${i}.html`;
+    candidate = `${base}-backup-${itemCountLabel}${timestamp}-${i}.html`;
     if (!fs.existsSync(candidate)) return candidate;
   }
   throw new Error('Could not find a unique backup path');

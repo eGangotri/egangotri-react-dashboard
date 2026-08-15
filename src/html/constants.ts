@@ -4,6 +4,10 @@ import * as path from 'path';
 
 export const INPUT_PATH = path.join(process.cwd(), `./src/html/input/`);
 export const MASTER_JSON = path.join(INPUT_PATH, 'master-data.json');
+export const BACKUP_DIR = path.join(INPUT_PATH, 'backup');
+
+const injectAbleExcel = "latest-2.xlsx"
+export const LATEST_INJECTABLE_EXCEL =  path.join(INPUT_PATH, injectAbleExcel);
 
 export const TEMPLATE_PATH = path.join(INPUT_PATH, 'GDrive_Explorer_Ultra-tmplt.html');
 export const FINAL_HTML_PATH = path.join(INPUT_PATH, 'GDrive_Explorer_Ultra.html');

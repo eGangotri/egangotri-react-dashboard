@@ -536,6 +536,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       case ExecType.GenExcelV3ofAbsPathsFromProfile:
         _resp = await makePostCallForCreateUploadableExcelV3({
           profiles: dataUserInput,
+          ignorePaths: dataUserInput3NonMandatory,
           allNotJustPdfs: false,
         },
           `yarnExcel/createExcelV3OfAbsPathFromProfile`);
@@ -544,6 +545,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       case ExecType.GenExcelV3ofAbsPathsForAllFileTypesFromProfile:
         _resp = await makePostCallForCreateUploadableExcelV3({
           profiles: dataUserInput,
+          ignorePaths: dataUserInput3NonMandatory,
           allNotJustPdfs: true,
         },
           `yarnExcel/createExcelV3OfAbsPathFromProfile`);

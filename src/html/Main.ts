@@ -3,36 +3,37 @@ import * as fs from 'fs';
 import { readFile, utils } from 'xlsx';
 import { GDriveExcelItem } from './types/GDriveExcelItem';
 import { HtmlDataType } from './types/HtmlDataType';
-import { INPUT_PATH, MASTER_JSON, REQUIRED_HTML_DATA_KEYS } from './constants';
+import { LATEST_INJECTABLE_EXCEL, MASTER_JSON, REQUIRED_GDRIVE_KEYS, REQUIRED_HTML_DATA_KEYS } from './constants';
 import { injectGDriveDataIntoTemplate } from './injectGDriveData';
+import { backupJsonFile } from './backupUtils';
+import { faLaptopHouse } from '@fortawesome/free-solid-svg-icons';
 
 /**
  * pnpm run excelToHTML
- * add your latest Google Drive excel with name latest-XX.xlsx as input Folder
+ * add your latest Google Drive excel with name latest.xlsx as input Folder
  * in call at bottom to 
- * const json = excelToJson('latest-XX.xlsx');
+ * const json = excelToJson('latest.xlsx');
  * Make sure its a Google Drive Excel
  */
 
 
 const excelToJson = (xlsxFileName: string) => {
-    const excelPath = process.argv[2] || `${INPUT_PATH}${xlsxFileName}`;
-    if (!fs.existsSync(excelPath)) {
-        console.error(`Error: Excel file not found at ${excelPath}`);
+    if (!fs.existsSync(xlsxFileName)) {
+        console.error(`Error: Excel file not found at ${xlsxFileName}`);
         process.exit(1);
     }
-    const outputJsonPath = `${excelPath.replace(/\.xlsx$/i, '')}.json`;
+    const outputJsonPath = `${xlsxFileName.replace(/\.xlsx$/i, '')}.json`;
 
-    const workbook = readFile(excelPath);
+    const workbook = readFile(xlsxFileName);
     const worksheet = workbook.Sheets[workbook.SheetNames[0]];
     const jsonData = utils.sheet_to_json(worksheet);
     if (jsonData.length === 0) {
-        console.error(`Error: No data rows found in ${excelPath}. Exiting.`);
+        console.error(`Error: No data rows found in ${xlsxFileName}. Exiting.`);
         process.exit(1);
     }
     fs.writeFileSync(outputJsonPath, JSON.stringify(jsonData, null, 2));
 
-    console.log(`Converted ${excelPath} -> ${outputJsonPath}`);
+    console.log(`Converted ${xlsxFileName} -> ${outputJsonPath}`);
     return outputJsonPath
 }
 
@@ -69,25 +70,17 @@ const gDriveExcelJsonToHtmlDataJson = (inputJsonPath: string) => {
 }
 
 
-const validateHtmlDataItems = (raw: unknown, jsonPath: string): HtmlDataType[] => {
+const validateHtmlDataItems = (raw: unknown, jsonPath: string, throwError = false): HtmlDataType[] => {
     if (!Array.isArray(raw) || raw.length === 0) {
         throw new Error(`${jsonPath} must contain a non-empty JSON array of html-data items`);
     }
     raw.forEach((item, idx) => {
         const missing = REQUIRED_HTML_DATA_KEYS.filter((key) => !(key in item));
-        // if (missing.length > 0) {
-        //     throw new Error(`${jsonPath}: item at index ${idx} is missing required field(s): ${missing.join(', ')}`);
-        // }
+        if (missing.length > 0 && throwError) {
+            throw new Error(`${jsonPath}: item at index ${idx} is missing required field(s): ${missing.join(', ')}`);
+        }
     });
     return raw as HtmlDataType[];
-};
-
-const backupJsonFile = (jsonFilePath: string): string => {
-    const timestamp = new Date().toISOString().replace(/[:.]/g, '-').replace('T', '_').replace('Z', '');
-    const backupPath = jsonFilePath.replace(/\.json$/i, `-backup-${timestamp}.json`);
-    fs.copyFileSync(jsonFilePath, backupPath);
-    console.log(`Backup created: ${backupPath}`);
-    return backupPath;
 };
 
 /**
@@ -103,8 +96,8 @@ const mergeHtmlDataJsonFiles = ( masterJsonPath: string, injectableDataPath: str
         }
     });
 
-    const master = validateHtmlDataItems(JSON.parse(fs.readFileSync(masterJsonPath, 'utf-8')), masterJsonPath);
-    const injectable = validateHtmlDataItems(JSON.parse(fs.readFileSync(injectableDataPath, 'utf-8')), injectableDataPath);
+    const master = validateHtmlDataItems(JSON.parse(fs.readFileSync(masterJsonPath, 'utf-8')), masterJsonPath, faLaptopHouse);
+    const injectable = validateHtmlDataItems(JSON.parse(fs.readFileSync(injectableDataPath, 'utf-8')), injectableDataPath, true);
 
     const existingCount = master.length;
     const indexByLinkForMaster = 
@@ -118,29 +111,29 @@ const mergeHtmlDataJsonFiles = ( masterJsonPath: string, injectableDataPath: str
             master[existingIdx] = item;
             overwritten++;
         } else {
-            indexByLinkForMaster.set(item.l, injectable.length);
+            indexByLinkForMaster.set(item.l, master.length);
             master.push(item);
             added++;
         }
     }
 
     backupJsonFile(masterJsonPath);
-    fs.writeFileSync(masterJsonPath, JSON.stringify(injectable, null, 2));
+    fs.writeFileSync(masterJsonPath, JSON.stringify(master, null, 2));
 
     console.log('--- Merge Report ---');
-    console.log(`Source file:            ${masterJsonPath}`);
-    console.log(`Target file:            ${injectableDataPath}`);
-    console.log(`Existing items (before): ${existingCount}`);
-    console.log(`Source items processed:  ${injectable.length}`);
-    console.log(`New items written:       ${added}`);
-    console.log(`Overwritten (dup link):  ${overwritten}`);
-    console.log(`Total items (after):     ${injectable.length}`);
+    console.log(`Master-JSON Path:                             ${masterJsonPath}`);
+    console.log(`Injectable Path:                              ${injectableDataPath}`);
+    console.log(`Existing items (before) in Master-JSON:  ${existingCount}`);
+    console.log(`Injectable items processed:              ${injectable.length}`);
+    console.log(`New items written:                       ${added}`);
+    console.log(`Overwritten (dup link):                  ${overwritten}`);
+    console.log(`Total items (after) in Master-JSON:      ${master.length}`);
 
-    return { existingCount, sourceCount: master.length,
+    return { existingCount, sourceCount: injectable.length,
          added, overwritten, totalAfter: master.length };
 };
 
-const json = excelToJson('latest.xlsx');
+const json = excelToJson(LATEST_INJECTABLE_EXCEL);
 const htmlJson = gDriveExcelJsonToHtmlDataJson(json);
 const result = mergeHtmlDataJsonFiles(MASTER_JSON,htmlJson)
 console.log(result)
