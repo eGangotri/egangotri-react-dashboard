@@ -330,10 +330,10 @@ export const getUploadStatusDataByProfile = async (
 
 export const getDataForUploadCycle = async (
   limit: number = MAX_ITEMS_LISTABLE_FOR_UPLOAD_CYCLE,
-  forQueues = false
+  limit2:number = MAX_ITEMS_LISTABLE
 ) => {
   const resource =
-    `${chooseApiPrefix(forQueues)}/listForUploadCycle?limit=${limit}`;
+    `${chooseApiPrefix(false)}/listForUploadCycle?limit=${limit}&limit2=${limit2}`;
   const result = await makeGetCall(resource);
   return result?.response || [];
 };

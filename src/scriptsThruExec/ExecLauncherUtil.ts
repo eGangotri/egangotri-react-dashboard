@@ -210,11 +210,13 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
     _resp = await handleYarnListingGeneration(execType, dataUserInput);
   }
 
-  else if (execType >= 9000 && execType <= 9110) {
+  else if (execType === ExecType.GenExcelV1ofAbsPathsFromProfile || 
+    execType === ExecType.GenExcelV1ofAbsPathsForAllFileTypesFromProfile) {
     const execAsString = execType.toString()
 
     _resp = await makePostCallForCreateUploadableExcelV1({
       profiles: dataUserInput,
+      ignorePaths: dataUserInput2Mandatory || "",
       script: dataUserInput3NonMandatory,
       allNotJustPdfs: execAsString[1] === "1",
       useFolderNameAsDesc: execAsString[2] === "1",
@@ -536,6 +538,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       case ExecType.GenExcelV3ofAbsPathsFromProfile:
         _resp = await makePostCallForCreateUploadableExcelV3({
           profiles: dataUserInput,
+          ignorePaths: dataUserInput3NonMandatory,
           allNotJustPdfs: false,
         },
           `yarnExcel/createExcelV3OfAbsPathFromProfile`);
@@ -544,6 +547,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       case ExecType.GenExcelV3ofAbsPathsForAllFileTypesFromProfile:
         _resp = await makePostCallForCreateUploadableExcelV3({
           profiles: dataUserInput,
+          ignorePaths: dataUserInput3NonMandatory,
           allNotJustPdfs: true,
         },
           `yarnExcel/createExcelV3OfAbsPathFromProfile`);

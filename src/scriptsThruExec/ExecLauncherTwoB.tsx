@@ -26,7 +26,7 @@ const ExecLauncherTwoB: React.FC = () => {
         setAllNotJustPdfsV1(event.target.checked);
         setUploadableExcelTypeV1(_uploadableExcelV1CreateType({
             allNotJustPdfsV1: event.target.checked,
-            useFolderNameAsDesc: useFolderNameAsDesc
+            useFolderNameAsDesc: useFolderNameAsDesc,
         }));
     };
     const handleUseFolderNameAsDesc = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -94,6 +94,9 @@ const ExecLauncherTwoB: React.FC = () => {
                     placeholder='Profile Name'
                     userInputOneInfo="It will take all Abs Paths of PDFs in the Folder or Profile and create Excel for Uploads"
                     execType={uploadableExcelTypeV1}
+                    userInputTwoInfoNonMandatory='Folders to exclude as csv-s'
+                    secondTextBoxPlaceHolder='Folders to exclude as csv-s'
+                    secondComponentRequired={false}
                     thirdTextBoxPlaceHolder='Enter Script for Folder/File-Name Converstions(Optional)'
                     userInputThreeInfoNonMandatory='For Converting any scripts in FileName or FolderName to Roman-Colloquial (Optional)'
                     reactComponent={<Box>
@@ -111,6 +114,9 @@ const ExecLauncherTwoB: React.FC = () => {
                 <ExecComponent buttonText="Create Uploadable-Excel-V3"
                     placeholder='Profile Name'
                     userInputOneInfo="It will take all Abs Paths of PDFs in the Folder or Profile and create Excel for Uploads"
+                    thirdTextBoxPlaceHolder='Folders to exclude as csv-s'
+                    userInputThreeInfoNonMandatory='Folders to exclude as csv-s'
+
                     execType={uploadableExcelTypeV3}
                     reactComponent={<Box>
                         <FormControlLabel

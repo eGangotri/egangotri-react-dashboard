@@ -60,7 +60,7 @@
     "start": "vite",
     "// note": "pnpm st runs pnpm start   if alias st='pnpm run start' in bash then just st",
     "st": "pnpm run start",
-    "excelToHTML": "pnpm dlx tsx ./src/html/convertExcelToJson.ts",
+    "excelToHTML": "pnpm dlx tsx ./src/html/Main.ts",
     "build": "tsc && vite build",
     "serve": "vite preview",
     "start0": "react-dotenv && pnpm run lint_fix",

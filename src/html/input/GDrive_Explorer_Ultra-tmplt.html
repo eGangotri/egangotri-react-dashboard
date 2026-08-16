@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GDrive Explorer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .loading-spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border-left-color: #09f;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .thumbnail-img {
+            max-width: 80px;
+            max-height: 50px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+        .highlight {
+            padding: 0 2px;
+            border-radius: 2px;
+            font-weight: bold;
+        }
+        .collapsed {
+            display: none !important;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 140px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 20;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -70px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 10px;
+            pointer-events: none;
+        }
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen text-gray-800">
+    <div id="app" class="flex flex-col h-screen">
+        <header class="bg-white border-b border-gray-200 shadow-sm z-10 px-4 py-3">
+            <div class="container mx-auto flex flex-wrap items-center gap-4">
+                <div class="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-3 shrink-0">
+                    <h1 class="text-xl font-bold text-gray-900 tracking-tight">GDrive Explorer</h1>
+                    <span class="text-xs text-gray-500 font-medium">Till July-26 • <span id="headerTotalCount">0</span> files</span>
+                </div>
+
+                <div class="flex-grow min-w-[280px]">
+                    <div class="relative">
+                        <input type="text" id="csvSearch" placeholder="Search terms (e.g. Kal, Tant, Khem)..." 
+                               class="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:bg-white outline-none transition text-sm">
+                        <div class="absolute left-3 top-2.5 text-gray-400">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-4 shrink-0">
+                    <div class="flex items-center gap-2">
+                        <div id="activeTerms" class="hidden md:flex flex-wrap gap-1"></div>
+                        <button id="combinedSearchBtn" onclick="searchCombined()" class="hidden md:flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-[10px] font-bold uppercase rounded-lg shadow-sm transition-all">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                            Search Combined
+                        </button>
+                    </div>
+                    
+                    <div class="flex items-center gap-2 text-xs text-gray-600 border-l pl-4 border-gray-200">
+                        <label>Rows:</label>
+                        <select id="pageSize" class="bg-transparent border-none font-semibold outline-none cursor-pointer">
+                            <option value="10">10</option>
+                            <option value="25">25</option>
+                            <option value="50" selected>50</option>
+                            <option value="100">100</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-grow overflow-hidden flex flex-col">
+            <div class="bg-gray-100 px-4 py-1.5 text-[11px] text-gray-500 border-b border-gray-200 flex justify-between items-center">
+                <div class="flex items-center gap-4">
+                    <div>Showing <span id="showingCount" class="font-bold text-gray-700">0</span> results</div>
+                    <div class="flex gap-2 border-l pl-4 border-gray-300">
+                        <button onclick="toggleCol('col-thumb')" class="hover:text-blue-600 transition flex items-center gap-1">
+                            <span id="icon-thumb">📁</span> Thumb
+                        </button>
+                        <button onclick="toggleCol('col-folder')" class="hover:text-blue-600 transition flex items-center gap-1">
+                            <span id="icon-folder">📂</span> Folder
+                        </button>
+                        <button onclick="toggleCol('col-size')" class="hover:text-blue-600 transition flex items-center gap-1">
+                            <span id="icon-size">📁</span> Size
+                        </button>
+                        <button onclick="toggleCol('col-page')" class="hover:text-blue-600 transition flex items-center gap-1">
+                            <span id="icon-size">📁</span> Page Count
+                        </button>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2">
+                    <div id="activeTermsMobile" class="md:hidden flex gap-1"></div>
+                    <button id="combinedSearchBtnMobile" onclick="searchCombined()" class="md:hidden flex items-center gap-1 px-2 py-0.5 bg-blue-600 text-white text-[9px] font-bold uppercase rounded transition-all hidden">
+                        Combined Search
+                    </button>
+                </div>
+                <div class="flex items-center gap-4">
+                    <span id="sortStatus" class="italic">Sorted by Title</span>
+                    <div id="loadingIndicator" class="hidden"><div class="loading-spinner"></div></div>
+                </div>
+            </div>
+
+            <div class="flex-grow overflow-auto bg-white">
+                <table class="min-w-full divide-y divide-gray-200 table-fixed">
+                    <thead class="bg-gray-50 sticky top-0 z-10 shadow-sm">
+                        <tr>
+                            <th class="col-thumb collapsed w-24 px-4 py-3 text-left text-[10px] font-bold text-gray-500 uppercase tracking-wider">Thumb</th>
+                            <th class="px-4 py-3 text-left text-[10px] font-bold text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition" onclick="sortBy('t')">Title ↕</th>
+                            <th class="col-folder w-1/4 px-4 py-3 text-left text-[10px] font-bold text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition" onclick="sortBy('f')">Folder ↕</th>
+                            <th class="col-size collapsed w-24 px-4 py-3 text-left text-[10px] font-bold text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition" onclick="sortBy('s')">Size ↕</th>
+                            <th class="col-page collapsed w-24 px-4 py-3 text-left text-[10px] font-bold text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition" onclick="sortBy('s')">Pages↕</th>
+                            <th class="w-32 px-4 py-3 text-left text-[10px] font-bold text-gray-500 uppercase tracking-wider">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody" class="bg-white divide-y divide-gray-100">
+                        <!-- Rows injected here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <footer class="bg-white border-t border-gray-200 px-4 py-2 flex items-center justify-between shadow-[0_-1px_3px_rgba(0,0,0,0.05)]">
+                <div class="text-xs text-gray-500">
+                    Page <span id="currentPage" class="font-bold text-gray-700">1</span> of <span id="totalPages" class="font-bold text-gray-700">1</span>
+                </div>
+                <div class="flex gap-1">
+                    <button onclick="goToPage(1)" class="px-2 py-1 text-[10px] font-bold uppercase border border-gray-200 rounded hover:bg-gray-50 disabled:opacity-30" id="btnFirst">First</button>
+                    <button onclick="prevPage()" class="px-3 py-1 text-[10px] font-bold uppercase border border-gray-200 rounded hover:bg-gray-50 disabled:opacity-30" id="btnPrev">Prev</button>
+                    <button onclick="nextPage()" class="px-3 py-1 text-[10px] font-bold uppercase border border-gray-200 rounded hover:bg-gray-50 disabled:opacity-30" id="btnNext">Next</button>
+                    <button onclick="goToPage(state.totalPages)" class="px-2 py-1 text-[10px] font-bold uppercase border border-gray-200 rounded hover:bg-gray-50 disabled:opacity-30" id="btnLast">Last</button>
+                </div>
+            </footer>
+        </main>
+
+        <div id="loadingOverlay" class="fixed inset-0 bg-white/80 backdrop-blur-sm flex items-center justify-center z-50 hidden">
+            <div class="flex flex-col items-center">
+                <div class="loading-spinner mb-3 w-10 h-10 border-4"></div>
+                <p class="text-sm font-bold text-gray-600">Syncing Files...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const state = {
+            allData: [],
+            filteredData: [],
+            currentPage: 1,
+            pageSize: 50,
+            totalPages: 1,
+            sortCol: 't',
+            sortDir: 1,
+            searchTerms: [],
+            columns: {
+                'col-thumb': false,
+                'col-folder': true,
+                'col-size': false,
+                'col-page': false,
+            }
+        };
+
+        const highlightColors = [
+            { bg: '#fef3c7', text: '#92400e' }, 
+            { bg: '#dcfce7', text: '#166534' }, 
+            { bg: '#dbeafe', text: '#1e40af' }, 
+            { bg: '#f3e8ff', text: '#6b21a8' }, 
+            { bg: '#fee2e2', text: '#991b1b' }, 
+            { bg: '#e0f2fe', text: '#075985' }, 
+            { bg: '#ffedd5', text: '#9a3412' }, 
+            { bg: '#f1f5f9', text: '#1e293b' }  
+        ];
+
+        const tableBody = document.getElementById('tableBody');
+        const csvSearch = document.getElementById('csvSearch');
+        const activeTerms = document.getElementById('activeTerms');
+        const activeTermsMobile = document.getElementById('activeTermsMobile');
+        const combinedSearchBtn = document.getElementById('combinedSearchBtn');
+        const combinedSearchBtnMobile = document.getElementById('combinedSearchBtnMobile');
+        const showingCount = document.getElementById('showingCount');
+        const headerTotalCount = document.getElementById('headerTotalCount');
+        const currentPageEl = document.getElementById('currentPage');
+        const totalPagesEl = document.getElementById('totalPages');
+        const pageSizeEl = document.getElementById('pageSize');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        const sortStatus = document.getElementById('sortStatus');
+
+        async function init() {
+            showLoading(true);
+            try {
+                state.filteredData = [...state.allData];
+                headerTotalCount.textContent = state.allData.length.toLocaleString();
+                updateUI();
+            } catch (err) {
+                console.error("Failed to load data:", err);
+            }
+            showLoading(false);
+        }
+
+        function showLoading(show) {
+            loadingOverlay.classList.toggle('hidden', !show);
+        }
+
+        function toggleCol(colClass) {
+            state.columns[colClass] = !state.columns[colClass];
+            const elements = document.getElementsByClassName(colClass);
+            for (let el of elements) {
+                el.classList.toggle('collapsed', !state.columns[colClass]);
+            }
+            const iconId = 'icon-' + colClass.split('-')[1];
+            document.getElementById(iconId).innerHTML = state.columns[colClass] ? '📂' : '📁';
+        }
+
+        function copyToClipboard(text, btn) {
+            navigator.clipboard.writeText(text).then(() => {
+                const originalColor = btn.style.color;
+                btn.style.color = '#10b981';
+                setTimeout(() => {
+                    btn.style.color = originalColor;
+                }, 1000);
+            });
+        }
+
+        function searchArchive(text) {
+            const query = encodeURIComponent(text).replace(/%20/g, '+');
+            window.open(`https://archive.org/search?tab=all&query=${query}`, '_blank');
+        }
+
+        function searchCombined() {
+            if (state.searchTerms.length > 0) {
+                const query = state.searchTerms.join(' ');
+                searchArchive(query);
+            }
+        }
+
+        function highlightText(text, terms) {
+            if (!terms || terms.length === 0) return text;
+            let highlighted = text;
+            const sortedTerms = [...terms].sort((a, b) => b.length - a.length);
+            const placeholders = [];
+            
+            sortedTerms.forEach((term, index) => {
+                const color = highlightColors[index % highlightColors.length];
+                const regex = new RegExp(`(${term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+                const marker = `___HL_${index}___`;
+                highlighted = highlighted.replace(regex, (match) => {
+                    placeholders[index] = `<span class="highlight" style="background-color: ${color.bg}; color: ${color.text};">${match}</span>`;
+                    return marker;
+                });
+            });
+
+            placeholders.forEach((html, index) => {
+                const marker = new RegExp(`___HL_${index}___`, 'g');
+                highlighted = highlighted.replace(marker, html);
+            });
+            return highlighted;
+        }
+
+        function updateUI() {
+            const start = (state.currentPage - 1) * state.pageSize;
+            const end = start + state.pageSize;
+            const pageData = state.filteredData.slice(start, end);
+            state.totalPages = Math.ceil(state.filteredData.length / state.pageSize) || 1;
+            
+            tableBody.innerHTML = pageData.map(item => {
+                const hTitle = highlightText(item.t, state.searchTerms);
+                const hFolder = highlightText(item.f, state.searchTerms);
+                const safeTitle = item.t.replace(/`/g, "\\`").replace(/\$/g, "\\$");
+                const noExt = item.t.substring(0, item.t.lastIndexOf('.')) || item.t;
+                const splitStr = noExt.split('-')[0].trim();
+                
+                return `
+                <tr class="hover:bg-blue-50/30 transition group">
+                    <td class="col-thumb ${state.columns['col-thumb'] ? '' : 'collapsed'} px-4 py-3">
+                        ${item.th ? `<img src="${item.th}" class="thumbnail-img shadow-sm border border-gray-100" onerror="this.style.display='none'">` : '<span class="text-[9px] text-gray-300 font-bold uppercase">No Preview</span>'}
+                    </td>
+                    <td class="px-4 py-3">
+                        <a href="${item.l}" target="_blank" class="text-sm font-semibold text-blue-600 hover:text-blue-800 hover:underline leading-tight block mb-1">${hTitle}</a>
+                    </td>
+                    <td class="col-folder ${state.columns['col-folder'] ? '' : 'collapsed'} px-4 py-3">
+                        <div class="text-[11px] text-gray-500 break-all font-medium">${hFolder}</div>
+                    </td>
+                    <td class="col-size ${state.columns['col-size'] ? '' : 'collapsed'} px-4 py-3">
+                        <div class="text-[11px] font-bold text-gray-600">${item.s}</div>
+                    </td>
+                    <td class="col-page ${state.columns['col-page'] ? '' : 'collapsed'} px-4 py-3">
+                        <div class="text-[11px] font-bold text-gray-600">${item.p?item.p:'-'}</div>
+                    </td>
+                    <td class="px-4 py-3">
+                        <div class="flex items-center gap-3">
+                            <!-- Copy No Ext -->
+                            <div class="tooltip">
+                                <button onclick="copyToClipboard('${noExt.replace(/'/g, "\\'")}', this)" class="text-gray-400 hover:text-gray-600 transition">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+                                </button>
+                                <span class="tooltiptext">Copy Title (No Ext)</span>
+                            </div>
+                            
+                            <!-- Search Archive -->
+                            <div class="tooltip">
+                                <button onclick="searchArchive('${noExt.replace(/'/g, "\\'")}')" class="text-blue-400 hover:text-blue-600 transition">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                                </button>
+                                <span class="tooltiptext">Search Archive.org</span>
+                            </div>
+
+                            <div class="w-px h-4 bg-gray-200"></div>
+
+                            <!-- Copy Split -->
+                            <div class="tooltip">
+                                <button onclick="copyToClipboard('${splitStr.replace(/'/g, "\\'")}', this)" class="text-gray-400 hover:text-gray-600 transition">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+                                </button>
+                                <span class="tooltiptext">Copy Split String</span>
+                            </div>
+
+                            <!-- Search Split -->
+                            <div class="tooltip">
+                                <button onclick="searchArchive('${splitStr.replace(/'/g, "\\'")}')" class="text-blue-400 hover:text-blue-600 transition">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 21l1.5-4.5L13 21h-3zm3.5-11.5L15 5l1.5 4.5h-3zM3 3h18v18H3V3z"></path></svg>
+                                </button>
+                                <span class="tooltiptext">Search Split String</span>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                `;
+            }).join('');
+
+            showingCount.textContent = state.filteredData.length.toLocaleString();
+            currentPageEl.textContent = state.currentPage;
+            totalPagesEl.textContent = state.totalPages;
+
+            const termHtml = state.searchTerms.map((term, index) => {
+                const color = highlightColors[index % highlightColors.length];
+                return `<span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase shadow-sm" style="background-color: ${color.bg}; color: ${color.text}; border: 1px solid ${color.text}20">${term}</span>`;
+            }).join('');
+            activeTerms.innerHTML = termHtml;
+            activeTermsMobile.innerHTML = termHtml;
+
+            if (state.searchTerms.length > 0) {
+                combinedSearchBtn.classList.remove('hidden');
+                combinedSearchBtnMobile.classList.remove('hidden');
+            } else {
+                combinedSearchBtn.classList.add('hidden');
+                combinedSearchBtnMobile.classList.add('hidden');
+            }
+
+            document.getElementById('btnFirst').disabled = state.currentPage === 1;
+            document.getElementById('btnPrev').disabled = state.currentPage === 1;
+            document.getElementById('btnNext').disabled = state.currentPage === state.totalPages;
+            document.getElementById('btnLast').disabled = state.currentPage === state.totalPages;
+        }
+
+        function filterData() {
+            state.searchTerms = csvSearch.value.split(',').map(t => t.trim()).filter(t => t !== '');
+            const lowerTerms = state.searchTerms.map(t => t.toLowerCase());
+            state.filteredData = state.allData.filter(item => {
+                const content = (item.t + " " + item.f).toLowerCase();
+                for (let term of lowerTerms) {
+                    if (!content.includes(term)) return false;
+                }
+                return true;
+            });
+            state.currentPage = 1;
+            updateUI();
+        }
+
+        function sortBy(col) {
+            if (state.sortCol === col) {
+                state.sortDir *= -1;
+            } else {
+                state.sortCol = col;
+                state.sortDir = 1;
+            }
+            const colName = col === 't' ? 'Title' : col === 'f' ? 'Folder' : 'Size';
+            sortStatus.textContent = `Sorted by ${colName} ${state.sortDir === 1 ? '↑' : '↓'}`;
+            
+            state.filteredData.sort((a, b) => {
+                let valA = (a[col] || '').toString().toLowerCase();
+                let valB = (b[col] || '').toString().toLowerCase();
+                if (col === 's') { 
+                    const parseSize = (s) => {
+                        const n = parseFloat(s);
+                        if (s.includes('GB')) return n * 1024;
+                        if (s.includes('KB')) return n / 1024;
+                        return n;
+                    };
+                    valA = parseSize(a[col]);
+                    valB = parseSize(b[col]);
+                }
+                if (valA < valB) return -1 * state.sortDir;
+                if (valA > valB) return 1 * state.sortDir;
+                return 0;
+            });
+            state.currentPage = 1;
+            updateUI();
+        }
+
+        csvSearch.addEventListener('input', filterData);
+        pageSizeEl.addEventListener('change', (e) => {
+            state.pageSize = parseInt(e.target.value);
+            state.currentPage = 1;
+            updateUI();
+        });
+
+        function prevPage() { if (state.currentPage > 1) { state.currentPage--; updateUI(); } }
+        function nextPage() { if (state.currentPage < state.totalPages) { state.currentPage++; updateUI(); } }
+        function goToPage(page) { state.currentPage = Math.max(1, Math.min(page, state.totalPages)); updateUI(); }
+
+        state.allData = [];
+        init();
+    </script>
+</body>
+</html>

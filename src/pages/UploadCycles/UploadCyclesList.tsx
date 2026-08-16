@@ -9,7 +9,6 @@ import { Typography, Box, Link, TextField, Select, MenuItem, FormControl, InputL
 import { MdVerified, MdFindInPage, MdCloudUpload, MdFilterList, MdFilterListOff, MdAcUnit } from "react-icons/md"
 import type { UploadCycleTableData, UploadCycleTableDataDictionary } from "mirror/types"
 import { deleteUploadCycleById, getDataForUploadCycle, makePostCallWithErrorHandling, verifyUploadStatusForUploadCycleId } from "service/BackendFetchService"
-import { MAX_ITEMS_LISTABLE } from "utils/constants"
 import { createBackgroundForRow, calcRowUploadFailures } from "./utils"
 import { ColorCodeInformationPanel } from "./ColorCodedInformationPanel"
 import ConfirmDialog from "../../widgets/ConfirmDialog"
@@ -39,7 +38,7 @@ const UploadCyclesList: React.FC = () => {
 
     const fetchUploadCycles = useCallback(async () => {
         try {
-            const dataForUploadCycle: UploadCycleTableDataDictionary[] = await getDataForUploadCycle(MAX_ITEMS_LISTABLE)
+            const dataForUploadCycle: UploadCycleTableDataDictionary[] = await getDataForUploadCycle()
             return dataForUploadCycle?.map((item) => ({
                 id: item.uploadCycle.uploadCycleId,
                 ...item.uploadCycle,
@@ -623,13 +622,13 @@ const UploadCyclesList: React.FC = () => {
                                     <FaTimes style={{ position: 'absolute', fontSize: '0.7em', color: 'red', bottom: 4, right: 4 }} />
                                 </IconButton>
                             </Tooltip>
-                             <Tooltip title="Close All Tabs for Uploaded Items">
+                             <Tooltip title="Close All Tabs for Successfully Uploaded Items">
                                 <IconButton color="primary" onClick={invokeCloseSuccessfullyUploaded}>
                                     <FaCheckCircle />
                                 </IconButton>
                             </Tooltip>
                             <Tooltip title="Resume Uploads">
-                                <IconButton color="primary" onClick={inspectChromeTabs}>
+                                <IconButton color="success" onClick={inspectChromeTabs}>
                                     <FaPlay />
                                 </IconButton>
                             </Tooltip>

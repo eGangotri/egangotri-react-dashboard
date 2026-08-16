@@ -9,6 +9,10 @@ lerna-debug.log*
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 src/html/input/*.*
+src/html/input/*.html
+src/html/input/*.json
+
+src/html/input/backup/*.*
 # Runtime data
 pids
 *.pid
@@ -101,3 +105,6 @@ dist
 # TernJS port file
 .tern-port
 bash.exe.stackdump
+
+# JSON/HTML backup files
+/backup/
