@@ -115,6 +115,7 @@ const AITitleRenamerHistory: React.FC = () => {
   // State for row selection
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
 
+  const [folderToCleanUp, setFolderToCleanUp] = useState<string>('PLAYGROUND');
   const executeFolderCleanup = async (runId: string) => {
     const _profile = cleanupTOFolder === "Default" ? "" : cleanupTOFolder
     console.log(`Executing folder cleanup for runId: ${runId} with profile: ${_profile}`)
@@ -362,6 +363,33 @@ const AITitleRenamerHistory: React.FC = () => {
       setLoading(false);
     }
   };
+
+    // Handle cleanup for selected items
+  const moveAllEmptyFoldersToDiscard = async () => {
+    const ok = window.confirm(`Are you sure you want to cleanup All Empty folders to _discard folder?`);
+    if (!ok) return;
+
+    try {
+      setLoading(true);
+      const response = await makePostCallWithErrorHandling({
+        folderToCleanUp: folderToCleanUp,
+      }, `ai/moveEmptyFoldersToDiscard`)
+
+      setResultTitle(`Cleanup triggered for ${folderToCleanUp}`);
+      setResultBody(response);
+      setResultOpen(true);
+      setReloadKey(k => k + 1);
+    } catch (e) {
+      console.error(e);
+      setResultTitle('Cleanup error');
+      setResultBody({ error: e instanceof Error ? e.message : 'Unknown error' });
+      setResultOpen(true);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
 
   // Get filename from path
   const getFileName = (filePath: string) => {
@@ -699,6 +727,20 @@ const AITitleRenamerHistory: React.FC = () => {
         <Typography variant="h5" component="h2">
           AI Title Renamer History
         </Typography>
+        <Box display="flex" alignItems="center" gap={1}>
+          <TextField
+            size="small"
+            label="Folder to clean"
+            value={folderToCleanUp}
+            onChange={(e) => setFolderToCleanUp(e.target.value)}
+            sx={{ width: 160 }}
+          />
+          <Tooltip title={`Move all empty folders in ${folderToCleanUp} to _discard`}>
+            <IconButton onClick={moveAllEmptyFoldersToDiscard} color="primary">
+              <CleaningServicesIcon />
+            </IconButton>
+          </Tooltip>
+        </Box>
       </Box>
 
       {/* Error message display */}
