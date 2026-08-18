@@ -731,9 +731,10 @@ const AITitleRenamerHistory: React.FC = () => {
           <TextField
             size="small"
             label="Folder to clean"
+            placeholder="Profile or Path or Formula with %%"
             value={folderToCleanUp}
             onChange={(e) => setFolderToCleanUp(e.target.value)}
-            sx={{ width: 160 }}
+            sx={{ width: 360 }}
           />
           <Tooltip title={`Move all empty folders in ${folderToCleanUp} to _discard`}>
             <IconButton onClick={moveAllEmptyFoldersToDiscard} color="primary">

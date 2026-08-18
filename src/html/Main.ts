@@ -96,7 +96,7 @@ const mergeHtmlDataJsonFiles = ( masterJsonPath: string, injectableDataPath: str
         }
     });
 
-    const master = validateHtmlDataItems(JSON.parse(fs.readFileSync(masterJsonPath, 'utf-8')), masterJsonPath, faLaptopHouse);
+    const master = validateHtmlDataItems(JSON.parse(fs.readFileSync(masterJsonPath, 'utf-8')), masterJsonPath, false);
     const injectable = validateHtmlDataItems(JSON.parse(fs.readFileSync(injectableDataPath, 'utf-8')), injectableDataPath, true);
 
     const existingCount = master.length;
