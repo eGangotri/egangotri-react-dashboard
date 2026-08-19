@@ -1,4 +1,5 @@
 import * as fs from 'fs';
+import { formatTime } from 'mirror/utils';
 import * as path from 'path';
 import * as XLSX from 'xlsx';
 
@@ -66,6 +67,7 @@ function cleanArchiveTitle(input: string): string {
 
 // Function 2: encode title, hit archive.org scrape API, collect totals, save to Excel
 export async function searchArchiveAndExport(range?: string, folderPrefix?: string): Promise<void> {
+    const startTime = Date.now();
     let allTitles = getArrayOfTitles();
     if (folderPrefix) {
         const prefixLower = folderPrefix.toLowerCase();
@@ -107,7 +109,9 @@ export async function searchArchiveAndExport(range?: string, folderPrefix?: stri
     const summarySheet = XLSX.utils.json_to_sheet(buildSummaryRows(rows));
     XLSX.utils.book_append_sheet(workbook, summarySheet, 'Summary');
     XLSX.writeFile(workbook, outputPath);
-    console.log(`\nSaved ${rows.length} rows to ${outputPath}`);
+    const errorCount = rows.filter((row) => row.Total === -1).length;
+    const zeroCount = rows.filter((row) => row.Total === 0).length;
+    console.log(`\nSaved ${rows.length} rows with ${zeroCount} Empty Items and ${errorCount} Errors to ${outputPath} in ${formatTime(Date.now() - startTime)}`);
 }
 
 // Strips Lucene query operators (-, :, (), [], etc.) that make archive.org's scrape API
@@ -188,12 +192,12 @@ function buildSummaryRows(
             'Main-Folder': main,
             'Total Items in Master Data': masterCounts.get(main) ?? 0,
             'Error Count': counts.errors,
-            'Count Total=0': counts[0],
-            'Count Total=1': counts[1],
-            'Count Total=2': counts[2],
-            'Count Total=3': counts[3],
-            'Count Total=4': counts[4],
-            'Count Total>=5': counts['5+'],
+            'Empty Count': counts[0],
+            'Count=1': counts[1],
+            'Count=2': counts[2],
+            'Count=3': counts[3],
+            'Count=4': counts[4],
+            'Count>=5': counts['5+'],
         }));
 }
 
