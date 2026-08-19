@@ -45,6 +45,9 @@ function cleanArchiveTitle(input: string): string {
     // 1. Separate transitions from letters into numbers (e.g., "Part10" -> "Part 10");
     // digit-to-letter transitions like "14th" are left untouched
     .replace(/([a-zA-Z])(?=\d)/g, '$1 ')
+    // 1a. Separate transitions from numbers into uppercase letters (e.g., "25Shlf" -> "25 Shlf");
+    // lowercase suffixes like "4th", "5th" are left untouched
+    .replace(/(\d)(?=[A-Z])/g, '$1 ')
     // 1b. Insert a space after a dot when an uppercase letter follows
     // (e.g., "Dr.Gokul" -> "Dr. Gokul", "K.C" -> "K. C"); "Dr.gokul" stays untouched
     .replace(/\.(?=[A-Z])/g, '. ')
