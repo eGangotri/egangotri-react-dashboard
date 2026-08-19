@@ -84,15 +84,15 @@ export async function searchArchiveAndExport(range?: string, folderPrefix?: stri
 
     const rows: Array<{ Title: string; Folder: string; 'Main-Folder': string; Total: number | string; 'Cleaned Title': string; EncodedUrl: string; Identifiers: string }> = [];
 
-    for (let i = 0; i < titles.length; i++) {
-        const { title, folder } = titles[i];
+    for (let counter = 0; counter < titles.length; counter++) {
+        const { title, folder } = titles[counter];
         const cleanedTitle = cleanArchiveTitle(title);
         const query = encodeURIComponent(sanitizeForLucene(cleanedTitle)).replace(/%20/g, '+');
         const url = `https://archive.org/services/search/v1/scrape?q=${query}&fields=identifier`;
         //console.log(`url: ${url}`)
         const { total, identifiers } = await fetchTotalWithRetry(url, title);
         rows.push({ Title: title, Folder: folder, 'Main-Folder': getMainFolder(folder), Total: total, 'Cleaned Title': cleanedTitle, EncodedUrl: url, Identifiers: identifiers.join(', ') });
-        console.log(`${start + i}. ${title} -> ${total}`);
+        console.log(`(${counter + 1}/${titles.length}). ${title} -> ${total}`);
         await sleep(300);
     }
 
