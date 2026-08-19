@@ -17,7 +17,7 @@ interface MasterDataItem {
 }
 
 interface ScrapeResult {
-    items: unknown[];
+    items: Array<{ identifier: string }>;
     count: number;
     total: number;
 }
@@ -34,6 +34,33 @@ export function getArrayOfTitles(): Array<{ title: string; folder: string }> {
         }));
 }
 
+/**
+ * Transforms an input raw title string into Internet Archive's normalized title format.
+ * 
+ * @param input - Raw title string (e.g., "Geeta Govinda of Jaya Deva_6127_1861_Devanagari - Sahitya_Part10")
+ * @returns Cleaned title string (e.g., "Geeta Govinda Of Jaya Deva 6127 1861 Devanagari Sahitya Part 10")
+ */
+function cleanArchiveTitle(input: string): string {
+  return input
+    // 1. Separate transitions from letters into numbers (e.g., "Part10" -> "Part 10");
+    // digit-to-letter transitions like "14th" are left untouched
+    .replace(/([a-zA-Z])(?=\d)/g, '$1 ')
+    // 1b. Insert a space after a dot when an uppercase letter follows
+    // (e.g., "Dr.Gokul" -> "Dr. Gokul", "K.C" -> "K. C"); "Dr.gokul" stays untouched
+    .replace(/\.(?=[A-Z])/g, '. ')
+    // 1c. Split camelCase/PascalCase words at lowercase-to-uppercase transitions
+    // (e.g., "PanchangaVijayaKalpa" -> "Panchanga Vijaya Kalpa")
+    .replace(/([a-z])(?=[A-Z])/g, '$1 ')
+    // 2. Replace hyphens, underscores, and punctuation symbols with a single space
+    .replace(/[-_]/g, ' ')
+    // 3. Collapse multiple spaces into a single space and trim edges
+    .replace(/\s+/g, ' ')
+    .trim()
+    // 4. Convert to Title Case (capitalizes the first letter of every word)
+    .replace(/\b\w/g, (char) => char.toUpperCase());
+}
+
+
 // Function 2: encode title, hit archive.org scrape API, collect totals, save to Excel
 export async function searchArchiveAndExport(range?: string, folderPrefix?: string): Promise<void> {
     let allTitles = getArrayOfTitles();
@@ -48,16 +75,18 @@ export async function searchArchiveAndExport(range?: string, folderPrefix?: stri
     }
     const [start, end] = parseRange(range, allTitles.length);
     const titles = allTitles.slice(start - 1, end);
-    console.log(`Processing ${titles.length} of ${allTitles.length} titles (range ${start}-${end})`);
+    console.log(`Processing ${titles.length} of ${allTitles.length} titles (range ${start}-${end})\n`);
 
-    const rows: Array<{ Title: string; Folder: string; 'Main-Folder': string; EncodedUrl: string; Total: number | string }> = [];
+    const rows: Array<{ Title: string; Folder: string; 'Main-Folder': string; Total: number | string; 'Cleaned Title': string; EncodedUrl: string; Identifiers: string }> = [];
 
     for (let i = 0; i < titles.length; i++) {
         const { title, folder } = titles[i];
-        const query = encodeURIComponent(sanitizeForLucene(title)).replace(/%20/g, '+');
-        const url = `https://archive.org/services/search/v1/scrape?q=${query}&total_only=true`;
-        const total = await fetchTotalWithRetry(url, title);
-        rows.push({ Title: title, Folder: folder, 'Main-Folder': getMainFolder(folder), EncodedUrl: url, Total: total });
+        const cleanedTitle = cleanArchiveTitle(title);
+        const query = encodeURIComponent(sanitizeForLucene(cleanedTitle)).replace(/%20/g, '+');
+        const url = `https://archive.org/services/search/v1/scrape?q=${query}&fields=identifier`;
+        //console.log(`url: ${url}`)
+        const { total, identifiers } = await fetchTotalWithRetry(url, title);
+        rows.push({ Title: title, Folder: folder, 'Main-Folder': getMainFolder(folder), Total: total, 'Cleaned Title': cleanedTitle, EncodedUrl: url, Identifiers: identifiers.join(', ') });
         console.log(`${start + i}. ${title} -> ${total}`);
         await sleep(300);
     }
@@ -75,7 +104,7 @@ export async function searchArchiveAndExport(range?: string, folderPrefix?: stri
     const summarySheet = XLSX.utils.json_to_sheet(buildSummaryRows(rows));
     XLSX.utils.book_append_sheet(workbook, summarySheet, 'Summary');
     XLSX.writeFile(workbook, outputPath);
-    console.log(`Saved ${rows.length} rows to ${outputPath}`);
+    console.log(`\nSaved ${rows.length} rows to ${outputPath}`);
 }
 
 // Strips Lucene query operators (-, :, (), [], etc.) that make archive.org's scrape API
@@ -91,11 +120,11 @@ function sleep(ms: number): Promise<void> {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-// Fetches the scrape total with retries; also retries when total is 0 once, since
-// transient archive.org hiccups/throttling can produce false zeros
-// Errors are stored as -1
-async function fetchTotalWithRetry(url: string, title: string, maxAttempts = 3): Promise<number | string> {
-    let total: number | string = -1;
+// Fetches actual matched identifiers (not total_only) so the total is grounded in real items;
+// archive.org's reported total can be stale/inconsistent between calls, so the count of
+// returned identifiers is used as the authoritative number. Errors are stored as -1.
+async function fetchTotalWithRetry(url: string, title: string, maxAttempts = 3): Promise<{ total: number; identifiers: string[] }> {
+    let result = { total: -1, identifiers: [] as string[] };
     for (let attempt = 1; attempt <= maxAttempts; attempt++) {
         try {
             const res = await fetch(url);
@@ -103,9 +132,13 @@ async function fetchTotalWithRetry(url: string, title: string, maxAttempts = 3):
                 throw new Error(`HTTP ${res.status}`);
             }
             const json = (await res.json()) as ScrapeResult;
-            total = json.total;
-            if (total !== 0 || attempt >= 2) {
-                return total;
+            const identifiers = (json.items ?? []).map((item) => item.identifier);
+            result = { total: identifiers.length, identifiers };
+            if (json.total !== identifiers.length) {
+                console.warn(`Inconsistent response for "${title}": reported total=${json.total} but ${identifiers.length} item(s) returned; using ${identifiers.length}`);
+            }
+            if (result.total !== 0 || attempt >= 2) {
+                return result;
             }
             console.warn(`Got 0 for "${title}", retrying to rule out a transient miss...`);
         } catch (err) {
@@ -113,7 +146,7 @@ async function fetchTotalWithRetry(url: string, title: string, maxAttempts = 3):
         }
         await sleep(1000 * attempt);
     }
-    return total;
+    return result;
 }
 
 // Builds summary rows grouped by Main-Folder: total items in master-data.json per main folder,
