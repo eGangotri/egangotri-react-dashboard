@@ -139,4 +139,6 @@ const result = mergeHtmlDataJsonFiles(MASTER_JSON,htmlJson)
 console.log(result)
 injectGDriveDataIntoTemplate();
 
+// * pnpm run excelToHTML
+
 //{"t": "Sanskrit Vangmaya Ka Brihat Itihas Volume 16 - Jyotisha - Ramachandra Pandey 2012.pdf", "l": "https://drive.google.com/file/d/1vNyKeufNjz5-z8DfrmID8SOhKFwpHWM4/view?usp=drivesdk", "s": "144.04 MB",  "f": "Treasures\\src_up_sansthan", "th": ""}
