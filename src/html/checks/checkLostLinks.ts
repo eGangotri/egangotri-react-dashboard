@@ -91,7 +91,7 @@ export async function searchArchiveAndExport(range?: string, folderPrefix?: stri
         const url = `https://archive.org/services/search/v1/scrape?q=${query}&fields=identifier`;
         //console.log(`url: ${url}`)
         const { total, identifiers } = await fetchTotalWithRetry(url, title);
-        rows.push({ Title: title, Folder: folder, 'Main-Folder': getMainFolder(folder), Total: total, 'Cleaned Title': cleanedTitle, EncodedUrl: url, Identifiers: identifiers.join(', ') });
+        rows.push({ Title: title, Folder: folder, 'Main-Folder': getMainFolder(folder), Total: total, 'Cleaned Title': cleanedTitle, EncodedUrl: url, Identifiers: capForExcelCell(identifiers) });
         console.log(`(${counter + 1}/${titles.length}). ${title} -> ${total}`);
         await sleep(300);
     }
@@ -112,6 +112,26 @@ export async function searchArchiveAndExport(range?: string, folderPrefix?: stri
     const errorCount = rows.filter((row) => row.Total === -1).length;
     const zeroCount = rows.filter((row) => row.Total === 0).length;
     console.log(`\nSaved ${rows.length} rows with ${zeroCount} Empty Items and ${errorCount} Errors to ${outputPath} in ${formatTime(Date.now() - startTime)}`);
+}
+
+// Joins identifiers into a string that stays under Excel's 32767-character cell limit;
+// when too many match, keeps as many as fit and appends "... (+N more)"
+function capForExcelCell(identifiers: string[], maxLength = 3200): string {
+    const joined = identifiers.join(', ');
+    if (joined.length <= maxLength) {
+        return joined;
+    }
+    let kept = 0;
+    let length = 0;
+    for (const id of identifiers) {
+        const next = length + (kept > 0 ? 2 : 0) + id.length;
+        if (next > maxLength - 30) {
+            break;
+        }
+        length = next;
+        kept++;
+    }
+    return `${identifiers.slice(0, kept).join(', ')} ... (+${identifiers.length - kept} more)`;
 }
 
 // Strips Lucene query operators (-, :, (), [], etc.) that make archive.org's scrape API
