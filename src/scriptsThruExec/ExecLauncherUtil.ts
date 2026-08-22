@@ -683,6 +683,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
           _resp = await makePostCallWithErrorHandling({
             folder1: dataUserInput,
             folder2: dataUserInput2Mandatory,
+            tolerance: dataUserInput3NonMandatory,
             findDisjoint: isDisjoint,
             moveItems: isMoveItems,
             byFileName: isByFileName
