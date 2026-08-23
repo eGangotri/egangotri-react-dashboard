@@ -245,7 +245,7 @@ const UploadCyclesList: React.FC = () => {
         } else if (type === TASK_TYPE_ENUM.FIND_MISSING) {
             await handleFindMissing(id)
         } else if (type === TASK_TYPE_ENUM.REUPLOAD_FAILED) {
-            await handleReupload(id)
+            await handleShowUploadFailures(id)
         } else if (type === TASK_TYPE_ENUM.ISOLATE_UPLOAD_FAILED) {
             await handleIsolateUploadFailures(id)
         } else if (type === TASK_TYPE_ENUM.DE_ISOLATE_UPLOAD_FAILED) {
@@ -328,7 +328,7 @@ const UploadCyclesList: React.FC = () => {
     const {
         handleVerifyUploadStatus,
         handleFindMissing,
-        handleReupload,
+        handleShowUploadFailures,
         handleIsolateUploadFailures,
         handleDeIsolateUploadFailures,
         handleMoveToFreeze

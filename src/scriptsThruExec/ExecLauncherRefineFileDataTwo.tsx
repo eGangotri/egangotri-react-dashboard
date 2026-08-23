@@ -66,6 +66,9 @@ const ExecLauncherRefineFileDataTwo: React.FC = () => {
                     placeholder='Folder Abs Path'
                     secondTextBoxPlaceHolder='Folder Abs Path'
                     execType={findBySizeType}
+                    thirdTextBoxPlaceHolder='Numeral in Bytes that will offset equality'
+                    userInputThreeInfoNonMandatory='So if you add 100 two files that are 150b and 250b respectively will be considered equal.'
+                    thirdTextBoxDefaultValue={"0"}
                     css={{ width: "550px" }}
                     css2={{ width: "550px" }}
                     reactComponent={<>
