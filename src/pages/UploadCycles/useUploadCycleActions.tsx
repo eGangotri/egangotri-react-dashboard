@@ -1,14 +1,12 @@
 import React from "react"
-import { makePostCallWithErrorHandling, verifyUploadStatusForUploadCycleId } from "service/BackendFetchService"
+import { getUploadStatusDataForUshered, makePostCallWithErrorHandling, verifyUploadStatusForUploadCycleId } from "service/BackendFetchService"
 import { _launchGradlev2, launchGradleReuploadFailed } from "service/launchGradle"
 import { launchYarnMoveToFreezeByUploadId } from "service/launchYarn"
-import { Box, Button, Typography, CircularProgress, IconButton, Tooltip } from "@mui/material"
-import Search from "@mui/icons-material/Search";
-import CloudUpload from "@mui/icons-material/CloudUpload";
-import FilterList from "@mui/icons-material/FilterList";
+import { Box, Button, Typography, CircularProgress } from "@mui/material"
 
-import { ERROR_RED } from "constants/colors"
 import ExecResponsePanel from "scriptsThruExec/ExecResponsePanel"
+import ItemsActionPanel, { ItemForAction } from "./ItemsActionPanel"
+import { MAX_ITEMS_LISTABLE } from "utils/constants"
 
 export const TASK_TYPE_ENUM = {
     VERIFY_UPLOAD_STATUS: "Verify Upload Status",
@@ -29,16 +27,6 @@ interface UseUploadCycleActionsProps {
     setPopoverAnchor: (anchor: HTMLButtonElement | null) => void;
     fetchData: () => void;
 }
-
-const getArchiveSearchUrl = (filePath: string) => {
-    const backslash = String.fromCharCode(92);
-    const lastSep = Math.max(filePath.lastIndexOf('/'), filePath.lastIndexOf(backslash));
-    const fileName = lastSep >= 0 ? filePath.slice(lastSep + 1) : filePath;
-    const lastDot = fileName.lastIndexOf('.');
-    const nameWithoutExt = lastDot > 0 ? fileName.slice(0, lastDot) : fileName;
-    const queryName = nameWithoutExt.split('-')[0];
-    return `https://archive.org/search?query=${encodeURIComponent(queryName)}`;
-};
 
 const getTitleFromPath = (filePath: string) => {
     const backslash = String.fromCharCode(92);
@@ -88,52 +76,18 @@ export const useUploadCycleActions = ({
                                 Isolate Missed
                             </Button>
                         </Box>
-                        <Typography variant="h6">Missing Titles for {uploadCycleId}</Typography>
-                        {
-                            missedData?.map((_data: { archiveProfile: string, missedCount: string, missed: string[] }, index: number) => {
-                                return (
-                                    <Box key={index} sx={{ mt: 1 }}>
-                                        <Typography variant="body2" sx={{ fontWeight: 'bold' }}>({index + 1}) {_data.archiveProfile} ({_data.missedCount})</Typography>
-                                        <Box sx={{ color: ERROR_RED, ml: 2 }}>
-                                            {_data.missed.map((item: string, index2: number) => {
-                                                return (
-                                                    <Typography key={index2} variant="caption" sx={{ display: 'block' }}>
-                                                        ({index + 1}.{index2 + 1}) {item}
-                                                        <Tooltip title="Search in archive">
-                                                            <IconButton
-                                                                size="small"
-                                                                href={getArchiveSearchUrl(item)}
-                                                                target="_blank"
-                                                                rel="noopener noreferrer"
-                                                            >
-                                                                <Search />
-                                                            </IconButton>
-                                                        </Tooltip>
-                                                        <Tooltip title="Upload single file">
-                                                            <IconButton
-                                                                size="small"
-                                                                onClick={(event) => handleSingleUpload(uploadCycleId, _data.archiveProfile, item, event.currentTarget as HTMLButtonElement)}
-                                                            >
-                                                                <CloudUpload />
-                                                            </IconButton>
-                                                        </Tooltip>
-                                                        <Tooltip title="Isolate missed">
-                                                            <IconButton
-                                                                size="small"
-                                                                onClick={(event) => handleSingleIsolate(_data.archiveProfile, item, event.currentTarget as HTMLButtonElement)}
-                                                            >
-                                                                <FilterList />
-                                                            </IconButton>
-                                                        </Tooltip>
-
-                                                    </Typography>
-                                                )
-                                            })}
-                                        </Box>
-                                    </Box>
-                                )
-                            })
-                        }
+                        <ItemsActionPanel
+                            title={`Missing Titles for ${uploadCycleId}`}
+                            items={(missedData || []).flatMap((_data: { archiveProfile: string, missedCount: string, missed: string[] }) =>
+                                (_data.missed || []).map((item: string): ItemForAction => ({
+                                    archiveProfile: _data.archiveProfile,
+                                    absPath: item,
+                                    alreadyUploaded: false
+                                })))}
+                            disabled={isLoading}
+                            onReupload={(archiveProfile, absPath, anchor) => handleSingleUpload(uploadCycleId, archiveProfile, absPath, anchor)}
+                            onIsolate={(archiveProfile, absPath, anchor) => handleSingleIsolate(archiveProfile, absPath, anchor)}
+                        />
                     </> :
                     <Typography>No Missing Titles for Upload Cycle with Id: {uploadCycleId}</Typography>
                 }
@@ -150,6 +104,65 @@ export const useUploadCycleActions = ({
             updateMissedTitlesResult(lastMissedData);
         }
     }, [isLoading, lastMissedData, updateMissedTitlesResult]);
+
+    const [lastFailedData, setLastFailedData] = React.useState<any>(null);
+
+    const updateFailedItemsResult = React.useCallback((data: any) => {
+        if (!data) return;
+        const { uploadCycleId, failedItems, summary } = data;
+        const failedItemsPanel = (
+            <Box>
+                {(failedItems && failedItems.length > 0) ?
+                    <>
+                        <Box sx={{ paddingBottom: "30px" }}>
+                            <Button
+                                variant="contained"
+                                onClick={() => handleReupload(uploadCycleId)}
+                                size="small"
+                                sx={{ width: "200px", marginTop: "20px", marginRight: "20px" }}
+                                disabled={isLoading}
+                                startIcon={isLoading ? <CircularProgress size={16} color="inherit" /> : null}
+                            >
+                                Reupload Failed
+                            </Button>
+                            <Button
+                                variant="contained"
+                                onClick={() => handleIsolateUploadFailures(uploadCycleId)}
+                                size="small"
+                                sx={{ width: "200px", marginTop: "20px" }}
+                                disabled={isLoading}
+                                startIcon={isLoading ? <CircularProgress size={16} color="inherit" /> : null}
+                            >
+                                Isolate Failed
+                            </Button>
+                        </Box>
+                        <ItemsActionPanel
+                            title={`Failed Items for ${uploadCycleId}`}
+                            items={(failedItems || []).map((item: any): ItemForAction => ({
+                                archiveProfile: item.archiveProfile,
+                                absPath: item.localPath,
+                                alreadyUploaded: false
+                            }))}
+                            disabled={isLoading}
+                            onReupload={(archiveProfile, absPath, anchor) => handleSingleUpload(uploadCycleId, archiveProfile, absPath, anchor)}
+                            onIsolate={(archiveProfile, absPath, anchor) => handleSingleIsolate(archiveProfile, absPath, anchor)}
+                        />
+                    </> :
+                    <Typography>No Failed Items for Upload Cycle with Id: {uploadCycleId}</Typography>
+                }
+                <Box sx={{ mt: 2 }}>
+                    <ExecResponsePanel response={summary} />
+                </Box>
+            </Box>
+        );
+        setApiResult(failedItemsPanel);
+    }, [isLoading, setApiResult]);
+
+    React.useEffect(() => {
+        if (lastFailedData) {
+            updateFailedItemsResult(lastFailedData);
+        }
+    }, [isLoading, lastFailedData, updateFailedItemsResult]);
 
     const getAnchorId = (uploadCycleId: string, taskType: string) => {
         switch (taskType) {
@@ -195,6 +208,7 @@ export const useUploadCycleActions = ({
     const handleFindMissing = async (uploadCycleId: string, row?: any) => {
         const anchorId = getAnchorId(uploadCycleId, TASK_TYPE_ENUM.FIND_MISSING);
         setIsLoading(true);
+        setLastFailedData(null);
         setPopoverTitle(TASK_TYPE_ENUM.FIND_MISSING)
         try {
             const missed = await makePostCallWithErrorHandling({
@@ -206,21 +220,6 @@ export const useUploadCycleActions = ({
             if (el) setPopoverAnchor(el as HTMLButtonElement);
 
             if (missedData) {
-                // const missingTitlesPanel = (
-                //     <>
-                //         {(missedData && missedData.length > 0) ?
-                //             <>
-                //                 {row && (
-                //                     <Box sx={{ paddingBottom: "10px" }}>
-                //                         <Typography variant="subtitle2">Action options for {uploadCycleId} available in ActionButtons component.</Typography>
-                //                     </Box>
-                //                 )}
-                //                 <Typography variant="h6">Missing Titles for {uploadCycleId}</Typography>
-                //                 {
-                //                     missedData?.map((_data: { archiveProfile: string, missedCount: string, missed: string[] }, index: number) => {
-                //                         return (
-                //                             <Box key={index} sx={{ mt: 1 }}>
-                //                                 <Typography variant="body2" sx={{ fontWeight: 'bold' }}>({index + 1}) {_data.archiveProfile} ({_data.missedCount})</Typography>
                 setLastMissedData({ uploadCycleId, missedData, missed });
             } else {
                 setApiResult(<ExecResponsePanel response={missed} />);
@@ -237,10 +236,38 @@ export const useUploadCycleActions = ({
         }
     };
 
+    const handleShowUploadFailures = async (uploadCycleId: string) => {
+        const anchorId = getAnchorId(uploadCycleId, TASK_TYPE_ENUM.REUPLOAD_FAILED);
+        setIsLoading(true);
+        setLastMissedData(null);
+        setPopoverTitle(TASK_TYPE_ENUM.REUPLOAD_FAILED)
+        try {
+            const usheredItems = await getUploadStatusDataForUshered(MAX_ITEMS_LISTABLE, uploadCycleId);
+            const allItems: any[] = usheredItems?.response || [];
+            const failedItems = allItems.filter((item: any) => item.uploadFlag !== true);
+            const summary = {
+                uploadCycleId,
+                totalUsheredCount: allItems.length,
+                failedCount: failedItems.length
+            };
+            const el = document.getElementById(anchorId);
+            if (el) setPopoverAnchor(el as HTMLButtonElement);
+            setLastFailedData({ uploadCycleId, failedItems, summary });
+        } catch (error: any) {
+            console.error("Error fetching failed items:", error);
+            setApiResult(<ExecResponsePanel response={{ error: error?.message || String(error) }} />);
+            setPopoverAnchor(document.getElementById(anchorId) as HTMLButtonElement)
+            setLastFailedData(null);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     const handleReupload = async (uploadCycleId: string) => {
         const anchorId = getAnchorId(uploadCycleId, TASK_TYPE_ENUM.REUPLOAD_FAILED);
         setIsLoading(true);
         setLastMissedData(null);
+        // We keep lastFailedData so the panel updates with loading state
         setPopoverTitle(TASK_TYPE_ENUM.REUPLOAD_FAILED)
         try {
             const _resp = await launchGradleReuploadFailed(uploadCycleId);
@@ -248,10 +275,12 @@ export const useUploadCycleActions = ({
             const el = document.getElementById(anchorId);
             if (el) setPopoverAnchor(el as HTMLButtonElement);
             fetchData();
+            setLastFailedData(null); // Clear now that we have a final result
         } catch (error: any) {
             console.error("Error reuploading failed items:", error);
             setApiResult(<ExecResponsePanel response={{ error: error?.message || String(error) }} />);
             setPopoverAnchor(document.getElementById(anchorId) as HTMLButtonElement)
+            setLastFailedData(null);
         } finally {
             setIsLoading(false);
         }
@@ -261,6 +290,7 @@ export const useUploadCycleActions = ({
         const anchorId = getAnchorId(uploadCycleId, TASK_TYPE_ENUM.ISOLATE_UPLOAD_FAILED);
         setIsLoading(true);
         setLastMissedData(null);
+        // We keep lastFailedData so the panel updates with loading state
         setPopoverTitle(TASK_TYPE_ENUM.ISOLATE_UPLOAD_FAILED)
         try {
             const _res = await _launchGradlev2({
@@ -269,11 +299,13 @@ export const useUploadCycleActions = ({
             setApiResult(<ExecResponsePanel response={_res} />);
             const el = document.getElementById(anchorId);
             if (el) setPopoverAnchor(el as HTMLButtonElement);
+            setLastFailedData(null); // Clear now that we have a final result
         } catch (error: any) {
             console.error("Error isolating upload failures:", error);
             setApiResult(<ExecResponsePanel response={{ error: error?.message || String(error) }} />);
             const el = document.getElementById(anchorId);
             if (el) setPopoverAnchor(el as HTMLButtonElement);
+            setLastFailedData(null);
         } finally {
             setIsLoading(false);
         }
@@ -411,6 +443,7 @@ export const useUploadCycleActions = ({
     return {
         handleVerifyUploadStatus,
         handleFindMissing,
+        handleShowUploadFailures,
         handleReupload,
         handleIsolateUploadFailures,
         handleDeIsolateUploadFailures: handleDeIsolateFailedUploads,

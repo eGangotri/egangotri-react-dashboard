@@ -1,8 +1,6 @@
 import {
     Table, TableBody, TableCell,
-    TableHead, TableRow, Link,
-    Button,
-    Box,
+    TableRow, Link,
     IconButton,
     Tooltip,
     Typography
@@ -10,24 +8,92 @@ import {
 import { MdList } from "react-icons/md";
 import type { ArchiveProfileAndCount, UploadCycleArchiveProfile, UploadCycleTableData } from "mirror/types"
 import { UPLOADS_USHERED_PATH } from "Routes/constants"
-import path from 'path';
 import React from "react";
-import { getCachedValue } from "../../service/BackendFetchService";
-import { ResultDisplayPopover } from "../../widgets/ResultDisplayPopover";
+import { getCachedValue, getUploadStatusDataForUshered, makePostCallWithErrorHandling } from "../../service/BackendFetchService";
+import { _launchGradlev2 } from "../../service/launchGradle";
+import ItemsActionPanel, { ItemForAction } from "./ItemsActionPanel";
+import { MAX_ITEMS_LISTABLE } from "../../utils/constants";
+import ConfirmDialog from "../../widgets/ConfirmDialog";
+import ExecPopover from "../../scriptsThruExec/ExecPopover";
+import ExecResponsePanel from "../../scriptsThruExec/ExecResponsePanel";
+
+const normalizePath = (p: string) => p?.replace(/\\/g, "/").toLowerCase();
 
 
 export const NestedTable: React.FC<{ data: UploadCycleTableData }> = ({ data }) => {
     const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
-    const [titlesForPopover, setTitlesForPopover] = React.useState<string>("");
-    const handleTitleClick = (event: React.MouseEvent<HTMLButtonElement>, absolutePaths: string[]) => {
-        const _titles = (
-            <>
-                {absolutePaths?.map((absPath, index) => <Box>({index + 1}) {path.basename(absPath)}</Box>)}
-            </>
-        )
-        setTitlesForPopover(absolutePaths?.map((absPath, index) => `(${index + 1}) ${path.basename(absPath)}`).join("\n"));
-        console.log("handleTitleClick: " + event.currentTarget)
-        setAnchorEl(event.currentTarget);
+    const [panelContent, setPanelContent] = React.useState<JSX.Element | null>(null);
+    const [openDialog, setOpenDialog] = React.useState(false);
+    const [isLoading, setIsLoading] = React.useState(false);
+    const [pending, setPending] = React.useState<{ archiveProfile: string, absolutePaths: string[], anchor: HTMLButtonElement } | null>(null);
+
+    const handleTitleClick = (event: React.MouseEvent<HTMLButtonElement>, archiveProfile: string, absolutePaths: string[]) => {
+        setPending({ archiveProfile, absolutePaths, anchor: event.currentTarget });
+        setOpenDialog(true);
+    };
+
+    const handleSingleReupload = async (archiveProfile: string, absPath: string) => {
+        setIsLoading(true);
+        try {
+            const _res = await makePostCallWithErrorHandling({
+                uploadCycleId: data.uploadCycleId,
+                itemsForReupload: [{ archiveProfile, absolutePath: absPath, uploadCycleId: data.uploadCycleId }]
+            }, 'execLauncher/reuploadMissedByProfileAndAbsPath');
+            setPanelContent(<ExecResponsePanel response={_res} />);
+        } catch (error: any) {
+            setPanelContent(<ExecResponsePanel response={{ error: error?.message || String(error) }} />);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleSingleIsolate = async (archiveProfile: string, absPath: string) => {
+        setIsLoading(true);
+        try {
+            const _res = await _launchGradlev2({
+                gradleArgs: `${archiveProfile} # '${absPath} '`,
+            }, "isolateMissingViaAbsPath");
+            setPanelContent(<ExecResponsePanel response={_res} />);
+        } catch (error: any) {
+            setPanelContent(<ExecResponsePanel response={{ error: error?.message || String(error) }} />);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleConfirm = async () => {
+        setOpenDialog(false);
+        if (!pending) return;
+        const { archiveProfile, absolutePaths, anchor } = pending;
+        setIsLoading(true);
+        try {
+            const usheredItems = await getUploadStatusDataForUshered(MAX_ITEMS_LISTABLE, data.uploadCycleId, [archiveProfile]);
+            const uploadedPaths = new Set<string>(
+                (usheredItems?.response || [])
+                    .filter((item: any) => item.uploadFlag === true)
+                    .map((item: any) => normalizePath(item.localPath))
+            );
+            const itemsForAction: ItemForAction[] = absolutePaths.map((absPath) => ({
+                archiveProfile,
+                absPath,
+                alreadyUploaded: uploadedPaths.has(normalizePath(absPath))
+            }));
+            const panel = (
+                <ItemsActionPanel
+                    title={`Items for ${data.uploadCycleId}`}
+                    items={itemsForAction}
+                    onReupload={(profile, absPath) => handleSingleReupload(profile, absPath)}
+                    onIsolate={(profile, absPath) => handleSingleIsolate(profile, absPath)}
+                />
+            );
+            setPanelContent(panel);
+            setAnchorEl(anchor);
+        } catch (error: any) {
+            setPanelContent(<ExecResponsePanel response={{ error: error?.message || String(error) }} />);
+            setAnchorEl(anchor);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -45,11 +111,11 @@ export const NestedTable: React.FC<{ data: UploadCycleTableData }> = ({ data }) 
                                 </Tooltip>
                                 <Tooltip title="Fetch All Titles">
                                     <IconButton
-                                        onClick={(e) => handleTitleClick(e, archiveProfileAndCount?.absolutePaths || [])}
+                                        onClick={(e) => handleTitleClick(e, archiveProfileAndCount?.archiveProfile || "", archiveProfileAndCount?.absolutePaths || [])}
                                         color="primary"
                                         size="medium"
                                         sx={{ ml: 1 }}
-
+                                        disabled={isLoading}
                                     >
                                         <MdList />
                                         <Typography variant="caption" sx={{ ml: 0.5 }}>
@@ -62,9 +128,19 @@ export const NestedTable: React.FC<{ data: UploadCycleTableData }> = ({ data }) 
                     ))}
                 </TableBody>
             </Table>
-            <ResultDisplayPopover popoverAnchor={anchorEl}
-                setPopoverAnchor={setAnchorEl}
-                popoverContent={titlesForPopover} actionType="Titles" />
+            <ConfirmDialog
+                openDialog={openDialog}
+                handleClose={() => setOpenDialog(false)}
+                setOpenDialog={setOpenDialog}
+                invokeFuncOnClick2={handleConfirm}
+            />
+            <ExecPopover
+                open={Boolean(anchorEl)}
+                anchorEl={anchorEl}
+                onClose={() => setAnchorEl(null)}
+            >
+                {panelContent}
+            </ExecPopover>
         </>
     )
 }
