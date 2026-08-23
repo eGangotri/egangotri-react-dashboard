@@ -160,13 +160,13 @@ const UploadCyclesList: React.FC = () => {
         }
     }
     const updateChromeDriver = async () => {
-        if (window.confirm('Are you sure you want to update Chrome driver?')) {
+        if (window.confirm('Are you sure you want to update Chrome driver? Use this feature sparingly')) {
             try {
                 const resp = await makeGetCall('/uploadCycle/updateChromeDriver')
 
                 // Check if the response indicates success
                 if (resp && resp.status === 'success') {
-                    alert("Chrome driver updated successfully.")
+                    alert("Chrome driver updated successfully.May need to restart the backend")
                     console.log('Chrome driver update response:', resp);
                 } else if (resp && resp.error) {
                     // Handle error response from server
@@ -174,7 +174,7 @@ const UploadCyclesList: React.FC = () => {
                     console.error('Chrome driver update failed:', resp);
                 } else {
                     // Generic success if no specific status field
-                    alert("Chrome driver updated successfully.")
+                    alert("Chrome driver updated successfully.May need to restart the backend")
                     console.log('Chrome driver update response:', resp);
                 }
             } catch (error: any) {
