@@ -1,5 +1,4 @@
 import ProtectedRoute from 'ProtectedRoute';
-import UploadCyclesOld1 from 'pages/UploadCycles';
 import Uploads from 'pages/upload';
 import FileMover from 'pages/widget/fileMover';
 import ExecLauncher from 'scriptsThruExec/ExecLauncherOne';
@@ -95,7 +94,7 @@ const DashboardRoutes: React.FC = () => {
     const allFrags = (
         <>
             {<Route path={LANDING_PAGE_PATH} element={<UploadCyclesList />} />}
-            {<Route path={LANDING_PAGE_OLD_PATH} element={<UploadCyclesOld1 />} />}
+        {/* {<Route path={LANDING_PAGE_OLD_PATH} element={<UploadCyclesOld1 />} />} */}
             {<Route path={UPLOADS_USHERED_PATH} element={<Uploads forQueues={false} />} />}
             {<Route path={UPLOADS_USHERED_OLD_PATH} element={<UploadsOld forQueues={false} />} />}
             {<Route path={UPLOADS_QUEUED_PATH} element={<Uploads forQueues={true} />} />}

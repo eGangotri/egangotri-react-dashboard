@@ -18,7 +18,7 @@ const ExecPopover: React.FC<ExecPopoverProps> = ({ id, open, anchorEl, onClose, 
       anchorEl={anchorEl}
       onClose={onClose}
       sx={{
-        width: '80%',
+        width: '100%',
         height: '80%',
       }}
       anchorOrigin={{
@@ -26,7 +26,7 @@ const ExecPopover: React.FC<ExecPopoverProps> = ({ id, open, anchorEl, onClose, 
         horizontal: 'right',
       }}
     >
-      <Box sx={{ p: 2, width: '80%', height: '10%' }}>
+      <Box sx={{ p: 2, width: '100%', height: '10%' }}>
         <Typography sx={{ p: 2 }}>
           {children}
         </Typography>

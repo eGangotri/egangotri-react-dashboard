@@ -78,9 +78,10 @@ export const NestedTable: React.FC<{ data: UploadCycleTableData }> = ({ data }) 
                 absPath,
                 alreadyUploaded: uploadedPaths.has(normalizePath(absPath))
             }));
+            const profile = itemsForAction?.length > 0 ? itemsForAction[0]?.archiveProfile: ""
             const panel = (
                 <ItemsActionPanel
-                    title={`Items for ${data.uploadCycleId}`}
+                    title={`Items for Profile: ${profile} and Id: ${data.uploadCycleId}`}
                     items={itemsForAction}
                     onReupload={(profile, absPath) => handleSingleReupload(profile, absPath)}
                     onIsolate={(profile, absPath) => handleSingleIsolate(profile, absPath)}

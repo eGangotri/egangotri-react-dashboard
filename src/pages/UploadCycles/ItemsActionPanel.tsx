@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Box, Typography, IconButton, Tooltip, Button, Stack } from "@mui/material";
 import { DataGrid, type GridColDef, type GridRenderCellParams } from "@mui/x-data-grid";
 import Search from "@mui/icons-material/Search";
@@ -18,8 +18,8 @@ export const getArchiveSearchUrl = (filePath: string) => {
 };
 
 export interface ItemForAction {
-    archiveProfile: string;
     absPath: string;
+    archiveProfile: string
     alreadyUploaded?: boolean;
 }
 
@@ -31,17 +31,7 @@ interface ItemsActionPanelProps {
     onIsolate: (archiveProfile: string, absPath: string, anchor: HTMLButtonElement) => void;
 }
 
-const groupByProfile = (items: ItemForAction[]) => {
-    const groups: Record<string, ItemForAction[]> = {};
-    items.forEach((item) => {
-        (groups[item.archiveProfile] = groups[item.archiveProfile] || []).push(item);
-    });
-    return groups;
-};
-
 const ItemsActionPanel: React.FC<ItemsActionPanelProps> = ({ title, items, disabled = false, onReupload, onIsolate }) => {
-    const groups = groupByProfile(items);
-
     const handleCopyJson = async () => {
         try {
             await navigator.clipboard.writeText(JSON.stringify({ title, items }, null, 2));
@@ -51,14 +41,21 @@ const ItemsActionPanel: React.FC<ItemsActionPanelProps> = ({ title, items, disab
         }
     };
 
+    const [copySuccess, setCopySuccess] = useState<string | null>(null);
+
+    const handleCopy = (text: string) => {
+        navigator.clipboard.writeText(text).then(() => {
+            setCopySuccess(text);
+            setTimeout(() => setCopySuccess(null), 2000);
+        });
+    };
+
+
     const handleCopyText = async () => {
         try {
             let text = `${title}\n\n`;
-            Object.entries(groups).forEach(([profile, groupItems], index) => {
-                text += `(${index + 1}) ${profile} (${groupItems.length})\n`;
-                groupItems.forEach((item, index2) => {
-                    text += `  (${index + 1}.${index2 + 1}) ${item.absPath}${item.alreadyUploaded ? " [Uploaded]" : ""}\n`;
-                });
+            items.forEach((x, index) => {
+                text += `(${index + 1}) ${x.absPath}\n`;
             });
             await navigator.clipboard.writeText(text);
             console.log('Text copied to clipboard');
@@ -118,12 +115,30 @@ const ItemsActionPanel: React.FC<ItemsActionPanelProps> = ({ title, items, disab
                 </Box>
             ),
         },
-        { field: "archiveProfile", headerName: "Archive Profile", width: 150 },
-        { field: "absPath", headerName: "Absolute Path", flex: 1, minWidth: 300 },
+        {
+            field: "absPath", headerName: "Absolute Path",
+            flex: 1,
+            minWidth: 300,
+            renderCell: (params: GridRenderCellParams) => (
+                <>
+                    <Tooltip title={copySuccess === params.value ? "Copied!" : "Copy Link"}>
+                        <IconButton
+                            size="small"
+                            onClick={() => handleCopy(params.value)}
+                            color={copySuccess === params.value ? "success" : "default"}
+                        >
+                            <ContentCopy fontSize="small" />
+                            <Typography variant="caption">{params.value}</Typography>
+
+                        </IconButton>
+                    </Tooltip>
+                </>
+            ),
+        },
         {
             field: "alreadyUploaded",
             headerName: "Uploaded",
-            width: 100,
+            width: 50,
             renderCell: (params: GridRenderCellParams) => (
                 <Typography variant="caption">{params.value ? "Yes" : "No"}</Typography>
             ),

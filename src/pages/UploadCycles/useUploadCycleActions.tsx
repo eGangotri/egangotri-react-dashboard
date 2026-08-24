@@ -50,6 +50,7 @@ export const useUploadCycleActions = ({
     const updateMissedTitlesResult = React.useCallback((data: any) => {
         if (!data) return;
         const { uploadCycleId, missedData, missed } = data;
+        const archiveProfile = missedData && missedData.length > 0 ? missedData[0].archiveProfile : "";
         const missingTitlesPanel = (
             <Box>
                 {(missedData && missedData.length > 0) ?
@@ -77,19 +78,19 @@ export const useUploadCycleActions = ({
                             </Button>
                         </Box>
                         <ItemsActionPanel
-                            title={`Missing Titles for ${uploadCycleId}`}
+                            title={`Missing Titles for Profile: ${archiveProfile} and Id ${uploadCycleId}`}
                             items={(missedData || []).flatMap((_data: { archiveProfile: string, missedCount: string, missed: string[] }) =>
                                 (_data.missed || []).map((item: string): ItemForAction => ({
-                                    archiveProfile: _data.archiveProfile,
                                     absPath: item,
-                                    alreadyUploaded: false
+                                    alreadyUploaded: false,
+                                    archiveProfile: archiveProfile
                                 })))}
                             disabled={isLoading}
                             onReupload={(archiveProfile, absPath, anchor) => handleSingleUpload(uploadCycleId, archiveProfile, absPath, anchor)}
                             onIsolate={(archiveProfile, absPath, anchor) => handleSingleIsolate(archiveProfile, absPath, anchor)}
                         />
                     </> :
-                    <Typography>No Missing Titles for Upload Cycle with Id: {uploadCycleId}</Typography>
+                    <Typography>No Missing Titles for Profile: ${archiveProfile} and Upload Cycle with Id: {uploadCycleId}</Typography>
                 }
                 <Box sx={{ mt: 2 }}>
                     <ExecResponsePanel response={missed} />
@@ -110,6 +111,8 @@ export const useUploadCycleActions = ({
     const updateFailedItemsResult = React.useCallback((data: any) => {
         if (!data) return;
         const { uploadCycleId, failedItems, summary } = data;
+
+        const profile = failedItems?.length > 0 ? failedItems[0]?.archiveProfile : ""
         const failedItemsPanel = (
             <Box>
                 {(failedItems && failedItems.length > 0) ?
@@ -137,18 +140,18 @@ export const useUploadCycleActions = ({
                             </Button>
                         </Box>
                         <ItemsActionPanel
-                            title={`Failed Items for ${uploadCycleId}`}
+                            title={`Failed Items for (${profile}) with Id: ${uploadCycleId}`}
                             items={(failedItems || []).map((item: any): ItemForAction => ({
-                                archiveProfile: item.archiveProfile,
                                 absPath: item.localPath,
-                                alreadyUploaded: false
+                                alreadyUploaded: false,
+                                archiveProfile: profile
                             }))}
                             disabled={isLoading}
                             onReupload={(archiveProfile, absPath, anchor) => handleSingleUpload(uploadCycleId, archiveProfile, absPath, anchor)}
                             onIsolate={(archiveProfile, absPath, anchor) => handleSingleIsolate(archiveProfile, absPath, anchor)}
                         />
                     </> :
-                    <Typography>No Failed Items for Upload Cycle with Id: {uploadCycleId}</Typography>
+                    <Typography>No Failed Items for Profile ${profile} with Upload Cycle Id: {uploadCycleId}</Typography>
                 }
                 <Box sx={{ mt: 2 }}>
                     <ExecResponsePanel response={summary} />
