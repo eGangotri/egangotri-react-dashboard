@@ -71,11 +71,11 @@ const ItemsActionPanel: React.FC<ItemsActionPanelProps> = ({ title, items, disab
     }));
 
     const columns: GridColDef[] = [
-        { field: "serialNo", headerName: "#", width: 60 },
+        { field: "serialNo", headerName: "#", width: 20 },
         {
             field: "actions",
             headerName: "Actions",
-            width: 140,
+            width: 110,
             sortable: false,
             filterable: false,
             renderCell: (params: GridRenderCellParams) => (
