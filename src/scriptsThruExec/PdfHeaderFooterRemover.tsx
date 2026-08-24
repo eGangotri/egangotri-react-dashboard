@@ -187,7 +187,7 @@ export default function PdfHeaderFooterRemover() {
         },
         {
             field: "reRemove",
-            headerName: "ReRemove",
+            headerName: "Resume",
             width: 120,
             sortable: false,
             filterable: false,
@@ -210,7 +210,7 @@ export default function PdfHeaderFooterRemover() {
                         }
                     }}
                 >
-                    ReRemove
+                    Resume
                 </Button>
             ),
         },
