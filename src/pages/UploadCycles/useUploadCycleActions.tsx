@@ -28,14 +28,6 @@ interface UseUploadCycleActionsProps {
     fetchData: () => void;
 }
 
-const getTitleFromPath = (filePath: string) => {
-    const backslash = String.fromCharCode(92);
-    const lastSep = Math.max(filePath.lastIndexOf('/'), filePath.lastIndexOf(backslash));
-    const fileName = lastSep >= 0 ? filePath.slice(lastSep + 1) : filePath;
-    const lastDot = fileName.lastIndexOf('.');
-    return lastDot > 0 ? fileName.slice(0, lastDot) : fileName;
-};
-
 export const useUploadCycleActions = ({
     isLoading,
     setIsLoading,
@@ -90,7 +82,7 @@ export const useUploadCycleActions = ({
                             onIsolate={(archiveProfile, absPath, anchor) => handleSingleIsolate(archiveProfile, absPath, anchor)}
                         />
                     </> :
-                    <Typography>No Missing Titles for Profile: ${archiveProfile} and Upload Cycle with Id: {uploadCycleId}</Typography>
+                    <Typography>No Missing Titles for Upload Cycle with Id: {uploadCycleId}</Typography>
                 }
                 <Box sx={{ mt: 2 }}>
                     <ExecResponsePanel response={missed} />
