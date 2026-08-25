@@ -7,7 +7,7 @@ export const MASTER_JSON = path.join(INPUT_PATH, 'master-data.json');
 export const BACKUP_DIR = path.join(INPUT_PATH, 'backup');
 
 //pnpm run excelToHTML
-const injectAbleExcel = "latest-58.xlsx" //start next from 59. but 60-61 done
+const injectAbleExcel = "latest-59.xlsx" //start with 65
 //90-94 done
 export const LATEST_INJECTABLE_EXCEL =  path.join(INPUT_PATH, injectAbleExcel);
 

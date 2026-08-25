@@ -5,6 +5,7 @@ export interface HtmlDataType {
     s: string;
     sb: string;
     f: string;
+    folder?: string;
     th: string;
     c: string;
 }

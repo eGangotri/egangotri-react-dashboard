@@ -49,9 +49,16 @@ const validateGDriveExcelItems = (raw: unknown): GDriveExcelItem[] => {
     return raw as GDriveExcelItem[];
 };
 
+const folderFromF = (f: string): string => (f ?? '').split('\\')[0];
+
 const gDriveExcelJsonToHtmlDataJson = (inputJsonPath: string) => {
     const parsed = JSON.parse(fs.readFileSync(inputJsonPath, 'utf-8'));
     const items = validateGDriveExcelItems(parsed);
+    const missingPages = items.filter((item) => item["No. of Pages"] === undefined || item["No. of Pages"] === null || String(item["No. of Pages"]).trim() === "");
+    if (missingPages.length > 0) {
+        console.log(`Cancelling entire operation: ${missingPages.length} item(s) in ${inputJsonPath} have no "No. of Pages" value. First offending title: ${missingPages[0]["Title in Google Drive"]}`);
+        process.exit(1);
+    }
     const htmlData: HtmlDataType[] = items.map((item) => ({
         t: item["Title in Google Drive"],
         l: item["Link to File Location"],
@@ -59,6 +66,7 @@ const gDriveExcelJsonToHtmlDataJson = (inputJsonPath: string) => {
         s: item["Size with Units"],
         sb: item["Size in Bytes"],
         f: item["Folder Name"],
+        folder: folderFromF(item["Folder Name"]),
         th: item["Thumbnail"],
         c: item["Created Time"],
     }));
@@ -114,6 +122,12 @@ const mergeHtmlDataJsonFiles = ( masterJsonPath: string, injectableDataPath: str
             indexByLinkForMaster.set(item.l, master.length);
             master.push(item);
             added++;
+        }
+    }
+
+    for (const item of master) {
+        if (!item.folder) {
+            item.folder = folderFromF(item.f);
         }
     }
 
