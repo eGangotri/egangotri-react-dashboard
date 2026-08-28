@@ -6,13 +6,16 @@ import { backupJsonFile } from './backupUtils';
 
 // pnpm dlx tsx src/html/RemoveTreasureUtils.ts
 
-const folderToRemove = 'Treasures64'
+const folderToRemove = 'Treasures70'
+const includeIsEmptyPagesCondition = true;
+
 const removeEntriesByFolderWithEmptyPages = (folderName: string): void => {
     const data: HtmlDataType[] = JSON.parse(fs.readFileSync(MASTER_JSON, 'utf8'));
     const before = data.length;
     const isEmptyPages = (p: string | null | undefined): boolean =>
         p === null || p === undefined || String(p).trim() === '';
-    const filtered = data.filter((e: HtmlDataType) => !(e.folder === folderName && isEmptyPages(e.p)));
+     
+    const filtered = data.filter((e: HtmlDataType) => !(e.folder === folderName && (!includeIsEmptyPagesCondition || isEmptyPages(e.p))));
     backupJsonFile(MASTER_JSON);
     fs.writeFileSync(MASTER_JSON, JSON.stringify(filtered, null, 2));
     console.log(`before: ${before} after: ${filtered.length} removed: ${before - filtered.length}`);
