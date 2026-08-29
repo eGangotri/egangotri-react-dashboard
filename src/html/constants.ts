@@ -7,8 +7,7 @@ export const MASTER_JSON = path.join(INPUT_PATH, 'master-data.json');
 export const BACKUP_DIR = path.join(INPUT_PATH, 'backup');
 
 //pnpm run excelToHTML
-const injectAbleExcel = "latest-73.xlsx" //start with 73. 72/75/76/77/79 done
-//90-94 done
+const injectAbleExcel = "latest-78.xlsx" //start with  80.
 export const LATEST_INJECTABLE_EXCEL =  path.join(INPUT_PATH, injectAbleExcel);
 
 export const TEMPLATE_PATH = path.join(INPUT_PATH, 'GDrive_Explorer_Ultra-tmplt.html');
