@@ -15,7 +15,10 @@ export default defineConfig({
   server: {
     //host: "127.0.0.1",
     host: "0.0.0.0", // Change this to your IP address 
-
+    watch: {
+      usePolling: false,
+    },
+    hmr: false, // Disables HMR entirely
     port: 3000,
   },
   define: {
