@@ -17,8 +17,8 @@ export default defineConfig({
     host: "0.0.0.0", // Change this to your IP address 
     watch: {
       usePolling: false,
+      ignored: ['!**/node_modules/**', '!**/.git/**', '!**/dist/**', '!**/build/**', '!**/.cache/**'],
     },
-    hmr: false, // Disables HMR entirely
     port: 3000,
   },
   define: {
