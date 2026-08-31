@@ -1,8 +1,24 @@
-//node src/html/countMasterData.js
-const fs = require("fs");
-const path = require("path");
+//pnpm dlx tsx src/html/MasterDataReport.ts
+import * as fs from "fs";
+import { MASTER_JSON } from "./constants";
+import { HtmlDataType } from "./types/HtmlDataType";
 
-const data = JSON.parse(fs.readFileSync(path.join(__dirname, "input","master-data.json"), "utf8"));
+const data: HtmlDataType[] = JSON.parse(fs.readFileSync(MASTER_JSON, "utf-8"));
+
+const getFolder = (item: HtmlDataType): string =>
+  item.folder || (item.f || "").split("\\")[0];
+
+const printItemCountByFolder = (items: HtmlDataType[]) => {
+  const folderCounts = new Map<string, number>();
+  for (const item of items) {
+    const folder = getFolder(item);
+    folderCounts.set(folder, (folderCounts.get(folder) || 0) + 1);
+  }
+  console.log(`Item count by folder (${folderCounts.size} folders):`);
+  for (const [folder, count] of [...folderCounts.entries()].sort((a, b) => b[1] - a[1])) {
+    console.log(`  ${folder}: ${count}`);
+  }
+};
 
 const withP = data.filter((item) => "p" in item).length;
 const withoutP = data.length - withP;
@@ -11,7 +27,7 @@ console.log(`Total items: ${data.length}`);
 console.log(`Items with "p": ${withP}`);
 console.log(`Items without "p": ${withoutP}`);
 
-const tCounts = new Map();
+const tCounts = new Map<string, number>();
 for (const item of data) {
   tCounts.set(item.t, (tCounts.get(item.t) || 0) + 1);
 }
@@ -26,10 +42,9 @@ for (const count of tCounts.values()) {
 console.log(`Duplicate "t" titles: ${duplicateTitles}`);
 console.log(`Items sharing a duplicate "t": ${duplicateItems}`);
 
-const folderTCounts = new Map();
+const folderTCounts = new Map<string, number>();
 for (const item of data) {
-  const folder = item.folder || (item.f || "").split("\\")[0];
-  const key = `${folder}|${item.t}`;
+  const key = `${getFolder(item)}|${item.t}`;
   folderTCounts.set(key, (folderTCounts.get(key) || 0) + 1);
 }
 let duplicateItemsInFolder = 0;
@@ -43,7 +58,7 @@ for (const count of folderTCounts.values()) {
 console.log(`Duplicate "t" titles within same folder: ${duplicateTitlesInFolder}`);
 console.log(`Items sharing a duplicate "t" within same folder: ${duplicateItemsInFolder}`);
 
-const dupCountByFolder = new Map();
+const dupCountByFolder = new Map<string, number>();
 for (const [key, count] of folderTCounts.entries()) {
   if (count > 1) {
     const folder = key.split("|")[0];
@@ -58,4 +73,4 @@ for (const [folder, count] of top5) {
   console.log(`  ${folder}: ${count} duplicate items`);
 }
 
-//node countMasterData.js
+printItemCountByFolder(data);

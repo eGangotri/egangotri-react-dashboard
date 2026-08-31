@@ -1,4 +1,5 @@
 import * as fs from 'fs';
+import { MASTER_JSON } from 'html/constants';
 import { formatTime } from 'mirror/utils';
 import * as path from 'path';
 import * as XLSX from 'xlsx';
@@ -7,7 +8,6 @@ import * as XLSX from 'xlsx';
 // pnpm dlx tsx src/html/checks/checkLostLinks.ts 1-3 Treasure
 // pnpm dlx tsx src/html/checks/checkLostLinks.ts 'Treasures 2'
 
-const MASTER_DATA_PATH = path.resolve(__dirname, '../input/master-data.json');
 const OUTPUT_DIR = path.resolve(__dirname, '../output');
 
 interface MasterDataItem {
@@ -25,7 +25,7 @@ interface ScrapeResult {
 
 // Function 1: extract all "t" values (stripping the trailing .pdf extension) along with "f"
 export function getArrayOfTitles(): Array<{ title: string; folder: string }> {
-    const raw = fs.readFileSync(MASTER_DATA_PATH, 'utf-8');
+    const raw = fs.readFileSync(MASTER_JSON, 'utf-8');
     const data: MasterDataItem[] = JSON.parse(raw);
     return data
         .filter((item) => typeof item.t === 'string')
