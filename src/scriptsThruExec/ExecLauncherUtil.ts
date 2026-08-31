@@ -103,6 +103,8 @@ export enum ExecType {
   GenExcelOfGoogleDriveLinkForAll = 812,
   GenExcelOfGoogleDriveLinkPdfOnlyManuVersion = 813,
   GenExcelOfGoogleDriveLinkPdfOnlyMinimalVersion = 814,
+  
+  FindMissingPageCountInExcelAndRepopulate = 815,
 
   GenExcelOfGoogleDriveLinkForReduced = 82,
   GenExcelOfGoogleDriveLinkForRenameFilesExcel = 83,
@@ -518,6 +520,14 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
           "ignoreFolder": data.userInputThird || "",
         }, `gDrive/getGoogleDriveListingAsExcel`);
         break;
+
+
+      case ExecType.FindMissingPageCountInExcelAndRepopulate:
+        _resp = await makePostCallForGenExcelForGDrive({
+          "excelLink": dataUserInput,
+        }, `gDrive/findMissingPageCountAndRepopulate`);
+        break;
+        
 
       case ExecType.GenListingsofLocalFolderAsPdf:
         _resp = await launchLocalFolderListingForPdf(dataUserInput);

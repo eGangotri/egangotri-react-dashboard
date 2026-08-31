@@ -39,8 +39,8 @@ const GDriveCatalogerExcelComponent: React.FC = () => {
         setExcelGDrive(_listingType || ExecType.GenExcelOfGoogleDriveLinkPdfOnly);
     };
 
-    const handleInputChange = (inputValue: string) => {
-        console.log("inputValue", inputValue, `inputValue.includes("ab") ${inputValue.includes("ab")}`);
+    const handleInputSecondChange = (inputValue: string) => {
+        console.log("inputValue", inputValue, `inputValue.includes("/") ${inputValue.includes("/")}`);
         if (inputValue.includes("/") || inputValue.includes("\\")) {
             setValidationCss({ backgroundColor: "red", width: "450px" });
         } else {
@@ -58,7 +58,7 @@ const GDriveCatalogerExcelComponent: React.FC = () => {
             additionalPayload={{ includePdfPageCount }}
             css={{ minWidth: "23vw", width: "450px" }}
             css2={validationCss}
-            onInputChange={handleInputChange}
+            onInputChangeSecond={handleInputSecondChange}
             userInputTwoInfoNonMandatory="Only Folder Name not Path. Either one Folder-Name or CSV of Folder-Names"
             userInputThreeInfoNonMandatory='Ignore Folder.proc is default'
             textBoxThreeValue='proc'

@@ -191,7 +191,7 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
                   marginRight: "30px",
                   marginBottom: "20px",
                   ...css,
-                  backgroundColor: errors.userInput ? '#ffcdd2' : undefined
+                  ...(errors.userInput ? { backgroundColor: '#ffcdd2' } : {})
                 }}
                 helperText={errors.userInput?.message}
                 rows={rows1stTf}

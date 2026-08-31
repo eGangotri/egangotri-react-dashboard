@@ -1,8 +1,8 @@
-import React, { ChangeEvent, useState } from 'react';
+import React, { useState } from 'react';
 import ExecComponent from './ExecComponent';
 import Box from '@mui/material/Box';
 import { ExecType } from './ExecLauncherUtil';
-import { Button, FormControlLabel, Link, Radio, RadioGroup, Typography } from '@mui/material';
+import { Button, Link, Typography } from '@mui/material';
 import {
     COMBINATION_EXCEL_PATH_LOCAL_STORAGE_KEY,
     GDRIVE_EXCEL_NAME_LOCAL_STORAGE_KEY,
@@ -10,79 +10,50 @@ import {
 } from 'service/consts';
 import GDriveCatalogerExcelComponent from './GDriveCatalogerExcelComponent';
 
+const loadStoredValue = (key: string, setter: (value: string) => void) => {
+    const storedValue = localStorage.getItem(key);
+    if (storedValue) {
+        setter(storedValue);
+    }
+};
+
+const LoadFromLocalStorageButton: React.FC<{ onClick: () => void }> = ({ onClick }) => (
+    <Button variant="contained" color="primary" onClick={onClick}
+        sx={{ marginRight: "10px", marginBottom: "10px" }}>Load From Local Storage</Button>
+);
 
 const ExecLauncherFive: React.FC = () => {
-    const [excelGDrive, setExcelGDrive] = React.useState<number>(ExecType.GenExcelOfGoogleDriveLinkPdfOnly);
     const [allPDFExcelName, setAllPDFExcelName] = useState('');
     const [reducedPDFExcelName, setReducedPDFExcelName] = useState('');
     const [topNFileDumpPath, setTopNFileDumpPath] = useState('');
     const [combinationExcelPath, setCombinationExcelPath] = useState('');
-
-    const chooseGDriveExcelType = (event: ChangeEvent<HTMLInputElement>) => {
-        const _val = event.target.value;
-        console.log("_val", _val)
-        let _listingType;
-        switch (Number(_val)) {
-            case ExecType.GenExcelOfGoogleDriveLinkPdfOnly:
-                _listingType = ExecType.GenExcelOfGoogleDriveLinkPdfOnly;
-                break;
-            case ExecType.GenExcelOfGoogleDriveLinkForReduced:
-                _listingType = ExecType.GenExcelOfGoogleDriveLinkForReduced;
-                break;
-        }
-        console.log("_listingType", _listingType);
-        setExcelGDrive(_listingType || ExecType.GenExcelOfGoogleDriveLinkPdfOnly);
-    };
-    const [validationCss, setValidationCss] = React.useState({
+    const [validationCss, setValidationCss] = useState({
         backgroundColor: "lightgreen",
         width: "450px"
     });
+
     const handleInputChange = (inputValue: string) => {
-        console.log("inputValue", inputValue, `inputValue.includes("ab") ${inputValue.includes("ab")}`);
-        if (inputValue.includes("/") || inputValue.includes("\\")) {
-            setValidationCss({ backgroundColor: "red", width: "450px" });
-        } else {
-            setValidationCss({ backgroundColor: "lightgreen", width: "450px" });
-        }
+        const isValid = /\.xlsx["']?$/.test(inputValue);
+        console.log(`handleInputChange ${isValid}`)
+        setValidationCss({ backgroundColor: isValid ? "lightgreen" : "red", width: "450px" });
     };
 
-
     const loadFromLocalStorage = () => {
-        let storedValue = localStorage.getItem(`${GDRIVE_EXCEL_NAME_LOCAL_STORAGE_KEY}`);
-        console.log(`loadFromLocalStorage called ${storedValue}`)
-        if (storedValue) {
-            setAllPDFExcelName(storedValue || "-");
-        }
+        loadStoredValue(GDRIVE_EXCEL_NAME_LOCAL_STORAGE_KEY, setAllPDFExcelName);
+        loadStoredValue(`${GDRIVE_EXCEL_NAME_LOCAL_STORAGE_KEY}${REDUCED_SUFFIX}`, setReducedPDFExcelName);
+    };
 
-        let storedValue2 = localStorage.getItem(`${GDRIVE_EXCEL_NAME_LOCAL_STORAGE_KEY}${REDUCED_SUFFIX}`);
-        console.log(`loadFromLocalStorage called ${storedValue2}`)
-        if (storedValue2) {
-            setReducedPDFExcelName(storedValue2);
-        }
-    }
+    const loadTopNPathFromLocalStorage = () =>
+        loadStoredValue(TOP_N_FILE_LOCAL_STORAGE_KEY, setTopNFileDumpPath);
 
-    const loadTopNPathFromLocalStorage = () => {
-        let storedValue = localStorage.getItem(TOP_N_FILE_LOCAL_STORAGE_KEY);
-        console.log(`loadFromLocalStorage called ${storedValue}`)
-        if (storedValue) {
-            setTopNFileDumpPath(storedValue);
-        }
-    }
-
-    const loadComboExcelFromLocalStorage = () => {
-        let storedValue = localStorage.getItem(COMBINATION_EXCEL_PATH_LOCAL_STORAGE_KEY);
-        console.log(`loadFromLocalStorage called ${storedValue}`)
-        if (storedValue) {
-            setCombinationExcelPath(storedValue || "-");
-        }
-    }
+    const loadComboExcelFromLocalStorage = () =>
+        loadStoredValue(COMBINATION_EXCEL_PATH_LOCAL_STORAGE_KEY, setCombinationExcelPath);
 
     return (
         <Box display="flex" gap={4} mb={2} flexDirection="row">
 
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
                 <GDriveCatalogerExcelComponent />
-
                 <Box>
                     <Typography variant="h6" component="div" gutterBottom>
                         <ol>
@@ -106,6 +77,15 @@ const ExecLauncherFive: React.FC = () => {
             </Box>
 
             <Box display="flex" alignContent="start" gap={4} mb={2} flexDirection="column">
+
+                <ExecComponent
+                    buttonText="Find Missing Page Count"
+                    placeholder='Excel Path'
+                    userInputOneInfo='Excel for GDrive Pdf List Error Check for Missing Page Count Entries & repopulation'
+                    execType={ExecType.FindMissingPageCountInExcelAndRepopulate}
+                    css={validationCss}
+                    onInputChange={handleInputChange}
+                />
                 <ExecComponent
                     buttonText="Get First and Last N Pages-Python"
                     placeholder='Absolute Path to PDFs Folder(s) as CSV'
@@ -117,11 +97,7 @@ const ExecLauncherFive: React.FC = () => {
                     css={{ minWidth: "23vw" }}
                     css2={{ minWidth: "23vw" }}
                     css3={{ marginTop: "30px", minWidth: "23vw" }}
-                    thirdButton={<Button
-                        variant="contained"
-                        color="primary"
-                        onClick={loadTopNPathFromLocalStorage}
-                        sx={{ marginRight: "10px", marginBottom: "10px" }}>Load From Local Storage</Button>}
+                    thirdButton={<LoadFromLocalStorageButton onClick={loadTopNPathFromLocalStorage} />}
                 />
                 <Box>
                     {topNFileDumpPath && <Typography variant="h6" component="div" gutterBottom>Path to Reduced PDFs {topNFileDumpPath} for dumping to G-Drive</Typography>}
@@ -140,11 +116,7 @@ const ExecLauncherFive: React.FC = () => {
                     css3={{ marginTop: "30px", minWidth: "23vw" }}
                     multiline1stTf
                     rows1stTf={4}
-                    thirdButton={<Button
-                        variant="contained"
-                        color="primary"
-                        onClick={loadTopNPathFromLocalStorage}
-                        sx={{ marginRight: "10px", marginBottom: "10px" }}>Load From Local Storage</Button>}
+                    thirdButton={<LoadFromLocalStorageButton onClick={loadTopNPathFromLocalStorage} />}
                     reactComponent={
                         <div>Can be run concurrently??</div>
                     }
@@ -165,7 +137,7 @@ const ExecLauncherFive: React.FC = () => {
                     userInputOneInfo="It will pick the latest Excel from the Folders"
                     textBoxOneValue={allPDFExcelName}
                     textBoxTwoValue={reducedPDFExcelName}
-                    thirdButton={<Button variant="contained" color="primary" onClick={loadFromLocalStorage} sx={{ marginRight: "10px", marginBottom: "10px" }}>Load From Local Storage</Button>}
+                    thirdButton={<LoadFromLocalStorageButton onClick={loadFromLocalStorage} />}
                 //  css3={{marginTop: "30px", width: "100%"}}
                 />
 
@@ -176,7 +148,7 @@ const ExecLauncherFive: React.FC = () => {
                     css={{ minWidth: "33vw" }}
                     userInputOneInfo="It will pick the latest Excel from the Folders"
                     textBoxOneValue={combinationExcelPath}
-                    thirdButton={<Button variant="contained" color="primary" onClick={loadComboExcelFromLocalStorage} sx={{ marginRight: "10px", marginBottom: "10px" }}>Load From Local Storage</Button>}
+                    thirdButton={<LoadFromLocalStorageButton onClick={loadComboExcelFromLocalStorage} />}
                 //  css3={{marginTop: "30px", width: "100%"}}
                 />
                 <Typography>
