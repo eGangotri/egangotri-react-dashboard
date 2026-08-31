@@ -524,7 +524,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
 
       case ExecType.FindMissingPageCountInExcelAndRepopulate:
         _resp = await makePostCallForGenExcelForGDrive({
-          "excelLink": dataUserInput,
+          "excelPath": dataUserInput,
         }, `gDrive/findMissingPageCountAndRepopulate`);
         break;
         
