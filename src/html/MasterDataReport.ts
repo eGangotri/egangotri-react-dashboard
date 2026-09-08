@@ -8,6 +8,11 @@ const data: HtmlDataType[] = JSON.parse(fs.readFileSync(MASTER_JSON, "utf-8"));
 const getFolder = (item: HtmlDataType): string =>
   item.folder || (item.f || "").split("\\")[0];
 
+const folderNumber = (folder: string): number => {
+  const match = folder.match(/\d+/);
+  return match ? Number(match[0]) : -1;
+};
+
 const printItemCountByFolder = (items: HtmlDataType[]) => {
   const folderCounts = new Map<string, number>();
   for (const item of items) {
@@ -15,7 +20,8 @@ const printItemCountByFolder = (items: HtmlDataType[]) => {
     folderCounts.set(folder, (folderCounts.get(folder) || 0) + 1);
   }
   console.log(`Item count by folder (${folderCounts.size} folders):`);
-  for (const [folder, count] of [...folderCounts.entries()].sort((a, b) => b[1] - a[1])) {
+  const sorted = [...folderCounts.entries()].sort((a, b) => folderNumber(a[0]) - folderNumber(b[0]));
+  for (const [folder, count] of sorted) {
     console.log(`  ${folder}: ${count}`);
   }
 };
@@ -56,7 +62,7 @@ const printDuplicationStats = (items: HtmlDataType[]) => {
   console.log(`Items sharing a duplicate "t" within same folder: ${folderTDups.duplicateItems}`);
 };
 
-const printTopFoldersWithDuplication = (items: HtmlDataType[], topN = 5) => {
+const printTopFoldersWithDuplication = (items: HtmlDataType[], topN = 12) => {
   const folderTCounts = countByKey(items, (item) => `${getFolder(item)}|${item.t}`);
   const dupCountByFolder = new Map<string, number>();
   for (const [key, count] of folderTCounts.entries()) {
@@ -76,4 +82,4 @@ const printTopFoldersWithDuplication = (items: HtmlDataType[], topN = 5) => {
 
 printDuplicationStats(data);
 printTopFoldersWithDuplication(data);
-printItemCountByFolder(data);
+//printItemCountByFolder(data);

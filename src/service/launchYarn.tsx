@@ -16,33 +16,34 @@ export async function launchVanitizeModule(
     return result.response as ExecResponseDetails
 }
 
-export async function launchGoogleDriveDownload(googleDriveLink: string,
-    profile: string): Promise<ExecResponseDetails> {
+export async function launchPdfGoogleDriveDownload(googleDriveLink: string,
+    profile: string, ignoreFolder = GDRIVE_DEFAULT_IGNORE_FOLDER): Promise<ExecResponseDetails> {
     const result = await makePostCallWithErrorHandling({
         "googleDriveLink": googleDriveLink,
         "profile": profile,
-        ignoreFolder: GDRIVE_DEFAULT_IGNORE_FOLDER
+        ignoreFolder,
+        fileType: PDF_TYPE
     }, `gDrive/downloadFromGoogleDrive`)
     return result;
 }
 
 
 export async function launchAllFromGoogleDriveDownload(googleDriveLink: string,
-    profile: string): Promise<ExecResponseDetails> {
+    profile: string, ignoreFolder = GDRIVE_DEFAULT_IGNORE_FOLDER): Promise<ExecResponseDetails> {
     const result = await makePostCallWithErrorHandling({
         "googleDriveLink": googleDriveLink,
         "profile": profile,
-        ignoreFolder: GDRIVE_DEFAULT_IGNORE_FOLDER,
+        ignoreFolder,
         fileType: ALL_TYPE
     }, `gDrive/downloadFromGoogleDrive`)
     return result;
 }
 export async function launchGoogleDriveZipDownload(googleDriveLink: string,
-    profile: string): Promise<ExecResponseDetails> {
+    profile: string, ignoreFolder = GDRIVE_DEFAULT_IGNORE_FOLDER ): Promise<ExecResponseDetails> {
     const jsonData = await makePostCallWithErrorHandling({
         "googleDriveLink": googleDriveLink,
         "profile": profile,
-        ignoreFolder: GDRIVE_DEFAULT_IGNORE_FOLDER,
+        ignoreFolder,
         fileType: ZIP_TYPE
     }, `gDrive/downloadFromGoogleDrive`)
 

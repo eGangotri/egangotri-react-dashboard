@@ -32,6 +32,7 @@ export type ExecComponentProps = {
     multiline1stTf?: boolean;
     multiline2ndTf?: boolean;
     multiline3rdTf?: boolean;
+    secondAndThirdInSameRow?: boolean;
     fullWidth?: boolean;
     rows1stTf?: number;
     rows2ndTf?: number;

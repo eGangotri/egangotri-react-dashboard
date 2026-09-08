@@ -72,6 +72,39 @@
             visibility: visible;
             opacity: 1;
         }
+        .search-help {
+            position: relative;
+            display: inline-block;
+        }
+        .search-help-text {
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.2s;
+            position: absolute;
+            z-index: 30;
+            top: 130%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 300px;
+            background-color: #1f2937;
+            color: #f9fafb;
+            border-radius: 6px;
+            padding: 10px 12px;
+            font-size: 11px;
+            line-height: 1.5;
+            text-align: left;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        .search-help:hover .search-help-text,
+        .search-help:focus-within .search-help-text {
+            visibility: visible;
+            opacity: 1;
+        }
+        .search-help-text code {
+            background-color: rgba(255, 255, 255, 0.12);
+            padding: 0 3px;
+            border-radius: 3px;
+        }
     </style>
 </head>
 <body class="bg-gray-50 min-h-screen text-gray-800">
@@ -90,6 +123,20 @@
                         <div class="absolute left-3 top-2.5 text-gray-400">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                         </div>
+                    </div>
+                </div>
+
+                <div class="search-help shrink-0" tabindex="0">
+                    <svg class="w-5 h-5 text-gray-400 hover:text-blue-600 transition cursor-help" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <div class="search-help-text">
+                        Use word fragments and comma separation to get best results:
+                        <div class="my-1 font-bold">ex. <code>bhag, ta, dhari</code></div>
+                        It will give you:
+                        <ul class="list-disc pl-4 mt-1 space-y-0.5">
+                            <li>Bhagwat and Bhagvat (with v)</li>
+                            <li>Geeta with ee and single i</li>
+                            <li>dhari will give sridhari and shridhari</li>
+                        </ul>
                     </div>
                 </div>
 

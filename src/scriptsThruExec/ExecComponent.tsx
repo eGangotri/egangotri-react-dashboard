@@ -23,6 +23,7 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
   execType = ExecType.LoginToArchive,
   secondTextBoxPlaceHolder = "",
   thirdTextBoxPlaceHolder = "",
+  secondTextBoxDefaultValue = "",
   thirdTextBoxDefaultValue = "",
   thirdInputType = "text",
   reactComponent = <></>,
@@ -40,6 +41,7 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
   multiline1stTf = false,
   multiline2ndTf = false,
   multiline3rdTf = false,
+  secondAndThirdInSameRow = false,
   rows1stTf = 1,
   rows2ndTf = 1,
   onInputChange,
@@ -65,7 +67,12 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
 
   const { register, handleSubmit, setValue, formState: { errors }, reset } = useForm<ExecComponentFormData>({
     mode: 'onChange',
-    reValidateMode: 'onChange'
+    reValidateMode: 'onChange',
+    defaultValues: {
+      userInput: textBoxOneValue,
+      userInputSecond: textBoxTwoValue || secondTextBoxDefaultValue,
+      userInputThird: textBoxThreeValue || thirdTextBoxDefaultValue
+    }
   });
   const [openDialog, setOpenDialog] = React.useState<boolean>(false);
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
@@ -132,16 +139,15 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
   const id = open ? 'simple-popover' : undefined;
 
   useEffect(() => {
-    setValue('userInput', textBoxOneValue);
+    if (textBoxOneValue) setValue('userInput', textBoxOneValue);
   }, [textBoxOneValue, setValue]);
 
-
   useEffect(() => {
-    setValue('userInputSecond', textBoxTwoValue);
+    if (textBoxTwoValue) setValue('userInputSecond', textBoxTwoValue);
   }, [textBoxTwoValue, setValue]);
 
   useEffect(() => {
-    setValue('userInputThird', textBoxThreeValue);
+    if (textBoxThreeValue) setValue('userInputThird', textBoxThreeValue);
   }, [textBoxThreeValue, setValue]);
 
   const onSubmit = async (data: ExecComponentFormData) => {
@@ -206,6 +212,12 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
             {execLogsForPopover}
           </ExecPopover>
 
+          <Box sx={{
+            display: 'flex',
+            flexDirection: secondAndThirdInSameRow ? 'row' : 'column',
+            alignItems: secondAndThirdInSameRow ? 'flex-start' : 'stretch',
+            gap: secondAndThirdInSameRow ? 2 : 0
+          }}>
           {secondTextBoxPlaceHolder?.length > 0 ?
             <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start' }}>
               <TextField variant="outlined"
@@ -223,7 +235,7 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
                   onChange: handleInputChangeSecond
                 })}
                 error={Boolean(errors.userInputSecond)}
-                sx={{ marginRight: "30px", width: "250px", ...css2 }}
+                sx={{ marginRight: secondAndThirdInSameRow ? 0 : "30px", width: "250px", ...css2 }}
                 helperText={errors.userInputSecond?.message}
                 rows={rows2ndTf}
                 multiline={multiline2ndTf}
@@ -249,7 +261,9 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
                       slotProps={{
                         textField: {
                           placeholder: thirdTextBoxPlaceHolder,
-                          sx: { paddingTop: "30px", marginTop: "30px", width: "250px", ...css3 },
+                          sx: secondAndThirdInSameRow
+                            ? { width: "250px", ...css3 }
+                            : { paddingTop: "30px", marginTop: "30px", width: "250px", ...css3 },
                           error: Boolean(errors.userInputThird),
                           helperText: errors.userInputThird?.message,
                         },
@@ -262,14 +276,15 @@ const ExecComponent: React.FC<ExecComponentProps> = ({
                   placeholder={thirdTextBoxPlaceHolder}
                   {...register('userInputThird')}
                   error={Boolean(errors.userInputThird)}
-                  defaultValue={thirdTextBoxDefaultValue || ""}
-                  sx={{ marginTop: "30px", width: "250px", ...css3 }}
+                  sx={{ marginTop: secondAndThirdInSameRow ? 0 : "30px", width: "250px", ...css3 }}
+                  multiline={multiline3rdTf}
                   helperText={errors.userInputThird?.message} />
               }
               {userInputThreeInfo && <InfoIconWithTooltip input={userInputThreeInfo} />}
             </Box>
             : null
           }
+          </Box>
 
           {reactComponent}
           <Box sx={{ marginTop: "10px" }}>

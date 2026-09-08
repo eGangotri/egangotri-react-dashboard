@@ -16,7 +16,7 @@ import { makePostCallWithErrorHandling } from "service/BackendFetchService";
 import { FaTrash, FaBrain } from "react-icons/fa";
 import ExecComponent from "scriptsThruExec/ExecComponent";
 import { ExecType } from "scriptsThruExec/ExecLauncherUtil";
-import { redownloadFromGDrive, verifyGDriveDwnldSuccessFolders } from "service/launchYarn";
+import { GDRIVE_DEFAULT_IGNORE_FOLDER, redownloadFromGDrive, verifyGDriveDwnldSuccessFolders } from "service/launchYarn";
 import { buildDeterministicColorMap, colorForKey } from "utils/color";
 import ExecResponsePanel from "scriptsThruExec/ExecResponsePanel";
 import Spinner from "widgets/Spinner";
@@ -666,11 +666,18 @@ const GDriveDownloadListing: React.FC = () => {
                     secondTextBoxPlaceHolder='Enter Profile or File Abs Path'
                     execType={gDriveFileType}
                     textBoxTwoValue="PLAYGROUND"
+                    thirdTextBoxPlaceHolder="Folder to Ignore"
+                    userInputThreeInfoNonMandatory="any folder name specified will be filtered. proc is default"
+                    thirdTextBoxDefaultValue={GDRIVE_DEFAULT_IGNORE_FOLDER}
                     onCompleted={() => {
                         loadDownloads()
                     }}
+                    multiline1stTf
+                    rows1stTf={5}
+                    secondAndThirdInSameRow
                     css={{ backgroundColor: "lightgreen", width: "90vw" }}
-                    css2={{ backgroundColor: "lightgreen", width: "90vw" }}
+                    css2={{ backgroundColor: "lightgreen", width: "45vw" }}
+                    css3={{ backgroundColor: "lightgreen", width: "20vw" }}
                     reactComponent={<>
                         <RadioGroup aria-label="gDriveFileType" name="gDriveFileType" value={gDriveFileType} onChange={chooseGDriveFileType} row>
                             <FormControlLabel value={ExecType.DWNLD_PDFS_ONLY_FROM_GOOGLE_DRIVE} control={<Radio />} label="PDF-Only" />

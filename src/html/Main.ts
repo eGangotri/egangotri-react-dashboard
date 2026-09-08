@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import { readFile, utils } from 'xlsx';
 import { GDriveExcelItem } from './types/GDriveExcelItem';
 import { HtmlDataType } from './types/HtmlDataType';
-import { LATEST_INJECTABLE_EXCEL, MASTER_JSON, REQUIRED_GDRIVE_KEYS, REQUIRED_HTML_DATA_KEYS } from './constants';
+import { FINAL_HTML_PATH, LATEST_INJECTABLE_EXCEL, MASTER_JSON, PUBLIC_HTML_PATH, REQUIRED_GDRIVE_KEYS, REQUIRED_HTML_DATA_KEYS } from './constants';
 import { injectGDriveDataIntoTemplate } from './injectGDriveData';
 import { backupJsonFile } from './backupUtils';
 import { faLaptopHouse } from '@fortawesome/free-solid-svg-icons';
@@ -147,11 +147,52 @@ const mergeHtmlDataJsonFiles = ( masterJsonPath: string, injectableDataPath: str
          added, overwritten, totalAfter: master.length };
 };
 
+/**
+ * Creates a public/shareable copy of GDrive_Explorer_Ultra.html as
+ * GDrive_Explorer_Ultra-v0.html, with every Google Drive link removed:
+ * - each item's "l" (file link) and "th" (thumbnail, which embeds the file id) are dropped
+ * - the clickable title anchor is rendered as plain text instead
+ * The -v0 file is always overwritten; no backup is taken.
+ */
+const createPublicHtmlWithoutGDriveLinks = () => {
+    if (!fs.existsSync(FINAL_HTML_PATH)) {
+        throw new Error(`Html not found: ${FINAL_HTML_PATH}. Run injectGDriveDataIntoTemplate() first.`);
+    }
+
+    const html = fs.readFileSync(FINAL_HTML_PATH, 'utf-8');
+    const dataMatch = html.match(/state\.allData = (\[[\s\S]*?\n\]);/);
+    if (!dataMatch) {
+        throw new Error(`Could not locate "state.allData = [...];" in ${FINAL_HTML_PATH}`);
+    }
+
+    const allData = JSON.parse(dataMatch[1]) as HtmlDataType[];
+    const publicData = allData.map(({ l, th, ...rest }) => ({ ...rest, l: '', th: '' }));
+
+    let publicHtml = html.replace(dataMatch[0], `state.allData = ${JSON.stringify(publicData, null, 2)};`);
+
+    const titleAnchor = '<a href="${item.l}" target="_blank" class="text-sm font-semibold text-blue-600 hover:text-blue-800 hover:underline leading-tight block mb-1">${hTitle}</a>';
+    if (!publicHtml.includes(titleAnchor)) {
+        throw new Error(`Could not locate the title anchor markup in ${FINAL_HTML_PATH}; template markup may have changed`);
+    }
+    publicHtml = publicHtml.split(titleAnchor).join(
+        '<span class="text-sm font-semibold text-gray-800 leading-tight block mb-1">${hTitle}</span>'
+    );
+
+    if (/drive\.google\.com|docs\.google\.com/.test(publicHtml)) {
+        throw new Error(`Google Drive links still present in generated public html; aborting write of ${PUBLIC_HTML_PATH}`);
+    }
+
+    fs.writeFileSync(PUBLIC_HTML_PATH, publicHtml);
+    console.log(`Created ${PUBLIC_HTML_PATH} with ${publicData.length} items (no GDrive links)`);
+    return PUBLIC_HTML_PATH;
+};
+
 const json = excelToJson(LATEST_INJECTABLE_EXCEL);
 const htmlJson = gDriveExcelJsonToHtmlDataJson(json);
 const result = mergeHtmlDataJsonFiles(MASTER_JSON,htmlJson)
 console.log(result)
 injectGDriveDataIntoTemplate();
+createPublicHtmlWithoutGDriveLinks();
 
 // * pnpm run excelToHTML
 

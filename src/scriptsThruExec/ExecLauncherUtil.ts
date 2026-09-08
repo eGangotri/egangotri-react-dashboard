@@ -8,11 +8,12 @@ import {
 import {
   addHeaderFooter,
   downloadGDriveItemsViaExcel,
+  GDRIVE_DEFAULT_IGNORE_FOLDER,
   launchAllArchiveItemsDownloadViaExcel,
   launchAllFromGoogleDriveDownload,
   launchArchiveExcelDownload,
   launchArchivePdfDownload,
-  launchGoogleDriveDownload,
+  launchPdfGoogleDriveDownload,
   launchGoogleDriveZipDownload,
   launchVanitizeModule,
   launchYarnMoveToFreeze,
@@ -345,15 +346,18 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
         break;
 
       case ExecType.DWNLD_PDFS_ONLY_FROM_GOOGLE_DRIVE:
-        _resp = await launchGoogleDriveDownload(dataUserInput, dataUserInput2Mandatory);
+        _resp = await launchPdfGoogleDriveDownload(dataUserInput, 
+          dataUserInput2Mandatory, dataUserInput3NonMandatory);
         break;
 
       case ExecType.DWNLD_ZIPS_ONLY_FROM_GOOGLE_DRIVE:
-        _resp = await launchGoogleDriveZipDownload(dataUserInput, dataUserInput2Mandatory);
+        _resp = await launchGoogleDriveZipDownload(dataUserInput, 
+          dataUserInput2Mandatory, dataUserInput3NonMandatory);
         break;
 
       case ExecType.DWNLD_ALL_FROM_GOOGLE_DRIVE:
-        _resp = await launchAllFromGoogleDriveDownload(dataUserInput, dataUserInput2Mandatory);
+        _resp = await launchAllFromGoogleDriveDownload(dataUserInput, 
+          dataUserInput2Mandatory, dataUserInput3NonMandatory);
         break;
 
       case ExecType.VERIFY_G_DRIVE_PDF_DOWNLOAD:
@@ -492,7 +496,7 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
           "allNotJustPdfs": true,
           "minimalVersion": false,
           "manuVersion": false,
-          "ignoreFolder": data.userInputThird || "proc",
+          "ignoreFolder": data.userInputThird || GDRIVE_DEFAULT_IGNORE_FOLDER,
           "includePdfPageCount": data.includePdfPageCount || false,
         }, `gDrive/getGoogleDriveListingAsExcel`);
         break;

@@ -8,11 +8,14 @@ export const MASTER_JSON = path.join(MASTER_PATH, 'master-data.json');
 export const BACKUP_DIR = path.join(INPUT_PATH, 'backup');
 
 //pnpm run excelToHTML
-const injectAbleExcel = "latest-84.xlsx" //start with  81. 80-84 done
+const injectAbleExcel = "latest-85.xlsx" //start with  82. 80/81/84 done/ 60-69 need to be redone
 export const LATEST_INJECTABLE_EXCEL =  path.join(INPUT_PATH, injectAbleExcel);
 
 export const TEMPLATE_PATH = path.join(MASTER_PATH, 'GDrive_Explorer_Ultra-tmplt.html');
 export const FINAL_HTML_PATH = path.join(MASTER_PATH, 'GDrive_Explorer_Ultra.html');
+// Public/shareable version of FINAL_HTML_PATH with all Google Drive links stripped out.
+// Always overwritten, never backed up.
+export const PUBLIC_HTML_PATH = path.join(MASTER_PATH, 'GDrive_Explorer_Ultra-v0.html');
 
 export const REQUIRED_GDRIVE_KEYS: (keyof GDriveExcelItem)[] = [
     'S.No',
