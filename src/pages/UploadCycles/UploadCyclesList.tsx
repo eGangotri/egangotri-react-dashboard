@@ -159,6 +159,30 @@ const UploadCyclesList: React.FC = () => {
             fetchData()
         }
     }
+
+    
+    const handleBulkReuploadMissed = async () => {
+        if (selectedRows.length === 0) return
+
+        const ok = window.confirm(`Are you sure you want to reupload missed items for ${selectedRows.length} selected upload cycle(s)?`)
+        if (!ok) return
+
+        setIsLoading(true)
+        setPopoverTitle("Bulk Reupload Missed Results")
+        try {
+            const uploadCycleIds = selectedRows.map((id) => String(id))
+            const _resp = await makePostCallWithErrorHandling({ uploadCycleIds }, "execLauncher/reuploadMissedMulti")
+            setApiResult(<ExecResponsePanel response={_resp} />);
+            setPopoverAnchor(document.getElementById("bulk-reupload-missed-button") as HTMLButtonElement)
+        } catch (error: any) {
+            console.error("Error in bulk reupload failed:", error)
+            setApiResult(<ExecResponsePanel response={{ error: error?.message || String(error) }} />);
+            setPopoverAnchor(document.getElementById("bulk-reupload-missed-button") as HTMLButtonElement)
+        } finally {
+            setIsLoading(false)
+            fetchData()
+        }
+    }
     const updateChromeDriver = async () => {
         if (window.confirm('Are you sure you want to update Chrome driver? Use this feature sparingly')) {
             try {
@@ -649,6 +673,15 @@ const UploadCyclesList: React.FC = () => {
                 </Box>
                 {selectedRows.length > 0 && (
                     <Box sx={{ mb: 1 }}>
+                        <Button sx={{ m: 1 }}
+                            id="bulk-reupload-missed-button"
+                            variant="contained"
+                            color="error"
+                            disabled={isLoading}
+                            onClick={handleBulkReuploadMissed}
+                        >
+                            {`Reupload Missed for Selected (${selectedRows.length})`}
+                        </Button>
                         <Button sx={{ m: 1 }}
                             id="bulk-reupload-failed-button"
                             variant="contained"
