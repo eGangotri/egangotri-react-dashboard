@@ -39,7 +39,7 @@ export async function launchAllFromGoogleDriveDownload(googleDriveLink: string,
     return result;
 }
 export async function launchGoogleDriveZipDownload(googleDriveLink: string,
-    profile: string, ignoreFolder = GDRIVE_DEFAULT_IGNORE_FOLDER ): Promise<ExecResponseDetails> {
+    profile: string, ignoreFolder = GDRIVE_DEFAULT_IGNORE_FOLDER): Promise<ExecResponseDetails> {
     const jsonData = await makePostCallWithErrorHandling({
         "googleDriveLink": googleDriveLink,
         "profile": profile,
@@ -124,9 +124,9 @@ export async function verifyGDriveDwnldSuccessFolders(id: string): Promise<ExecR
     return jsonData;
 }
 export async function verifyGDriveDwnldSuccessFoldersByLink(googleDriveLink: string,
-     profile: string,
-     fileType:string,
-     verifyBySizeOnly = false): Promise<ExecResponseDetails> {
+    profile: string,
+    fileType: string,
+    verifyBySizeOnly = false): Promise<ExecResponseDetails> {
     const jsonData = await makePostCallWithErrorHandling({
         googleDriveLink,
         profile,
@@ -153,8 +153,8 @@ export async function launchYarnQaToDestFileMover(
 
     const result = await makePostCall(postParams,
         resource);
-        console.log(`result ${JSON.stringify(result)}`)
-   // return result.response as ExecResponseDetails
+    console.log(`result ${JSON.stringify(result)}`)
+    // return result.response as ExecResponseDetails
     return {
         ...result,
         ...result.response
@@ -208,19 +208,33 @@ export async function launchArchiveExcelDownload(archiveLinks: string,
     onlyLinks = false,
     ascOrder = false):
     Promise<ExecResponseDetails> {
-    if (!archiveLinks.trim().includes(',') && /\s/.test(archiveLinks.trim())) {
-        archiveLinks = archiveLinks.trim().split(/\s+/).map((x: string) => x.trim()).join(',');
-        console.log(`archiveLink ${JSON.stringify(archiveLinks)}`)
+    const isSearchQuery = archiveLinks?.trim().startsWith("https://archive.org/search")
+    if (isSearchQuery) {
+        const result = await makePostCallWithErrorHandling({
+            archiveLinks,
+            maxItems,
+            limitedFields,
+            dateRange,
+            onlyLinks,
+            ascOrder
+        }, `yarnArchive/getArchiveListingByQuery`)
+        return result;
     }
-    const result = await makePostCallWithErrorHandling({
-        archiveLinks,
-        maxItems,
-        limitedFields,
-        dateRange,
-        onlyLinks,
-        ascOrder
-    }, `yarnArchive/getArchiveListing`)
-    return result;
+    else {
+        if (!archiveLinks.trim().includes(',') && /\s/.test(archiveLinks.trim())) {
+            archiveLinks = archiveLinks.trim().split(/\s+/).map((x: string) => x.trim()).join(',');
+            console.log(`archiveLink ${JSON.stringify(archiveLinks)}`)
+        }
+        const result = await makePostCallWithErrorHandling({
+            archiveLinks,
+            maxItems,
+            limitedFields,
+            dateRange,
+            onlyLinks,
+            ascOrder
+        }, `yarnArchive/getArchiveListing`)
+        return result;
+    }
 }
 
 

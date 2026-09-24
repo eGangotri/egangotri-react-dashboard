@@ -140,8 +140,8 @@ const ExecLauncherTwoB: React.FC = () => {
                     secondComponentRequired={false}
                     thirdTextBoxPlaceHolder='Date Range (Optional)'
                     thirdInputType="dateRange"
-                    validationPattern={/^https:\/\/archive\.org\/details\/@/}
-                    validationMessage="First user input must start with https://archive.org/details/@"
+                    validationPattern={/^https:\/\/archive\.org\/(details\/@|search\?query=)/}
+                    validationMessage="First user input must start with https://archive.org/details/@ or https://archive.org/search?query="
                     reactComponent={<Box>
                         <FormControlLabel
                             control={<Checkbox checked={dontGenerateCheck} onChange={handleDontGenerateCheck} />}
