@@ -6,7 +6,7 @@ import { backupJsonFile } from './backupUtils';
 
 // pnpm dlx tsx src/html/RemoveTreasureUtils.ts
 
-const folderToRemove = 'Treasures70'
+const folderToRemove = 'Treasures66'
 const includeIsEmptyPagesCondition = true;
 
 const removeEntriesByFolderWithEmptyPages = (folderName: string): void => {

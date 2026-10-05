@@ -84,7 +84,7 @@ const ExecLauncherThree: React.FC = () => {
                 />
 
                 <ExecComponent buttonText="List Files in Folder-Gradle(Fast)"
-                    placeholder='Folder Path or Freezed Profile AS CSV'
+                    placeholder='Folder Path or Freezed Profile or Variable inside %% AS CSV'
                     execType={genListingOfLocalFolder}
                     css={{ width: "40vw" }}
                     reactComponent={<>
@@ -101,6 +101,7 @@ const ExecLauncherThree: React.FC = () => {
                     userInputOneInfo='works for CSVs.<br> will work for <br>
                     "C:\tmp\_quickUpld , C:\tmp\_quickUpld2"<br>
                     "C:\tmp\_quickUpld" , "C:\tmp\_quickUpld2"<br>
+                    %FREEZE%<br>
                     but doesnt yet handle cumulative, treats each separately'
                 />
             </Box>

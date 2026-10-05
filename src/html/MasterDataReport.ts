@@ -8,23 +8,6 @@ const data: HtmlDataType[] = JSON.parse(fs.readFileSync(MASTER_JSON, "utf-8"));
 const getFolder = (item: HtmlDataType): string =>
   item.folder || (item.f || "").split("\\")[0];
 
-const folderNumber = (folder: string): number => {
-  const match = folder.match(/\d+/);
-  return match ? Number(match[0]) : -1;
-};
-
-const printItemCountByFolder = (items: HtmlDataType[]) => {
-  const folderCounts = new Map<string, number>();
-  for (const item of items) {
-    const folder = getFolder(item);
-    folderCounts.set(folder, (folderCounts.get(folder) || 0) + 1);
-  }
-  console.log(`Item count by folder (${folderCounts.size} folders):`);
-  const sorted = [...folderCounts.entries()].sort((a, b) => folderNumber(a[0]) - folderNumber(b[0]));
-  for (const [folder, count] of sorted) {
-    console.log(`  ${folder}: ${count}`);
-  }
-};
 
 const countByKey = (items: HtmlDataType[], keyFn: (item: HtmlDataType) => string) => {
   const counts = new Map<string, number>();
@@ -80,6 +63,18 @@ const printTopFoldersWithDuplication = (items: HtmlDataType[], topN = 12) => {
   }
 };
 
+const printTopFoldersWithoutP = (items: HtmlDataType[], topN = 3) => {
+  const itemsWithoutP = items.filter((item) => !("p" in item) || item.p === null || item.p === undefined || String(item.p).trim() === "");
+  const folderCounts = countByKey(itemsWithoutP, getFolder);
+  const topFolders = [...folderCounts.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, topN);
+  console.log(`Top ${topN} folders without "p":`);
+  for (const [folder, count] of topFolders) {
+    console.log(`  ${folder}: ${count} items`);
+  }
+};
+
 printDuplicationStats(data);
 printTopFoldersWithDuplication(data);
-//printItemCountByFolder(data);
+printTopFoldersWithoutP(data);

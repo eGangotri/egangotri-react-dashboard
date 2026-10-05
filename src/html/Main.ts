@@ -183,7 +183,7 @@ const createPublicHtmlWithoutGDriveLinks = () => {
     }
 
     fs.writeFileSync(PUBLIC_HTML_PATH, publicHtml);
-    console.log(`Created ${PUBLIC_HTML_PATH} with ${publicData.length} items (no GDrive links)`);
+    console.log(`Created ${PUBLIC_HTML_PATH} with ${publicData.length} items (GDrive-Link-less-Version)`);
     return PUBLIC_HTML_PATH;
 };
 
