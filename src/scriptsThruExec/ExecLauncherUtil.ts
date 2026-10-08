@@ -455,11 +455,10 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       case ExecType.GenExcelOfGoogleDriveLinkPdfOnly:
         _resp = await makePostCallForGenExcelForGDrive({
           "googleDriveLink": dataUserInput,
-          "folderName": data.userInputSecond || "D:\\",
           "reduced": false,
           "allNotJustPdfs": false,
           "includePdfPageCount": data.includePdfPageCount || false,
-          "ignoreFolder": data.userInputThird || "",
+          "ignoreFolder": data.userInputSecond || "",
         }, `gDrive/getGoogleDriveListingAsExcel`);
 
         break;
@@ -467,36 +466,33 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       case ExecType.GenExcelOfGoogleDriveLinkPdfOnlyManuVersion:
         _resp = await makePostCallForGenExcelForGDrive({
           "googleDriveLink": dataUserInput,
-          "folderName": data.userInputSecond || "D:\\",
           "reduced": false,
           "allNotJustPdfs": true,
           "manuVersion": true,
           "includePdfPageCount": data.includePdfPageCount || false,
-          "ignoreFolder": data.userInputThird || "",
+          "ignoreFolder": data.userInputSecond || "",
         }, `gDrive/getGoogleDriveListingAsExcel`);
         break;
 
       case ExecType.GenExcelOfGoogleDriveLinkPdfOnlyMinimalVersion:
         _resp = await makePostCallForGenExcelForGDrive({
           "googleDriveLink": dataUserInput,
-          "folderName": data.userInputSecond || "D:\\",
           "reduced": false,
           "allNotJustPdfs": false,
           "minimalVersion": true,
           "includePdfPageCount": data.includePdfPageCount || false,
-          "ignoreFolder": data.userInputThird || "",
+          "ignoreFolder": data.userInputSecond || "",
         }, `gDrive/getGoogleDriveListingAsExcel`);
         break;
 
       case ExecType.GenExcelOfGoogleDriveLinkForAll:
         _resp = await makePostCallForGenExcelForGDrive({
           "googleDriveLink": dataUserInput,
-          "folderName": data.userInputSecond || "D:\\",
           "reduced": false,
           "allNotJustPdfs": true,
           "minimalVersion": false,
           "manuVersion": false,
-          "ignoreFolder": data.userInputThird || GDRIVE_DEFAULT_IGNORE_FOLDER,
+          "ignoreFolder": data.userInputSecond || GDRIVE_DEFAULT_IGNORE_FOLDER,
           "includePdfPageCount": data.includePdfPageCount || false,
         }, `gDrive/getGoogleDriveListingAsExcel`);
         break;
@@ -505,23 +501,21 @@ export const invokeFuncBasedOnExecType = async (execType: ExecType,
       case ExecType.GenExcelOfGoogleDriveLinkForReduced:
         _resp = await makePostCallForGenExcelForGDrive({
           "googleDriveLink": dataUserInput,
-          "folderName": data.userInputSecond || "D:\\",
           "reduced": true,
           "allNotJustPdfs": false,
           "includePdfPageCount": data.includePdfPageCount || false,
-          "ignoreFolder": data.userInputThird || "",
+          "ignoreFolder": data.userInputSecond || "",
         }, `gDrive/getGoogleDriveListingAsExcel`);
         break;
 
       case ExecType.GenExcelOfGoogleDriveLinkForRenameFilesExcel:
         _resp = await makePostCallForGenExcelForGDrive({
           "googleDriveLink": dataUserInput,
-          "folderName": data.userInputSecond || "D:\\",
           "reduced": false,
           "pdfRenamerXlV2": true,
           "allNotJustPdfs": false,
           "includePdfPageCount": data.includePdfPageCount || false,
-          "ignoreFolder": data.userInputThird || "",
+          "ignoreFolder": data.userInputSecond || "",
         }, `gDrive/getGoogleDriveListingAsExcel`);
         break;
 

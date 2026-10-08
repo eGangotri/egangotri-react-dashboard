@@ -52,16 +52,14 @@ const GDriveCatalogerExcelComponent: React.FC = () => {
         <ExecComponent
             buttonText="Create G-Drive Cataloger Version Excel"
             placeholder='Enter Google Drive Link(s)/Identifiers as csv'
-            secondTextBoxPlaceHolder='Enter Folder Name (not path)'
-            thirdTextBoxPlaceHolder='Ignore Folder'
+            secondTextBoxPlaceHolder='Ignore Folder '
             execType={excelGDrive}
             additionalPayload={{ includePdfPageCount }}
             css={{ minWidth: "23vw", width: "450px" }}
             css2={validationCss}
             onInputChangeSecond={handleInputSecondChange}
-            userInputTwoInfoNonMandatory="Only Folder Name not Path. Either one Folder-Name or CSV of Folder-Names"
-            userInputThreeInfoNonMandatory='Ignore Folder.proc is default'
-            textBoxThreeValue='proc'
+            userInputTwoInfoNonMandatory='Ignore Folder (proc is default value)'
+            textBoxTwoValue='proc'
             reactComponent={
                 <GDriveExcelOptions 
                     value={excelGDrive} 
